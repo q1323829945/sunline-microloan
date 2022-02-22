@@ -8,11 +8,11 @@ spring:
     generate-ddl: true
     show-sql: true
   flyway:
-    baseline-on-migrate: true
-    enabled: true
+    baseline-on-migrate: false
+    enabled: false
 
 server:
-  port : 8081
+  port : 8089
 
 management:
   endpoints:
@@ -23,12 +23,12 @@ management:
 datasource:
   default-datasource-url: "jdbc:mysql://localhost:3306"
   default-datasource-username: "root"
-  default-datasource-password: "Ph1lip@123"
+  default-datasource-password: "123456"
   default-datasource-database: "db_saas"
   default-datasource-option-flags: "useSSL=false&serverTimezone=UTC"
   default-datasource-driver: "com.mysql.cj.jdbc.Driver"
   tenant-datasource-url: "jdbc:mysql://localhost:3306"
   tenant-datasource-username: "root"
-  tenant-datasource-password: "Ph1lip@123"
+  tenant-datasource-password: "123456"
   tenant-datasource-option-flags: "useSSL=false&serverTimezone=UTC"
   tenant-datasource-driver: "com.mysql.cj.jdbc.Driver"

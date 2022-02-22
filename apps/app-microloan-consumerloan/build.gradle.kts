@@ -22,8 +22,6 @@ dependencies {
 	implementation(project(":lib-response"))
 	implementation(project(":lib-redis"))
 	implementation(project(":lib-mq"))
-	implementation(project(":lib-datasource"))
-	implementation(project(":lib-commands"))
-	implementation(project(":lib-rbac"))
+	implementation(project(":lib-snowflake"))
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
