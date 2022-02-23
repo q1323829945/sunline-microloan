@@ -54,6 +54,14 @@ class Document(
     @Column(name = "document_location", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var documentLocation: String,
 
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = DocumentInvolvement::class, mappedBy = "documentId")
+    @OrderBy("id ASC")
+    var involvements: MutableList<DocumentInvolvement> = mutableListOf(),
+
+    @NotNull
+    @Column(name = "document_store_reference", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
+    var documentStoreReference: String,
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var created: Date? = null,
