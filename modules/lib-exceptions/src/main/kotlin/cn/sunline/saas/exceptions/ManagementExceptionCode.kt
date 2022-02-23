@@ -18,4 +18,7 @@ enum class ManagementExceptionCode(val code: Int) {
     // Tenant 3000 - 3999
     TENANT_DATA_SOURCE_INVALID(3000),
 
+    //upload 4000 - 4999
+    FILE_UPLOAD_FAILED(4000),
+
 }

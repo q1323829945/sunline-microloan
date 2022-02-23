@@ -18,3 +18,10 @@ data class NotFoundException(
     val statusCode: ManagementExceptionCode = ManagementExceptionCode.NOT_FOUND_DATA,
     val user: Long? = null
 ) : Exception()
+
+
+data class UploadException(
+    val statusCode: ManagementExceptionCode,
+    val exceptionMessage: String? = null,
+    val data:Any? = null
+):Exception()
