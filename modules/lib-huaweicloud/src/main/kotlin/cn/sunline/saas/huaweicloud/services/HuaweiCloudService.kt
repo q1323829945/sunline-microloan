@@ -2,98 +2,64 @@ package cn.sunline.saas.huaweicloud.services
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.UploadException
-import cn.sunline.saas.huaweicloud.config.ACCESS_KEY
-import cn.sunline.saas.huaweicloud.config.HuaweiCloudTools
-import cn.sunline.saas.huaweicloud.config.REGION
-import cn.sunline.saas.huaweicloud.config.SECURITY_KEY
+import cn.sunline.saas.huaweicloud.config.*
 import cn.sunline.saas.obs.api.*
+import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.InputStreamEntity
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClients
+import org.joda.time.DateTime
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.StringBuilder
 
-fun main() {
-    val cloud = HuaweiCloudService()
-
-//    cloud.createBucket(BucketParams("lizheng-test2", CreateBucketConfiguration("cn-east-3")))
-
-    cloud.putObject(PutParams("lizheng-test2","abc.jpg",""))
-}
 
 @Service
 class HuaweiCloudService:ObsApi {
-     var createBucketTemplate = "<CreateBucketConfiguration " +
-            "xmlns=\"http://obs.cn-east-3.myhuaweicloud.com/doc/2022-02-23/\">\n" +
-            "<Location>" + REGION + "</Location>\n" +
-            "</CreateBucketConfiguration>"
 
+    @Autowired
+    private lateinit var huaweiCloudTools: HuaweiCloudTools
+
+    private val logger = LoggerFactory.getLogger(HuaweiCloudService::class.java)
 
     override fun createBucket(bucketParams: BucketParams) {
-        val createBucketTemplate = "<CreateBucketConfiguration " +
-                "xmlns=\"http://obs.cn-east-3.myhuaweicloud.com/doc/2022-02-23/\">\n" +
-                "<Location>" + REGION + "</Location>\n" +
-                "</CreateBucketConfiguration>"
+        val regin = bucketParams.createBucketConfiguration.locationConstraint
+        //uri
+        val uri = getUri(bucketParams.bucketName, regin)
 
-        val httpClient = HttpClients.createDefault()
-        val requestTime = HuaweiCloudTools.getCloudUploadFormatDate()
-        val contentType = "application/xml"
-        val httpPut = HttpPut("http://${bucketParams.bucketName}.obs.$REGION.myhuaweicloud.com")
-        httpPut.addHeader("Date",requestTime)
-        httpPut.addHeader("Content-Type",contentType)
-
-        val contentMD5:String = ""
-        val canonicalizeHeaders = ""
+        //header
+        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${bucketParams.bucketName}/"
-        val canonicalString = "PUT\n" +
-                "$contentMD5\n" +
-                "$contentType\n" +
-                "$requestTime\n" +
-                "$canonicalizeHeaders$canonicalizeResource"
+        val signature = getSignature("PUT","","application/xml",requestTime,"",canonicalizeResource)
+        val headerMap = mutableMapOf<String,String>()
+        headerMap["Date"] = requestTime
+        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Content-Type"] = "application/xml"
 
-        println("canonicalString : $canonicalString")
+        //body
+        val date = DateTime.now().toString("yyyy-MM-dd")
 
-        val signature = HuaweiCloudTools.signWithHmacSha1(SECURITY_KEY,canonicalString)
-        httpPut.addHeader("Authorization","OBS $ACCESS_KEY:$signature")
-        httpPut.entity = StringEntity(createBucketTemplate)
+        val createBucketTemplate = "<CreateBucketConfiguration " +
+                "xmlns=\"http://$regin.myhuaweicloud.com/doc/$date/\">\n" +
+                "<Location>" + regin + "</Location>\n" +
+                "</CreateBucketConfiguration>"
+        val body = StringEntity(createBucketTemplate)
 
-        val httpResponse = httpClient.execute(httpPut)
+        //httpPut
+        val httpPut = getHttpPut(uri,headerMap,body)
 
-        println("Request Message:")
-        println("${httpPut.requestLine}")
+        //response
+        val response = setHttpClientAndGetResult(httpPut)
 
-        for(header in httpPut.allHeaders){
-            println("${header.name} : ${header.value}")
-        }
-
-        println("${httpPut.entity.content}")
-
-        println("Response Message:")
-        println("${httpResponse.statusLine}")
-        for(header in httpResponse.allHeaders){
-            println("${header.name} : ${header.value}")
-        }
-
-        val reader = BufferedReader(InputStreamReader(httpResponse.entity.content))
-        val response = StringBuilder()
-        while (true){
-            val line = reader.readLine() ?: break
-            response.append(line)
-        }
-        reader.close()
-
-        println(response)
-
-        httpClient.close()
+        huaweiCloudResponseLog(response,httpPut)
     }
-
-
-
 
 
     override fun putBucketLifecycleConfiguration(lifecycleParams: LifecycleParams) {
@@ -101,62 +67,39 @@ class HuaweiCloudService:ObsApi {
     }
 
     override fun deleteBucket(bucketName: String) {
-        TODO("Not yet implemented")
     }
 
     override fun putObject(putParams: PutParams) {
 
-        val httpClient = HttpClients.createDefault()
-        val requestTime = HuaweiCloudTools.getCloudUploadFormatDate()
-        val httpPut = HttpPut("http://${putParams.bucketName}.obs.$REGION.myhuaweicloud.com/${putParams.key}")
-        httpPut.addHeader("Date",requestTime)
+        //uri
+        val uri = getUri(putParams.bucketName, huaweiCloudTools.region,putParams.key)
 
-        val contentMD5 = ""
-        val contentType = ""
-        val canonicalizeHeaders = ""
+
+        //header
+        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${putParams.bucketName}/${putParams.key}"
-        val strToSign = "PUT\n" +
-                "$contentMD5\n" +
-                "$contentType\n" +
-                "$requestTime\n" +
-                "$canonicalizeHeaders$canonicalizeResource"
+        val signature = getSignature("PUT","","",requestTime,"",canonicalizeResource)
+        val headerMap = mutableMapOf<String,String>()
+        headerMap["Date"] = requestTime
+        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
-        val signature = HuaweiCloudTools.signWithHmacSha1(SECURITY_KEY,strToSign)
-
-
-        val entity = if(putParams.body is String){
-            InputStreamEntity(FileInputStream(putParams.body as String))
-        }else if(putParams.body is InputStream){
-            InputStreamEntity(putParams.body as InputStream)
+        //body
+        val body = putParams.body
+        val entity = if(body is String){
+            InputStreamEntity(FileInputStream(body))
+        }else if(body is InputStream){
+            InputStreamEntity(body)
         } else{
             throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR,"body error")
         }
 
-        httpPut.entity = entity
+        //httpPut
+        val httpPut = getHttpPut(uri,headerMap,entity)
 
-        httpPut.addHeader("Authorization","OBS $ACCESS_KEY:$signature")
-        val httpResponse = httpClient.execute(httpPut)
+        //response
+        val response = setHttpClientAndGetResult(httpPut)
 
-        println("Request Message:")
-        println("${httpPut.requestLine}")
-
-        for(header in httpPut.allHeaders){
-            println("${header.name} : ${header.value}")
-        }
-
-        println("${httpPut.entity.content}")
-
-        println("Response Message:")
-        println("${httpResponse.statusLine}")
-
-        if(httpResponse.statusLine.statusCode != 200){
-            throw UploadException(ManagementExceptionCode.FILE_UPLOAD_FAILED,"file upload error")
-        }
-
-        for(header in httpResponse.allHeaders){
-            println("${header.name} : ${header.value}")
-        }
-        httpClient.close()
+        huaweiCloudResponseLog(response,httpPut)
     }
 
     override fun getObject(getParams: GetParams): Any? {
@@ -165,5 +108,78 @@ class HuaweiCloudService:ObsApi {
 
     override fun deleteObject(deleteParams: DeleteParams) {
         TODO("Not yet implemented")
+    }
+
+    fun getSignature(requestMode:String,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
+        val sign = "$requestMode\n" +
+                    "$md5\n" +
+                    "$contentType\n" +
+                    "$requestTime\n" +
+                    "$canonicalizeHeaders$canonicalizeResource"
+        return  huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey,sign)
+    }
+
+    fun setHttpClientAndGetResult(httpPut: HttpPut):CloseableHttpResponse{
+        val httpClient = HttpClients.createDefault()
+        val httpResponse = httpClient.execute(httpPut)
+        httpClient.close()
+        return httpResponse
+    }
+
+    fun getHttpPut(uri:String,headerMap:Map<String,String>,entity: HttpEntity):HttpPut{
+        val httpPut = HttpPut(uri)
+
+        headerMap.forEach{
+            httpPut.addHeader(it.key,it.value)
+        }
+
+        httpPut.entity = entity
+
+        return httpPut
+    }
+
+    fun huaweiCloudResponseLog(httpResponse:CloseableHttpResponse,httpPut: HttpPut){
+
+        logger.debug("Request Message:")
+        logger.debug("${httpPut.requestLine}")
+
+        for(header in httpPut.allHeaders){
+            logger.debug("${header.name} : ${header.value}")
+        }
+
+        logger.debug("${httpPut.entity.content}")
+
+
+        logger.debug("Response Message:")
+
+        logger.debug("${httpResponse.statusLine}")
+
+        for(header in httpResponse.allHeaders){
+            logger.debug("${header.name} : ${header.value}")
+        }
+
+        val reader = BufferedReader(InputStreamReader(httpResponse.entity.content))
+        val str = StringBuilder()
+
+        while (true){
+            val line = reader.readLine()?:break
+            str.append(line)
+        }
+
+        logger.debug(str.toString())
+
+        if(httpResponse.statusLine.statusCode != 200){
+            throw UploadException(ManagementExceptionCode.FILE_UPLOAD_FAILED,"file upload error")
+        }
+
+
+    }
+
+    fun getUri(bucketName: String,region:String,key:String):String{
+        return "http://$bucketName.obs.$region.myhuaweicloud.com/$key"
+    }
+
+    fun getUri(bucketName: String,region:String):String{
+        return "http://$bucketName.obs.$region.myhuaweicloud.com"
     }
 }

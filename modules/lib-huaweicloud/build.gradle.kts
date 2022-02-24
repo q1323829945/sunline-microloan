@@ -8,6 +8,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
     implementation("com.huaweicloud:esdk-obs-java-bundle:3.21.11")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
+    implementation("joda-time:joda-time:2.10.13")
+
 
 
     implementation(project(":lib-exceptions"))
