@@ -1,22 +1,18 @@
 package cn.sunline.saas.huaweicloud.services
 
-import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.huaweicloud.config.ACCESS_KEY
 import cn.sunline.saas.huaweicloud.config.HuaweiCloudTools
 import cn.sunline.saas.huaweicloud.config.REGION
 import cn.sunline.saas.huaweicloud.config.SECURITY_KEY
-import cn.sunline.saas.huaweicloud.model.HuaweiCloudData
 import cn.sunline.saas.obs.api.*
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.entity.InputStreamEntity
 import org.apache.http.impl.client.HttpClients
 import org.springframework.stereotype.Service
-import java.io.BufferedReader
 import java.io.FileInputStream
-import java.io.InputStreamReader
-import java.lang.StringBuilder
+import java.io.InputStream
 
 fun main() {
     val cloud = HuaweiCloudService()
@@ -100,17 +96,16 @@ class HuaweiCloudService:ObsApi {
     }
 
     override fun putObject(putParams: PutParams) {
-        val data = putParams.body as HuaweiCloudData
 
         val httpClient = HttpClients.createDefault()
         val requestTime = HuaweiCloudTools.getCloudUploadFormatDate()
-        val httpPut = HttpPut("http://${putParams.bucketName}.obs.$REGION.myhuaweicloud.com/${data.documentName}")
+        val httpPut = HttpPut("http://${putParams.bucketName}.obs.$REGION.myhuaweicloud.com/${putParams.key}")
         httpPut.addHeader("Date",requestTime)
 
         val contentMD5 = ""
         val contentType = ""
         val canonicalizeHeaders = ""
-        val canonicalizeResource = "/${putParams.bucketName}/${data.documentName}"
+        val canonicalizeResource = "/${putParams.bucketName}/${putParams.key}"
         val strToSign = "PUT\n" +
                 "$contentMD5\n" +
                 "$contentType\n" +
@@ -118,8 +113,16 @@ class HuaweiCloudService:ObsApi {
                 "$canonicalizeHeaders$canonicalizeResource"
 
         val signature = HuaweiCloudTools.signWithHmacSha1(SECURITY_KEY,strToSign)
-        val inputStream = FileInputStream(data.documentLocation)
-        val entity = InputStreamEntity(inputStream)
+
+
+        val entity = if(putParams.body is String){
+            InputStreamEntity(FileInputStream(putParams.body as String))
+        }else if(putParams.body is InputStream){
+            InputStreamEntity(putParams.body as InputStream)
+        } else{
+            throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR,"body error")
+        }
+
         httpPut.entity = entity
 
         httpPut.addHeader("Authorization","OBS $ACCESS_KEY:$signature")
@@ -144,10 +147,7 @@ class HuaweiCloudService:ObsApi {
         for(header in httpResponse.allHeaders){
             println("${header.name} : ${header.value}")
         }
-
-
         httpClient.close()
-
     }
 
     override fun getObject(getParams: GetParams): Any? {

@@ -22,5 +22,6 @@ dependencies {
 	implementation(project(":lib-response"))
 	implementation(project(":lib-document"))
 	implementation(project(":lib-obs-api"))
+	implementation(project(":lib-huaweicloud"))
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
