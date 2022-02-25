@@ -1,26 +1,28 @@
 package cn.sunline.saas.snowflake.services
 
-import cn.sunline.saas.redis.services.RedisClient
+import cn.sunline.saas.snowflake.SnowflakeApplication
 import cn.sunline.saas.snowflake.`interface`.SnowflakeInterface
 import cn.sunline.saas.snowflake.config.MAX_CLOCK_BACK
 import cn.sunline.saas.snowflake.config.MAX_SEQUENCE
+import cn.sunline.saas.snowflake.config.RedisConfigTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
 import org.assertj.core.api.Assertions.assertThat
+import org.springframework.test.context.ContextConfiguration
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = [RedisConfigTest::class])
 class SnowflakeServiceTest {
 
 
     @Autowired
     private lateinit var snowflakeService: SnowflakeInterface
 
+
     @Test
     fun `get one Id`(){
         val id = snowflakeService.nextId()
-
         assertThat(id).isNotNull
     }
 
@@ -79,4 +81,7 @@ class SnowflakeServiceTest {
     private fun timeGen():Long{
         return System.currentTimeMillis()
     }
+
+
+
 }

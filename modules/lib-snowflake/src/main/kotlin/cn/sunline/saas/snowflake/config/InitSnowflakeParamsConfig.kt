@@ -10,21 +10,21 @@ import javax.annotation.PostConstruct
 @Component
 class InitSnowflakeParamsConfig {
 
-//    @Autowired
-//    private lateinit var redisClient: RedisClient
+    @Autowired
+    private lateinit var redisClient: RedisClient
 
     var workId: Long = -1
     var datacenterId:Long = -1
 
     @PostConstruct
     fun initWorkId(){
-        workId = 1
-//        if(workId == -1L){
-//            workId = redisClient.getMapItem<Long>(SNOWFLAKE_REDIS_HASH, WORKER_ID_REDIS_KEY)?:0L
-//            workId = (workId + 1) and MAX_WORKER
-//            println("workId: $workId")
-//            redisClient.addToMap(SNOWFLAKE_REDIS_HASH, WORKER_ID_REDIS_KEY,workId)
-//        }
+//        workId = 1
+        if(workId == -1L){
+            workId = redisClient.getMapItem<Long>(SNOWFLAKE_REDIS_HASH, WORKER_ID_REDIS_KEY)?:0L
+            workId = (workId + 1) and MAX_WORKER
+            println("workId: $workId")
+            redisClient.addToMap(SNOWFLAKE_REDIS_HASH, WORKER_ID_REDIS_KEY,workId)
+        }
     }
 
     @PostConstruct
