@@ -80,7 +80,7 @@ class HuaweiCloudService:ObsApi {
 
 
         //httpDelete
-        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap,null)
+        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap)
 
         //response
         val response = setHttpClientAndGetResult(httpDelete)
@@ -136,7 +136,7 @@ class HuaweiCloudService:ObsApi {
 
 
         //httpGet
-        val httpGet = getHttpRequest(HttpRequestMethod.GET,uri,headerMap,null)
+        val httpGet = getHttpRequest(HttpRequestMethod.GET,uri,headerMap)
 
         //response
         val response = setHttpClientAndGetResult(httpGet)
@@ -159,7 +159,7 @@ class HuaweiCloudService:ObsApi {
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
         //httpDelete
-        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap,null)
+        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap)
 
         //response
         val response = setHttpClientAndGetResult(httpDelete)
@@ -181,6 +181,10 @@ class HuaweiCloudService:ObsApi {
         val httpResponse = httpClient.execute(httpRequestBase)
         httpClient.close()
         return httpResponse
+    }
+
+    fun getHttpRequest(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>):HttpRequestBase{
+        return getHttpRequest(httpMethod,uri,headerMap,null)
     }
 
     fun getHttpRequest(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: HttpEntity?):HttpRequestBase{
@@ -211,25 +215,25 @@ class HuaweiCloudService:ObsApi {
 
     fun huaweiCloudResponseLog(httpResponse:CloseableHttpResponse,httpRequestBase: HttpRequestBase){
 
-//        logger.debug("Request Message:")
+        logger.debug("Request Message:")
 
-        println("${httpRequestBase.requestLine}")
+        logger.debug("${httpRequestBase.requestLine}")
 
         for(header in httpRequestBase.allHeaders){
-            println("${header.name} : ${header.value}")
+            logger.debug("${header.name} : ${header.value}")
         }
 
         if(httpRequestBase is HttpPut){
-            println("${httpRequestBase.entity.content}")
+            logger.debug("${httpRequestBase.entity.content}")
 
         }
 
-        println("Response Message:")
+        logger.debug("Response Message:")
 
-        println("${httpResponse.statusLine}")
+        logger.debug("${httpResponse.statusLine}")
 
         for(header in httpResponse.allHeaders){
-            println("${header.name} : ${header.value}")
+            logger.debug("${header.name} : ${header.value}")
         }
 
         if(httpResponse.entity != null){
@@ -241,7 +245,7 @@ class HuaweiCloudService:ObsApi {
                 str.append(line)
             }
 
-            println("这个是打印结果：$str")
+            logger.debug("response:$str")
         }
 
 
