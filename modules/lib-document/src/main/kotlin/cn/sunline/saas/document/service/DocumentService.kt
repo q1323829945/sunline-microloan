@@ -17,4 +17,6 @@ class DocumentService(private val documentRepo:DocumentRepository):BaseRepoServi
     fun retrieveByDirectory(directoryId:Long):MutableList<Document>?{
         return documentRepo.findByDirectoryId(directoryId)
     }
+
+
 }

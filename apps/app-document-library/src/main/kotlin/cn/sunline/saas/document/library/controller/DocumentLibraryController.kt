@@ -1,16 +1,17 @@
 package cn.sunline.saas.document.library.controller
 
-import cn.sunline.saas.document.model.DocumentFormat
-import cn.sunline.saas.document.model.DocumentInvolvementType
-import cn.sunline.saas.document.model.DocumentStatus
-import cn.sunline.saas.document.model.DocumentType
+import cn.sunline.saas.document.model.*
+import cn.sunline.saas.document.service.DocumentService
+import cn.sunline.saas.obs.api.ObsApi
+import cn.sunline.saas.obs.api.PutParams
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 /**
@@ -24,6 +25,7 @@ import java.util.*
 class DocumentLibraryController {
 
     data class DTODocumentDirectoryEntry(
+        val documentId: Long,
         val documentName: String,
         val documentVersion: String,
         val documentType: DocumentType,
@@ -32,6 +34,7 @@ class DocumentLibraryController {
         val creationDate: Date,
         val documentLocation: String,
         val involvement: DTODocumentInvolvement,
+        var documentStoreReference:String?
     )
 
     data class DTODocumentInvolvement(val partyId: Long, val involvementType: DocumentInvolvementType)
@@ -45,13 +48,34 @@ class DocumentLibraryController {
         val documentFormat: DocumentFormat,
         val creationDate: Date,
         val documentLocation: String,
-        val involvement: DTODocumentInvolvement,
+        val involvement: DTODocumentInvolvement?,
         val documentStatus: DocumentStatus
     )
+
+    @Autowired
+    private lateinit var documentService:DocumentService
+
+    @Autowired
+    private lateinit var huaweiService: ObsApi
+
+
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping("Register")
     fun register(@RequestBody dtoDocumentDirectoryEntry: DTODocumentDirectoryEntry): ResponseEntity<DTOResponseSuccess<DTOResponseDocumentDirectoryEntry>> {
 
-        return DTOResponseSuccess(DTOResponseDocumentDirectoryEntry()).response()
+        val key = dtoDocumentDirectoryEntry.creationDate.time.toString() + dtoDocumentDirectoryEntry.documentName
+
+        //TODO: how to get bucket
+        huaweiService.putObject(PutParams("lizheng-test",key,dtoDocumentDirectoryEntry.documentLocation))
+
+        dtoDocumentDirectoryEntry.documentStoreReference = key
+        val document = objectMapper.convertValue<Document>(dtoDocumentDirectoryEntry)
+
+        val saveDocument = documentService.save(document)
+        val responseDocument = objectMapper.convertValue<DTOResponseDocumentDirectoryEntry>(saveDocument)
+
+        return DTOResponseSuccess(responseDocument).response()
     }
+
 }

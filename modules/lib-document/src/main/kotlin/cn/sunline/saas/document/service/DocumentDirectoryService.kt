@@ -13,4 +13,10 @@ import org.springframework.stereotype.Service
  */
 @Service
 class DocumentDirectoryService(private val documentDirectoryRepo: DocumentDirectoryRepository) :
-    BaseRepoService<DocumentDirectory, Long>(documentDirectoryRepo)
+    BaseRepoService<DocumentDirectory, Long>(documentDirectoryRepo) {
+
+
+
+
+
+}

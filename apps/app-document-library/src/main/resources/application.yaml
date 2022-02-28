@@ -12,7 +12,7 @@ spring:
     enabled: true
 
 server:
-  port : 8081
+  port : 8083
 
 management:
   endpoints:
@@ -23,12 +23,27 @@ management:
 datasource:
   default-datasource-url: "jdbc:mysql://localhost:3306"
   default-datasource-username: "root"
-  default-datasource-password: "Ph1lip@123"
+  default-datasource-password: "123456"
   default-datasource-database: "db_saas"
   default-datasource-option-flags: "useSSL=false&serverTimezone=UTC"
   default-datasource-driver: "com.mysql.cj.jdbc.Driver"
   tenant-datasource-url: "jdbc:mysql://localhost:3306"
   tenant-datasource-username: "root"
-  tenant-datasource-password: "Ph1lip@123"
+  tenant-datasource-password: "123456"
   tenant-datasource-option-flags: "useSSL=false&serverTimezone=UTC"
   tenant-datasource-driver: "com.mysql.cj.jdbc.Driver"
+
+
+huawei:
+  cloud:
+    accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
+    securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
+    region: "cn-east-3"
+    bucketName: "lizheng-test"
+
+
+logging:
+  level:
+    cn.sunline.saas.huaweicloud: trace
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"

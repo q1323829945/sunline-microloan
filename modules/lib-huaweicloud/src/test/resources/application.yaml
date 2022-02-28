@@ -1,0 +1,14 @@
+
+huawei:
+  cloud:
+    accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
+    securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
+    region: "cn-east-3"
+    bucketName: "lizheng-test"
+
+
+logging:
+  level:
+    cn.sunline.saas.huaweicloud: trace
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
