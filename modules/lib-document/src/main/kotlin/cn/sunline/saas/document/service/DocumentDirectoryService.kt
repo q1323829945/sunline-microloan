@@ -1,8 +1,8 @@
 package cn.sunline.saas.document.service
 
-import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.document.model.DocumentDirectory
 import cn.sunline.saas.document.repository.DocumentDirectoryRepository
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 
 /**
@@ -13,10 +13,4 @@ import org.springframework.stereotype.Service
  */
 @Service
 class DocumentDirectoryService(private val documentDirectoryRepo: DocumentDirectoryRepository) :
-    BaseRepoService<DocumentDirectory, Long>(documentDirectoryRepo) {
-
-
-
-
-
-}
+    BaseMultiTenantRepoService<DocumentDirectory, Long>(documentDirectoryRepo)

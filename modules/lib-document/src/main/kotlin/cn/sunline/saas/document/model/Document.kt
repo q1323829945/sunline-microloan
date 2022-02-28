@@ -1,5 +1,6 @@
 package cn.sunline.saas.document.model
 
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -59,7 +60,12 @@ class Document(
     var involvements: MutableList<DocumentInvolvement> = mutableListOf(),
 
     @NotNull
-    @Column(name = "document_store_reference", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
+    @Column(
+        name = "document_store_reference",
+        nullable = false,
+        length = 256,
+        columnDefinition = "varchar(256) not null"
+    )
     var documentStoreReference: String,
 
     @CreationTimestamp
@@ -70,4 +76,17 @@ class Document(
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
 
-)
+) : MultiTenant {
+
+    @NotNull
+    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long? {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
+    }
+}
