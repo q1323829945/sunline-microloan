@@ -1,8 +1,8 @@
 package cn.sunline.saas.document.service
 
-import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.document.model.Document
 import cn.sunline.saas.document.repository.DocumentRepository
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
  * @date 2022/2/21 16:24
  */
 @Service
-class DocumentService(private val documentRepo:DocumentRepository):BaseRepoService<Document,Long>(documentRepo){
+class DocumentService(private val documentRepo: DocumentRepository): BaseMultiTenantRepoService<Document, Long>(documentRepo){
 
     fun retrieveByDirectory(directoryId:Long):MutableList<Document>?{
         return documentRepo.findByDirectoryId(directoryId)

@@ -1,5 +1,6 @@
 package cn.sunline.saas.document.model
 
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull
 @Table(name = "document_directory")
 class DocumentDirectory(
     @Id
-    @Column(name="directory_id",nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "directory_id", nullable = false, columnDefinition = "bigint not null")
     val directoryId: Long,
 
     @NotNull
@@ -43,4 +44,17 @@ class DocumentDirectory(
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-)
+) : MultiTenant {
+
+    @NotNull
+    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long? {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
+    }
+}

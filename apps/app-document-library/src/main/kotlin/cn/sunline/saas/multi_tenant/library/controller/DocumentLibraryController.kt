@@ -1,4 +1,4 @@
-package cn.sunline.saas.document.library.controller
+package cn.sunline.saas.multi_tenant.library.controller
 
 import cn.sunline.saas.document.model.*
 import cn.sunline.saas.document.service.DocumentService

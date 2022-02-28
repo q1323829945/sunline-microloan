@@ -6,9 +6,10 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
 import java.io.Serializable
-import java.util.*
 
 abstract class BaseRepoService<T, ID: Serializable>(private val baseRepository: BaseRepository<T, ID>) {
+
+
     fun getOne(id: ID): T? {
         return baseRepository.findByIdOrNull(id)
     }
@@ -32,4 +33,5 @@ abstract class BaseRepoService<T, ID: Serializable>(private val baseRepository: 
     fun save(list: Iterable<T>): Iterable<T> {
         return baseRepository.saveAll(list)
     }
+
 }
