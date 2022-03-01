@@ -1,10 +1,7 @@
 package cn.sunline.saas.huaweicloud.services
 
 import cn.sunline.saas.exceptions.UploadException
-import cn.sunline.saas.obs.api.BucketParams
-import cn.sunline.saas.obs.api.CreateBucketConfiguration
-import cn.sunline.saas.obs.api.ObsApi
-import cn.sunline.saas.obs.api.PutParams
+import cn.sunline.saas.obs.api.*
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,13 +21,18 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `create bucket`(){
-        val bucket = BucketParams("lizheng-test3", CreateBucketConfiguration("cn-east-3"))
+        val bucket = BucketParams("lizheng-test13", CreateBucketConfiguration("cn-east-3"))
         huaweiCloudService.createBucket(bucket)
     }
 
     @Test
+    fun `delete bucket`(){
+        huaweiCloudService.deleteBucket("lizheng-test10")
+    }
+
+    @Test
     fun `object path upload`(){
-        val put = PutParams("lizheng-test","mimimi2.JPG","D:\\123.JPG")
+        val put = PutParams("lizheng-test","mimimi3.JPG","D:\\123.JPG")
         huaweiCloudService.putObject(put)
     }
 
@@ -51,5 +53,17 @@ class HuaweiCloudServiceTest {
         }
     }
 
+    @Test
+    fun `get object`(){
+        val get = GetParams("lizheng-test","mimimi2.JPG")
 
+        huaweiCloudService.getObject(get)
+    }
+
+    @Test
+    fun `delete object`(){
+        val del = DeleteParams("lizheng-test","mimimi2.JPG")
+
+        huaweiCloudService.deleteObject(del)
+    }
 }
