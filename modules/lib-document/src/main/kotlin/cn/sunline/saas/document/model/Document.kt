@@ -60,12 +60,7 @@ class Document(
     var involvements: MutableList<DocumentInvolvement> = mutableListOf(),
 
     @NotNull
-    @Column(
-        name = "document_store_reference",
-        nullable = false,
-        length = 256,
-        columnDefinition = "varchar(256) not null"
-    )
+    @Column(name = "document_store_reference",nullable = false,length = 256,columnDefinition = "varchar(256) not null")
     var documentStoreReference: String,
 
     @CreationTimestamp

@@ -9,12 +9,7 @@ class DatasourceConfig (
     var defaultDatasourceUrl: String = "jdbc:mysql://localhost:3306",
     var defaultDatasourceUsername: String = "",
     var defaultDatasourcePassword: String = "",
-    var defaultDatasourceDatabase: String = "db_saas",
+    var defaultDatasourceDatabase: String = "db_saas_loan",
     var defaultDatasourceDriver: String = "com.mysql.cj.jdbc.Driver",
     var defaultDatasourceOptionFlags: String = "useSSL=false&serverTimezone=UTC",
-    var tenantDatasourceUrl: String = "jdbc:mysql://localhost:3306",
-    var tenantDatasourceUsername: String = "",
-    var tenantDatasourcePassword: String = "",
-    var tenantDatasourceDriver: String = "com.mysql.cj.jdbc.Driver",
-    var tenantDatasourceOptionFlags: String = "useSSL=false&serverTimezone=UTC"
 )
