@@ -1,12 +1,10 @@
 package cn.sunline.saas.document.generation.services
 
-import cn.sunline.saas.document.generation.factory.FileConvertFactory
 import cn.sunline.saas.document.generation.models.FileType
 import cn.sunline.saas.document.generation.models.TemplateType
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFParagraph
 import org.apache.poi.xwpf.usermodel.XWPFTable
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.FileInputStream
@@ -14,8 +12,6 @@ import java.io.InputStream
 
 @Service
 class FileGeneration {
-    @Autowired
-    private lateinit var fileConvertFactory: FileConvertFactory
 
     fun generation(templateType: TemplateType, params: Map<String, String>, convertType: FileType, filePath: String, fileName: String): String{
         return generation(templateType.url, params, convertType, filePath, fileName)
@@ -30,7 +26,7 @@ class FileGeneration {
 
         val document = fillTemplate(templateStream, params)
 
-        val convert = fileConvertFactory.getFIleConvert(convertType)
+        val convert = convertType.convent
 
         return convert.convert(document, filePath, fileName)
     }
