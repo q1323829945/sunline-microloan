@@ -1,4 +1,4 @@
-package cn.sunline.saas.snowflake.config
+package cn.sunline.saas.seq.snowflake.config
 
 const val INIT_TIMESTAMP:Long = 1645414066687L
 
