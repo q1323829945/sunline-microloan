@@ -1,9 +1,9 @@
 package cn.sunline.saas.document.services.controller
 
+import cn.sunline.saas.document.model.DocumentType
 import cn.sunline.saas.document.template.modules.DocumentTemplate
-import cn.sunline.saas.document.template.modules.DocumentType
+import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.modules.LanguageType
-import cn.sunline.saas.document.template.modules.TemplateType
 import cn.sunline.saas.document.template.services.DocumentTemplateService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -14,7 +14,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,7 +31,8 @@ class DocumentTemplateController {
             val documentStoreReference:String,
             val bucketName:String,
             val languageType:LanguageType,
-            val documentType:DocumentType
+            val fileType:FileType,
+            val documentType: DocumentType
     )
 
     data class DTODocumentTemplateView(
@@ -41,6 +41,7 @@ class DocumentTemplateController {
             val documentStoreReference:String,
             val bucketName:String,
             val languageType:LanguageType,
+            val fileType:FileType,
             val documentType:DocumentType
     )
 

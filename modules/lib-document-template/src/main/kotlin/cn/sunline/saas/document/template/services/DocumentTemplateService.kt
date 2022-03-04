@@ -15,7 +15,7 @@ class DocumentTemplateService(private val documentTemplateRepository: DocumentTe
         oldOne.documentStoreReference = newOne.documentStoreReference
         oldOne.languageType = newOne.languageType
         oldOne.documentType = newOne.documentType
-
+        oldOne.fileType = newOne.fileType
         return this.save(oldOne)
     }
 }

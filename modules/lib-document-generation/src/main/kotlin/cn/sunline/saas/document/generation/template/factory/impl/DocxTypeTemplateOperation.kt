@@ -1,7 +1,5 @@
 package cn.sunline.saas.document.generation.template.factory.impl
 
-import cn.sunline.saas.document.generation.config.TemplateParams
-import cn.sunline.saas.document.generation.models.FileType
 import cn.sunline.saas.document.generation.template.factory.BaseTemplateOperation
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFParagraph
@@ -13,7 +11,6 @@ class DocxTypeTemplateOperation : BaseTemplateOperation {
 
     override fun fillTemplate(inputStream: InputStream, params: Map<String, String>): XWPFDocument {
 
-//        val d = Document
         val document = XWPFDocument(inputStream)
         //paragraphs
         val documentParagraphs = document.paragraphs

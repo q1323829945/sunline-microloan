@@ -9,6 +9,7 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-obs-api"))
+    implementation(project(":lib-document"))
     api(project(":lib-base-jpa"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
