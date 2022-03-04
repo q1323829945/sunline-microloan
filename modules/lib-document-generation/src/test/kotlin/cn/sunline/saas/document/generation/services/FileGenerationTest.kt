@@ -2,7 +2,7 @@ package cn.sunline.saas.document.generation.services
 
 import cn.sunline.saas.document.generation.config.FileGeneration
 import cn.sunline.saas.document.generation.config.TemplateParams
-import cn.sunline.saas.document.generation.models.FileType
+import cn.sunline.saas.document.template.modules.FileType
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -17,13 +17,13 @@ class FileGenerationTest {
 
     @Test
     fun `generation from docx stream`(){
-        val file = FileInputStream(File("D:\\新建文件夹\\合同填充\\移动CA中心个人数字证书申请表.docx"))
+        val file = FileInputStream(File("D:\\test\\ca.docx"))
         val params = mapOf(Pair("\${sign}","授权人"),Pair("\${idNo}","身份证"),Pair("\${year}","2022")
         ,Pair("\${month}","3"),Pair("\${day}","1"))
-        val temp = TemplateParams(file,DocumentType.DOCX)
+        val temp = TemplateParams(file,FileType.DOCX)
         val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
 
-        val outputFile = FileOutputStream(File("D:\\test\\移动CA中心个人数字证书申请表.pdf"))
+        val outputFile = FileOutputStream(File("D:\\test\\myNewCA.pdf"))
 
         var len = 0
 
@@ -41,13 +41,13 @@ class FileGenerationTest {
 
     @Test
     fun `generation from pdf stream`(){
-        val file = FileInputStream(File("D:\\english.pdf"))
+        val file = FileInputStream(File("D:\\test\\ok.pdf"))
         val params = mapOf(Pair("\$","asd"),Pair("\${idNo}","99885511"),Pair("\${year}","2022")
                 ,Pair("\${month}","3"),Pair("\${day}","1"),Pair("\${sign}","Mr.Bean"),Pair("\${params}","GETONE"))
-        val temp = TemplateParams(file,DocumentType.PDF)
+        val temp = TemplateParams(file,FileType.PDF)
         val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
 
-        val outputFile = FileOutputStream(File("D:\\newEnglish2.pdf"))
+        val outputFile = FileOutputStream(File("D:\\test\\newEnglish2.pdf"))
 
         var len = 0
 
