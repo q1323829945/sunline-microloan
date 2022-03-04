@@ -1,6 +1,7 @@
-package cn.sunline.saas.document.generation.factory.impl
+package cn.sunline.saas.document.generation.convert.factory.impl
 
-import cn.sunline.saas.document.generation.factory.BaseFileConvert
+import cn.sunline.saas.document.generation.convert.factory.BaseFileConvert
+import org.apache.poi.hwpf.HWPFDocument
 import org.apache.poi.xwpf.converter.pdf.PdfOptions
 import org.apache.poi.xwpf.converter.pdf.internal.PdfMapper
 import org.apache.poi.xwpf.usermodel.XWPFDocument
@@ -17,10 +18,10 @@ class ConvertToPDF: BaseFileConvert {
             val byteArrayOutputStream = ByteArrayOutputStream()
             val mapper = PdfMapper(document, byteArrayOutputStream, options, null)
             mapper.start()
-
-
             return ByteArrayInputStream(byteArrayOutputStream.toByteArray())
-        }else{
+        } else if (document is InputStream){
+            return document
+        } else {
             throw Exception("document error")
         }
     }

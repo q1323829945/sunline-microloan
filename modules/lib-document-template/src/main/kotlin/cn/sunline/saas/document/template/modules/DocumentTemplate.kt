@@ -1,4 +1,4 @@
-package cn.sunline.saas.document.generation.models
+package cn.sunline.saas.document.template.modules
 
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -21,9 +21,12 @@ class DocumentTemplate(
     @NotNull
     @Column(name = "bucket_name", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var bucketName: String,
-    
-    @NotNull
-    @Column(name = "template_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
-    var templateType:TemplateType,
 
+    @NotNull
+    @Column(name = "language_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    var languageType: LanguageType,
+
+    @NotNull
+    @Column(name = "document_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    var documentType: DocumentType,
 )

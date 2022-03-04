@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.InputStream
 
 
@@ -21,13 +22,13 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `create bucket`(){
-        val bucket = BucketParams("lizheng-test13", CreateBucketConfiguration("cn-east-3"))
+        val bucket = BucketParams("lizheng-test10", CreateBucketConfiguration("cn-east-3"))
         huaweiCloudService.createBucket(bucket)
     }
 
     @Test
     fun `delete bucket`(){
-        huaweiCloudService.deleteBucket("lizheng-test10")
+        huaweiCloudService.deleteBucket("lizheng-test13")
     }
 
     @Test
@@ -55,9 +56,23 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `get object`(){
-        val get = GetParams("lizheng-test","mimimi2.JPG")
+        val get = GetParams("lizheng-test","zxsqs.pdf")
 
-        huaweiCloudService.getObject(get)
+        val arrayInputStream = huaweiCloudService.getObject(get) as InputStream
+
+        val outputStream = FileOutputStream(File("qqq.pdf"))
+
+        val bytes = ByteArray(1024)
+        var len = 0
+        while (true){
+            len = arrayInputStream.read(bytes)
+            if(len == -1){
+                break
+            }
+
+            outputStream.write(bytes,0,len)
+        }
+
     }
 
     @Test

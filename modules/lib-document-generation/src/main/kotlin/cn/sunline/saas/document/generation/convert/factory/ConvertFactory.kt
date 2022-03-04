@@ -1,6 +1,6 @@
-package cn.sunline.saas.document.generation.factory
+package cn.sunline.saas.document.generation.convert.factory
 
-import cn.sunline.saas.document.generation.factory.impl.ConvertToPDF
+import cn.sunline.saas.document.generation.convert.factory.impl.ConvertToPDF
 import cn.sunline.saas.document.generation.models.FileType
 import cn.sunline.saas.document.generation.models.FileType.*
 import org.springframework.stereotype.Component

@@ -12,13 +12,26 @@ dependencies {
 
     implementation("org.apache.poi:poi:3.10.1")
     implementation("org.apache.poi:poi-ooxml:3.10.1")
+    implementation("org.apache.poi:poi-scratchpad:3.10.1")
+
+
     implementation("org.apache.poi:ooxml-schemas:1.1")
     implementation("fr.opensagres.xdocreport:xdocreport:1.0.6")
     implementation("com.lowagie:itext:2.1.7")
+    implementation("com.itextpdf:itextpdf:5.2.0")
     implementation("com.itextpdf:itext-asian:5.2.0")
+    implementation("e-iceblue:spire.doc.free:3.9.0")
+
+
+
+
+
+
+
 
 
     implementation(project(":lib-exceptions"))
+    implementation(project(":lib-document-template"))
     api(project(":lib-base-jpa"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
