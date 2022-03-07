@@ -8,5 +8,6 @@ data class RuleResult(
 )
 
 interface RuleApi {
-    fun execute(data:Any,condition: Condition):RuleResult
+    fun execute(data:Map<String,Any>,conditions: List<Condition>):RuleResult
+
 }

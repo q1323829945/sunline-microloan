@@ -1,6 +1,5 @@
 package cn.sunline.saas.rule.aviator.services
 
-import cn.sunline.saas.rule.aviator.modules.RuleParams
 import cn.sunline.saas.rule.engine.api.RuleApi
 import cn.sunline.saas.rule.engine.api.RuleResult
 import cn.sunline.saas.rule.engine.model.Condition
@@ -9,19 +8,26 @@ import org.springframework.stereotype.Service
 
 @Service
 class AviatorRule: RuleApi {
-    override fun execute(data: Any, condition: Condition): RuleResult {
-        val params = data as List<RuleParams>
-        val map = HashMap<String,Any>()
-        params.forEach{
-            map[it.key] = it.value
-        }
-        var reason = condition.description
 
-        map.forEach{
+    override fun execute(data: Map<String, Any>, conditions: List<Condition>): RuleResult {
+
+        val reasonStringBuffer = StringBuffer("(")
+        for(idx in conditions.indices){
+            reasonStringBuffer.append(conditions[idx].description)
+            if(idx != conditions.size -1){
+                reasonStringBuffer.append(") && (")
+            }
+        }
+        reasonStringBuffer.append(")")
+
+        var reason = reasonStringBuffer.toString()
+
+        data.forEach{
             reason = reason.replace(it.key,it.value.toString())
         }
 
-        return RuleResult(AviatorEvaluator.execute(condition.description,map),reason)
+        return RuleResult(AviatorEvaluator.execute(reasonStringBuffer.toString(),data),reason)
     }
+
 
 }
