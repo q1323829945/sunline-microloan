@@ -47,7 +47,7 @@ class FileGenerationTest {
         val temp = TemplateParams(file,FileType.PDF)
         val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
 
-        val outputFile = FileOutputStream(File("D:\\test\\newEnglish2.pdf"))
+        val outputFile = FileOutputStream(File("D:\\test\\newEnglish3.pdf"))
 
         var len = 0
 

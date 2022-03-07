@@ -1,6 +1,7 @@
 package cn.sunline.saas.document.generation.template.factory.impl
 
 import cn.sunline.saas.document.generation.template.factory.BaseTemplateOperation
+import com.itextpdf.awt.geom.Rectangle2D
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.Font
 import com.itextpdf.text.pdf.*
@@ -10,16 +11,18 @@ import com.itextpdf.text.pdf.parser.RenderListener
 import com.itextpdf.text.pdf.parser.TextRenderInfo
 import java.io.*
 
-data class Coordinate(
-        val key:String,
-        val x:Float,
-        val y:Float,
-        val w:Float,
-        val h:Float,
-        val page:Int
-)
+
 
 class PdfTypeTemplateOperation : BaseTemplateOperation {
+
+    data class Coordinate(
+            val key:String,
+            val x:Float,
+            val y:Float,
+            val w:Float,
+            val h:Float,
+            val page:Int
+    )
 
     override fun fillTemplate(inputStream: InputStream, params: Map<String, String>): Any {
         val reader = PdfReader(inputStream)
@@ -58,7 +61,6 @@ class PdfTypeTemplateOperation : BaseTemplateOperation {
         return byteArrayInputStream
     }
 
-
     private fun getWordsCoordinate(reader: PdfReader):List<Coordinate>{
 
         val pageNum = reader.numberOfPages
@@ -66,120 +68,139 @@ class PdfTypeTemplateOperation : BaseTemplateOperation {
         val pdfReaderContentParser = PdfReaderContentParser(reader)
         val coordinateList = ArrayList<Coordinate>()
         for(page in 1 .. pageNum){
+            val getKeyPositionListener = GetKeyPositionListener()
+            getKeyPositionListener.page = page
+            pdfReaderContentParser.processContent(page,getKeyPositionListener)
 
-
-            val keyList = ArrayList<Coordinate>()
-
-            pdfReaderContentParser.processContent(page,object : RenderListener {
-                private var keyWord = StringBuffer()
-                private var flag = false
-                private var x:Float = -1f
-                private var y:Float = -1f
-                private var h:Float = -1f
-
-                override fun beginTextBlock() {
-                    //do noting
-                }
-
-                override fun renderText(renderInfo: TextRenderInfo?) {
-                    renderInfo?.text?.run {
-                        //start is "$" and end is "}"
-                        if(this.contains("$") && this.contains("}") && !flag){
-
-                            keyWord = StringBuffer()
-                            var idxStart = 0
-                            for(i in this.indices){
-                                if('$' == this[i]){
-                                    idxStart = i
-                                    break
-                                }
-                            }
-                            var idxEnd = 0
-                            for(i in this.indices){
-                                if('}' == this[i]){
-                                    idxEnd = i
-                                    break
-                                }
-                            }
-                            if(idxEnd+1 > idxStart) {
-                                keyWord.append(this.substring(idxStart,idxEnd+1))
-
-                                val boundingRectange = renderInfo.baseline.boundingRectange
-                                val x = boundingRectange.x
-                                val y = boundingRectange.y
-                                val h = boundingRectange.height
-                                val w = boundingRectange.width
-
-                                val coordinate = Coordinate(keyWord.toString(),x,y,w,h,page)
-                                keyList.add(coordinate)
-                            }
-                            return
-                        }
-
-                        //start is "$"
-                        if(this.contains("$") && !flag){
-
-                            val boundingRectange = renderInfo.baseline.boundingRectange
-                            x = boundingRectange.x
-                            y = boundingRectange.y
-                            h = boundingRectange.height
-
-                            keyWord = StringBuffer()
-                            var idx = 0
-                            for(i in this.indices){
-                                if('$' == this[i]){
-                                    idx = i
-                                    break
-                                }
-                            }
-                            keyWord.append(this.substring(idx))
-                            flag = true
-                            return
-                        }
-
-
-                        //end is "}"
-                        if(this.contains("}") && flag){
-                            var idx = 0
-                            for(i in this.indices){
-                                if('}' == this[i]){
-                                    idx = i
-                                    break
-                                }
-                            }
-                            keyWord.append(this.substring(0,idx+1))
-                            flag = false
-
-                            val boundingRectange = renderInfo.baseline.boundingRectange
-                            val w = boundingRectange.x - x +boundingRectange.width
-                            val coordinate = Coordinate(keyWord.toString(),x,y,w,h,page)
-                            keyList.add(coordinate)
-
-                            return
-                        }
-
-                        if(flag){
-                            keyWord.append(this)
-                        }
-                    }
-
-                }
-
-                override fun endTextBlock() {
-                    //do noting
-                }
-
-                override fun renderImage(renderInfo: ImageRenderInfo?) {
-                    //do noting
-                }
-
-            })
-
-            coordinateList.addAll(keyList)
+            coordinateList.addAll(getKeyPositionListener.keyList)
         }
         return coordinateList
     }
 
+    private inner class GetKeyPositionListener:RenderListener{
+        private var keyWord = StringBuffer()
+        private var flag = false
+        private var x:Float = -1f
+        private var y:Float = -1f
+        private var h:Float = -1f
+
+        var page:Int = 0
+        var keyList = ArrayList<Coordinate>()
+
+        override fun renderText(renderInfo: TextRenderInfo?) {
+            renderInfo?.text?.run {
+
+                val boundingRectange = renderInfo.baseline.boundingRectange
+                //start is "$" and end is "}"
+                if(containsFullKey(this,boundingRectange)) return
+
+                //start is "$"
+                if(containsStartKey(this,boundingRectange)) return
+
+                //end is "}"
+                if(containsEndKey(this,boundingRectange)) return
+
+
+                if(flag){
+                    keyWord.append(this)
+                }
+            }
+        }
+
+        private fun containsEndKey(key: String,boundingRectange: Rectangle2D.Float):Boolean{
+            if(key.contains("}") && flag){
+                var idx = 0
+                for(i in key.indices){
+                    if('}' == key[i]){
+                        idx = i
+                        break
+                    }
+                }
+                keyWord.append(key.substring(0,idx+1))
+                flag = false
+
+                val w = boundingRectange.x - x +boundingRectange.width
+                val coordinate = Coordinate(keyWord.toString(),x,y,w,h,page)
+                keyList.add(coordinate)
+
+                return true
+            }
+            return false
+        }
+
+        private fun containsStartKey(key: String,boundingRectange: Rectangle2D.Float):Boolean{
+            if(key.contains("$") && !flag){
+
+                x = boundingRectange.x
+                y = boundingRectange.y
+                h = boundingRectange.height
+
+                keyWord = StringBuffer()
+                var idx = 0
+                for(i in key.indices){
+                    if('$' == key[i]){
+                        idx = i
+                        break
+                    }
+                }
+                keyWord.append(key.substring(idx))
+                flag = true
+                return true
+            }
+            return false
+        }
+
+        private fun containsFullKey(key: String,boundingRectange: Rectangle2D.Float):Boolean{
+            if(key.contains("$") && key.contains("}") && !flag){
+
+                keyWord = StringBuffer()
+                var idxStart = 0
+                for(i in key.indices){
+                    if('$' == key[i]){
+                        idxStart = i
+                        break
+                    }
+                }
+                var idxEnd = 0
+                for(i in key.indices){
+                    if('}' == key[i]){
+                        idxEnd = i
+                        break
+                    }
+                }
+                if(idxEnd+1 > idxStart) {
+                    keyWord.append(key.substring(idxStart,idxEnd+1))
+
+                    val x = boundingRectange.x
+                    val y = boundingRectange.y
+                    val h = boundingRectange.height
+                    val w = boundingRectange.width
+
+                    val coordinate = Coordinate(keyWord.toString(),x,y,w,h,page)
+                    keyList.add(coordinate)
+                }
+                return true
+            }
+            return false
+        }
+
+
+
+
+        override fun beginTextBlock() {
+            //do noting
+        }
+
+
+        override fun endTextBlock() {
+            //do noting
+        }
+
+        override fun renderImage(renderInfo: ImageRenderInfo?) {
+            //do noting
+        }
+
+    }
 
 }
 
