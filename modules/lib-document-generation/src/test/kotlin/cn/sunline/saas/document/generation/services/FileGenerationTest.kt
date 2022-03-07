@@ -21,9 +21,13 @@ class FileGenerationTest {
         val params = mapOf(Pair("\${sign}","授权人"),Pair("\${idNo}","身份证"),Pair("\${year}","2022")
         ,Pair("\${month}","3"),Pair("\${day}","1"))
         val temp = TemplateParams(file,FileType.DOCX)
+        
+        val start = System.currentTimeMillis()
         val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
+        println(System.currentTimeMillis() - start)
 
         val outputFile = FileOutputStream(File("D:\\test\\myNewCA.pdf"))
+
 
         var len = 0
 
@@ -41,14 +45,17 @@ class FileGenerationTest {
 
     @Test
     fun `generation from pdf stream`(){
-        val file = FileInputStream(File("D:\\test\\ok.pdf"))
+        val file = FileInputStream(File("D:\\test\\myNewCA.pdf"))
         val params = mapOf(Pair("\$","asd"),Pair("\${idNo}","99885511"),Pair("\${year}","2022")
-                ,Pair("\${month}","3"),Pair("\${day}","1"),Pair("\${sign}","Mr.Bean"),Pair("\${params}","GETONE"))
+                ,Pair("\${month}","3"),Pair("\${day}","1"),Pair("\${sign}","Mr.Bean"),Pair("\${time}","2022.3.7"))
         val temp = TemplateParams(file,FileType.PDF)
+
+
+        val start = System.currentTimeMillis()
         val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
+        println(System.currentTimeMillis() - start)
 
-        val outputFile = FileOutputStream(File("D:\\test\\newEnglish3.pdf"))
-
+        val outputFile = FileOutputStream(File("D:\\test\\newEnglish4.pdf"))
         var len = 0
 
         val bytes = ByteArray(1024)

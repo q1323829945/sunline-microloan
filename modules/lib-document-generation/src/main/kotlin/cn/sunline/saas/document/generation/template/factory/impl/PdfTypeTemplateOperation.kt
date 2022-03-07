@@ -43,7 +43,7 @@ class PdfTypeTemplateOperation : BaseTemplateOperation {
                 canvas.restoreState()
 
                 canvas.beginText()
-                val bf = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.EMBEDDED);
+                val bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, "utf-8", BaseFont.EMBEDDED);
                 val font = Font(bf,10f,Font.BOLD)
                 canvas.setFontAndSize(font.baseFont,9f)
                 canvas.setTextMatrix(x,y)
