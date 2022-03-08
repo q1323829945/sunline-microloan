@@ -8,9 +8,7 @@ val daprVersion: String by rootProject.extra
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-activemq")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("io.github.microutils:kotlin-logging:${logVersion}")
     implementation("org.flywaydb:flyway-core:${flywayVersion}")
@@ -26,9 +24,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
-    implementation(project(":lib-mq"))
     api(project(":lib-seq-api"))
-
     implementation(project(":lib-snowflake"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

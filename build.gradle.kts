@@ -27,6 +27,7 @@ val redissonVersion by extra { "3.16.8" }
 val nettyVersion by extra { "4.1.74.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }
 val logVersion by extra { "2.1.21" }
+val daprVersion by extra { "1.4.0"}
 
 subprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -85,7 +86,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 }
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
