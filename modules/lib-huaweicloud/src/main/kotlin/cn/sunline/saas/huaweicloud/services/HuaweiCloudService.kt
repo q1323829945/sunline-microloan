@@ -5,21 +5,14 @@ import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.huaweicloud.config.*
 import cn.sunline.saas.huaweicloud.models.HttpRequestMethod
 import cn.sunline.saas.obs.api.*
-import org.apache.http.HttpEntity
-import org.apache.http.client.methods.*
-import org.apache.http.entity.InputStreamEntity
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.client.HttpClients
+import org.apache.commons.httpclient.HttpClient
+import org.apache.commons.httpclient.HttpMethod
+import org.apache.commons.httpclient.methods.*
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.util.FileCopyUtils
 import java.io.*
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-
 
 @Service
 class HuaweiCloudService:ObsApi {
@@ -50,15 +43,16 @@ class HuaweiCloudService:ObsApi {
                 "xmlns=\"http://$regin.myhuaweicloud.com/doc/$date/\">\n" +
                 "<Location>" + regin + "</Location>\n" +
                 "</CreateBucketConfiguration>"
-        val body = StringEntity(createBucketTemplate)
+
+        val inputStream = ByteArrayInputStream(createBucketTemplate.toByteArray())
+
+        val body = InputStreamRequestEntity(inputStream)
 
         //httpPut
-        val httpPut = getHttpRequest(HttpRequestMethod.PUT,uri,headerMap,body)
+        val httpPut = getHttpMethod(HttpRequestMethod.PUT,uri,headerMap,body)
 
-        //response
-        val response = setHttpClientAndGetResult(httpPut)
-
-        huaweiCloudResponseLog(response,httpPut)
+        //sendClint
+        sendClient(httpPut)
     }
 
 
@@ -80,13 +74,10 @@ class HuaweiCloudService:ObsApi {
 
 
         //httpDelete
-        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap)
+        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE,uri,headerMap)
 
-        //response
-        val response = setHttpClientAndGetResult(httpDelete)
-
-        huaweiCloudResponseLog(response,httpDelete)
-
+        //sendClint
+        sendClient(httpDelete)
     }
 
     override fun putObject(putParams: PutParams) {
@@ -106,20 +97,18 @@ class HuaweiCloudService:ObsApi {
         //body
         val body = putParams.body
         val entity = if(body is String){
-            InputStreamEntity(FileInputStream(body))
+            InputStreamRequestEntity(FileInputStream(body))
         }else if(body is InputStream){
-            InputStreamEntity(body)
+            InputStreamRequestEntity(body)
         } else{
             throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR,"body error")
         }
 
         //httpPut
-        val httpPut = getHttpRequest(HttpRequestMethod.PUT,uri,headerMap,entity)
+        val httpPut = getHttpMethod(HttpRequestMethod.PUT,uri,headerMap,entity)
 
-        //response
-        val response = setHttpClientAndGetResult(httpPut)
-
-        huaweiCloudResponseLog(response,httpPut)
+        //sendClint
+        sendClient(httpPut)
     }
 
     override fun getObject(getParams: GetParams): Any? {
@@ -136,14 +125,12 @@ class HuaweiCloudService:ObsApi {
 
 
         //httpGet
-        val httpGet = getHttpRequest(HttpRequestMethod.GET,uri,headerMap)
+        val httpGet = getHttpMethod(HttpRequestMethod.GET,uri,headerMap)
 
-        //response
-        val response = setHttpClientAndGetResult(httpGet)
+        //sendClint
+        sendClient(httpGet)
 
-//        huaweiCloudResponseLog(response,httpGet)
-        //TODO: outputSteam throw error:stock closed
-        return null
+        return getResponseStream(httpGet)
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {
@@ -159,12 +146,10 @@ class HuaweiCloudService:ObsApi {
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
         //httpDelete
-        val httpDelete = getHttpRequest(HttpRequestMethod.DELETE,uri,headerMap)
+        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE,uri,headerMap)
 
-        //response
-        val response = setHttpClientAndGetResult(httpDelete)
-
-        huaweiCloudResponseLog(response,httpDelete)
+        //sendClint
+        sendClient(httpDelete)
     }
 
     fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
@@ -176,84 +161,59 @@ class HuaweiCloudService:ObsApi {
         return  huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey,sign)
     }
 
-    fun setHttpClientAndGetResult(httpRequestBase: HttpRequestBase):CloseableHttpResponse{
-        val httpClient = HttpClients.createDefault()
-        val httpResponse = httpClient.execute(httpRequestBase)
-        httpClient.close()
-        return httpResponse
+    fun getResponseStream(httpMethod:HttpMethod):InputStream{
+        val inputStream = httpMethod.responseBodyAsStream
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        val bytes = ByteArray(1024)
+        var len = 0
+        while (true){
+            len = inputStream.read(bytes)
+
+            if(len == -1){
+                break
+            }
+            byteArrayOutputStream.write(bytes,0,len)
+        }
+
+        return ByteArrayInputStream(byteArrayOutputStream.toByteArray())
     }
 
-    fun getHttpRequest(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>):HttpRequestBase{
-        return getHttpRequest(httpMethod,uri,headerMap,null)
+    fun sendClient(httpMethod:HttpMethod) {
+        val httpClient = HttpClient()
+        val status = httpClient.executeMethod(httpMethod)
+
+        logger.debug("status:$status")
+        if(status != 200 && status != 204){
+            throw UploadException(ManagementExceptionCode.FILE_UPLOAD_FAILED,"file upload error")
+        }
     }
 
-    fun getHttpRequest(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: HttpEntity?):HttpRequestBase{
+
+    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>):HttpMethod{
+        return getHttpMethod(httpMethod,uri,headerMap,null)
+    }
+
+    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: RequestEntity?):HttpMethod{
         val httpRequest =  if(httpMethod == HttpRequestMethod.GET){
-            HttpGet(uri)
+            GetMethod(uri)
         }else if(httpMethod == HttpRequestMethod.DELETE){
-            HttpDelete(uri)
+            DeleteMethod(uri)
         }else if (httpMethod == HttpRequestMethod.PUT){
-            HttpPut(uri)
-
+            PutMethod(uri)
         }else if(httpMethod == HttpRequestMethod.POST){
-            HttpPost(uri)
+            PostMethod(uri)
         }else{
             throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR)
         }
         headerMap.forEach{
-            httpRequest.addHeader(it.key,it.value)
+            httpRequest.addRequestHeader(it.key,it.value)
         }
 
-        if(httpRequest is HttpPut){
-            httpRequest.entity = entity
+        if(httpRequest is PutMethod){
+            httpRequest.requestEntity = entity
         }
 
         return httpRequest
-    }
-
-
-
-    fun huaweiCloudResponseLog(httpResponse:CloseableHttpResponse,httpRequestBase: HttpRequestBase){
-
-        logger.debug("Request Message:")
-
-        logger.debug("${httpRequestBase.requestLine}")
-
-        for(header in httpRequestBase.allHeaders){
-            logger.debug("${header.name} : ${header.value}")
-        }
-
-        if(httpRequestBase is HttpPut){
-            logger.debug("${httpRequestBase.entity.content}")
-
-        }
-
-        logger.debug("Response Message:")
-
-        logger.debug("${httpResponse.statusLine}")
-
-        for(header in httpResponse.allHeaders){
-            logger.debug("${header.name} : ${header.value}")
-        }
-
-        if(httpResponse.entity != null){
-            val reader = BufferedReader(InputStreamReader(httpResponse.entity.content))
-            val str = StringBuilder()
-
-            while (true){
-                val line = reader.readLine()?:break
-                str.append(line)
-            }
-
-            logger.debug("response:$str")
-        }
-
-
-        if(httpResponse.statusLine.statusCode != 200 && httpResponse.statusLine.statusCode != 204){
-            throw UploadException(ManagementExceptionCode.FILE_UPLOAD_FAILED,"file upload error")
-        }
-
-
     }
 
     fun getUri(bucketName: String,region:String,key:String):String{

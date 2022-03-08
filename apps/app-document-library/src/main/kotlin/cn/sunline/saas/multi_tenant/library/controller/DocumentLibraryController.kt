@@ -73,6 +73,7 @@ class DocumentLibraryController {
         val document = objectMapper.convertValue<Document>(dtoDocumentDirectoryEntry)
 
         val saveDocument = documentService.save(document)
+
         val responseDocument = objectMapper.convertValue<DTOResponseDocumentDirectoryEntry>(saveDocument)
 
         return DTOResponseSuccess(responseDocument).response()

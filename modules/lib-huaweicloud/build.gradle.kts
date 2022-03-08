@@ -6,8 +6,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
-    implementation("com.huaweicloud:esdk-obs-java-bundle:3.21.11")
-    implementation("org.apache.httpcomponents:httpclient:4.5.13")
+    implementation("commons-httpclient:commons-httpclient:3.1")
+
     implementation("joda-time:joda-time:2.10.13")
 
 

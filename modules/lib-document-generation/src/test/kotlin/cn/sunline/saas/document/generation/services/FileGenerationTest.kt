@@ -1,7 +1,8 @@
 package cn.sunline.saas.document.generation.services
 
 import cn.sunline.saas.document.generation.config.FileGeneration
-import cn.sunline.saas.document.generation.models.FileType
+import cn.sunline.saas.document.generation.config.TemplateParams
+import cn.sunline.saas.document.template.modules.FileType
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,13 +16,18 @@ class FileGenerationTest {
     private lateinit var fileGeneration: FileGeneration
 
     @Test
-    fun `generation from stream`(){
-        val file = FileInputStream(File("D:\\新建文件夹\\合同填充\\征信授权书.docx"))
+    fun `generation from docx stream`(){
+        val file = FileInputStream(File("D:\\test\\ca.docx"))
         val params = mapOf(Pair("\${sign}","授权人"),Pair("\${idNo}","身份证"),Pair("\${year}","2022")
         ,Pair("\${month}","3"),Pair("\${day}","1"))
-        val inputStream = fileGeneration.generation(file,params, FileType.PDF)
+        val temp = TemplateParams(file,FileType.DOCX)
+        
+        val start = System.currentTimeMillis()
+        val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
+        println(System.currentTimeMillis() - start)
 
-        val outputFile = FileOutputStream(File("D:\\新的征信2222.pdf"))
+        val outputFile = FileOutputStream(File("D:\\test\\myNewCA.pdf"))
+
 
         var len = 0
 
@@ -33,11 +39,35 @@ class FileGenerationTest {
             if(len == -1){
                 break
             }
-
             outputFile.write(bytes)
         }
+    }
+
+    @Test
+    fun `generation from pdf stream`(){
+        val file = FileInputStream(File("D:\\test\\myNewCA.pdf"))
+        val params = mapOf(Pair("\$","asd"),Pair("\${idNo}","99885511"),Pair("\${year}","2022")
+                ,Pair("\${month}","3"),Pair("\${day}","1"),Pair("\${sign}","Mr.Bean"),Pair("\${time}","2022.3.7"))
+        val temp = TemplateParams(file,FileType.PDF)
 
 
+        val start = System.currentTimeMillis()
+        val inputStream = fileGeneration.generation(temp,params, FileType.PDF)
+        println(System.currentTimeMillis() - start)
+
+        val outputFile = FileOutputStream(File("D:\\test\\newEnglish4.pdf"))
+        var len = 0
+
+        val bytes = ByteArray(1024)
+
+        while (true){
+            len = inputStream.read(bytes)
+
+            if(len == -1){
+                break
+            }
+            outputFile.write(bytes)
+        }
     }
 
 }

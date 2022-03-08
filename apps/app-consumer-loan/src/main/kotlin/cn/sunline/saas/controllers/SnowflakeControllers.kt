@@ -1,6 +1,6 @@
 package cn.sunline.saas.controllers
 
-import cn.sunline.saas.snowflake.`interface`.SnowflakeInterface
+import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 class SnowflakeControllers {
 
     @Autowired
-    private lateinit var snowflakeService: SnowflakeInterface
+    private lateinit var snowflakeService: Sequence
 
     @GetMapping
     fun getId(): Long {
