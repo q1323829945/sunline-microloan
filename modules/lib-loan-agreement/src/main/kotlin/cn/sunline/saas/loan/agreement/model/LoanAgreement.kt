@@ -38,7 +38,12 @@ class LoanAgreement(
 
     @NotNull
     @Column(nullable = false, precision = 19, scale = 2, columnDefinition = "decimal(19,2) not null")
-    var amount: BigDecimal = BigDecimal.ZERO
+    var amount: BigDecimal = BigDecimal.ZERO,
+
+    @NotNull
+    @Column(nullable = false, length = 3, columnDefinition = "varchar(3) not null")
+    var currency: String
+
 ) : Agreement<LoanArrangement>(
     id,
     agreementType,

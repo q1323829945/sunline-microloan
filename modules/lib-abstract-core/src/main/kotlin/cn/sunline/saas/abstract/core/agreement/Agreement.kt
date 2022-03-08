@@ -51,7 +51,7 @@ abstract class Agreement<T:Arrangement>(
     @OrderBy(value = "id ASC")
     var conditions: MutableList<Condition> = mutableListOf(),
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     var arrangements: MutableList<T> = mutableListOf()
 
 )

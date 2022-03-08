@@ -41,10 +41,12 @@ class Document(
     var directoryId: Long,
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "document_status", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
     var documentStatus: DocumentStatus = DocumentStatus.NORMAL,
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "document_format", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
     var documentFormat: DocumentFormat,
 
