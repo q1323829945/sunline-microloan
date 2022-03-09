@@ -20,11 +20,15 @@ import javax.validation.constraints.NotNull
     indexes = [Index(name = "idx_interest_product_feature_product_id", columnList = "product_id")]
 )
 class InterestProductFeature(
-    id: Long? = null,
+    @Id
+    val id: Long? = null,
     type: ProductFeatureType = ProductFeatureType.PRICING,
     specification: MutableList<Condition> = mutableListOf(),
     configurationOptions: MutableList<ConfigurationParameter> = mutableListOf(),
-    productId: Long,
+
+    @NotNull
+    @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+    val productId: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -36,9 +40,14 @@ class InterestProductFeature(
     var ratePlanId: Long,
 
     @OneToOne
-    var modality: InterestProductFeatureModality
+    @JoinColumn(name = "id")
+    var interest: InterestProductFeatureModality,
 
-) : ProductFeature(id, type, specification, configurationOptions, productId), MultiTenant {
+    @OneToOne
+    @JoinColumn(name = "id")
+    var overdueInterest: OverdueInterestProductFeatureModality
+
+) : ProductFeature(), MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

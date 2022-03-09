@@ -10,23 +10,17 @@ import javax.validation.constraints.NotNull
  * @author Kevin-Cui
  * @date 2022/3/4 8:48
  */
-abstract class ProductFeature(
-    @Id
-    val id: Long? = null,
-
+abstract class ProductFeature {
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 16, columnDefinition = "varchar(16) not null")
-    val type: ProductFeatureType,
+    lateinit var type: ProductFeatureType
 
     @OneToMany(fetch = FetchType.EAGER)
-    var specification: MutableList<Condition> = mutableListOf(),
+    var specification: MutableList<Condition> = mutableListOf()
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "referenceId")
-    var configurationOptions: MutableList<ConfigurationParameter> = mutableListOf(),
+    var configurationOptions: MutableList<ConfigurationParameter> = mutableListOf()
 
-    @NotNull
-    @Column(name="product_id",nullable = false, columnDefinition = "bigint not null")
-    val productId: Long,
-)
+}

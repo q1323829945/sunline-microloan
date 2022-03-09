@@ -1,37 +1,36 @@
-package cn.sunline.saas.interest.model
+package cn.sunline.saas.repayment.model
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import jdk.jfr.Frequency
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
- * @title: RatePlan
+ * @title: InterestProductFeatureModality
  * @description: TODO
  * @author Kevin-Cui
- * @date 2022/3/7 11:09
+ * @date 2022/3/7 13:35
  */
 @Entity
 @Table(
-    name = "rate_plan",
+    name = "interest_product_feature_modality",
 )
-class RatePlan(
+class RepaymentProductFeatureModality(
     @Id
     val id: Long? = null,
 
     @NotNull
-    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    var name: String,
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "payment_method", nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    var paymentMethod: PaymentMethodType,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "rate_plan_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val type: RatePlanType = RatePlanType.STANDARD,
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "rate_plan_id")
-    var rates: MutableList<InterestRate> = mutableListOf()
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var frequency: RepaymentFrequency,
 
 ) : MultiTenant {
+
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
