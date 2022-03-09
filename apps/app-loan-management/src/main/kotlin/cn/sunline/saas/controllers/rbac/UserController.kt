@@ -1,4 +1,4 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.services.RoleService
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("users")
 class UserController {
-    data class DTORoleView(val name: String)
+    data class DTORoleView(val id:Long,val name: String)
     data class DTOUserView(val id: Long, val username: String, val email: String, val roles: List<DTORoleView>)
     data class DTOUserAdd(
             val username: String,

@@ -22,7 +22,7 @@ class TenantContextImpl(private val tenantRepo: TenantRepository) : TenantContex
     }
 
     override fun set(tenantId: String) {
-        var tenant = tenantRepo.findByIdOrNull(tenantId as Long)
+        var tenant = tenantRepo.findByIdOrNull(tenantId.toLong())
         if(tenant == null){
             //TODO remote call tenant mananger service
         }

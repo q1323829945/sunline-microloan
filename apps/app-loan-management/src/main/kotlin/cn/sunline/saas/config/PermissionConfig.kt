@@ -11,17 +11,17 @@ enum class PermissionConfig (
     USER_GET("user", "users/[0-9]+\$", RequestMethod.GET, "View user profile"),
     USER_GET_LIST("user", "users(\\?.*|\$)", RequestMethod.GET, "View user list"),
     USER_ADD("user", "users\$", RequestMethod.POST, "Add new user"),
-    USER_MODIFY("user", "users/[0-9]+\$", RequestMethod.POST, "Modify user"),
+    USER_MODIFY("user", "users/[0-9]+\$", RequestMethod.PUT, "Modify user"),
 
     ROLE_GET("role", "roles/[0-9]+\$", RequestMethod.GET, "View role profile"),
     ROLE_GET_LIST("role", "roles(\\?.*|\$)", RequestMethod.GET, "View role list"),
     ROLE_ADD("role", "roles\$", RequestMethod.POST, "Add new role"),
-    ROLE_MODIFY("role", "roles/[0-9]+\$", RequestMethod.POST, "Modify role"),
+    ROLE_MODIFY("role", "roles/[0-9]+\$", RequestMethod.PUT, "Modify role"),
 
     PERMISSION_GET("permission", "permissions/[0-9]+\$", RequestMethod.GET, "View permission profile"),
     PERMISSION_LIST("permission", "permissions(\\?.*|\$)", RequestMethod.GET, "View permission list"),
     PERMISSION_ADD("permission", "permissions\$", RequestMethod.POST, "Add new permission"),
-    PERMISSION_MODIFY("permission", "permissions/[0-9]+\$", RequestMethod.POST, "Modify permission"),
+    PERMISSION_MODIFY("permission", "permissions/[0-9]+\$", RequestMethod.PUT, "Modify permission"),
 
     TENANT_GET_LIST("tenant", "tenants(\\?.*|\$)", RequestMethod.GET, "View tenant list"),
     TENANT_MODIFY("tenant", "tenants/[0-9]+\$", RequestMethod.PUT, "Modify tenant"),

@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "permission"
+    name = "tenant_permission"
 )
-class Permission (
+class TenantPermission (
 
     @Id
     val appID: Long?,

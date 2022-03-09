@@ -1,4 +1,4 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.rbac.modules.Role
 import cn.sunline.saas.rbac.services.PermissionService
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("roles")
 class RoleController {
-    data class DTOPermissionView(val name: String)
+    data class DTOPermissionView(val id:Long,val name: String)
     data class DTORoleChange(val name: String, val remark: String, val permissionList: List<Long> = listOf())
     data class DTORoleView(val id: Long, val name: String, val remark: String, val permissions: List<DTOPermissionView>)
 

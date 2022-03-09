@@ -1,4 +1,4 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.config.PermissionConfig
 import cn.sunline.saas.menu.services.MenuService

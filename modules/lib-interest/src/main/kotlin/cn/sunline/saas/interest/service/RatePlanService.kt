@@ -14,4 +14,11 @@ import org.springframework.stereotype.Service
 @Service
 class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
     BaseMultiTenantRepoService<RatePlan, Long>(ratePlanRepository) {
+
+    fun updateOne(oldRatePlan: RatePlan, newRatePlan: RatePlan): RatePlan {
+        oldRatePlan.rates = newRatePlan.rates
+        oldRatePlan.name = newRatePlan.name
+        oldRatePlan.rates = newRatePlan.rates
+        return save(oldRatePlan)
+    }
 }

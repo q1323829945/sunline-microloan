@@ -1,8 +1,7 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.services.TokenService
 import cn.sunline.saas.rbac.services.UserService
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -10,8 +9,6 @@ import cn.sunline.saas.response.response
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -34,9 +31,4 @@ class AuthController {
         return DTOResponseSuccess(DTOLoginResponse(token)).response()
     }
 
-    @GetMapping("test")
-    @PreAuthorize("hasAuthority('USER_GET')")
-    fun test(@AuthenticationPrincipal user: User): ResponseEntity<out Any> {
-        return DTOResponseSuccess(user.username).response()
-    }
 }

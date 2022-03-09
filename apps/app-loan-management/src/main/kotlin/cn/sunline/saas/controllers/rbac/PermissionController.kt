@@ -1,4 +1,4 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.rbac.modules.Permission
 import cn.sunline.saas.rbac.services.PermissionService
