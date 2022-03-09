@@ -15,8 +15,9 @@ class MenuService {
         val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role")
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions")
         val userConfig = Menu("userConfig","sysConfig","","/dashboard/user")
+        val ratePlanConfig = Menu("ratePlanConfig","sysConfig","","/dashboard/ratePlan")
 
-        menuList = listOf(sysConfig,roleConfig,permissionConfig,userConfig)
+        menuList = listOf(sysConfig,roleConfig,permissionConfig,userConfig,ratePlanConfig)
 
     }
 
