@@ -28,9 +28,20 @@ enum class PermissionConfig (
     TENANT_STATUS_CHANGE("tenant", "tenants/[0-9]+/status", RequestMethod.PUT, "Modify tenant"),
     TENANT_DELETE("tenant", "tenants/[0-9]+\$", RequestMethod.DELETE, "Delete tenant"),
 
+    RATE_PLAN_MODIFY("ratePlan", "ratePlan/[0-9]+\$", RequestMethod.PUT, "Modify rateplan"),
+    RATE_PLAN_GET_LIST("ratePlan", "ratePlan(\\?.*|\$)", RequestMethod.GET, "View ratePlan list"),
+    RATE_PLAN_ADD("ratePlan", "ratePlan\$", RequestMethod.POST, "Add ratePlan role"),
+
+    INTEREST_RATE_ADD("interestRate", "interestRate\$", RequestMethod.POST, "Add interestRate role"),
+    INTEREST_RATE_GET_LIST("interestRate", "interestRate(\\?.*|\$)", RequestMethod.GET, "View interestRate list"),
+    INTEREST_RATE_MODIFY("interestRate", "interestRate/[0-9]+\$", RequestMethod.PUT, "Modify interestRate"),
+    INTEREST_RATE_DELETE("interestRate", "interestRate/[0-9]+\$", RequestMethod.DELETE, "Delete interestRate"),
+
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
     ROLE_MENU("menu","roleConfig", RequestMethod.GET,"View role menu"),
     PERMISSION_MENU("menu","permissionConfig", RequestMethod.GET,"View permission menu"),
     FORMAL_TENANT_MENU("menu","tenantConfig", RequestMethod.GET,"View formal tenant menu")
+
+
 }

@@ -25,7 +25,7 @@ class InterestRate(
     var period: String,
 
     @NotNull
-    @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "number(9,6) not null")
+    @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")
     var rate: BigDecimal,
 
     @NotNull

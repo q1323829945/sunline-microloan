@@ -4,7 +4,9 @@ import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.repository.InterestRateRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import org.springframework.stereotype.Service
 
+@Service
 class InterestRateService (private val interestRateRepository: InterestRateRepository) :
         BaseMultiTenantRepoService<InterestRate, Long>(interestRateRepository) {
 
@@ -12,5 +14,9 @@ class InterestRateService (private val interestRateRepository: InterestRateRepos
         oldInterestRate.period = newInterestRate.period
         oldInterestRate.rate = newInterestRate.rate
         return save(oldInterestRate)
+    }
+
+    fun deleteById(id:Long){
+        interestRateRepository.deleteById(id)
     }
 }

@@ -24,5 +24,7 @@ dependencies {
     implementation(project(":lib-rbac"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-interest"))
+    implementation(project(":lib-seq-api"))
+    implementation(project(":lib-snowflake"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

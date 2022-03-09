@@ -1,12 +1,8 @@
 package cn.sunline.saas.controllers.interest
 
-import cn.sunline.saas.controllers.rbac.RoleController
-import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
-import cn.sunline.saas.interest.service.InterestRateService
 import cn.sunline.saas.interest.service.RatePlanService
-import cn.sunline.saas.rbac.modules.Role
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -15,7 +11,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
-
+import cn.sunline.saas.seq.Sequence
 
 @RestController
 @RequestMapping("ratePlan")
@@ -24,6 +20,7 @@ class RatePlanController {
     data class DTORatesView(val id:Long,val period: String,val rate: BigDecimal)
 
     data class DTORatePlanAdd(
+            var id: Long?,
             val name: String,
             val type: RatePlanType
     )
@@ -36,20 +33,19 @@ class RatePlanController {
     )
 
     data class DTORatePlanChange(
+            val id: Long,
             val name: String,
-            val type: RatePlanType,
-            val rates: List<Long> = listOf()
+            val type: RatePlanType
     )
 
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-
     @Autowired
     private lateinit var ratePlanService:RatePlanService
 
     @Autowired
-    private lateinit var interestRateService: InterestRateService
+    private lateinit var snowflakeService: Sequence
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<Any> {
@@ -59,6 +55,7 @@ class RatePlanController {
 
     @PostMapping
     fun addOne(@RequestBody dtoRatePlan: DTORatePlanAdd): ResponseEntity<DTORatePlanView> {
+        dtoRatePlan.id = snowflakeService.nextId()
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.save(ratePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)
@@ -67,15 +64,8 @@ class RatePlanController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlanChange): ResponseEntity<DTORatePlanView> {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw Exception("Invalid role")
+        val oldRatePlan = ratePlanService.getOne(id)?: throw Exception("Invalid ratePlan")
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
-
-        if (dtoRatePlan.rates.isEmpty()) {
-            newRatePlan.rates.clear()
-        } else {
-            newRatePlan.rates = interestRateService.getByIds(dtoRatePlan.rates).toMutableList()
-        }
-
         val savedRatePlan = ratePlanService.updateOne(newRatePlan, oldRatePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)
         return ResponseEntity.ok(responseRatePlan)

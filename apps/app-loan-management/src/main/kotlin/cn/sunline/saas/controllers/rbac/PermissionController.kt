@@ -32,4 +32,5 @@ class PermissionController {
         val dtoSavedPermission = objectMapper.convertValue<DTOPermission>(savedPermission)
         return ResponseEntity.ok(dtoSavedPermission)
     }
+
 }
