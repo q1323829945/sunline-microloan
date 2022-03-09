@@ -1,10 +1,8 @@
 package cn.sunline.saas.loan.product.service
 
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeature
-import cn.sunline.saas.interest.model.InterestProductFeature
-import cn.sunline.saas.interest.model.InterestProductFeatureModality
 import cn.sunline.saas.interest.model.InterestType
-import cn.sunline.saas.interest.service.InterestProductFeatureService
+import cn.sunline.saas.interest.component.InterestProductFeatureComponent
 import cn.sunline.saas.loan.product.model.LoanProduct
 import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.loan.product.repository.LoanProductRepository
@@ -27,7 +25,7 @@ class LoanProductService(private val loanProductRepos: LoanProductRepository) :
     private lateinit var seq: Sequence
 
     @Autowired
-    private lateinit var interestProductFeatureService: InterestProductFeatureService
+    private lateinit var interestProductFeatureService: InterestProductFeatureComponent
 
     fun register(interestType: InterestType, ratePlanId: Long, frequency: String, calculationMethod: String) {
         val newProductId = seq.nextId()

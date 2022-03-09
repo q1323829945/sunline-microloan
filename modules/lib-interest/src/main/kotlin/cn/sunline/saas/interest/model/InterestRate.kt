@@ -30,7 +30,8 @@ class InterestRate(
 
     @NotNull
     @Column(name = "rate_plan_id", nullable = false, columnDefinition = "bigint not null")
-    val ratePlanId: Long,
+    var ratePlanId: Long,
+
 ) : MultiTenant {
 
     @NotNull
