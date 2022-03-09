@@ -10,14 +10,12 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
-import cn.sunline.saas.seq.Sequence
 
 @RestController
-@RequestMapping("interestRate")
+@RequestMapping("InterestRate")
 class InterestRateController {
 
     data class DTOInterestRateAdd(
-            var id: Long?,
             val period: String,
             val rate: BigDecimal,
             val ratePlanId:Long
@@ -43,8 +41,6 @@ class InterestRateController {
     @Autowired
     private lateinit var interestRateService: InterestRateService
 
-    @Autowired
-    private lateinit var snowflakeService: Sequence
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<Any> {
@@ -54,9 +50,8 @@ class InterestRateController {
 
     @PostMapping
     fun addOne(@RequestBody dtoInterestRate: DTOInterestRateAdd): ResponseEntity<DTOInterestRateView> {
-        dtoInterestRate.id = snowflakeService.nextId()
         val interestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
-        val savedInterestRate = interestRateService.save(interestRate)
+        val savedInterestRate = interestRateService.addOne(interestRate)
         val responseInterestRate = objectMapper.convertValue<DTOInterestRateView>(savedInterestRate)
         return ResponseEntity.ok(responseInterestRate)
     }

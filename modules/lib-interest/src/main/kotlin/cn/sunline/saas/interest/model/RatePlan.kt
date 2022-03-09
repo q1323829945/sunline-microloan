@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull
 )
 class RatePlan(
     @Id
-    val id: Long? = null,
+    var id: Long? = null,
 
     @NotNull
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")

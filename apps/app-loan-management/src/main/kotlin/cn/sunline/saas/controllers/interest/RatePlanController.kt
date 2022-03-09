@@ -14,13 +14,12 @@ import java.math.BigDecimal
 import cn.sunline.saas.seq.Sequence
 
 @RestController
-@RequestMapping("ratePlan")
+@RequestMapping("RatePlan")
 class RatePlanController {
 
     data class DTORatesView(val id:Long,val period: String,val rate: BigDecimal)
 
     data class DTORatePlanAdd(
-            var id: Long?,
             val name: String,
             val type: RatePlanType
     )
@@ -44,8 +43,6 @@ class RatePlanController {
     @Autowired
     private lateinit var ratePlanService:RatePlanService
 
-    @Autowired
-    private lateinit var snowflakeService: Sequence
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<Any> {
@@ -55,9 +52,8 @@ class RatePlanController {
 
     @PostMapping
     fun addOne(@RequestBody dtoRatePlan: DTORatePlanAdd): ResponseEntity<DTORatePlanView> {
-        dtoRatePlan.id = snowflakeService.nextId()
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
-        val savedRatePlan = ratePlanService.save(ratePlan)
+        val savedRatePlan = ratePlanService.addOne(ratePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)
         return ResponseEntity.ok(responseRatePlan)
     }
