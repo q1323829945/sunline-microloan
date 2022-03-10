@@ -71,7 +71,7 @@ class InterestRateController {
         val oldInterestRate = interestRateService.getOne(id)?: throw Exception("Invalid interestRate")
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
 
-        val savedInterestRate = interestRateService.updateOne(newInterestRate, oldInterestRate)
+        val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
         val responseInterestRate = objectMapper.convertValue<DTOInterestRateView>(savedInterestRate)
         return DTOResponseSuccess(responseInterestRate).response()
     }
