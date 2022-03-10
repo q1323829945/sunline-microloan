@@ -1,12 +1,17 @@
 package cn.sunline.saas.controllers.rbac
 
+import cn.sunline.saas.rbac.modules.Permission
 import cn.sunline.saas.rbac.modules.Role
 import cn.sunline.saas.rbac.services.PermissionService
 import cn.sunline.saas.rbac.services.RoleService
+import cn.sunline.saas.response.DTOPagedResponseSuccess
+import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -27,20 +32,21 @@ class RoleController {
     private lateinit var permissionService: PermissionService
 
     @GetMapping
-    fun getPaged(pageable: Pageable): ResponseEntity<Any> {
-        return ResponseEntity.ok(roleService.getPaged(pageable = pageable).map { objectMapper.convertValue<DTORoleView>(it) })
+    fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        val page = roleService.getPaged(pageable = pageable)
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORoleView>(it)}).response()
     }
 
     @PostMapping
-    fun addOne(@RequestBody dtoRole: DTORoleChange): ResponseEntity<DTORoleView> {
+    fun addOne(@RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
         val role = objectMapper.convertValue<Role>(dtoRole)
         val savedRole = roleService.save(role)
         val responseRole = objectMapper.convertValue<DTORoleView>(savedRole)
-        return ResponseEntity.ok(responseRole)
+        return DTOResponseSuccess(responseRole).response()
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoRole: DTORoleChange): ResponseEntity<DTORoleView> {
+    fun updateOne(@PathVariable id: Long, @RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
         val oldRole = roleService.getOne(id)?: throw Exception("Invalid role")
         val newRole = objectMapper.convertValue<Role>(dtoRole)
 
@@ -52,6 +58,6 @@ class RoleController {
 
         val savedRole = roleService.updateOne(oldRole, newRole)
         val responseRole = objectMapper.convertValue<DTORoleView>(savedRole)
-        return ResponseEntity.ok(responseRole)
+        return DTOResponseSuccess(responseRole).response()
     }
 }

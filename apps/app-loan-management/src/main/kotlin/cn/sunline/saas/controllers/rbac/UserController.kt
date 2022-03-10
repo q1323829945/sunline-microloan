@@ -3,10 +3,14 @@ package cn.sunline.saas.controllers.rbac
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.services.RoleService
 import cn.sunline.saas.rbac.services.UserService
+import cn.sunline.saas.response.DTOPagedResponseSuccess
+import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -35,21 +39,21 @@ class UserController {
     private lateinit var roleService: RoleService
 
     @GetMapping
-    fun getPaged(pageable: Pageable): ResponseEntity<Any> {
-        return ResponseEntity.ok(
-                userService.getPaged(pageable = pageable).map { objectMapper.convertValue<DTOUserView>(it) })
+    fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        val page = userService.getPaged(pageable = pageable)
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTOUserView>(it) }).response()
     }
 
     @PostMapping
-    fun addOne(@RequestBody dtoUser: DTOUserAdd): ResponseEntity<DTOUserView> {
+    fun addOne(@RequestBody dtoUser: DTOUserAdd): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
         val user = objectMapper.convertValue<User>(dtoUser)
         val registeredUser = userService.register(user)
         val responseUser = objectMapper.convertValue<DTOUserView>(registeredUser)
-        return ResponseEntity.ok(responseUser)
+        return DTOResponseSuccess(responseUser).response()
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoUser: DTOUserChange): ResponseEntity<DTOUserView> {
+    fun updateOne(@PathVariable id: Long, @RequestBody dtoUser: DTOUserChange): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
         val oldUser = userService.getOne(id) ?: throw Exception("Invalid user")
         val newUser = objectMapper.convertValue<User>(dtoUser)
 
@@ -61,6 +65,6 @@ class UserController {
 
         val savedUser = userService.updateOne(oldUser, newUser)
         val responseUser = objectMapper.convertValue<DTOUserView>(savedUser)
-        return ResponseEntity.ok(responseUser)
+        return DTOResponseSuccess(responseUser).response()
     }
 }

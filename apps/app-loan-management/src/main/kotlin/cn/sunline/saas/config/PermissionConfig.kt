@@ -41,7 +41,8 @@ enum class PermissionConfig (
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
     ROLE_MENU("menu","roleConfig", RequestMethod.GET,"View role menu"),
     PERMISSION_MENU("menu","permissionConfig", RequestMethod.GET,"View permission menu"),
-    FORMAL_TENANT_MENU("menu","tenantConfig", RequestMethod.GET,"View formal tenant menu")
+    FORMAL_TENANT_MENU("menu","tenantConfig", RequestMethod.GET,"View formal tenant menu"),
+    RATE_PLAN_MENU("menu","ratePlanConfig", RequestMethod.GET,"View formal tenant menu")
 
 
 }
