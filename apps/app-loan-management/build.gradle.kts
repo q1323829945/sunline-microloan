@@ -22,5 +22,7 @@ dependencies {
     implementation(project(":lib-response"))
     implementation(project(":lib-menu"))
     implementation(project(":lib-rbac"))
+    implementation(project(":lib-multi-tenant"))
+    implementation(project(":lib-interest"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

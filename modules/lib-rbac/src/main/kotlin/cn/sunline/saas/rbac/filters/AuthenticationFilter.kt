@@ -37,7 +37,7 @@ class AuthenticationFilter (
                     return
                 }
 
-                val authentication = UsernamePasswordAuthenticationToken(this, null, this?.authorities)
+                val authentication = UsernamePasswordAuthenticationToken(this, null, this.authorities)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         }

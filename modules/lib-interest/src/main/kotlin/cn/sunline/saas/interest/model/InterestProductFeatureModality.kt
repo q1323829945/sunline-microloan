@@ -1,7 +1,6 @@
 package cn.sunline.saas.interest.model
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import jdk.jfr.Frequency
 import java.math.BigDecimal
 import javax.persistence.*
 import javax.validation.constraints.NotNull

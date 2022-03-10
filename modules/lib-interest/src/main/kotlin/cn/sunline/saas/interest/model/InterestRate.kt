@@ -18,14 +18,14 @@ import javax.validation.constraints.NotNull
 )
 class InterestRate(
     @Id
-    val id: Long? = null,
+    var id: Long? = null,
 
     @NotNull
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var period: String,
 
     @NotNull
-    @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "number(9,6) not null")
+    @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")
     var rate: BigDecimal,
 
     @NotNull
