@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.model.db.RatePlan
 import cn.sunline.saas.interest.repository.RatePlanRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.beans.factory.annotation.Autowired

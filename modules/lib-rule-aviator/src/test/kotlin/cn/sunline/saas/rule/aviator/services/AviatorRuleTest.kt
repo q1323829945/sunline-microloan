@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -14,52 +15,43 @@ class AviatorRuleTest {
     private lateinit var aviatorRule: RuleApi
 
     @Test
-    fun `check false rule`(){
-        val map = HashMap<String,Any>()
+    fun `check false rule`() {
+        val map = HashMap<String, Any>()
         map["value1"] = 2
         map["value2"] = 5
 
         val conditions = ArrayList<Condition>()
-        conditions.add(Condition(null,"equals","value1 == 2"))
-        conditions.add(Condition(null,"equals","value2 < 4"))
+        val condition1 = Condition(1, "equals", "value1")
+        condition1.setValue(BigDecimal(2), null)
+        conditions.add(condition1)
+        val condition2 = Condition(2, "equals", "value2")
+        condition2.setValue(BigDecimal(4), null)
+        conditions.add(condition2)
 
 
-        val result = aviatorRule.execute(map,conditions)
+        val result = aviatorRule.execute(map, conditions)
 
         assertThat(result.result).isEqualTo(false)
-        assertThat(result.reason).isEqualTo("(2 == 2) && (5 < 4)")
-
     }
 
     @Test
-    fun `check true rule`(){
-        val map = HashMap<String,Any>()
+    fun `check true rule`() {
+        val map = HashMap<String, Any>()
         map["value1"] = 2
         map["value2"] = 3
 
         val conditions = ArrayList<Condition>()
-        conditions.add(Condition(null,"equals","value1 == 2"))
-        conditions.add(Condition(null,"equals","value2 < 4"))
+        val condition1 = Condition(1, "equals", "value1")
+        condition1.setValue(BigDecimal(2), null)
+        conditions.add(condition1)
+        val condition2 = Condition(2, "equals", "value2")
+        condition2.setValue(BigDecimal(4), null)
+        conditions.add(condition2)
 
-
-        val result = aviatorRule.execute(map,conditions)
+        val result = aviatorRule.execute(map, conditions)
 
         assertThat(result.result).isEqualTo(true)
-        assertThat(result.reason).isEqualTo("(2 == 2) && (3 < 4)")
 
-    }
-
-    @Test
-    fun `check custom multiply rule`(){
-        val map = HashMap<String,Any>()
-        map["value1"] = 3
-        map["value2"] = 4
-        val conditions = ArrayList<Condition>()
-        conditions.add(Condition(null,"multiply","multiply(value1,value2)"))
-        val result = aviatorRule.execute(map,conditions)
-
-        assertThat(result.result).isEqualTo(12.0)
-        assertThat(result.reason).isEqualTo("(multiply(3,4))")
     }
 
 }

@@ -1,6 +1,5 @@
 package cn.sunline.saas.repayment.model
 
-import cn.sunline.saas.abstract.core.banking.product.feature.ConfigurationParameter
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeature
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeatureType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
@@ -20,17 +19,19 @@ import javax.validation.constraints.NotNull
     indexes = [Index(name = "idx_repayment_product_feature_product_id", columnList = "product_id")]
 )
 class RepaymentProductFeature(
-    id: Long? = null,
-    type: ProductFeatureType = ProductFeatureType.PRICING,
-    specification: MutableList<Condition> = mutableListOf(),
-    configurationOptions: MutableList<ConfigurationParameter> = mutableListOf(),
-    productId: Long,
+    @Id
+    val id: Long? = null,
+    type: ProductFeatureType = ProductFeatureType.REPAYMENT,
+
+    @NotNull
+    @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+    val productId: Long,
 
     @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "id")
     var modality: RepaymentProductFeatureModality
 
-) : ProductFeature(id, type, specification, configurationOptions, productId),
+) : ProductFeature(),
     MultiTenant {
 
     @NotNull

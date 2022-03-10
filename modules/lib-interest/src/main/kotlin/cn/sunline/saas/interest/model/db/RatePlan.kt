@@ -1,39 +1,38 @@
-package cn.sunline.saas.interest.model
+package cn.sunline.saas.interest.model.db
 
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import java.math.BigDecimal
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
- * @title: InterestRate
+ * @title: RatePlan
  * @description: TODO
  * @author Kevin-Cui
- * @date 2022/3/7 11:17
+ * @date 2022/3/7 11:09
  */
 @Entity
 @Table(
-    name = "interest_rate",
-    indexes = [Index(name = "idx_interest_rate_plan_id", columnList = "rate_plan_id")]
+    name = "rate_plan",
 )
-class InterestRate(
+class RatePlan(
     @Id
     var id: Long? = null,
 
     @NotNull
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    var period: String,
+    var name: String,
 
     @NotNull
-    @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")
-    var rate: BigDecimal,
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "rate_plan_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    val type: RatePlanType = RatePlanType.STANDARD,
 
-    @NotNull
-    @Column(name = "rate_plan_id", nullable = false, columnDefinition = "bigint not null")
-    var ratePlanId: Long,
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "rate_plan_id")
+    var rates: MutableList<InterestRate> = mutableListOf()
 
 ) : MultiTenant {
-
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
     private var tenantId: Long = 0L

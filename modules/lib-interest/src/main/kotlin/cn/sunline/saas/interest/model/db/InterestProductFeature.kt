@@ -1,10 +1,9 @@
-package cn.sunline.saas.interest.model
+package cn.sunline.saas.interest.model.db
 
-import cn.sunline.saas.abstract.core.banking.product.feature.ConfigurationParameter
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeature
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeatureType
+import cn.sunline.saas.interest.model.InterestType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.rule.engine.model.Condition
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -23,8 +22,6 @@ class InterestProductFeature(
     @Id
     val id: Long? = null,
     type: ProductFeatureType = ProductFeatureType.PRICING,
-    specification: MutableList<Condition> = mutableListOf(),
-    configurationOptions: MutableList<ConfigurationParameter> = mutableListOf(),
 
     @NotNull
     @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")

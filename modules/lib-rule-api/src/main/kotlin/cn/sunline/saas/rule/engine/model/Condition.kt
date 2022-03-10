@@ -1,7 +1,9 @@
 package cn.sunline.saas.rule.engine.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -21,12 +23,13 @@ class Condition(
     @Id
     val id: Long? = null,
 
-    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
     @NotNull
-    var name: String,
+    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    var type: String,
 
-    @Column(nullable = false, length = 256, columnDefinition = "varchar(256) not null")
-    var description: String = "",
+    @NotNull
+    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    val marker: String,
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -36,4 +39,28 @@ class Condition(
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
 
-)
+) {
+
+    @NotNull
+    @Column(name = "max_value_range", nullable = false, columnDefinition = "bigint not null")
+    private var maxValueRange: BigDecimal = BigDecimal.valueOf(Long.MAX_VALUE)
+
+    @NotNull
+    @Column(name = "max_value_range", nullable = false, columnDefinition = "bigint not null")
+    private var minValueRange: BigDecimal = BigDecimal.valueOf(Long.MIN_VALUE)
+
+    @JsonIgnore
+    var description: String = ""
+
+    fun setValue(maxValueRange: BigDecimal?, minValueRange: BigDecimal?) {
+        if (maxValueRange != null) {
+            this.maxValueRange = maxValueRange
+        }
+        if (minValueRange != null) {
+            this.minValueRange = minValueRange
+        }
+
+        this.description = "${this.marker} > ${this.minValueRange} && ${this.marker} <= ${this.maxValueRange}"
+    }
+
+}

@@ -9,23 +9,17 @@ import javax.validation.constraints.NotNull
  * @author Kevin-Cui
  * @date 2022/3/3 16:43
  */
-abstract class Directory(
-    @Id
-    val id: Long,
-
+abstract class Directory {
     @NotNull
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    var name: String,
+    lateinit var name: String
 
     @NotNull
     @Column(nullable = false, length = 16, columnDefinition = "varchar(16) not null")
-    var version:String,
+    lateinit var version: String
 
     @NotNull
     @Column(nullable = false, length = 1, columnDefinition = "tinyint(1) not null")
-    var deleted: Boolean = false,
+    var deleted: Boolean = false
 
-    @OneToMany
-    @JoinColumn(referencedColumnName="directoryId")
-    var directoryEntrys:MutableList<DirectoryEntry> = mutableListOf()
-)
+}

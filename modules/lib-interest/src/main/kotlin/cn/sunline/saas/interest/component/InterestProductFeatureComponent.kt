@@ -1,11 +1,12 @@
 package cn.sunline.saas.interest.component
 
-import cn.sunline.saas.interest.model.*
+import cn.sunline.saas.interest.model.db.InterestProductFeature
+import cn.sunline.saas.interest.model.db.InterestProductFeatureModality
+import cn.sunline.saas.interest.model.db.OverdueInterestProductFeatureModality
+import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
+import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import cn.sunline.saas.seq.Sequence
-import java.math.BigDecimal
-import java.nio.file.attribute.GroupPrincipal
 
 /**
  * @title: InterestProductFeatureService
@@ -19,27 +20,24 @@ class InterestProductFeatureComponent {
     private lateinit var seq: Sequence
 
     fun register(
-        productId: Long,
-        interestType: InterestType,
-        ratePlanId: Long,
-        baseYearDays: BaseYearDays,
-        frequency: String,
-        overdueInterestRatePercentage: Long
+        productId: Long, interestFeatureData: DTOInterestFeatureAdd
     ): InterestProductFeature {
 
         val interestProductFeatureId = seq.nextId()
         val interestProductFeatureModality = InterestProductFeatureModality(
-            id = interestProductFeatureId, baseYearDays = baseYearDays, adjustFrequency = frequency
+            id = interestProductFeatureId,
+            baseYearDays = interestFeatureData.baseYearDays,
+            adjustFrequency = interestFeatureData.adjustFrequency
         )
         val overdueInterestProductFeature = OverdueInterestProductFeatureModality(
             id = interestProductFeatureId,
-            overdueInterestRatePercentage = overdueInterestRatePercentage
+            overdueInterestRatePercentage = interestFeatureData.overdueInterestRatePercentage
         )
         return InterestProductFeature(
             id = interestProductFeatureId,
             productId = productId,
-            interestType = interestType,
-            ratePlanId = ratePlanId,
+            interestType = interestFeatureData.interestType,
+            ratePlanId = interestFeatureData.ratePlanId,
             interest = interestProductFeatureModality,
             overdueInterest = overdueInterestProductFeature
         )

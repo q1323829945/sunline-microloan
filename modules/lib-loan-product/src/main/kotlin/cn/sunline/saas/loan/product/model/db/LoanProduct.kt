@@ -1,10 +1,11 @@
-package cn.sunline.saas.loan.product.model
+package cn.sunline.saas.loan.product.model.db
 
 import cn.sunline.saas.abstract.core.banking.product.BankingProduct
 import cn.sunline.saas.abstract.core.banking.product.BankingProductStatus
-import cn.sunline.saas.abstract.core.banking.product.feature.ConfigurationParameter
-import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeature
+import cn.sunline.saas.interest.model.db.InterestProductFeature
+import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.repayment.model.RepaymentProductFeature
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -19,15 +20,13 @@ import javax.validation.constraints.NotNull
     name = "loan_product",
     indexes = [Index(name = "idx_loan_product_product_directory_id", columnList = "product_directory_id")]
 )
-class LoanProduct<T : ProductFeature>(
-    id: Long? = null,
+class LoanProduct(
+    @Id
+    val id: Long? = null,
     identificationCode: String,
     name: String,
     version: String,
     description: String,
-    status: BankingProductStatus = BankingProductStatus.INITIATED,
-    configurationOptions: MutableList<ConfigurationParameter> = mutableListOf(),
-    features: MutableList<T> = mutableListOf(),
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -38,12 +37,16 @@ class LoanProduct<T : ProductFeature>(
     @Column(name = "loan_purpose", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var loanPurpose: String,
 
-    @NotNull
-    @Column(name = "product_directory_id", nullable = true, columnDefinition = "bigint not null")
-    var productDirectoryId: Long?
+    status: BankingProductStatus = BankingProductStatus.INITIATED
 
-) : BankingProduct<T>(id, identificationCode, name, version, description, status, configurationOptions, features),
+) : BankingProduct(),
     MultiTenant {
+
+    @OneToOne(fetch = FetchType.EAGER)
+    lateinit var interestFeature: InterestProductFeature
+
+    @OneToOne(fetch = FetchType.EAGER)
+    lateinit var repaymentFeature: RepaymentProductFeature
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

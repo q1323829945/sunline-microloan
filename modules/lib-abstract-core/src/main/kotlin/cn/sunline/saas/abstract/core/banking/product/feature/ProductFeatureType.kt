@@ -7,5 +7,5 @@ package cn.sunline.saas.abstract.core.banking.product.feature
  * @date 2022/3/7 10:50
  */
 enum class ProductFeatureType {
-    PRICING,FEE
+    PRICING,FEE,REPAYMENT
 }

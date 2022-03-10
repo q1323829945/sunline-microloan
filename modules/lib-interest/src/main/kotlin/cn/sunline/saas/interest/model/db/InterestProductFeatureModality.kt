@@ -1,7 +1,7 @@
-package cn.sunline.saas.interest.model
+package cn.sunline.saas.interest.model.db
 
+import cn.sunline.saas.interest.model.BaseYearDays
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import java.math.BigDecimal
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -13,17 +13,22 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "overdue_interest_product_feature_modality",
+    name = "interest_product_feature_modality",
 )
-class OverdueInterestProductFeatureModality(
+class InterestProductFeatureModality(
     @Id
     val id: Long? = null,
 
     @NotNull
-    @Column(name="overdue_interest_rate_percentage",nullable = false, columnDefinition = "int not null")
-    var overdueInterestRatePercentage: Long,
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "base_year_days", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var baseYearDays: BaseYearDays,
 
-) : MultiTenant {
+    @NotNull
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var adjustFrequency: String,
+
+    ) : MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

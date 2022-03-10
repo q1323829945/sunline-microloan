@@ -9,4 +9,5 @@ dependencies {
     api(project(":lib-multi-tenant"))
     api(project(":lib-seq-api"))
     implementation(project(":lib-interest"))
+    implementation(project(":lib-repayment"))
 }

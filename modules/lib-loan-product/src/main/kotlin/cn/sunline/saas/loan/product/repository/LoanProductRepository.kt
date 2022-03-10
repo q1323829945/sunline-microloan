@@ -2,7 +2,7 @@ package cn.sunline.saas.loan.product.repository
 
 import cn.sunline.saas.abstract.core.banking.product.feature.ProductFeature
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
-import cn.sunline.saas.loan.product.model.LoanProduct
+import cn.sunline.saas.loan.product.model.db.LoanProduct
 
 /**
  * @title: LoanProductRepository

@@ -29,6 +29,11 @@ class RepaymentProductFeatureModality(
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var frequency: RepaymentFrequency,
 
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var repaymentDayType: RepaymentDayType
+
 ) : MultiTenant {
 
     @NotNull

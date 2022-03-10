@@ -18,16 +18,17 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "document_directory")
 class DocumentDirectory(
-    id: Long,
+    @Id
+    val id: Long? = null,
     name: String,
-    status: DirectoryStatus,
+    version: String,
+    deleted: Boolean = false,
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
     @OrderBy("id ASC")
     var children: MutableList<DocumentDirectory> = mutableListOf(),
 
     @ManyToOne
-    @JoinColumn(name = "id")
     var parent: DocumentDirectory,
 
 
@@ -38,7 +39,7 @@ class DocumentDirectory(
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-) : Directory(id, name, status), MultiTenant {
+) : Directory(), MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

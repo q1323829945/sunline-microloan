@@ -16,11 +16,4 @@ abstract class ProductFeature {
     @Column(nullable = false, length = 16, columnDefinition = "varchar(16) not null")
     lateinit var type: ProductFeatureType
 
-    @OneToMany(fetch = FetchType.EAGER)
-    var specification: MutableList<Condition> = mutableListOf()
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(referencedColumnName = "referenceId")
-    var configurationOptions: MutableList<ConfigurationParameter> = mutableListOf()
-
 }
