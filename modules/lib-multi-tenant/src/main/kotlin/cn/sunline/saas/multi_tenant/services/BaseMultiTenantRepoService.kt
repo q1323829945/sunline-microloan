@@ -35,4 +35,5 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
 
         return getPaged(tenantSpecification, pageable)
     }
+
 }

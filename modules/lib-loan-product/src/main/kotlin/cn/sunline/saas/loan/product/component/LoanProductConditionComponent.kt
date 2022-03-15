@@ -1,12 +1,12 @@
 package cn.sunline.saas.loan.product.component
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.product.model.ConditionType
-import cn.sunline.saas.loan.product.model.LoanTermType
 import cn.sunline.saas.rule.engine.model.Condition
+import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
-import cn.sunline.saas.seq.Sequence
 
 /**
  * @title: LoanProductConditionComponent
@@ -19,16 +19,13 @@ class LoanProductConditionComponent(
     @Autowired private val seq: Sequence
 ) {
 
-    private var conditions: MutableList<Condition> = mutableListOf()
-
-    fun amountCondition(maxAmount: BigDecimal?, minAmount: BigDecimal?): LoanProductConditionComponent {
+    fun amountCondition(maxAmount: BigDecimal?, minAmount: BigDecimal?): Condition {
         val condition = Condition(seq.nextId(), ConditionType.AMOUNT.name, ConditionType.AMOUNT.getMarker())
         condition.setValue(maxAmount, minAmount)
-        conditions.add(condition)
-        return this
+        return condition
     }
 
-    fun termCondition(maxTerm: LoanTermType?, minTerm: LoanTermType?): LoanProductConditionComponent {
+    fun termCondition(maxTerm: LoanTermType?, minTerm: LoanTermType?): Condition {
         val condition = Condition(seq.nextId(), ConditionType.TERM.name, ConditionType.TERM.getMarker())
         var maxCondition: BigDecimal? = null
         if (maxTerm != null) {
@@ -40,11 +37,7 @@ class LoanProductConditionComponent(
         }
 
         condition.setValue(maxCondition, minCondition)
-        conditions.add(condition)
-        return this
+        return condition
     }
 
-    fun builder(): MutableList<Condition> {
-        return conditions
-    }
 }

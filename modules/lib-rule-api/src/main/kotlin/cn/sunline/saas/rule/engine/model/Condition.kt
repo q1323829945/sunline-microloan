@@ -16,37 +16,34 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "condition"
+    name = "condition",
 )
 class Condition(
 
-    @Id
-    val id: Long? = null,
+    @Id val id: Long,
 
-    @NotNull
-    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @NotNull @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
     var type: String,
 
-    @NotNull
-    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @NotNull @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
     val marker: String,
+
+) {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    var created: Date? = null,
+    var created: Date? = null
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-
-) {
 
     @NotNull
     @Column(name = "max_value_range", nullable = false, columnDefinition = "bigint not null")
     private var maxValueRange: BigDecimal = BigDecimal.valueOf(Long.MAX_VALUE)
 
     @NotNull
-    @Column(name = "max_value_range", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "min_value_range", nullable = false, columnDefinition = "bigint not null")
     private var minValueRange: BigDecimal = BigDecimal.valueOf(Long.MIN_VALUE)
 
     @JsonIgnore

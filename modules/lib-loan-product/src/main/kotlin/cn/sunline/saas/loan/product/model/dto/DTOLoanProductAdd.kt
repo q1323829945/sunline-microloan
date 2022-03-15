@@ -1,8 +1,10 @@
 package cn.sunline.saas.loan.product.model.dto
 
+import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.loan.product.model.LoanProductType
-import cn.sunline.saas.loan.product.model.LoanTermType
+import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import java.math.BigDecimal
 
 /**
@@ -18,14 +20,21 @@ data class DTOLoanProductAdd(
     val description: String,
     val loanProductType: LoanProductType,
     val loanPurpose: String,
-    val configuration: DTOLoanProductConfiguration,
-    val interestFeature: DTOInterestFeatureAdd
+    val amountConfiguration: DTOAmountLoanProductConfiguration?,
+    val termConfiguration: DTOTermLoanProductConfiguration?,
+    val interestFeature: DTOInterestFeatureAdd?,
+    val repaymentFeature: DTORepaymentFeatureAdd?,
+    val feeFeatures:MutableList<DTOFeeFeatureAdd>?
+)
+
+data class DTOAmountLoanProductConfiguration(
+    val maxValueRange: BigDecimal?,
+    val minValueRange: BigDecimal?,
+)
+
+data class DTOTermLoanProductConfiguration(
+    val maxValueRange: LoanTermType?,
+    val minValueRange: LoanTermType?,
 )
 
 
-data class DTOLoanProductConfiguration(
-    val maxAmount: BigDecimal?,
-    val minAmount: BigDecimal?,
-    val maxTerm: LoanTermType?,
-    val minTerm: LoanTermType?,
-)

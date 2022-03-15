@@ -4,7 +4,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("joda-time:joda-time:${jodaVersion}")
-    implementation(project(":lib-abstract-core"))
+    implementation(project(":lib-global-constant"))
     implementation(project(":lib-snowflake"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))

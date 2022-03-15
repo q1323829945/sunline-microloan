@@ -32,7 +32,7 @@ class InterestRate(
     @Column(name = "rate_plan_id", nullable = false, columnDefinition = "bigint not null")
     var ratePlanId: Long,
 
-) : MultiTenant {
+    ) : MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

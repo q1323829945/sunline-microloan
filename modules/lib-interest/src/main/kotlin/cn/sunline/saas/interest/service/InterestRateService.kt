@@ -1,13 +1,11 @@
 package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.model.db.InterestRate
 import cn.sunline.saas.interest.repository.InterestRateRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.seq.snowflake.services.SnowflakeService
+import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import cn.sunline.saas.seq.Sequence
 
 @Service
 class InterestRateService (private val interestRateRepository: InterestRateRepository) :

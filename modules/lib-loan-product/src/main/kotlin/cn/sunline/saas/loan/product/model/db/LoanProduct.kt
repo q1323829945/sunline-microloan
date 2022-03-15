@@ -1,11 +1,9 @@
 package cn.sunline.saas.loan.product.model.db
 
-import cn.sunline.saas.abstract.core.banking.product.BankingProduct
-import cn.sunline.saas.abstract.core.banking.product.BankingProductStatus
-import cn.sunline.saas.interest.model.db.InterestProductFeature
+import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.repayment.model.RepaymentProductFeature
+import cn.sunline.saas.rule.engine.model.Condition
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -18,15 +16,26 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(
     name = "loan_product",
-    indexes = [Index(name = "idx_loan_product_product_directory_id", columnList = "product_directory_id")]
 )
 class LoanProduct(
     @Id
-    val id: Long? = null,
-    identificationCode: String,
-    name: String,
-    version: String,
-    description: String,
+    val id: Long,
+
+    @NotNull
+    @Column(name = "identification_code", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    val identificationCode: String,
+
+    @NotNull
+    @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    var name: String,
+
+    @NotNull
+    @Column(nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    var version: String,
+
+    @NotNull
+    @Column(nullable = false, length = 512, columnDefinition = "varchar(512) not null")
+    var description: String,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -36,17 +45,16 @@ class LoanProduct(
     @NotNull
     @Column(name = "loan_purpose", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var loanPurpose: String,
+) : MultiTenant {
 
-    status: BankingProductStatus = BankingProductStatus.INITIATED
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "reference_id")
+    var configurationOptions: MutableList<Condition>? = mutableListOf()
 
-) : BankingProduct(),
-    MultiTenant {
-
-    @OneToOne(fetch = FetchType.EAGER)
-    lateinit var interestFeature: InterestProductFeature
-
-    @OneToOne(fetch = FetchType.EAGER)
-    lateinit var repaymentFeature: RepaymentProductFeature
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var status: BankingProductStatus = BankingProductStatus.INITIATED
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

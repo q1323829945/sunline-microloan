@@ -19,6 +19,12 @@ data class NotFoundException(
     val user: Long? = null
 ) : Exception()
 
+open class BusinessException(
+    val exceptionMessage: String? = null,
+    val statusCode: ManagementExceptionCode,
+    val user: Long? = null
+) : Exception()
+
 
 data class UploadException(
     val statusCode: ManagementExceptionCode,
