@@ -39,3 +39,6 @@ out/
 ### Other
 .DS_Store
 gradle/
+
+### Gitbook ###
+.pdf
