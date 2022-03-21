@@ -22,6 +22,7 @@ enum class ManagementExceptionCode(val code: Int) {
     //upload 4000 - 4999
     FILE_UPLOAD_FAILED(4000),
     BODY_TYPE_ERROR(4001),
+    DOCUMENT_ALREADY_EXIST(4002),
 
     //Fee 5000 - 5049
     FEE_CONFIG_ERROR(5000)

@@ -1,7 +1,9 @@
 package cn.sunline.saas.config
 
+import cn.sunline.saas.exceptions.BaseException
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.response.DTOResponseError
 import cn.sunline.saas.response.response
 import org.springframework.http.HttpHeaders
@@ -21,6 +23,11 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [(ManagementException::class)])
     fun handleManagementException(ex: ManagementException): ResponseEntity<DTOResponseError> {
         return DTOResponseError(ex.statusCode.code, ex.exceptionMessage, ex.message, ex.data).response()
+    }
+
+    @ExceptionHandler(value = [(UploadException::class)])
+    fun handleUploadException(ex:BaseException):ResponseEntity<DTOResponseError>{
+        return DTOResponseError(ex.statusCode.code,ex.exceptionMessage,ex.message,ex.data).response()
     }
 
     override fun handleMethodArgumentNotValid(ex: MethodArgumentNotValidException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {

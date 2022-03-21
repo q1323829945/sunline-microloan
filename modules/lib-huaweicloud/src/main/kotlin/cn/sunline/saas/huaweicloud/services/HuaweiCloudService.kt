@@ -101,7 +101,7 @@ class HuaweiCloudService:ObsApi {
         }else if(body is InputStream){
             InputStreamRequestEntity(body)
         } else{
-            throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR,"body error")
+            throw UploadException("body error",ManagementExceptionCode.BODY_TYPE_ERROR)
         }
 
         //httpPut
@@ -168,7 +168,7 @@ class HuaweiCloudService:ObsApi {
 
         logger.debug("status:$status")
         if(status != 200 && status != 204){
-            throw UploadException(ManagementExceptionCode.FILE_UPLOAD_FAILED,"file upload error")
+            throw UploadException("file upload error",ManagementExceptionCode.FILE_UPLOAD_FAILED)
         }
     }
 
@@ -187,7 +187,7 @@ class HuaweiCloudService:ObsApi {
         }else if(httpMethod == HttpRequestMethod.POST){
             PostMethod(uri)
         }else{
-            throw UploadException(ManagementExceptionCode.BODY_TYPE_ERROR)
+            throw UploadException(null,ManagementExceptionCode.BODY_TYPE_ERROR)
         }
         headerMap.forEach{
             httpRequest.addRequestHeader(it.key,it.value)

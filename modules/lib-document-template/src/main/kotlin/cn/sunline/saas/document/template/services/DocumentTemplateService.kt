@@ -3,6 +3,8 @@ package cn.sunline.saas.document.template.services
 import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.document.template.modules.DocumentTemplate
 import cn.sunline.saas.document.template.repositories.DocumentTemplateRepository
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.huaweicloud.config.HuaweiCloudTools
 import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.GetParams
@@ -23,6 +25,10 @@ class DocumentTemplateService(private val documentTemplateRepository: DocumentTe
     private lateinit var huaweiCloudTools:HuaweiCloudTools
 
     fun addDocumentTemplate(documentTemplate: DocumentTemplate,inputStream: InputStream):DocumentTemplate{
+        val checkTemplate = documentTemplateRepository.findByDocumentStoreReference(documentTemplate.documentStoreReference)
+        if(checkTemplate != null){
+            throw UploadException("document already exist",ManagementExceptionCode.DOCUMENT_ALREADY_EXIST)
+        }
 
         val putParams = PutParams(huaweiCloudTools.bucketName,documentTemplate.documentStoreReference,inputStream)
 
@@ -31,8 +37,14 @@ class DocumentTemplateService(private val documentTemplateRepository: DocumentTe
         return this.save(documentTemplate)
     }
 
+
     fun updateDocumentTemplate(oldOne:DocumentTemplate,newOne:DocumentTemplate,inputStream: InputStream?):DocumentTemplate{
         inputStream?.run {
+            val checkTemplate = documentTemplateRepository.findByDocumentStoreReference(newOne.documentStoreReference)
+            if(checkTemplate != null && oldOne.documentStoreReference != newOne.documentStoreReference){
+                throw UploadException("document already exist",ManagementExceptionCode.DOCUMENT_ALREADY_EXIST)
+            }
+
             val deleteParams = DeleteParams(huaweiCloudTools.bucketName,oldOne.documentStoreReference)
             huaweiCloudService.deleteObject(deleteParams)
 

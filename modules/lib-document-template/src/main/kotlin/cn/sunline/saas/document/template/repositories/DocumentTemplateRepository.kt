@@ -5,4 +5,5 @@ import cn.sunline.saas.document.template.modules.DocumentTemplate
 import org.springframework.data.jpa.repository.Query
 
 interface DocumentTemplateRepository: BaseRepository<DocumentTemplate,Long> {
+    fun findByDocumentStoreReference(documentStoreReference:String):DocumentTemplate?
 }
