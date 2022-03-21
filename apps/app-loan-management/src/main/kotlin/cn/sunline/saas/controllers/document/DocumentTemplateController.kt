@@ -29,7 +29,7 @@ class DocumentTemplateController {
             var documentStoreReference:String?,
             val directoryId: Long,
             val languageType:LanguageType,
-            val fileType:FileType,
+            var fileType:FileType?,
             val documentType: DocumentType,
             val directoryPath:String,
     )
@@ -40,8 +40,7 @@ class DocumentTemplateController {
             var documentStoreReference:String,
             val directoryId: Long,
             val languageType:LanguageType,
-            val fileType:FileType,
-            val directoryPath:String,
+            val fileType:FileType
     )
 
     data class DTODocumentTemplateChange(
@@ -49,7 +48,7 @@ class DocumentTemplateController {
             var documentStoreReference:String?,
             val directoryId: Long,
             val languageType:LanguageType,
-            val fileType:FileType,
+            var fileType:FileType,
             val documentType: DocumentType,
             val directoryPath:String?,
     )
@@ -69,6 +68,13 @@ class DocumentTemplateController {
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun addOne(@RequestPart("template") documentTemplate: DTODocumentTemplateAdd,@RequestPart("file") file: MultipartFile): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>> {
         documentTemplate.documentStoreReference = "${documentTemplate.directoryPath}/${file.originalFilename}"
+
+        try{
+            documentTemplate.fileType = FileType.valueOf(file.originalFilename!!.substring(file.originalFilename!!.lastIndexOf(".")+1).uppercase())
+        } catch (e:Exception){
+            throw Exception("file type error")
+        }
+
         val template = objectMapper.convertValue<DocumentTemplate>(documentTemplate)
         val saveTemplate = documentTemplateService.addDocumentTemplate(template,file.inputStream)
         val responseTemplate = objectMapper.convertValue<DTODocumentTemplateView>(saveTemplate)
@@ -83,6 +89,13 @@ class DocumentTemplateController {
 
         file?.originalFilename?.run {
             dtoTemplate.documentStoreReference = "${dtoTemplate.directoryPath}/${file.originalFilename}"
+
+            try{
+                dtoTemplate.fileType = FileType.valueOf(file.originalFilename!!.substring(file.originalFilename!!.lastIndexOf(".")+1).uppercase())
+            } catch (e:Exception){
+                throw Exception("file type error")
+            }
+
         }
 
         val newOne = objectMapper.convertValue<DocumentTemplate>(dtoTemplate)
@@ -109,8 +122,10 @@ class DocumentTemplateController {
         val fileName = if(template.documentStoreReference.lastIndexOf("/") == -1){
             template.documentStoreReference
         }else{
-            template.documentStoreReference.substring(template.documentStoreReference.lastIndexOf("/"))
+            template.documentStoreReference.substring(template.documentStoreReference.lastIndexOf("/")+1)
         }
+
+
 
         response.reset();
         response.contentType = "application/octet-stream";

@@ -5,7 +5,13 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = "document_template")
+@Table(name = "document_template",
+        indexes = [
+            Index(name = "idx_document_store_reference_unique", columnList = "document_store_reference",unique = true),
+        ]
+
+
+)
 class DocumentTemplate(
         @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

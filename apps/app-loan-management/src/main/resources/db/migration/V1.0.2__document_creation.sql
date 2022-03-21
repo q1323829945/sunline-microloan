@@ -22,6 +22,7 @@ CREATE TABLE `document_template` (
   `name` varchar(256) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK9iuykkrwaiwph24v8aeu6onu5` (`directory_id`),
+  UNIQUE KEY `idx_document_store_reference_unique` (`document_store_reference`),
   CONSTRAINT `FK9iuykkrwaiwph24v8aeu6onu5` FOREIGN KEY (`directory_id`) REFERENCES `document_template_directory` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

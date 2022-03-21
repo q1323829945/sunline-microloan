@@ -273,9 +273,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
 
         loanProduct.configurationOptions?.forEach {
-            println("这里是！！！！")
-            println(it.getMaxValueRange())
-            println(it.getMinValueRange())
             when (ConditionType.valueOf(it.type)) {
                 ConditionType.AMOUNT -> {
                     dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
