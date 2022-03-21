@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [(BaseException::class)])
     fun handleUploadException(ex:BaseException):ResponseEntity<DTOResponseError>{
-        return DTOResponseError(ex.statusCode.code,ex.exceptionMessage,ex.message,ex.data).response()
+        return DTOResponseError(ex.statusCode.code,ex.exceptionMessage,ex.exceptionMessage,ex.data).response()
     }
 
     override fun handleMethodArgumentNotValid(ex: MethodArgumentNotValidException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {

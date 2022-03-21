@@ -17,6 +17,11 @@ spring:
     username: "root"
     password: "123456"
     driver-class-name: "com.mysql.cj.jdbc.Driver"
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
 
 server:
   port : 8083

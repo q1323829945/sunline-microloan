@@ -30,7 +30,8 @@ class DocumentTemplateDirectoryController {
             val parentId: Long?,
             val tenantId:Long,
             val directory: List<DTOTemplateDirectoryListView>,
-            val templates:List<DTODocumentTemplateView>
+            val templates:List<DTODocumentTemplateView>,
+            val directoryPath:String
     )
 
     data class DTODocumentTemplateView(
@@ -68,21 +69,27 @@ class DocumentTemplateDirectoryController {
         //TODO:
         val directoryList = documentTemplateDirectoryService.queryAll()
 
-        val responseDirectory = getDirectoryTree(directoryList,null)
+        val responseDirectory = getDirectoryTree(directoryList,null,null)
 
         return DTOResponseSuccess(responseDirectory).response()
     }
 
-    fun getDirectoryTree(directoryList:List<DocumentTemplateDirectory>,parentId: Long?):List<DTOTemplateDirectoryListView>{
+    fun getDirectoryTree(directoryList:List<DocumentTemplateDirectory>,parentId: Long?,directoryPath:String?):List<DTOTemplateDirectoryListView>{
         val responseList = ArrayList<DTOTemplateDirectoryListView>()
         for(directory in directoryList){
             val dtoDirectoryList = ArrayList<DTOTemplateDirectoryListView>()
             //get directory children
             if(directory.parent?.id == parentId){
-                dtoDirectoryList.addAll(getDirectoryTree(directoryList, directory.id))
+                val path = if(directoryPath == null){
+                    directory.name
+                }else{
+                    "$directoryPath/${directory.name}"
+                }
+
+                dtoDirectoryList.addAll(getDirectoryTree(directoryList, directory.id,path))
                 val dtoTemplateList = objectMapper.convertValue<List<DTODocumentTemplateView>>(directory.templates)
 
-                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!,directory.name,parentId,directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList)
+                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!,directory.name,parentId,directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList,path)
                 responseList.add(dtoDirectory)
             }
 
