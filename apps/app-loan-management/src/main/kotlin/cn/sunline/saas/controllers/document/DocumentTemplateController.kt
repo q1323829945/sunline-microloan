@@ -30,7 +30,8 @@ class DocumentTemplateController {
             val directoryId: Long,
             val languageType:LanguageType,
             val fileType:FileType,
-            val documentType: DocumentType
+            val documentType: DocumentType,
+            val directoryPath:String,
     )
 
     data class DTODocumentTemplateView(
@@ -39,7 +40,8 @@ class DocumentTemplateController {
             var documentStoreReference:String,
             val directoryId: Long,
             val languageType:LanguageType,
-            val fileType:FileType
+            val fileType:FileType,
+            val directoryPath:String,
     )
 
     data class DTODocumentTemplateChange(
@@ -48,7 +50,8 @@ class DocumentTemplateController {
             val directoryId: Long,
             val languageType:LanguageType,
             val fileType:FileType,
-            val documentType: DocumentType
+            val documentType: DocumentType,
+            val directoryPath:String?,
     )
 
     @Autowired
@@ -65,7 +68,7 @@ class DocumentTemplateController {
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun addOne(@RequestPart("template") documentTemplate: DTODocumentTemplateAdd,@RequestPart("file") file: MultipartFile): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>> {
-        documentTemplate.documentStoreReference = file.originalFilename
+        documentTemplate.documentStoreReference = "${documentTemplate.directoryPath}/${file.originalFilename}"
         val template = objectMapper.convertValue<DocumentTemplate>(documentTemplate)
         val saveTemplate = documentTemplateService.addDocumentTemplate(template,file.inputStream)
         val responseTemplate = objectMapper.convertValue<DTODocumentTemplateView>(saveTemplate)
@@ -79,7 +82,7 @@ class DocumentTemplateController {
         val oldOne = documentTemplateService.getOne(id)?:throw Exception("Invalid template")
 
         file?.originalFilename?.run {
-            dtoTemplate.documentStoreReference = file.originalFilename
+            dtoTemplate.documentStoreReference = "${dtoTemplate.directoryPath}/${file.originalFilename}"
         }
 
         val newOne = objectMapper.convertValue<DocumentTemplate>(dtoTemplate)
@@ -96,14 +99,22 @@ class DocumentTemplateController {
         return DTOResponseSuccess(responseDocumentTemplate).response()
     }
 
+
+
     @GetMapping("download/{id}")
     fun download(@PathVariable id:Long,response: HttpServletResponse) {
         val template = documentTemplateService.getOne(id)?:throw Exception("Invalid template")
         val inputStream = documentTemplateService.download(template)
 
+        val fileName = if(template.documentStoreReference.lastIndexOf("/") == -1){
+            template.documentStoreReference
+        }else{
+            template.documentStoreReference.substring(template.documentStoreReference.lastIndexOf("/"))
+        }
+
         response.reset();
         response.contentType = "application/octet-stream";
-        response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(template.documentStoreReference, "UTF-8"));
+        response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
         val outputStream = response.outputStream
 
         val bytes = ByteArray(1024)
@@ -119,6 +130,4 @@ class DocumentTemplateController {
 
         inputStream.close()
     }
-
-
 }
