@@ -1,5 +1,6 @@
 package cn.sunline.saas.controllers.rbac
 
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.services.RoleService
 import cn.sunline.saas.rbac.services.UserService
@@ -53,7 +54,7 @@ class UserController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoUser: DTOUserChange): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
-        val oldUser = userService.getOne(id) ?: throw Exception("Invalid user")
+        val oldUser = userService.getOne(id) ?: throw NotFoundException("Invalid user")
         val newUser = objectMapper.convertValue<User>(dtoUser)
 
         if (dtoUser.roleList.isEmpty()) {

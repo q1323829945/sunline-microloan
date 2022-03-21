@@ -1,11 +1,10 @@
 package cn.sunline.saas.controllers.document
 
-import cn.sunline.saas.document.template.modules.DocumentTemplate
 import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.modules.LanguageType
 import cn.sunline.saas.document.template.services.DocumentTemplateDirectoryService
-import cn.sunline.saas.document.template.services.DocumentTemplateService
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -95,7 +94,7 @@ class DocumentTemplateDirectoryController {
     @PostMapping
     fun addOne(@RequestBody dtoDocumentDirectory: DTOTemplateDirectoryAdd): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
         dtoDocumentDirectory.parentId?.run {
-            val parent = documentTemplateDirectoryService.getOne(this)?:throw Exception("parent directory is invalid")
+            val parent = documentTemplateDirectoryService.getOne(this)?:throw NotFoundException("parent directory is invalid")
             dtoDocumentDirectory.parent = parent
         }
         val documentDirectory = objectMapper.convertValue<DocumentTemplateDirectory>(dtoDocumentDirectory)
@@ -106,7 +105,7 @@ class DocumentTemplateDirectoryController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoDirectory: DTOTemplateDirectoryChange): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
-        val oldOne = documentTemplateDirectoryService.getOne(id)?:throw Exception("Invalid directory")
+        val oldOne = documentTemplateDirectoryService.getOne(id)?:throw NotFoundException("Invalid directory")
         val newOne = objectMapper.convertValue<DocumentTemplateDirectory>(dtoDirectory)
         val updateOne = documentTemplateDirectoryService.update(oldOne,newOne)
         val responseDirectory = objectMapper.convertValue<DTOTemplateDirectoryView>(updateOne)
@@ -115,7 +114,7 @@ class DocumentTemplateDirectoryController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
-        val directory = documentTemplateDirectoryService.getOne(id)?:throw Exception("Invalid directory")
+        val directory = documentTemplateDirectoryService.getOne(id)?:throw NotFoundException("Invalid directory")
         val delete = documentTemplateDirectoryService.delete(directory)
         val responseDirectory = objectMapper.convertValue<DTOTemplateDirectoryView>(delete)
         return DTOResponseSuccess(responseDirectory).response()

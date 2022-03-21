@@ -1,6 +1,7 @@
 package cn.sunline.saas.controllers.rbac
 
 import cn.sunline.saas.config.PermissionConfig
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.menu.services.MenuService
 import cn.sunline.saas.rbac.services.UserService
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -37,7 +38,7 @@ class MenuController {
 
     @GetMapping
     fun getMenu(@RequestHeader("X-Authorization-Username")username:String): ResponseEntity<DTOResponseSuccess<List<DTOMenuView>>> {
-        val user = userService.getByUsername(username)?:throw Exception("Invalid user")
+        val user = userService.getByUsername(username)?:throw NotFoundException("Invalid user")
 
         val permissionSetList = user.roles.map {
             it.permissions

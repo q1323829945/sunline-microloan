@@ -7,6 +7,8 @@ enum class ManagementExceptionCode(val code: Int) {
     REQUEST_MISSING_REQUEST_PARAMETER(1002),
     NOT_FOUND_DATA(1003),
     REQUEST_RESOURCE_ACCESS_DENIED(1004),
+    DATA_ALREADY_EXIST(1005),
+    TYPE_ERROR(1006),
 
     // Auth 2000 - 2999
     AUTHORIZATION_LOGIN_FAILED(2000),
@@ -22,7 +24,6 @@ enum class ManagementExceptionCode(val code: Int) {
     //upload 4000 - 4999
     FILE_UPLOAD_FAILED(4000),
     BODY_TYPE_ERROR(4001),
-    DOCUMENT_ALREADY_EXIST(4002),
 
     //Fee 5000 - 5049
     FEE_CONFIG_ERROR(5000)

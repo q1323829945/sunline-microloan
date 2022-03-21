@@ -1,5 +1,6 @@
 package cn.sunline.saas.controllers.rbac
 
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.rbac.modules.Role
 import cn.sunline.saas.rbac.services.PermissionService
 import cn.sunline.saas.rbac.services.RoleService
@@ -45,7 +46,7 @@ class RoleController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
-        val oldRole = roleService.getOne(id)?: throw Exception("Invalid role")
+        val oldRole = roleService.getOne(id)?: throw NotFoundException("Invalid role")
         val newRole = objectMapper.convertValue<Role>(dtoRole)
 
         if (dtoRole.permissionList.isEmpty()) {

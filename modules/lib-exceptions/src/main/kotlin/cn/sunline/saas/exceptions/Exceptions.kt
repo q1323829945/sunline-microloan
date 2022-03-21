@@ -7,24 +7,24 @@ open class BaseException(
         val data: Any? = null
 ):Exception()
 
-data class ManagementException(
-    val statusCode: ManagementExceptionCode,
-    val exceptionMessage: String? = null,
-    val user: Long? = null,
-    val data: Any? = null
-) : Exception()
+class ManagementException(
+    statusCode: ManagementExceptionCode,
+    exceptionMessage: String? = null,
+    user: Long? = null,
+    data: Any? = null
+) : BaseException(statusCode, exceptionMessage, user, data)
 
-data class AuthenticationException(
-    val statusCode: ManagementExceptionCode,
-    val exceptionMessage: String? = null,
-    val user: Long? = null
-) : Exception()
+class AuthenticationException(
+    statusCode: ManagementExceptionCode,
+    exceptionMessage: String? = null,
+    user: Long? = null
+) : BaseException(statusCode, exceptionMessage, user, null)
 
-data class NotFoundException(
-    val exceptionMessage: String? = null,
-    val statusCode: ManagementExceptionCode = ManagementExceptionCode.NOT_FOUND_DATA,
-    val user: Long? = null
-) : Exception()
+class NotFoundException(
+    exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.NOT_FOUND_DATA,
+    user: Long? = null
+) : BaseException(statusCode, exceptionMessage, user, null)
 
 open class BusinessException(
     val exceptionMessage: String? = null,

@@ -1,5 +1,6 @@
 package cn.sunline.saas.controllers.interest
 
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.interest.model.db.InterestRate
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
@@ -80,7 +81,7 @@ class InterestRateController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoInterestRate: DTOInterestRateChange): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
-        val oldInterestRate = interestRateService.getOne(id)?: throw Exception("Invalid interestRate")
+        val oldInterestRate = interestRateService.getOne(id)?: throw NotFoundException("Invalid interestRate")
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
 
         val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
@@ -91,7 +92,7 @@ class InterestRateController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
-        val interestRate = interestRateService.getOne(id)?: throw Exception("Invalid interestRate")
+        val interestRate = interestRateService.getOne(id)?: throw NotFoundException("Invalid interestRate")
         interestRateService.deleteById(id)
         val responseInterestRate = objectMapper.convertValue<DTOInterestRateView>(interestRate)
         return DTOResponseSuccess(responseInterestRate).response()

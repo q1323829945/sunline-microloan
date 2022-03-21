@@ -11,6 +11,7 @@ dependencies {
     api(project(":lib-multi-tenant"))
     api(project(":lib-seq-api"))
     api(project(":lib-rule-api"))
+    implementation(project(":lib-exceptions"))
     implementation(project(":lib-interest"))
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))

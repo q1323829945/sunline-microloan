@@ -20,12 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
-    @ExceptionHandler(value = [(ManagementException::class)])
-    fun handleManagementException(ex: ManagementException): ResponseEntity<DTOResponseError> {
-        return DTOResponseError(ex.statusCode.code, ex.exceptionMessage, ex.message, ex.data).response()
-    }
-
-    @ExceptionHandler(value = [(UploadException::class)])
+    @ExceptionHandler(value = [(BaseException::class)])
     fun handleUploadException(ex:BaseException):ResponseEntity<DTOResponseError>{
         return DTOResponseError(ex.statusCode.code,ex.exceptionMessage,ex.message,ex.data).response()
     }

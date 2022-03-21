@@ -5,6 +5,9 @@ import cn.sunline.saas.document.template.modules.DocumentTemplate
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.modules.LanguageType
 import cn.sunline.saas.document.template.services.DocumentTemplateService
+import cn.sunline.saas.exceptions.ManagementException
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -72,7 +75,7 @@ class DocumentTemplateController {
         try{
             documentTemplate.fileType = FileType.valueOf(file.originalFilename!!.substring(file.originalFilename!!.lastIndexOf(".")+1).uppercase())
         } catch (e:Exception){
-            throw Exception("file type error")
+            throw ManagementException(ManagementExceptionCode.TYPE_ERROR,"file type error")
         }
 
         val template = objectMapper.convertValue<DocumentTemplate>(documentTemplate)
@@ -85,7 +88,7 @@ class DocumentTemplateController {
     @PostMapping(value = ["{id}"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateOne(@PathVariable id: Long,@RequestPart("template") dtoTemplate: DTODocumentTemplateChange,@RequestPart("file") file: MultipartFile?): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>>{
 
-        val oldOne = documentTemplateService.getOne(id)?:throw Exception("Invalid template")
+        val oldOne = documentTemplateService.getOne(id)?:throw NotFoundException("Invalid template")
 
         file?.originalFilename?.run {
             dtoTemplate.documentStoreReference = "${dtoTemplate.directoryPath}/${file.originalFilename}"
@@ -93,7 +96,7 @@ class DocumentTemplateController {
             try{
                 dtoTemplate.fileType = FileType.valueOf(file.originalFilename!!.substring(file.originalFilename!!.lastIndexOf(".")+1).uppercase())
             } catch (e:Exception){
-                throw Exception("file type error")
+                throw ManagementException(ManagementExceptionCode.TYPE_ERROR,"file type error")
             }
 
         }
@@ -106,7 +109,7 @@ class DocumentTemplateController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>> {
-        val documentTemplate = documentTemplateService.getOne(id)?: throw Exception("Invalid template")
+        val documentTemplate = documentTemplateService.getOne(id)?: throw ManagementException(ManagementExceptionCode.NOT_FOUND_DATA,"Invalid template")
         documentTemplateService.delete(documentTemplate)
         val responseDocumentTemplate = objectMapper.convertValue<DTODocumentTemplateView>(documentTemplate)
         return DTOResponseSuccess(responseDocumentTemplate).response()
@@ -116,7 +119,7 @@ class DocumentTemplateController {
 
     @GetMapping("download/{id}")
     fun download(@PathVariable id:Long,response: HttpServletResponse) {
-        val template = documentTemplateService.getOne(id)?:throw Exception("Invalid template")
+        val template = documentTemplateService.getOne(id)?:throw ManagementException(ManagementExceptionCode.NOT_FOUND_DATA,"Invalid template")
         val inputStream = documentTemplateService.download(template)
 
         val fileName = if(template.documentStoreReference.lastIndexOf("/") == -1){

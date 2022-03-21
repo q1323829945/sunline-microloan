@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.product.service
 
+import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
@@ -134,7 +135,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
     @Transactional
     fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
-        val oldLoanProduct = this.getOne(id)?:throw Exception("Invalid loan product")
+        val oldLoanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")
         //update loan product
         oldLoanProduct.name = loanProductData.name
         oldLoanProduct.version = (oldLoanProduct.version.toLong()+1L).toString()
@@ -254,7 +255,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
 
     fun getLoanProduct(id:Long): DTOLoanProductView {
-        val loanProduct = this.getOne(id)?:throw Exception("Invalid loan product")
+        val loanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
 
         loanProduct.configurationOptions?.forEach {
@@ -310,7 +311,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
-        val product = this.getOne(id) ?: throw Exception("Invalid loan product")
+        val product = this.getOne(id) ?: throw NotFoundException("Invalid loan product")
         product.status = status
         return save(product)
     }
