@@ -11,6 +11,5 @@ import org.springframework.data.jpa.repository.Query
  * @date 2022/3/11 14:33
  */
 interface RepaymentFeatureRepository:BaseRepository<RepaymentFeature,Long>{
-    @Query(value = "select * from repayment_feature where product_id = ?1", nativeQuery = true)
-    fun getOneByProductId(productId:Long):RepaymentFeature?
+    fun findByProductId(productId:Long):RepaymentFeature?
 }

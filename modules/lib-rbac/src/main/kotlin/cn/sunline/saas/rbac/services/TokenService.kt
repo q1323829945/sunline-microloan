@@ -18,6 +18,8 @@ class TokenService {
                 TOKEN_KEY_ROLES to user.authorities.map { it.authority }
         ))
 
+
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(Date())

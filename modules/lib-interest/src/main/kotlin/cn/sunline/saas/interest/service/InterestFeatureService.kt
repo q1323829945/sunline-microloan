@@ -25,7 +25,7 @@ class InterestFeatureService(private val interestFeatureRepository: InterestFeat
         return save(interestFeatureFactory.instance(productId, interestFeatureData))
     }
 
-    fun getOneByProductId(productId:Long):InterestFeature?{
-        return interestFeatureRepository.getOneByProductId(productId)
+    fun findByProductId(productId:Long):InterestFeature?{
+        return interestFeatureRepository.findByProductId(productId)
     }
 }

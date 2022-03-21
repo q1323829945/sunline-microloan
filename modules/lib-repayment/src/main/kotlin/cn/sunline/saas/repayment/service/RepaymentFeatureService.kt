@@ -24,7 +24,7 @@ class RepaymentFeatureService(private val repaymentFeatureRepo: RepaymentFeature
         return save(repaymentFeatureFactory.instance(productId, interestFeatureData))
     }
 
-    fun getOneByProductId(productId:Long):RepaymentFeature?{
-        return repaymentFeatureRepo.getOneByProductId(productId)
+    fun findByProductId(productId:Long):RepaymentFeature?{
+        return repaymentFeatureRepo.findByProductId(productId)
     }
 }

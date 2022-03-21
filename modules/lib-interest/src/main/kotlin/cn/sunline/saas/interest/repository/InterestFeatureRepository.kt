@@ -11,6 +11,5 @@ import org.springframework.data.jpa.repository.Query
  * @date 2022/3/10 16:20
  */
 interface InterestFeatureRepository : BaseRepository<InterestFeature, Long>{
-    @Query(value = "select * from interest_feature where product_id = ?1", nativeQuery = true)
-    fun getOneByProductId(productId:Long):InterestFeature?
+    fun findByProductId(productId:Long):InterestFeature?
 }

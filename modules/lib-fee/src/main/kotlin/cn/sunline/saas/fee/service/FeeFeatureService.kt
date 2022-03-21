@@ -51,7 +51,7 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
     }
 
 
-    fun getListByProductId(productId:Long):MutableList<FeeFeature>{
-        return feeFeatureRepo.getListByProductId(productId)
+    fun findByProductId(productId:Long):MutableList<FeeFeature>{
+        return feeFeatureRepo.findByProductId(productId)
     }
 }

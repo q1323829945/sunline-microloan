@@ -11,6 +11,5 @@ import org.springframework.data.jpa.repository.Query
  * @date 2022/3/14 10:35
  */
 interface FeeFeatureRepository : BaseRepository<FeeFeature, Long>{
-    @Query(value = "select * from fee_feature where product_id = ?1", nativeQuery = true)
-    fun getListByProductId(productId:Long):MutableList<FeeFeature>
+    fun findByProductId(productId:Long):MutableList<FeeFeature>
 }
