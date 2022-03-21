@@ -220,6 +220,14 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                                         it.penaltyRatio ?: BigDecimal.ZERO
                                 )
                         )
+                    } else {
+                        for(prepayment in repaymentFeature.prepayment){
+                            if(prepayment.id == it.id){
+                                prepayment.term = it.term
+                                prepayment.type = it.type
+                                prepayment.penaltyRatio = it.penaltyRatio
+                            }
+                        }
                     }
                 }
             }
@@ -255,6 +263,12 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                                         it.feeDeductType
                                 )
                         )
+                    } else {
+                        for(feeFeature in feeFeatures){
+                            if(feeFeature.id == it.id){
+                                feeFeature.feeDeductType = it.feeDeductType
+                            }
+                        }
                     }
                 }
             }
