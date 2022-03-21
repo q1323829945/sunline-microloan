@@ -56,7 +56,7 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `get object`(){
-        val get = GetParams("lizheng-test","zxsqs.pdf")
+        val get = GetParams("lizheng-test","ok.pdf")
 
         val arrayInputStream = huaweiCloudService.getObject(get) as InputStream
 

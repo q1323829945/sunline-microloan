@@ -11,6 +11,10 @@ dependencies {
     implementation(project(":lib-obs-api"))
     implementation(project(":lib-document"))
     api(project(":lib-base-jpa"))
+    api(project(":lib-seq-api"))
+    implementation(project(":lib-huaweicloud"))
+    implementation(project(":lib-abstract-core"))
+    implementation(project(":lib-snowflake"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.200")

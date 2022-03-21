@@ -23,4 +23,8 @@ class RepaymentFeatureService(private val repaymentFeatureRepo: RepaymentFeature
     fun register(productId: Long, interestFeatureData: DTORepaymentFeatureAdd): RepaymentFeature {
         return save(repaymentFeatureFactory.instance(productId, interestFeatureData))
     }
+
+    fun getOneByProductId(productId:Long):RepaymentFeature?{
+        return repaymentFeatureRepo.getOneByProductId(productId)
+    }
 }

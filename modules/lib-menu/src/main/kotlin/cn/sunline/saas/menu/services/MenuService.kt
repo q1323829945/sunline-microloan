@@ -16,8 +16,10 @@ class MenuService {
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions")
         val userConfig = Menu("userConfig","sysConfig","","/dashboard/user")
         val ratePlanConfig = Menu("ratePlanConfig","sysConfig","","/dashboard/ratePlan")
+        val documentTemplateConfig = Menu("documentTemplateConfig","sysConfig","","/dashboard/documentTemplate")
+        val loanProductConfig = Menu("loanProductConfig","sysConfig","","/dashboard/loanProduct")
 
-        menuList = listOf(sysConfig,roleConfig,permissionConfig,userConfig,ratePlanConfig)
+        menuList = listOf(sysConfig,roleConfig,permissionConfig,userConfig,ratePlanConfig,documentTemplateConfig,loanProductConfig)
 
     }
 

@@ -34,6 +34,11 @@ huawei:
     region: "cn-east-3"
     bucketName: "lizheng-test"
 
+redis:
+  server: 127.0.0.1:6379
+  useCluster: false
+  useSentinel: false
+  password:
 
 logging:
   level:

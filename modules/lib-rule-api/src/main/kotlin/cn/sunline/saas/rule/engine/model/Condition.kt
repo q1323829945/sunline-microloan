@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "condition",
+    name = "`condition`",
 )
 class Condition(
 
@@ -27,6 +27,10 @@ class Condition(
 
     @NotNull @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
     val marker: String,
+
+    @NotNull
+    @Column(name = "reference_id", nullable = false, columnDefinition = "bigint not null")
+    var referenceId: Long,
 
 ) {
 
@@ -60,4 +64,11 @@ class Condition(
         this.description = "${this.marker} > ${this.minValueRange} && ${this.marker} <= ${this.maxValueRange}"
     }
 
+    fun getMaxValueRange():BigDecimal{
+        return maxValueRange
+    }
+
+    fun getMinValueRange():BigDecimal{
+        return minValueRange
+    }
 }

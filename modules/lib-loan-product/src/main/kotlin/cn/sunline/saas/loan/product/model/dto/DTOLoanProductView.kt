@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.product.model.dto
 
 import cn.sunline.saas.fee.model.db.FeeFeature
+import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.db.InterestFeature
 import cn.sunline.saas.loan.product.model.LoanProductType
@@ -21,6 +22,7 @@ data class DTOLoanProductView(
         val description: String,
         val loanProductType: LoanProductType,
         val loanPurpose: String,
+        val status: BankingProductStatus,
         var amountConfiguration: DTOAmountLoanProductConfigurationView?,
         var termConfiguration: DTOTermLoanProductConfigurationView?,
         var interestFeature: InterestFeature?,
@@ -30,12 +32,12 @@ data class DTOLoanProductView(
 
 data class DTOAmountLoanProductConfigurationView(
         val id:Long,
-        val maxValueRange: BigDecimal?,
-        val minValueRange: BigDecimal?,
+        var maxValueRange: BigDecimal?,
+        var minValueRange: BigDecimal?,
 )
 
 data class DTOTermLoanProductConfigurationView(
         val id:Long,
-        val maxValueRange: LoanTermType?,
-        val minValueRange: LoanTermType?,
+        var maxValueRange: LoanTermType?,
+        var minValueRange: LoanTermType?,
 )

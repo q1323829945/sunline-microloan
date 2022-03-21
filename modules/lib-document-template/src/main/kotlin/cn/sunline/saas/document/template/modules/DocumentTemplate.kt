@@ -19,18 +19,18 @@ class DocumentTemplate(
     @Column(name = "document_store_reference", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var documentStoreReference: String,
 
-        @NotNull
-    @Column(name = "bucket_name", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
-    var bucketName: String,
+    @NotNull
+    @Column(name = "directory_id", nullable = false, columnDefinition = "bigint not null")
+    var directoryId: Long,
 
     @Column(name = "file_type", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var fileType: FileType,
 
-        @NotNull
+    @NotNull
     @Column(name = "language_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
     var languageType: LanguageType,
 
-        @NotNull
+    @NotNull
     @Column(name = "document_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
     var documentType: DocumentType,
 )

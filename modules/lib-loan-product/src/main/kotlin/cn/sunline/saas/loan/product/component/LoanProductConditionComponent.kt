@@ -19,14 +19,15 @@ class LoanProductConditionComponent(
     @Autowired private val seq: Sequence
 ) {
 
-    fun amountCondition(maxAmount: BigDecimal?, minAmount: BigDecimal?): Condition {
-        val condition = Condition(seq.nextId(), ConditionType.AMOUNT.name, ConditionType.AMOUNT.getMarker())
+    fun amountCondition(productId:Long,maxAmount: BigDecimal?, minAmount: BigDecimal?): Condition {
+        val condition = Condition(seq.nextId(), ConditionType.AMOUNT.name, ConditionType.AMOUNT.getMarker(),productId)
         condition.setValue(maxAmount, minAmount)
         return condition
     }
 
-    fun termCondition(maxTerm: LoanTermType?, minTerm: LoanTermType?): Condition {
-        val condition = Condition(seq.nextId(), ConditionType.TERM.name, ConditionType.TERM.getMarker())
+
+    fun termCondition(productId:Long,maxTerm: LoanTermType?, minTerm: LoanTermType?): Condition {
+        val condition = Condition(seq.nextId(), ConditionType.TERM.name, ConditionType.TERM.getMarker(),productId)
         var maxCondition: BigDecimal? = null
         if (maxTerm != null) {
             maxCondition = BigDecimal(maxTerm.convertDays())
@@ -38,6 +39,21 @@ class LoanProductConditionComponent(
 
         condition.setValue(maxCondition, minCondition)
         return condition
+    }
+
+    fun updateTermCondition(id:Long,maxTerm: LoanTermType?, minTerm: LoanTermType?,productId:Long): String {
+        val condition = Condition(id, ConditionType.TERM.name, ConditionType.TERM.getMarker(),productId)
+        var maxCondition: BigDecimal? = null
+        if (maxTerm != null) {
+            maxCondition = BigDecimal(maxTerm.convertDays())
+        }
+        var minCondition: BigDecimal? = null
+        if (minTerm != null) {
+            minCondition = BigDecimal(minTerm.convertDays())
+        }
+
+        condition.setValue(maxCondition, minCondition)
+        return condition.description
     }
 
 }

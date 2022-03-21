@@ -32,7 +32,7 @@ class PrepaymentFeatureModality(
     var type: PrepaymentType,
 
     @NotNull
-    @Column(name="penalty_ratio",nullable = false, scale = 9, precision = 6, columnDefinition = "number(9,6) not null")
+    @Column(name="penalty_ratio",nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")
     var penaltyRatio: BigDecimal?
 
 ) : MultiTenant {

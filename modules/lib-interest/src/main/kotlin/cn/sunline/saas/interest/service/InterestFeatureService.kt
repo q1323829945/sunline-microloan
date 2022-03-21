@@ -24,4 +24,8 @@ class InterestFeatureService(private val interestFeatureRepository: InterestFeat
     fun register(productId: Long, interestFeatureData: DTOInterestFeatureAdd): InterestFeature {
         return save(interestFeatureFactory.instance(productId, interestFeatureData))
     }
+
+    fun getOneByProductId(productId:Long):InterestFeature?{
+        return interestFeatureRepository.getOneByProductId(productId)
+    }
 }

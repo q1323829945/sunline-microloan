@@ -1,7 +1,13 @@
 package cn.sunline.saas.controllers.interest
 
-import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
+import cn.sunline.saas.interest.model.db.InterestRate
+import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.interest.service.InterestRateService
+import cn.sunline.saas.loan.product.model.LoanProductType
+import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration
+import cn.sunline.saas.loan.product.model.dto.DTOTermLoanProductConfiguration
+import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -9,7 +15,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -34,9 +39,16 @@ class InterestRateController {
     )
 
     data class DTOInterestRateChange(
-            val id: Long,
-            val period: String,
-            val rate: BigDecimal
+            val identificationCode: String,
+            val name: String,
+            val description: String,
+            val loanProductType: LoanProductType,
+            val loanPurpose: String,
+            val amountConfiguration: DTOAmountLoanProductConfiguration?,
+            val termConfiguration: DTOTermLoanProductConfiguration?,
+            val interestFeature: DTOInterestFeatureAdd?,
+            val repaymentFeature: DTORepaymentFeatureAdd?,
+            val feeFeatures:MutableList<DTOFeeFeatureAdd>?
     )
 
 

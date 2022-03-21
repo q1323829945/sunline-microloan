@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":lib-snowflake"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
+    api(project(":lib-abstract-core"))
     api(project(":lib-seq-api"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

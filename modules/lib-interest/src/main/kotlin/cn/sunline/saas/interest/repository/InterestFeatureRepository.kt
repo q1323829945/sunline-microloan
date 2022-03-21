@@ -2,6 +2,7 @@ package cn.sunline.saas.interest.repository
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
 import cn.sunline.saas.interest.model.db.InterestFeature
+import org.springframework.data.jpa.repository.Query
 
 /**
  * @title: InterestProductFeatureRepository
@@ -9,4 +10,7 @@ import cn.sunline.saas.interest.model.db.InterestFeature
  * @author Kevin-Cui
  * @date 2022/3/10 16:20
  */
-interface InterestFeatureRepository : BaseRepository<InterestFeature, Long>
+interface InterestFeatureRepository : BaseRepository<InterestFeature, Long>{
+    @Query(value = "select * from interest_feature where product_id = ?1", nativeQuery = true)
+    fun getOneByProductId(productId:Long):InterestFeature?
+}

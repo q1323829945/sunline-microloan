@@ -130,7 +130,7 @@ class HuaweiCloudService:ObsApi {
         //sendClint
         sendClient(httpGet)
 
-        return getResponseStream(httpGet)
+        return httpGet.responseBodyAsStream
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {
@@ -152,6 +152,7 @@ class HuaweiCloudService:ObsApi {
         sendClient(httpDelete)
     }
 
+
     fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
         val sign = "${requestMode.name}\n" +
                     "$md5\n" +
@@ -159,23 +160,6 @@ class HuaweiCloudService:ObsApi {
                     "$requestTime\n" +
                     "$canonicalizeHeaders$canonicalizeResource"
         return  huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey,sign)
-    }
-
-    fun getResponseStream(httpMethod:HttpMethod):InputStream{
-        val inputStream = httpMethod.responseBodyAsStream
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        val bytes = ByteArray(1024)
-        var len = 0
-        while (true){
-            len = inputStream.read(bytes)
-
-            if(len == -1){
-                break
-            }
-            byteArrayOutputStream.write(bytes,0,len)
-        }
-
-        return ByteArrayInputStream(byteArrayOutputStream.toByteArray())
     }
 
     fun sendClient(httpMethod:HttpMethod) {

@@ -1,7 +1,7 @@
 package cn.sunline.saas.controllers.interest
 
-import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.interest.model.db.RatePlan
 import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
-import cn.sunline.saas.seq.Sequence
-import org.springframework.data.domain.Page
 
 @RestController
 @RequestMapping("RatePlan")

@@ -35,10 +35,10 @@ class FeeFeature(
     @Column(name = "fee_method_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val feeMethodType: FeeMethodType,
 
-    @Column(name = "fee_amount",nullable = true, scale = 19, precision = 2, columnDefinition = "number(19,2) null")
+    @Column(name = "fee_amount",nullable = true, scale = 19, precision = 2, columnDefinition = "decimal(19,2) null")
     val feeAmount:BigDecimal?,
 
-    @Column(name = "fee_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "number(9,6) null")
+    @Column(name = "fee_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) null")
     val feeRate:BigDecimal?,
 
     @NotNull
