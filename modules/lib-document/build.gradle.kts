@@ -7,7 +7,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
-    implementation(project(":lib-abstract-core"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
 

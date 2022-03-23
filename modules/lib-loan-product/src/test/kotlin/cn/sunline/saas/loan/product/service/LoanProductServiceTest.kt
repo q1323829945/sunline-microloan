@@ -4,8 +4,6 @@ import cn.sunline.saas.fee.model.FeeDeductType
 import cn.sunline.saas.fee.model.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.interest.model.BaseYearDays
-import cn.sunline.saas.interest.model.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration

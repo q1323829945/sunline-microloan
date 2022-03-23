@@ -8,6 +8,8 @@ import cn.sunline.saas.repayment.model.RepaymentFrequency
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTime
+import org.joda.time.Instant
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -62,7 +64,8 @@ class RepaymentProductFeatureServiceTest(
         assertThat(actual).isNotNull
         assertThat(actual.payment).isNotNull
         assertThat(actual.prepayment.size).isEqualTo(3)
-        assertThat(actual.prepayment.get(0).penaltyRatio).isEqualTo(BigDecimal.ZERO)
-        assertThat(actual.prepayment.get(1).penaltyRatio).isEqualTo(BigDecimal(1.5))
+        assertThat(actual.prepayment[0].penaltyRatio).isEqualTo(BigDecimal.ZERO)
+        assertThat(actual.prepayment[1].penaltyRatio).isEqualTo(BigDecimal(1.5))
     }
+
 }

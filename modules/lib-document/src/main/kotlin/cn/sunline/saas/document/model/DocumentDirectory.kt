@@ -1,6 +1,5 @@
 package cn.sunline.saas.document.model
 
-import cn.sunline.saas.abstract.core.directory.Directory
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -20,9 +19,17 @@ import javax.validation.constraints.NotNull
 class DocumentDirectory(
     @Id
     val id: Long? = null,
-    name: String,
-    version: String,
-    deleted: Boolean = false,
+    @NotNull
+    @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    var name: String,
+
+    @NotNull
+    @Column(nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    var version: String,
+
+    @NotNull
+    @Column(nullable = false, length = 1, columnDefinition = "tinyint(1) not null")
+    var deleted: Boolean = false,
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
     @OrderBy("id ASC")
@@ -39,7 +46,7 @@ class DocumentDirectory(
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-) : Directory(), MultiTenant {
+) :  MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

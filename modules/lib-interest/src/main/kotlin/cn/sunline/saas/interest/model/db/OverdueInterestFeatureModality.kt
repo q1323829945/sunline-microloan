@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull
 )
 class OverdueInterestFeatureModality(
     @Id
-    val id: Long? = null,
+    val id: Long,
 
     @NotNull
     @Column(name = "overdue_interest_rate_percentage", nullable = false, columnDefinition = "int not null")
@@ -28,7 +28,7 @@ class OverdueInterestFeatureModality(
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
-    override fun getTenantId(): Long? {
+    override fun getTenantId(): Long {
         return tenantId
     }
 

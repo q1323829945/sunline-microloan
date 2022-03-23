@@ -1,8 +1,5 @@
 package cn.sunline.saas.interest.model.dto
 
-import cn.sunline.saas.interest.model.BaseYearDays
-import cn.sunline.saas.interest.model.InterestType
-
 /**
  * @title: DTOInterestFeatureAdd
  * @description: TODO

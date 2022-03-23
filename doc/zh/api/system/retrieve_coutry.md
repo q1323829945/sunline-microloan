@@ -24,20 +24,22 @@
 | 参数         | 类型   | 说明         |
 | ------------ | ------ | ------------ |
 | countryCode  | string | 国家代码     |
+| countryName  | string | 国家名称     |
 | numberCode   | string | 数字代码     |
-| name         | string | 名称         |
 | currencyCode | string | 本币         |
 | mobileArea   | string | 移动电话区号 |
+| datetimeZone | string | 时区         |
 
 ### 响应体示例
 
 ```json
 {
   "countryCode": "SGP",
+  "countryName": "Singapore",
   "numberCode": "702",
-  "name": "Singapore",
   "currencyCode": "SGD",
-  "mobileArea": "65"
+  "mobileArea": "65",
+  "datetimeZone":"Asia/Singapore"
 }
 ```
 
