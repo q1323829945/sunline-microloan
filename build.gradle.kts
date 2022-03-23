@@ -19,10 +19,10 @@ allprojects {
 }
 
 val jjwtVersion by extra { "0.9.1" }
-val flywayVersion by extra { "8.4.4" }
+val flywayVersion by extra { "8.5.2" }
 val mysqlConnectorVersion by extra { "8.0.28" }
 val jacksonVersion by extra { "2.13.1" }
-val jodaVersion by extra { "2.10.6" }
+val jodaVersion by extra { "2.10.13" }
 val redissonVersion by extra { "3.16.8" }
 val nettyVersion by extra { "4.1.74.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }

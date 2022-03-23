@@ -26,11 +26,10 @@ dependencies {
     implementation(project(":lib-interest"))
     implementation(project(":lib-document-template"))
     implementation(project(":lib-document"))
-    implementation(project(":lib-abstract-core"))
     implementation(project(":lib-loan-product"))
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))
-    implementation(project(":lib-global-constant"))
+    implementation(project(":lib-global"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

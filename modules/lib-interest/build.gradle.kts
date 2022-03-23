@@ -9,7 +9,6 @@ dependencies {
     implementation(project(":lib-interest-util"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
-    api(project(":lib-abstract-core"))
     api(project(":lib-seq-api"))
 
 

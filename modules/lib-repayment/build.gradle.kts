@@ -8,7 +8,6 @@ dependencies {
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
     api(project(":lib-seq-api"))
-    api(project(":lib-abstract-core"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

@@ -1,8 +1,5 @@
 package cn.sunline.saas.interest.component
 
-import cn.sunline.saas.interest.model.db.InterestProductFeature
-import cn.sunline.saas.interest.model.db.InterestProductFeatureModality
-import cn.sunline.saas.interest.model.db.OverdueInterestProductFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired

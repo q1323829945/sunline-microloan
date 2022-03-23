@@ -13,7 +13,6 @@ dependencies {
     api(project(":lib-base-jpa"))
     api(project(":lib-seq-api"))
     implementation(project(":lib-huaweicloud"))
-    implementation(project(":lib-abstract-core"))
     implementation(project(":lib-snowflake"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
