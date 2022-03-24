@@ -14,6 +14,7 @@ dependencies {
     api(project(":lib-interest"))
     api(project(":lib-repayment"))
     api(project(":lib-fee"))
+    implementation(project(":lib-interest-util"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

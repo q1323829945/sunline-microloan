@@ -36,5 +36,6 @@ dependencies {
     implementation(project(":lib-fee"))
     implementation(project(":lib-global"))
     implementation(project(":lib-loan-configure"))
+    implementation(project(":lib-interest-util"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

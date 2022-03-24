@@ -1,10 +1,10 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.OwnershipType
-import cn.sunline.saas.global.constant.CountryType
 import cn.sunline.saas.global.constant.CurrencyType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
+import cn.sunline.saas.global.model.Country
 import java.math.BigDecimal
 
 data class DTOCustomerOfferLoanAdd (
@@ -22,8 +22,8 @@ data class DTOCustomerOfferLoanAdd (
 data class DTOLoan(
         val amount:BigDecimal,
         val currency: CurrencyType,
-        val term:LoanTermType,
-        val local:YesOrNo,
+        val term: LoanTermType,
+        val local: YesOrNo,
         val employ:String,
 )
 
@@ -56,7 +56,7 @@ data class DTOGuarantor(
 data class DTOGuarantors(
         val name:String,
         val NRIC:String,
-        val nationality:CountryType,
+        val nationality: Country,
         val mobileArea:String,
         val mobileNumber:String,
         val email:String,

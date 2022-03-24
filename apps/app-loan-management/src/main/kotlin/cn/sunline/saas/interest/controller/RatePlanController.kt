@@ -2,6 +2,7 @@ package cn.sunline.saas.interest.controller
 
 import cn.sunline.saas.interest.exception.RatePlanNotFoundException
 import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.response.DTOPagedResponseSuccess

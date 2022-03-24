@@ -10,10 +10,10 @@ import cn.sunline.saas.interest.constant.InterestType
  * @date 2022/3/10 14:55
  */
 data class DTOInterestFeatureChange(
-    val id:Long?,
-    val interestType: InterestType,
-    val ratePlanId: Long,
-    val baseYearDays: BaseYearDays,
-    val adjustFrequency: String,
-    val overdueInterestRatePercentage: Long
+        val id:Long?,
+        val interestType: InterestType,
+        val ratePlanId: Long,
+        val baseYearDays: BaseYearDays,
+        val adjustFrequency: String,
+        val overdueInterestRatePercentage: Long
 )

@@ -1,11 +1,7 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.customer.offer.modules.OwnershipType
-import cn.sunline.saas.global.constant.CountryType
-import cn.sunline.saas.global.constant.CurrencyType
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.pdpa.modules.dto.PDPAInformationView
 import java.math.BigDecimal
 

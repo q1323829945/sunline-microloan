@@ -27,11 +27,10 @@ dependencies {
     api(project(":lib-seq-api"))
     implementation(project(":lib-snowflake"))
 
-    implementation(project(":lib-abstract-core"))
     implementation(project(":lib-loan-product"))
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))
-    implementation(project(":lib-global-constant"))
+    implementation(project(":lib-global"))
     implementation(project(":lib-pdpa"))
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-configure"))

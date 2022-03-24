@@ -26,30 +26,26 @@ import javax.persistence.criteria.Predicate
 @RequestMapping("InterestRate")
 class InterestRateController {
 
-    data class DTOInterestRateAdd(
-        val period: String,
-        val rate: BigDecimal,
-        val ratePlanId: Long
-    )
+    data class DTOInterestRateAdd(            val period: String,
+            val rate: BigDecimal,
+            val ratePlanId:Long    )
 
-    data class DTOInterestRateView(
-        val id: Long,
-        val period: String,
-        val rate: BigDecimal,
-        val ratePlanId: Long
-    )
+    data class DTOInterestRateView(            val id: Long,
+            val period: String,
+            val rate: BigDecimal,
+            val ratePlanId:Long    )
 
     data class DTOInterestRateChange(
-        val identificationCode: String,
-        val name: String,
-        val description: String,
-        val loanProductType: LoanProductType,
-        val loanPurpose: String,
-        val amountConfiguration: DTOAmountLoanProductConfiguration?,
-        val termConfiguration: DTOTermLoanProductConfiguration?,
-        val interestFeature: DTOInterestFeatureAdd?,
-        val repaymentFeature: DTORepaymentFeatureAdd?,
-        val feeFeatures: MutableList<DTOFeeFeatureAdd>?
+            val identificationCode: String,
+            val name: String,
+            val description: String,
+            val loanProductType: LoanProductType,
+            val loanPurpose: String,
+            val amountConfiguration: DTOAmountLoanProductConfiguration?,
+            val termConfiguration: DTOTermLoanProductConfiguration?,
+            val interestFeature: DTOInterestFeatureAdd?,
+            val repaymentFeature: DTORepaymentFeatureAdd?,
+            val feeFeatures:MutableList<DTOFeeFeatureAdd>?
     )
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
