@@ -55,6 +55,11 @@ enum class PermissionConfig (
     LOAN_PRODUCT_MODIFY_STATUS("LoanProduct", "LoanProduct/status/[0-9]+\$", RequestMethod.PUT, "Modify loanProduct status"),
 
 
+    LOAN_UPLOAD_CONFIGURE_ADD("LoanUploadConfigure", "LoanUploadConfigure\$", RequestMethod.POST, "Add LoanUploadConfigure"),
+    LOAN_UPLOAD_CONFIGURE_GET_LIST("LoanUploadConfigure", "LoanUploadConfigure(\\?.*|\$)", RequestMethod.GET, "View LoanUploadConfigure list"),
+    LOAN_UPLOAD_CONFIGURE_DELETE("LoanUploadConfigure", "LoanUploadConfigure/[0-9]+\$", RequestMethod.DELETE, "Modify LoanUploadConfigure status"),
+
+
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
     ROLE_MENU("menu","roleConfig", RequestMethod.GET,"View role menu"),
@@ -63,6 +68,7 @@ enum class PermissionConfig (
     RATE_PLAN_MENU("menu","ratePlanConfig", RequestMethod.GET,"View formal tenant menu"),
     DOCUMENT_TEMPLATE_MENU("menu","documentTemplateConfig", RequestMethod.GET,"View formal documentTemplateConfig menu"),
     LOAN_PRODUCT_MENU("menu","loanProductConfig", RequestMethod.GET,"View formal loanProductConfig menu"),
+    LOAN_UPLOAD_CONFIGURE_MENU("menu","loanUploadConfig", RequestMethod.GET,"View formal loanUploadConfig menu"),
 
 
 }

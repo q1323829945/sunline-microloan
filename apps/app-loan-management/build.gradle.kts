@@ -35,8 +35,6 @@ dependencies {
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))
     implementation(project(":lib-global"))
-    implementation(project(":lib-huaweicloud"))
-    implementation(project(":lib-snowflake"))
-
+    implementation(project(":lib-loan-configure"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

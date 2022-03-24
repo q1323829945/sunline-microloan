@@ -9,4 +9,6 @@ import cn.sunline.saas.loan.product.model.db.LoanProduct
  * @author Kevin-Cui
  * @date 2022/3/7 15:19
  */
-interface LoanProductRepository:BaseRepository<LoanProduct,Long>
+interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
+    fun findByIdentificationCode(identificationCode:String):LoanProduct?
+}

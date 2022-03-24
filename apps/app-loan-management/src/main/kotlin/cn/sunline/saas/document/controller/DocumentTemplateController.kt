@@ -20,7 +20,10 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
+import java.io.FileOutputStream
 import java.net.URLEncoder
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
@@ -67,6 +70,7 @@ class DocumentTemplateController {
 
         return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTODocumentTemplateView>(it)}).response()
     }
+
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun addOne(@RequestPart("template") documentTemplate: DTODocumentTemplateAdd, @RequestPart("file") file: MultipartFile): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>> {

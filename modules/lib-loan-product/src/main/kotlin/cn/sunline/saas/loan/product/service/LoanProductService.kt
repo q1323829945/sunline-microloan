@@ -315,4 +315,49 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         product.status = status
         return save(product)
     }
+
+
+    fun findByIdentificationCode(identificationCode:String):DTOLoanProductView{
+        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw NotFoundException("Invalid loan product")
+
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
+
+        product.configurationOptions?.forEach {
+            when (ConditionType.valueOf(it.type)) {
+                ConditionType.AMOUNT -> {
+                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
+                    dtoLoanProduct.amountConfiguration?.run {
+                        this.maxValueRange = it.getMaxValueRange()
+                        this.minValueRange = it.getMinValueRange()
+                    }
+                }
+                ConditionType.TERM ->{
+                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
+                }
+            }
+        }
+        return dtoLoanProduct
+    }
+
+    fun findById(id:Long):DTOLoanProductView{
+        val product = this.getOne(id)?:throw NotFoundException("Invalid loan product")
+
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
+
+        product.configurationOptions?.forEach {
+            when (ConditionType.valueOf(it.type)) {
+                ConditionType.AMOUNT -> {
+                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
+                    dtoLoanProduct.amountConfiguration?.run {
+                        this.maxValueRange = it.getMaxValueRange()
+                        this.minValueRange = it.getMinValueRange()
+                    }
+                }
+                ConditionType.TERM ->{
+                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
+                }
+            }
+        }
+        return dtoLoanProduct
+    }
 }
