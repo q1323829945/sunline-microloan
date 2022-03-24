@@ -7,5 +7,5 @@ package cn.sunline.saas.loan.product.model
  * @date 2022/3/14 10:38
  */
 enum class LoanFeeType {
-    PREPAYMENT,DISBURSEMENT
+    PREPAYMENT,DISBURSEMENT,OVERDUE
 }

@@ -9,9 +9,7 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
  * @author Kevin-Cui
  * @date 2022/3/15 9:53
  */
-class FeeException(
+class FeeConfigException(
     exceptionMessage: String? = null,
     statusCode: ManagementExceptionCode = ManagementExceptionCode.FEE_CONFIG_ERROR,
-    user: Long? = null
-) :
-    BusinessException(exceptionMessage, statusCode, user)
+) : BusinessException(exceptionMessage, statusCode)

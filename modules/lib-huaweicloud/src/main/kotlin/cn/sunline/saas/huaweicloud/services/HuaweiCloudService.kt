@@ -3,6 +3,7 @@ package cn.sunline.saas.huaweicloud.services
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.huaweicloud.config.*
+import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
 import cn.sunline.saas.huaweicloud.models.HttpRequestMethod
 import cn.sunline.saas.obs.api.*
 import org.apache.commons.httpclient.HttpClient
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service
 import java.io.*
 
 @Service
-class HuaweiCloudService:ObsApi {
+class HuaweiCloudService : ObsApi {
 
     @Autowired
     private lateinit var huaweiCloudTools: HuaweiCloudTools
@@ -30,8 +31,9 @@ class HuaweiCloudService:ObsApi {
         //header
         val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${bucketParams.bucketName}/"
-        val signature = getSignature(HttpRequestMethod.PUT,"","application/xml",requestTime,"",canonicalizeResource)
-        val headerMap = mutableMapOf<String,String>()
+        val signature =
+            getSignature(HttpRequestMethod.PUT, "", "application/xml", requestTime, "", canonicalizeResource)
+        val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
         headerMap["Content-Type"] = "application/xml"
@@ -49,7 +51,7 @@ class HuaweiCloudService:ObsApi {
         val body = InputStreamRequestEntity(inputStream)
 
         //httpPut
-        val httpPut = getHttpMethod(HttpRequestMethod.PUT,uri,headerMap,body)
+        val httpPut = getHttpMethod(HttpRequestMethod.PUT, uri, headerMap, body)
 
         //sendClint
         sendClient(httpPut)
@@ -67,14 +69,14 @@ class HuaweiCloudService:ObsApi {
         //header
         val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${bucketName}/"
-        val signature = getSignature(HttpRequestMethod.DELETE,"","",requestTime,"",canonicalizeResource)
-        val headerMap = mutableMapOf<String,String>()
+        val signature = getSignature(HttpRequestMethod.DELETE, "", "", requestTime, "", canonicalizeResource)
+        val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
 
         //httpDelete
-        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE,uri,headerMap)
+        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE, uri, headerMap)
 
         //sendClint
         sendClient(httpDelete)
@@ -83,29 +85,32 @@ class HuaweiCloudService:ObsApi {
     override fun putObject(putParams: PutParams) {
 
         //uri
-        val uri = getUri(putParams.bucketName, huaweiCloudTools.region,putParams.key)
+        val uri = getUri(putParams.bucketName, huaweiCloudTools.region, putParams.key)
 
 
         //header
         val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${putParams.bucketName}/${putParams.key}"
-        val signature = getSignature(HttpRequestMethod.PUT,"","",requestTime,"",canonicalizeResource)
-        val headerMap = mutableMapOf<String,String>()
+        val signature = getSignature(HttpRequestMethod.PUT, "", "", requestTime, "", canonicalizeResource)
+        val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
         //body
-        val body = putParams.body
-        val entity = if(body is String){
-            InputStreamRequestEntity(FileInputStream(body))
-        }else if(body is InputStream){
-            InputStreamRequestEntity(body)
-        } else{
-            throw UploadException("body error",ManagementExceptionCode.BODY_TYPE_ERROR)
+        val entity = when (val body = putParams.body) {
+            is String -> {
+                InputStreamRequestEntity(FileInputStream(body))
+            }
+            is InputStream -> {
+                InputStreamRequestEntity(body)
+            }
+            else -> {
+                throw ObsBodyTypeException("body error")
+            }
         }
 
         //httpPut
-        val httpPut = getHttpMethod(HttpRequestMethod.PUT,uri,headerMap,entity)
+        val httpPut = getHttpMethod(HttpRequestMethod.PUT, uri, headerMap, entity)
 
         //sendClint
         sendClient(httpPut)
@@ -113,19 +118,19 @@ class HuaweiCloudService:ObsApi {
 
     override fun getObject(getParams: GetParams): Any? {
         //uri
-        val uri = getUri(getParams.bucketName, huaweiCloudTools.region,getParams.key)
+        val uri = getUri(getParams.bucketName, huaweiCloudTools.region, getParams.key)
 
         //header
         val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${getParams.bucketName}/${getParams.key}"
-        val signature = getSignature(HttpRequestMethod.GET,"","",requestTime,"",canonicalizeResource)
-        val headerMap = mutableMapOf<String,String>()
+        val signature = getSignature(HttpRequestMethod.GET, "", "", requestTime, "", canonicalizeResource)
+        val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
 
         //httpGet
-        val httpGet = getHttpMethod(HttpRequestMethod.GET,uri,headerMap)
+        val httpGet = getHttpMethod(HttpRequestMethod.GET, uri, headerMap)
 
         //sendClint
         sendClient(httpGet)
@@ -135,76 +140,85 @@ class HuaweiCloudService:ObsApi {
 
     override fun deleteObject(deleteParams: DeleteParams) {
         //uri
-        val uri = getUri(deleteParams.bucketName, huaweiCloudTools.region,deleteParams.key)
+        val uri = getUri(deleteParams.bucketName, huaweiCloudTools.region, deleteParams.key)
 
         //header
         val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
         val canonicalizeResource = "/${deleteParams.bucketName}/${deleteParams.key}"
-        val signature = getSignature(HttpRequestMethod.DELETE,"","",requestTime,"",canonicalizeResource)
-        val headerMap = mutableMapOf<String,String>()
+        val signature = getSignature(HttpRequestMethod.DELETE, "", "", requestTime, "", canonicalizeResource)
+        val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
         headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
 
         //httpDelete
-        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE,uri,headerMap)
+        val httpDelete = getHttpMethod(HttpRequestMethod.DELETE, uri, headerMap)
 
         //sendClint
         sendClient(httpDelete)
     }
 
 
-    fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
+    fun getSignature(
+        requestMode: HttpRequestMethod,
+        md5: String,
+        contentType: String,
+        requestTime: String,
+        canonicalizeHeaders: String,
+        canonicalizeResource: String
+    ): String {
         val sign = "${requestMode.name}\n" +
-                    "$md5\n" +
-                    "$contentType\n" +
-                    "$requestTime\n" +
-                    "$canonicalizeHeaders$canonicalizeResource"
-        return  huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey,sign)
+                "$md5\n" +
+                "$contentType\n" +
+                "$requestTime\n" +
+                "$canonicalizeHeaders$canonicalizeResource"
+        return huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey, sign)
     }
 
-    fun sendClient(httpMethod:HttpMethod) {
+    fun sendClient(httpMethod: HttpMethod) {
         val httpClient = HttpClient()
         val status = httpClient.executeMethod(httpMethod)
 
         logger.debug("status:$status")
-        if(status != 200 && status != 204){
-            throw UploadException("file upload error",ManagementExceptionCode.FILE_UPLOAD_FAILED)
+        if (status != 200 && status != 204) {
+            throw UploadException("file upload error", ManagementExceptionCode.FILE_UPLOAD_FAILED)
         }
     }
 
 
-    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>):HttpMethod{
-        return getHttpMethod(httpMethod,uri,headerMap,null)
+    fun getHttpMethod(httpMethod: HttpRequestMethod, uri: String, headerMap: Map<String, String>): HttpMethod {
+        return getHttpMethod(httpMethod, uri, headerMap, null)
     }
 
-    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: RequestEntity?):HttpMethod{
-        val httpRequest =  if(httpMethod == HttpRequestMethod.GET){
-            GetMethod(uri)
-        }else if(httpMethod == HttpRequestMethod.DELETE){
-            DeleteMethod(uri)
-        }else if (httpMethod == HttpRequestMethod.PUT){
-            PutMethod(uri)
-        }else if(httpMethod == HttpRequestMethod.POST){
-            PostMethod(uri)
-        }else{
-            throw UploadException(null,ManagementExceptionCode.BODY_TYPE_ERROR)
-        }
-        headerMap.forEach{
-            httpRequest.addRequestHeader(it.key,it.value)
+    fun getHttpMethod(
+        httpMethod: HttpRequestMethod,
+        uri: String,
+        headerMap: Map<String, String>,
+        entity: RequestEntity?
+    ): HttpMethod {
+        val httpRequest =
+            when (httpMethod) {
+                HttpRequestMethod.GET -> GetMethod(uri)
+                HttpRequestMethod.DELETE -> DeleteMethod(uri)
+                HttpRequestMethod.PUT -> PutMethod(uri)
+                HttpRequestMethod.POST -> PostMethod(uri)
+            }
+
+        headerMap.forEach {
+            httpRequest.addRequestHeader(it.key, it.value)
         }
 
-        if(httpRequest is PutMethod){
+        if (httpRequest is PutMethod) {
             httpRequest.requestEntity = entity
         }
 
         return httpRequest
     }
 
-    fun getUri(bucketName: String,region:String,key:String):String{
+    fun getUri(bucketName: String, region: String, key: String): String {
         return "http://$bucketName.obs.$region.myhuaweicloud.com/$key"
     }
 
-    fun getUri(bucketName: String,region:String):String{
+    fun getUri(bucketName: String, region: String): String {
         return "http://$bucketName.obs.$region.myhuaweicloud.com"
     }
 }

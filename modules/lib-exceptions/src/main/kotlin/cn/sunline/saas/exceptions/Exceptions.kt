@@ -1,11 +1,11 @@
 package cn.sunline.saas.exceptions
 
 open class BaseException(
-        val statusCode: ManagementExceptionCode,
-        val exceptionMessage: String? = null,
-        val user: Long? = null,
-        val data: Any? = null
-):Exception()
+    val statusCode: ManagementExceptionCode,
+    val exceptionMessage: String? = null,
+    val user: Long? = null,
+    val data: Any? = null
+) : Exception()
 
 class ManagementException(
     statusCode: ManagementExceptionCode,
@@ -14,26 +14,30 @@ class ManagementException(
     data: Any? = null
 ) : BaseException(statusCode, exceptionMessage, user, data)
 
-class AuthenticationException(
-    statusCode: ManagementExceptionCode,
+open class AuthenticationException(
     exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode,
     user: Long? = null
 ) : BaseException(statusCode, exceptionMessage, user, null)
 
-class NotFoundException(
+open class NotFoundException(
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.NOT_FOUND_DATA,
+    statusCode: ManagementExceptionCode,
     user: Long? = null
 ) : BaseException(statusCode, exceptionMessage, user, null)
 
 open class BusinessException(
-    val exceptionMessage: String? = null,
-    val statusCode: ManagementExceptionCode,
-    val user: Long? = null
-) : Exception()
+    exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode,
+    user: Long? = null
+) : BaseException(statusCode, exceptionMessage, user, null)
 
+open class SystemException(
+    exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode,
+) : BaseException(statusCode, exceptionMessage, null, null)
 
-class UploadException(
-       exceptionMessage: String? = null,
-       statusCode: ManagementExceptionCode,
-):BaseException(statusCode, exceptionMessage, null, null)
+open class BadRequestException(
+    exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode,
+) : BaseException(statusCode, exceptionMessage, null, null)

@@ -1,6 +1,6 @@
 package cn.sunline.saas.fee.service
 
-import cn.sunline.saas.fee.exception.FeeException
+import cn.sunline.saas.fee.exception.FeeConfigException
 import cn.sunline.saas.fee.model.FeeMethodType
 import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
@@ -29,10 +29,10 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
 
         for (temp in dtoFeeFeatures) {
             if (temp.feeMethodType == FeeMethodType.FEE_RATIO && temp.feeRate == null) {
-                throw FeeException("Fee calculation method config error")
+                throw FeeConfigException("Fee calculation method config error")
             }
             if (temp.feeMethodType == FeeMethodType.FIX_AMOUNT && temp.feeAmount == null) {
-                throw FeeException("Fee calculation method config error")
+                throw FeeConfigException("Fee calculation method config error")
             }
             feeFeatures.add(
                 FeeFeature(
