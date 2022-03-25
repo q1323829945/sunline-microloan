@@ -1,13 +1,13 @@
 package cn.sunline.saas.pdpa.factory.impl
 
 import cn.sunline.saas.pdpa.factory.PDPAApi
-import cn.sunline.saas.pdpa.modules.dto.CorporateInformation
-import cn.sunline.saas.pdpa.modules.dto.PDPAInformationView
-import cn.sunline.saas.pdpa.modules.dto.PersonalInformation
+import cn.sunline.saas.pdpa.modules.CorporateInformation
+import cn.sunline.saas.pdpa.modules.PDPAInformation
+import cn.sunline.saas.pdpa.modules.PersonalInformation
 
 class ChinaPDPA: PDPAApi {
-    override fun getPDPA(): PDPAInformationView {
+    override fun getPDPA(): PDPAInformation {
         //TODO:
-        return PDPAInformationView(PersonalInformation("1","2"), CorporateInformation("1","2"),"3")
+        return PDPAInformation(PersonalInformation("1","2"), CorporateInformation("1","2"),"3")
     }
 }

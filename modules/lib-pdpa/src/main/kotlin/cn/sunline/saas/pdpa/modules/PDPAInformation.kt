@@ -1,7 +1,7 @@
-package cn.sunline.saas.pdpa.modules.dto
+package cn.sunline.saas.pdpa.modules
 
 
-data class PDPAInformationView (
+data class PDPAInformation (
     val personalInformation:PersonalInformation,
     val corporateInformation:CorporateInformation,
     val pdpaTemplateId:String

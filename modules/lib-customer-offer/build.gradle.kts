@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-huaweicloud"))
-    implementation(project(":lib-pdpa"))
     implementation("com.google.code.gson:gson:2.9.0")
 
 

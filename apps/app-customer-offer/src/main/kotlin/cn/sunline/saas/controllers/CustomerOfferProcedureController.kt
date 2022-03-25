@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService.DTOFile
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.global.model.Country
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.pdpa.factory.PDPAFactory
 import cn.sunline.saas.pdpa.services.PDPAService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.response
@@ -45,6 +47,8 @@ class CustomerOfferProcedureController {
     @Autowired
     private lateinit var pdpaService: PDPAService
 
+    @Autowired
+    private lateinit var pdpaFactory: PDPAFactory
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -86,12 +90,16 @@ class CustomerOfferProcedureController {
     @GetMapping("loan/{customerOfferId}/{countryCode}/retrieve")
     fun retrieveLoanApply(@PathVariable("customerOfferId")customerOfferId:Long,@PathVariable("countryCode")countryCode:String):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferLoanView>>{
         val dtoCustomerOfferLoanView = customerLoanApplyService.retrieve(customerOfferId, countryCode)
-        val loanProduct = loanProductService.findById(dtoCustomerOfferLoanView.product.productId)
 
+        //add product info
+        val loanProduct = loanProductService.findById(dtoCustomerOfferLoanView.product.productId)
         val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
         dtoLoanProduct.productId = loanProduct.id
-
         dtoCustomerOfferLoanView.product = dtoLoanProduct
+
+        //add pdpa info
+        val pdpa = pdpaFactory.getInstance(Country.valueOf(countryCode)).getPDPA()
+        dtoCustomerOfferLoanView.pdpa = objectMapper.convertValue<PDPAInformationView>(pdpa)
 
         return DTOResponseSuccess(dtoCustomerOfferLoanView).response()
     }

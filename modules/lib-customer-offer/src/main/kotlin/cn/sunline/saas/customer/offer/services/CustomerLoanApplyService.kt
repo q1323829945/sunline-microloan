@@ -6,13 +6,11 @@ import cn.sunline.saas.customer.offer.repositories.CustomerLoanApplyRepository
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
-import cn.sunline.saas.global.model.Country
 import cn.sunline.saas.huaweicloud.config.HuaweiCloudTools
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
-import cn.sunline.saas.pdpa.factory.PDPAFactory
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -34,9 +32,6 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
     @Autowired
     private lateinit var huaweiCloudTools: HuaweiCloudTools
-
-    @Autowired
-    private lateinit var pdpaFactory: PDPAFactory
 
     @Autowired
     private lateinit var customerOfferService: CustomerOfferService
@@ -108,11 +103,9 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
         dTOCustomerOfferProcedureView.status = customerOffer.status
 
-        val pdpa = pdpaFactory.getInstance(Country.valueOf(countryCode)).getPDPA()
-
         return DTOCustomerOfferLoanView(
                 dTOCustomerOfferProcedureView,
-                pdpa,
+                null,
                 DTOProductView(customerOffer.productId),
                 dtoCustomerOfferLoanAdd.loan,
                 dtoCustomerOfferLoanAdd.company,

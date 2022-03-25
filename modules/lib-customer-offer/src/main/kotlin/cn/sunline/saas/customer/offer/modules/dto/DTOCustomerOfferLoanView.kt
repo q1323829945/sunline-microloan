@@ -2,13 +2,12 @@ package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.pdpa.modules.dto.PDPAInformationView
 import java.math.BigDecimal
 
 
 data class DTOCustomerOfferLoanView (
         val customerOfferProcedure:DTOCustomerOfferProcedureView,
-        val pdpa:PDPAInformationView?,
+        var pdpa:PDPAInformationView?,
         var product:DTOProductView,
         val loan:DTOLoan,
         val company:DTOCompany,
@@ -48,4 +47,22 @@ data class DTOAmountConfiguration(
 data class DTOTermConfiguration(
         val maxValueRange: LoanTermType?,
         val minValueRange: LoanTermType?
+)
+
+
+data class PDPAInformationView (
+        val personalInformation:PersonalInformation,
+        val corporateInformation:CorporateInformation,
+        val pdpaTemplateId:String
+)
+
+
+data class PersonalInformation(
+        val key:String,
+        val name:String
+)
+
+data class CorporateInformation(
+        val key: String,
+        val name: String
 )
