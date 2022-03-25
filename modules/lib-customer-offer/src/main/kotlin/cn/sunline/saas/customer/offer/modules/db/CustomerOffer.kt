@@ -3,7 +3,6 @@ package cn.sunline.saas.customer.offer.modules.db
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull

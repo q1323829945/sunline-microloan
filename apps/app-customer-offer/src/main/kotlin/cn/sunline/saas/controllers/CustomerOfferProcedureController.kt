@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService.DTOFile
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.global.model.Country
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
-import cn.sunline.saas.loan.product.service.LoanProductService
-import cn.sunline.saas.pdpa.factory.PDPAFactory
-import cn.sunline.saas.pdpa.services.PDPAService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.services.PDPAService
+import cn.sunline.saas.services.ProductService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -42,23 +40,19 @@ class CustomerOfferProcedureController {
     private lateinit var customerOfferService: CustomerOfferService
 
     @Autowired
-    private lateinit var loanProductService: LoanProductService
+    private lateinit var productService: ProductService
 
     @Autowired
     private lateinit var pdpaService: PDPAService
-
-    @Autowired
-    private lateinit var pdpaFactory: PDPAFactory
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping(value = ["loan/initiate"], produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun recordLoanApply(@RequestPart("customerOffer") dtoCustomerOffer: DTOCustomerOfferAdd, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferView>> {
         //get product info
-        val loanProduct = loanProductService.findById(dtoCustomerOffer.product.productId)
+        val loanProduct = productService.findById(dtoCustomerOffer.product.productId)
 
         val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
-        dtoLoanProduct.productId = loanProduct.id
 
         val key = pdpaService.sign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
 
@@ -92,13 +86,12 @@ class CustomerOfferProcedureController {
         val dtoCustomerOfferLoanView = customerLoanApplyService.retrieve(customerOfferId, countryCode)
 
         //add product info
-        val loanProduct = loanProductService.findById(dtoCustomerOfferLoanView.product.productId)
+        val loanProduct = productService.findById(dtoCustomerOfferLoanView.product.productId)
         val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
-        dtoLoanProduct.productId = loanProduct.id
         dtoCustomerOfferLoanView.product = dtoLoanProduct
 
         //add pdpa info
-        val pdpa = pdpaFactory.getInstance(Country.valueOf(countryCode)).getPDPA()
+        val pdpa = pdpaService.retrieve(countryCode)
         dtoCustomerOfferLoanView.pdpa = objectMapper.convertValue<PDPAInformationView>(pdpa)
 
         return DTOResponseSuccess(dtoCustomerOfferLoanView).response()

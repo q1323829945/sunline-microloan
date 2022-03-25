@@ -8,6 +8,6 @@ import cn.sunline.saas.pdpa.modules.PersonalInformation
 class ChinaPDPA: PDPAApi {
     override fun getPDPA(): PDPAInformation {
         //TODO:
-        return PDPAInformation(PersonalInformation("1","2"), CorporateInformation("1","2"),"3")
+        return PDPAInformation(listOf(PersonalInformation("1","2"),PersonalInformation("3","4")), listOf(CorporateInformation("5","6"),CorporateInformation("7","8")),"3")
     }
 }

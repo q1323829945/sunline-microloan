@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-redis"))
     implementation(project(":lib-obs-api"))
+    implementation(project(":lib-global"))
 
     api(project(":lib-base-jpa"))
 

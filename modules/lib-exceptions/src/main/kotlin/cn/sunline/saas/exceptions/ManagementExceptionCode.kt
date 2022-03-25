@@ -21,14 +21,22 @@ enum class ManagementExceptionCode(val code: Int) {
     // Tenant 3000 - 3999
     TENANT_DATA_SOURCE_INVALID(3000),
 
+    //upload 4000 - 4999
     // Obs and Document 4000 - 4999
     FILE_UPLOAD_FAILED(4000),
     BODY_TYPE_ERROR(4001),
     DOCUMENT_TEMPLATE_NOT_FOUND(4002),
     DOCUMENT_DIRECTORY_NOT_FOUND(4003),
 
+    //Fee 5000 - 5049
+    FEE_CONFIG_ERROR(5000)
     // Product 5000 - 5049
     PRODUCT_NOT_FOUND(5000),
+
+
+
+
+
 
     // Fee 5050 - 5099
     FEE_CONFIG_ERROR(5050),

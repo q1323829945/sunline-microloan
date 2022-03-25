@@ -1,9 +1,5 @@
 package cn.sunline.saas.huaweicloud.services
 
-import cn.sunline.saas.huaweicloud.config.HuaweiCloudConfig
-import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
-import cn.sunline.saas.huaweicloud.exception.ObsUploadException
-import cn.sunline.saas.huaweicloud.models.HttpRequestMethod
 import cn.sunline.saas.obs.api.*
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.HttpMethod
@@ -190,22 +186,6 @@ class HuaweiCloudService : ObsApi {
         return getHttpMethod(httpMethod, uri, headerMap, null)
     }
 
-    fun getHttpMethod(
-        httpMethod: HttpRequestMethod,
-        uri: String,
-        headerMap: Map<String, String>,
-        entity: RequestEntity?
-    ): HttpMethod {
-        val httpRequest =
-            when (httpMethod) {
-                HttpRequestMethod.GET -> GetMethod(uri)
-                HttpRequestMethod.DELETE -> DeleteMethod(uri)
-                HttpRequestMethod.PUT -> PutMethod(uri)
-                HttpRequestMethod.POST -> PostMethod(uri)
-            }
-
-        headerMap.forEach {
-            httpRequest.addRequestHeader(it.key, it.value)
         }
 
         if (httpRequest is PutMethod) {

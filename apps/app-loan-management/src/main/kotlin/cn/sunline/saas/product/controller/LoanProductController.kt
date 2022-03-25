@@ -3,9 +3,7 @@ package cn.sunline.saas.product.controller
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductChange
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.loan.product.model.dto.*
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -30,6 +28,15 @@ class LoanProductController {
             val status: BankingProductStatus
     )
 
+    data class DTOLoanProduct(
+        var productId:Long,
+        val identificationCode:String,
+        val name:String,
+        val version:String? = null,
+        val description:String,
+        val amountConfiguration: DTOAmountLoanProductConfiguration?,
+        val termConfiguration: DTOTermLoanProductConfiguration?,
+    )
 
     @Autowired
     private lateinit var loanProductService: LoanProductService
@@ -74,6 +81,14 @@ class LoanProductController {
 
     }
 
+    @GetMapping("{productId}/retrieve")
+    fun getProductInfo(@PathVariable productId:Long): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>>{
+        val product = loanProductService.findById(productId)
+
+        val responseProduct = objectMapper.convertValue<DTOLoanProduct>(product)
+        responseProduct.productId = product.id
+        return DTOResponseSuccess(responseProduct).response()
+    }
 
 
 }

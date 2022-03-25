@@ -51,8 +51,8 @@ data class DTOTermConfiguration(
 
 
 data class PDPAInformationView (
-        val personalInformation:PersonalInformation,
-        val corporateInformation:CorporateInformation,
+        val personalInformation:List<PersonalInformation>,
+        val corporateInformation:List<CorporateInformation>,
         val pdpaTemplateId:String
 )
 

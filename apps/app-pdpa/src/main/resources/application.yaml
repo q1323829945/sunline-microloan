@@ -24,7 +24,7 @@ spring:
 
 
 server:
-  port : 8084
+  port : 8085
 
 management:
   endpoints:
@@ -50,9 +50,3 @@ logging:
     cn.sunline.saas.huaweicloud: trace
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
-
-
-
-ipconfig:
-  pdpa: 127.0.0.1:8085
-  product: 127.0.0.18083

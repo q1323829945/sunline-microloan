@@ -1,4 +1,4 @@
-package cn.sunline.saas.huaweicloud.models
+package cn.sunline.saas.global.constant
 
 enum class HttpRequestMethod {
     GET,POST,PUT,DELETE

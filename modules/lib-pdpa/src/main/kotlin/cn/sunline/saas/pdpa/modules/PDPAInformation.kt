@@ -2,8 +2,8 @@ package cn.sunline.saas.pdpa.modules
 
 
 data class PDPAInformation (
-    val personalInformation:PersonalInformation,
-    val corporateInformation:CorporateInformation,
+    val personalInformation:List<PersonalInformation>,
+    val corporateInformation:List<CorporateInformation>,
     val pdpaTemplateId:String
 )
 
