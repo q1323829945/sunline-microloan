@@ -15,5 +15,5 @@ data class DTOProductAdd(val productId: Long)
 
 data class DTOPDPAAdd(
         val pdpaTemplateId: Long,
-        var signature: String,
+        var signature: String?,
 )

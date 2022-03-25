@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.time.Clock
 import java.time.Instant
-import javax.persistence.criteria.Predicate
 
 @Service
 class CustomerOfferService (private val customerOfferRepo: CustomerOfferRepository) :
@@ -36,6 +36,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
         val save = this.save(CustomerOffer(
                 seq.nextId(),
                 dtoCustomerOffer.customerOfferProcedure.customerId,
+                dtoCustomerOffer.product.productId,
                 ApplyStatus.RECORD,
                 data,
                 Instant.now(Clock.systemUTC()).toEpochMilli().toString()
@@ -49,28 +50,23 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
 
     }
 
-    fun findProductIdById(id:Long):Long{
-        val customerOffer = this.getOne(id)?:throw NotFoundException("Invalid customer offer")
 
-        val dtoCustomerOffer = Gson().fromJson(customerOffer.data,DTOCustomerOfferAdd::class.java)
-
-        return dtoCustomerOffer.product.productId
+    fun getOneById(id: Long): CustomerOffer {
+        return getOne(id) ?: throw NotFoundException("Invalid customer offer")
     }
 
 
     fun getCustomerOfferPaged(customerId:Long,pageable: Pageable): Page<DTOCustomerOfferPage>{
-        val page = this.getPaged(
-                {root, _, criteriaBuilder ->
-                    val predicates = mutableListOf<Predicate>()
-                    predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),customerId))
-                    criteriaBuilder.and(*(predicates.toTypedArray()))
-                },pageable)
-                .map {
-                    val dto = objectMapper.convertValue<DTOCustomerOfferPage>(it)
-                    dto.customerOfferId = it.id!!
-                    dto
-                }
 
+        val page = customerOfferRepo.getCustomerOfferPaged(customerId,pageable).map {
+            DTOCustomerOfferPage(
+                it["customerOfferId"].toString().toLong(),
+                it["amount"]?.run { BigDecimal(it["amount"].toString()) },
+                it["datetime"].toString(),
+                it["productName"].toString(),
+                ApplyStatus.valueOf(it["status"].toString())
+            )
+        }
         return page
     }
 }

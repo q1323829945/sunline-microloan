@@ -7,6 +7,6 @@ data class DTOCustomerOfferPage(
         var customerOfferId:Long,
         var amount:BigDecimal?,
         val datetime:String,
-        var productName:String?,
+        var productName:String,
         val status: ApplyStatus
 )

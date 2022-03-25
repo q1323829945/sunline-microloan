@@ -8,14 +8,14 @@ import cn.sunline.saas.global.model.Country
 import java.math.BigDecimal
 
 data class DTOCustomerOfferLoanAdd (
-        val loan:DTOLoan?,
-        val company:DTOCompany?,
-        val contact:DTOContact?,
-        val detail:DTODetail?,
-        val guarantor:DTOGuarantor?,
-        val financial:DTOFinancial?,
-        val uploadDocument:List<DTOUploadDocument>,
-        val kyc:DTOKyc?,
+        val loan:DTOLoan,
+        val company:DTOCompany,
+        val contact:DTOContact,
+        val detail:DTODetail,
+        val guarantor:DTOGuarantor,
+        val financial:DTOFinancial,
+        var uploadDocument:List<DTOUploadDocument>,
+        val kyc:DTOKyc,
 )
 
 

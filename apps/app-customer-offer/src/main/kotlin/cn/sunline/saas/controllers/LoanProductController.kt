@@ -1,5 +1,7 @@
 package cn.sunline.saas.controllers
 
+import cn.sunline.saas.customer.offer.modules.dto.DTOAmountConfiguration
+import cn.sunline.saas.customer.offer.modules.dto.DTOTermConfiguration
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -24,18 +26,8 @@ class LoanProductController {
             val identificationCode:String,
             val name:String,
             val description:String,
-            val amountConfiguration:DTOAmountConfigurationView?,
-            val termConfiguration:DTOTermConfiguration?,
-    )
-
-    data class DTOAmountConfigurationView(
-            val maxValueRange:BigDecimal?,
-            val minValueRange:BigDecimal?,
-    )
-
-    data class DTOTermConfiguration(
-            val maxValueRange: LoanTermType?,
-            val minValueRange: LoanTermType?,
+            val amountConfiguration: DTOAmountConfiguration?,
+            val termConfiguration: DTOTermConfiguration?,
     )
 
     @Autowired

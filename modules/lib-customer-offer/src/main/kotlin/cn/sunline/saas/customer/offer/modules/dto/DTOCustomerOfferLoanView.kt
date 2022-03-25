@@ -7,17 +7,17 @@ import java.math.BigDecimal
 
 
 data class DTOCustomerOfferLoanView (
-        val customerOfferProcedure:DTOCustomerOfferProcedureView?,
+        val customerOfferProcedure:DTOCustomerOfferProcedureView,
         val pdpa:PDPAInformationView?,
         var product:DTOProductView,
-        val loan:DTOLoan?,
-        val company:DTOCompany?,
-        val contact:DTOContact?,
-        val detail:DTODetail?,
-        val guarantor:DTOGuarantor?,
-        val financial:DTOFinancial?,
-        val uploadDocument:List<DTOUploadDocument>?,
-        val kyc:DTOKyc?,
+        val loan:DTOLoan,
+        val company:DTOCompany,
+        val contact:DTOContact,
+        val detail:DTODetail,
+        val guarantor:DTOGuarantor,
+        val financial:DTOFinancial,
+        val uploadDocument:List<DTOUploadDocument>,
+        val kyc:DTOKyc,
 )
 
 data class DTOCustomerOfferProcedureView(
@@ -32,14 +32,13 @@ data class DTOCustomerOfferProcedureView(
 
 data class DTOProductView(
         var productId: Long,
-        var identificationCode:String?,
-        var name:String?,
-        var version:String?,
-        var description:String?,
-        var amountConfiguration: DTOAmountConfiguration?,
-        var termConfiguration: DTOTermConfiguration?,
-
-        )
+        var identificationCode:String? = null,
+        var name:String? = null,
+        var version:String? = null,
+        var description:String? = null,
+        var amountConfiguration: DTOAmountConfiguration? = null,
+        var termConfiguration: DTOTermConfiguration? = null,
+)
 
 data class DTOAmountConfiguration(
         val maxValueRange: BigDecimal?,

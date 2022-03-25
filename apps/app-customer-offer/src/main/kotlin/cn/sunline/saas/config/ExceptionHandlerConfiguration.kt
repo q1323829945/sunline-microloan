@@ -34,12 +34,12 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
     }
 
     override fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
-        var errorMessage = "Incomplete parameters, please check spec"
+        val errorMessage = "Incomplete parameters, please check spec"
         return DTOResponseError(ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER.code, "", errorMessage, null).response() as ResponseEntity<Any>
     }
 
     override fun handleMissingServletRequestParameter(ex: MissingServletRequestParameterException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
-        var errorMessage = "Missing parameters, please check parameters"
+        val errorMessage = "Missing parameters, please check parameters"
         return DTOResponseError(ManagementExceptionCode.REQUEST_MISSING_REQUEST_PARAMETER.code, "", errorMessage, null).response() as ResponseEntity<Any>
     }
 }

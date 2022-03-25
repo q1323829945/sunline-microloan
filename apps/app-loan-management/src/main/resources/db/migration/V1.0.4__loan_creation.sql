@@ -12,6 +12,7 @@ CREATE TABLE `loan_upload_config` (
 CREATE TABLE `customer_offer` (
   `id` bigint NOT NULL,
   `customer_id` bigint NOT NULL,
+  `product_id` bigint NOT NULL,
   `status` varchar(256) not null,
   `data` text not null,
   `datetime` varchar(256) not null,
@@ -22,24 +23,11 @@ CREATE TABLE `customer_offer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `customer_loan_apply` (
-  `id` bigint NOT NULL,
   `customer_offer_id` bigint NOT NULL,
+  `amount` decimal(21,2) NOT NULL,
   `data` text not null,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx_customer_offer_id` (`customer_offer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `pdpa` (
-  `id` bigint NOT NULL,
-  `customer_id` bigint NOT NULL,
-  `company_data` text not null,
-  `personal_data` text not null,
-  `signature` varchar(256),
-  `created` datetime(6) DEFAULT NULL,
-  `updated` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY  `idx_customer_id_unique` (`customer_id`)
+  PRIMARY KEY (`customer_offer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

@@ -13,6 +13,7 @@ import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.pdpa.services.PDPAService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -41,16 +42,23 @@ class CustomerOfferProcedureController {
     @Autowired
     private lateinit var loanProductService: LoanProductService
 
+    @Autowired
+    private lateinit var pdpaService: PDPAService
+
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    @PostMapping("loan/initiate")
-    fun recordLoanApply(@RequestBody dtoCustomerOffer: DTOCustomerOfferAdd):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferView>> {
+    @PostMapping(value = ["loan/initiate"], produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun recordLoanApply(@RequestPart("customerOffer") dtoCustomerOffer: DTOCustomerOfferAdd, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferView>> {
+        //get product info
         val loanProduct = loanProductService.findById(dtoCustomerOffer.product.productId)
 
         val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
         dtoLoanProduct.productId = loanProduct.id
 
+        val key = pdpaService.sign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
+
+        dtoCustomerOffer.pdpa.signature = key
         val customerOfferProcedure = customerOfferService.initiate(dtoCustomerOffer)
 
         return DTOResponseSuccess(DTOCustomerOfferView(customerOfferProcedure,dtoLoanProduct)).response()
@@ -59,8 +67,8 @@ class CustomerOfferProcedureController {
     @PutMapping(value = ["loan/{customerOfferId}/submit"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun submitLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>){
         val fileList = ArrayList<DTOFile>()
-        for(file in files){
-            fileList.add(DTOFile(file.originalFilename!!, file.inputStream))
+        files.forEach {
+            fileList.add(DTOFile(it.originalFilename!!, it.inputStream))
         }
         customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd,fileList)
     }
@@ -68,8 +76,8 @@ class CustomerOfferProcedureController {
     @PutMapping(value = ["loan/{customerOfferId}/update"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>){
         val fileList = ArrayList<DTOFile>()
-        for(file in files){
-            fileList.add(DTOFile(file.originalFilename!!, file.inputStream))
+        files.forEach {
+            fileList.add(DTOFile(it.originalFilename!!, it.inputStream))
         }
         customerLoanApplyService.update(customerOfferId, dtoCustomerOfferLoanAdd,fileList)
     }
@@ -90,14 +98,7 @@ class CustomerOfferProcedureController {
 
     @GetMapping("loan/{customerId}/list")
     fun getPaged(@PathVariable("customerId")customerId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val page = customerOfferService.getCustomerOfferPaged(customerId, pageable).map {
-            val productId = customerOfferService.findProductIdById(it.customerOfferId)
-            val product = loanProductService.findById(productId)
-            it.productName = product.name
-            val amount = customerLoanApplyService.findAmountByCustomerOfferId(it.customerOfferId)
-            it.amount = amount
-            it
-        }
+        val page = customerOfferService.getCustomerOfferPaged(customerId, pageable)
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 

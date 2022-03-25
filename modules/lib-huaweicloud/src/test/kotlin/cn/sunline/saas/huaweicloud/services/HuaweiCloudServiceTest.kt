@@ -78,8 +78,7 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `delete object`(){
-        val del = DeleteParams("mimimi2.JPG")
-
+        val del = DeleteParams("lizheng-test","mimimi2.JPG")
         huaweiCloudService.deleteObject(del)
     }
 }

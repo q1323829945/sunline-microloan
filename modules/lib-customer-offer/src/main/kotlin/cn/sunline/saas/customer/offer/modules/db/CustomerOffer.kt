@@ -23,12 +23,16 @@ class CustomerOffer (
     var customerId:Long,
 
     @NotNull
+    @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+    var productId:Long,
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "status", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var status:ApplyStatus = ApplyStatus.RECORD,
 
-    @NotNull
-    @Column(name = "data", nullable = false, columnDefinition = "text not null")
-    var data:String,
+    @Column(name = "data", nullable = false, columnDefinition = "text ")
+    var data:String?,
 
     @NotNull
     @Column(name = "datetime", nullable = false,length = 256,  columnDefinition = "varchar(256) not null")
