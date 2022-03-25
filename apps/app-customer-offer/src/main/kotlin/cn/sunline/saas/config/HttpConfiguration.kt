@@ -45,7 +45,6 @@ class HttpConfiguration {
         val httpClient = HttpClient()
         val status = httpClient.executeMethod(httpMethod)
 
-        println(status)
         if(status != 200){
             throw BusinessException("http error",ManagementExceptionCode.HTTP_ERROR)
         }
