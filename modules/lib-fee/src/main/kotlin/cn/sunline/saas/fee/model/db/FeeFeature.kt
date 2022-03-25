@@ -1,7 +1,7 @@
 package cn.sunline.saas.fee.model.db
 
-import cn.sunline.saas.fee.model.FeeDeductType
-import cn.sunline.saas.fee.model.FeeMethodType
+import cn.sunline.saas.fee.constant.FeeDeductType
+import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*

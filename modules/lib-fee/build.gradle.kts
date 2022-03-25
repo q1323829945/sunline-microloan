@@ -5,11 +5,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation(project(":lib-global"))
-    implementation(project(":lib-snowflake"))
     implementation(project(":lib-exceptions"))
+    implementation(project(":lib-fee-util"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
     api(project(":lib-seq-api"))
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

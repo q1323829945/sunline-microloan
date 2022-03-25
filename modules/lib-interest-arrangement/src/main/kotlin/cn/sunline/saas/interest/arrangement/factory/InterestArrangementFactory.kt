@@ -16,12 +16,10 @@ import org.springframework.stereotype.Component
  */
 @Component
 class InterestArrangementFactory {
-    @Autowired
-    private lateinit var seq: Sequence
 
-    fun instance(term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd): InterestArrangement {
+    fun instance(agreementId:Long,term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd): InterestArrangement {
         return InterestArrangement(
-            id = seq.nextId(),
+            id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,
             rate = InterestRateUtil.getRate(term, dtoInterestArrangementAdd.planRates),
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,

@@ -1,7 +1,5 @@
 package cn.sunline.saas.fee.service
 
-import cn.sunline.saas.fee.model.FeeDeductType
-import cn.sunline.saas.fee.model.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test

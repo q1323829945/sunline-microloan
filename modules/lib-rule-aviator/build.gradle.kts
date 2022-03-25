@@ -10,12 +10,9 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-rule-api"))
     api(project(":lib-base-jpa"))
-
     implementation("com.googlecode.aviator:aviator:5.3.0")
-
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.200")
-
 
 }

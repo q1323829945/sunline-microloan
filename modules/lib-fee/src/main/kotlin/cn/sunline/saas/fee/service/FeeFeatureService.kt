@@ -1,14 +1,13 @@
 package cn.sunline.saas.fee.service
 
-import cn.sunline.saas.fee.exception.FeeConfigException
-import cn.sunline.saas.fee.model.FeeMethodType
 import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.fee.repository.FeeFeatureRepository
+import cn.sunline.saas.fee.util.FeeUtil
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import cn.sunline.saas.seq.Sequence
 
 /**
  * @title: FeeFeatureService
@@ -27,22 +26,18 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
 
         val feeFeatures = mutableListOf<FeeFeature>()
 
-        for (temp in dtoFeeFeatures) {
-            if (temp.feeMethodType == FeeMethodType.FEE_RATIO && temp.feeRate == null) {
-                throw FeeConfigException("Fee calculation method config error")
-            }
-            if (temp.feeMethodType == FeeMethodType.FIX_AMOUNT && temp.feeAmount == null) {
-                throw FeeConfigException("Fee calculation method config error")
-            }
+        dtoFeeFeatures.forEach {
+            FeeUtil.validFeeConfig(it.feeMethodType,it.feeAmount,it.feeRate)
+
             feeFeatures.add(
                 FeeFeature(
                     seq.nextId(),
                     productId,
-                    temp.feeType,
-                    temp.feeMethodType,
-                    temp.feeAmount,
-                    temp.feeRate,
-                    temp.feeDeductType
+                    it.feeType,
+                    it.feeMethodType,
+                    it.feeAmount,
+                    it.feeRate,
+                    it.feeDeductType
                 )
             )
         }

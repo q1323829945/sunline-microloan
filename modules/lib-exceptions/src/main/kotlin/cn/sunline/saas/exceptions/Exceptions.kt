@@ -5,7 +5,7 @@ open class BaseException(
     val exceptionMessage: String? = null,
     val user: Long? = null,
     val data: Any? = null
-) : Exception()
+) : Exception(exceptionMessage)
 
 class ManagementException(
     statusCode: ManagementExceptionCode,

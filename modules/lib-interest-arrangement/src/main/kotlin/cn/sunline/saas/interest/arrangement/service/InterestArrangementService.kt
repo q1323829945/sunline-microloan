@@ -22,8 +22,10 @@ class InterestArrangementService(private val interestArrangementRepo: InterestAr
     @Autowired
     private lateinit var interestArrangementFactory: InterestArrangementFactory
 
-    fun registered(term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd): InterestArrangement {
-        return save(interestArrangementFactory.instance(term, dtoInterestArrangementAdd))
+    fun registered(
+        agreementId: Long, term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd
+    ): InterestArrangement {
+        return save(interestArrangementFactory.instance(agreementId, term, dtoInterestArrangementAdd))
     }
 
 }

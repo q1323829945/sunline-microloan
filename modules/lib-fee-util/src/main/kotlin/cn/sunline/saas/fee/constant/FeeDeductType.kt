@@ -1,4 +1,4 @@
-package cn.sunline.saas.fee.model
+package cn.sunline.saas.fee.constant
 
 /**
  * @title: FeeDeductType

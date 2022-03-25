@@ -1,7 +1,9 @@
 package cn.sunline.saas.loan.agreement.model.dto
 
-import cn.sunline.saas.global.constant.AgreementType
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 
 /**
  * @title: DTOLoanAgreementAdd
@@ -10,7 +12,12 @@ import cn.sunline.saas.global.constant.LoanTermType
  * @date 2022/3/22 19:07
  */
 data class DTOLoanAgreementAdd(
+    val productId: Long,
     val term: LoanTermType,
     val amount: String,
-    val currency: String
+    val currency: String,
+    val interestArrangement: DTOInterestArrangementAdd,
+    val repaymentArrangement: DTORepaymentArrangementAdd,
+    val feeArrangement: MutableList<DTOFeeArrangementAdd>,
+    val involvements: MutableList<DTOLoanAgreementInvolvement>
 )

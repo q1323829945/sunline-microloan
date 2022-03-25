@@ -1,15 +1,9 @@
 package cn.sunline.saas.repayment.service
 
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.PrepaymentType
-import cn.sunline.saas.repayment.model.RepaymentDayType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
-import org.joda.time.DateTime
-import org.joda.time.Instant
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

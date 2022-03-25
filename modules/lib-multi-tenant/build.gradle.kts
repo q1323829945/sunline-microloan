@@ -6,6 +6,5 @@ dependencies {
     implementation(project(":lib-exceptions"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")
 }

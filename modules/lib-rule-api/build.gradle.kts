@@ -1,4 +1,3 @@
-val jodaVersion: String by rootProject.extra
 val jacksonVersion: String by rootProject.extra
 
 dependencies {

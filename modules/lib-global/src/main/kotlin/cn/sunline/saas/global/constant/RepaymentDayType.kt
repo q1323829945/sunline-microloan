@@ -1,4 +1,4 @@
-package cn.sunline.saas.repayment.model
+package cn.sunline.saas.global.constant
 
 /**
  * @title: RepaymentDayType

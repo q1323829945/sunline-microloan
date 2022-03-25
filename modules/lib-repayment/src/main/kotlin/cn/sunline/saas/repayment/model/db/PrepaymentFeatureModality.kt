@@ -1,8 +1,8 @@
 package cn.sunline.saas.repayment.model.db
 
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.PrepaymentType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.repayment.model.PrepaymentType
 import java.math.BigDecimal
 import javax.persistence.*
 import javax.validation.constraints.NotNull

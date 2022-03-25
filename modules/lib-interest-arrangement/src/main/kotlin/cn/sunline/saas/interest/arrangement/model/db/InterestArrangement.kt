@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull
  * @date 2022/3/21 16:27
  */
 @Entity
+@Table(
+    name = "interest_arrangement",
+)
 class InterestArrangement(
 
     @Id

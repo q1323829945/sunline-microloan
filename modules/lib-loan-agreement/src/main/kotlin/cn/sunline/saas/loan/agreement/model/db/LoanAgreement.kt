@@ -57,7 +57,19 @@ class LoanAgreement(
 
     @NotNull
     @Column(nullable = false, length = 3, columnDefinition = "varchar(3) not null")
-    val currency: String
+    val currency: String,
+
+    @NotNull
+    @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+    val productId: Long,
+
+    @Column(nullable = true, length = 128, columnDefinition = "varchar(128) not null")
+    var agreementDocument: String?,
+
+    @NotNull
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "agreement_id")
+    val involvements: MutableList<LoanAgreementInvolvement>
 
 ) : MultiTenant {
 

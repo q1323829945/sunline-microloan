@@ -1,10 +1,6 @@
 package cn.sunline.saas.repayment.model.dto
 
-import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.PrepaymentType
-import cn.sunline.saas.repayment.model.RepaymentDayType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.*
 import java.math.BigDecimal
 
 /**

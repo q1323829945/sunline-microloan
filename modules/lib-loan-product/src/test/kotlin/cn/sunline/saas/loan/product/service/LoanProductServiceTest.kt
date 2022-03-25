@@ -1,7 +1,5 @@
 package cn.sunline.saas.loan.product.service
 
-import cn.sunline.saas.fee.model.FeeDeductType
-import cn.sunline.saas.fee.model.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
@@ -9,10 +7,6 @@ import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
 import cn.sunline.saas.loan.product.model.dto.DTOTermLoanProductConfiguration
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.PrepaymentType
-import cn.sunline.saas.repayment.model.RepaymentDayType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
