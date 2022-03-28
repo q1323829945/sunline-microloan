@@ -2,7 +2,6 @@ package cn.sunline.saas.config
 
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.exceptions.UploadException
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
 import com.google.gson.Gson
