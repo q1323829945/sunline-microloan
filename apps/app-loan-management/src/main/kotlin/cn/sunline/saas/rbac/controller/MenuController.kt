@@ -38,8 +38,7 @@ class MenuController {
 
     @GetMapping
     fun getMenu(@RequestHeader("X-Authorization-Username")username:String): ResponseEntity<DTOResponseSuccess<List<DTOMenuView>>> {
-        val user = userService.getByUsername(username)?:throw UserNotFoundException("Invalid user")
-
+        val user = userService.getByUsername(username)?:throw NotFoundException("Invalid user")
         val permissionSetList = user.roles.map {
             it.permissions
         }.toSet()

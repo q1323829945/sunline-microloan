@@ -75,12 +75,6 @@ class InterestRateController {
     }
 
     @PutMapping("{id}")
-    fun updateOne(
-        @PathVariable id: Long,
-        @RequestBody dtoInterestRate: DTOInterestRateChange
-    ): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
-        val oldInterestRate =
-            interestRateService.getOne(id) ?: throw InterestRateNotFoundException("Invalid interestRate")
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
 
         val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
@@ -90,8 +84,7 @@ class InterestRateController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
-        val interestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException("Invalid interestRate")
-        interestRateService.deleteById(id)
+        val interestRate = interestRateService.getOne(id)?: throw NotFoundException("Invalid interestRate")        interestRateService.deleteById(id)
         val responseInterestRate = objectMapper.convertValue<DTOInterestRateView>(interestRate)
         return DTOResponseSuccess(responseInterestRate).response()
     }

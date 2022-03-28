@@ -6,6 +6,7 @@ import cn.sunline.saas.customer.offer.modules.dto.CustomerOfferProcedureView
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferAdd
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer.offer.repositories.CustomerOfferRepository
+import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
@@ -52,7 +53,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
 
 
     fun getOneById(id: Long): CustomerOffer {
-        return getOne(id) ?: throw NotFoundException("Invalid customer offer")
+        return getOne(id) ?: throw NotFoundException("Invalid customer offer", ManagementExceptionCode.DATA_NOT_FOUND)
     }
 
 

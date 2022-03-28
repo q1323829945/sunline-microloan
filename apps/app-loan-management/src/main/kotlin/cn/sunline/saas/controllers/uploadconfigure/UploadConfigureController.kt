@@ -1,5 +1,6 @@
 package cn.sunline.saas.controllers.uploadconfigure
 
+import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureAdd
@@ -55,7 +56,8 @@ class UploadConfigureController {
 
     @DeleteMapping("{id}")
     fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
-        val uploadConfigure = uploadConfigureService.getOne(id)?:throw NotFoundException("Invalid configure")
+        val uploadConfigure = uploadConfigureService.getOne(id)?:throw NotFoundException("Invalid configure",
+            ManagementExceptionCode.DATA_NOT_FOUND)
         uploadConfigure.deleted = true
         val save = uploadConfigureService.save(uploadConfigure)
         val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(save)

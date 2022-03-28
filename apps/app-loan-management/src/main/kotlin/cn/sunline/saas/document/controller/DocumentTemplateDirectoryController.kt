@@ -101,7 +101,6 @@ class DocumentTemplateDirectoryController {
     @PostMapping
     fun addOne(@RequestBody dtoDocumentDirectory: DTOTemplateDirectoryAdd): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
         dtoDocumentDirectory.parentId?.run {
-            val parent = documentTemplateDirectoryService.getOne(this)?:throw DocumentDirectoryNotFoundException("parent directory is invalid")
             dtoDocumentDirectory.parent = parent
         }
         val documentDirectory = objectMapper.convertValue<DocumentTemplateDirectory>(dtoDocumentDirectory)
@@ -112,8 +111,7 @@ class DocumentTemplateDirectoryController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoDirectory: DTOTemplateDirectoryChange): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
-        val oldOne = documentTemplateDirectoryService.getOne(id)?:throw DocumentDirectoryNotFoundException("Invalid directory")
-        val newOne = objectMapper.convertValue<DocumentTemplateDirectory>(dtoDirectory)
+        val oldOne = documentTemplateDirectoryService.getOne(id)?:throw NotFoundException("Invalid directory")        val newOne = objectMapper.convertValue<DocumentTemplateDirectory>(dtoDirectory)
         val updateOne = documentTemplateDirectoryService.update(oldOne,newOne)
         val responseDirectory = objectMapper.convertValue<DTOTemplateDirectoryView>(updateOne)
         return DTOResponseSuccess(responseDirectory).response()
@@ -121,8 +119,7 @@ class DocumentTemplateDirectoryController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOTemplateDirectoryView>> {
-        val directory = documentTemplateDirectoryService.getOne(id)?:throw DocumentDirectoryNotFoundException("Invalid directory")
-        val delete = documentTemplateDirectoryService.delete(directory)
+        val directory = documentTemplateDirectoryService.getOne(id)?:throw NotFoundException("Invalid directory")        val delete = documentTemplateDirectoryService.delete(directory)
         val responseDirectory = objectMapper.convertValue<DTOTemplateDirectoryView>(delete)
         return DTOResponseSuccess(responseDirectory).response()
     }

@@ -93,7 +93,6 @@ class DocumentTemplateController {
     fun updateOne(@PathVariable id: Long, @RequestPart("template") dtoTemplate: DTODocumentTemplateChange, @RequestPart("file") file: MultipartFile?): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>>{
 
         val oldOne = documentTemplateService.getOne(id)?:throw DocumentTemplateNotFoundException("Invalid template")
-
         file?.originalFilename?.run {
             dtoTemplate.documentStoreReference = "${dtoTemplate.directoryPath}/${file.originalFilename}"
 
@@ -113,8 +112,7 @@ class DocumentTemplateController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>> {
-        val documentTemplate = documentTemplateService.getOne(id)?: throw DocumentTemplateNotFoundException("Invalid template")
-        documentTemplateService.delete(documentTemplate)
+        val documentTemplate = documentTemplateService.getOne(id)?: throw ManagementException(ManagementExceptionCode.NOT_FOUND_DATA,"Invalid template")        documentTemplateService.delete(documentTemplate)
         val responseDocumentTemplate = objectMapper.convertValue<DTODocumentTemplateView>(documentTemplate)
         return DTOResponseSuccess(responseDocumentTemplate).response()
     }
@@ -123,8 +121,7 @@ class DocumentTemplateController {
 
     @GetMapping("download/{id}")
     fun download(@PathVariable id:Long,response: HttpServletResponse) {
-        val template = documentTemplateService.getOne(id)?:throw DocumentTemplateNotFoundException("Invalid template")
-        val inputStream = documentTemplateService.download(template)
+        val template = documentTemplateService.getOne(id)?:throw ManagementException(ManagementExceptionCode.NOT_FOUND_DATA,"Invalid template")        val inputStream = documentTemplateService.download(template)
 
         val fileName = if(template.documentStoreReference.lastIndexOf("/") == -1){
             template.documentStoreReference

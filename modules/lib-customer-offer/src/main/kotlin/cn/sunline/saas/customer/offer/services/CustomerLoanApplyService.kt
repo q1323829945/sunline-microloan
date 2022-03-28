@@ -62,7 +62,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
     fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
 
-        val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply")
+        val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply",ManagementExceptionCode.DATA_NOT_FOUND)
         val originalData = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
 
         val fileTemplateIdList = dtoCustomerOfferLoanAdd.uploadDocument.map { it.documentTemplateId }
@@ -100,7 +100,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
 
     fun retrieve(customerOfferId:Long,countryCode:String): DTOCustomerOfferLoanView{
-        val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply")
+        val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply",ManagementExceptionCode.DATA_NOT_FOUND)
         val dtoCustomerOfferLoanAdd = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
 
         val customerOffer = customerOfferService.getOneById(customerOfferId)

@@ -1,7 +1,6 @@
 package cn.sunline.saas.interest.controller
 
-import cn.sunline.saas.interest.exception.RatePlanNotFoundException
-import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.exceptions.NotFoundExceptionimport cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanService
@@ -65,7 +64,6 @@ class RatePlanController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlanChange): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan")
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)

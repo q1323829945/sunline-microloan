@@ -5,16 +5,12 @@ import cn.sunline.saas.document.template.repositories.DocumentTemplateDirectoryR
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
+import org.springframework.beans.factory.annotation.Autowired
 
-/**
- * @title: DocumentDirectoryService
- * @description: TODO
- * @author Kevin-Cui
- * @date 2022/2/21 16:27
- */
 @Service
 class DocumentTemplateDirectoryService(private val documentTemplateDirectoryRepo: DocumentTemplateDirectoryRepository,private val sequence: Sequence) :
     BaseMultiTenantRepoService<DocumentTemplateDirectory, Long>(documentTemplateDirectoryRepo){
+
 
     fun queryAll():List<DocumentTemplateDirectory>{
         return documentTemplateDirectoryRepo.queryAll()

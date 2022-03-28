@@ -1,6 +1,6 @@
 package cn.sunline.saas.loan.product.service
 
-import cn.sunline.saas.fee.model.db.FeeFeature
+import cn.sunline.saas.exceptions.NotFoundExceptionimport cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
@@ -135,8 +135,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
     @Transactional
     fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
-        val oldLoanProduct = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product")
-        //update loan product
+        val oldLoanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")        //update loan product
         oldLoanProduct.name = loanProductData.name
         oldLoanProduct.version = (oldLoanProduct.version.toLong()+1L).toString()
         oldLoanProduct.description = loanProductData.description
@@ -255,8 +254,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
 
     fun getLoanProduct(id:Long): DTOLoanProductView {
-        val loanProduct = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product")
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
+        val loanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
 
         loanProduct.configurationOptions?.forEach {
             when (ConditionType.valueOf(it.type)) {
@@ -311,14 +309,13 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
-        val product = this.getOne(id) ?: throw LoanProductNotFoundException("Invalid loan product")
-        product.status = status
+        val product = this.getOne(id) ?: throw NotFoundException("Invalid loan product")        product.status = status
         return save(product)
     }
 
 
     fun findByIdentificationCode(identificationCode:String):DTOLoanProductView{
-        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw NotFoundException("Invalid loan product")
+        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw NotFoundException("Invalid loan product",ManagementExceptionCode.DATA_NOT_FOUND)
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
 
@@ -340,7 +337,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     }
 
     fun findById(id:Long):DTOLoanProductView{
-        val product = this.getOne(id)?:throw NotFoundException("Invalid loan product")
+        val product = this.getOne(id)?:throw NotFoundException("Invalid loan product", ManagementExceptionCode.DATA_NOT_FOUND)
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
 

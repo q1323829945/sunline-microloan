@@ -22,7 +22,7 @@ open class AuthenticationException(
 
 open class NotFoundException(
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode,
+    statusCode: ManagementExceptionCode ,
     user: Long? = null
 ) : BaseException(statusCode, exceptionMessage, user, null)
 

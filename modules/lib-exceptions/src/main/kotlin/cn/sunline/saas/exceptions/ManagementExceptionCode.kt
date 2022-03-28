@@ -8,6 +8,7 @@ enum class ManagementExceptionCode(val code: Int) {
     REQUEST_RESOURCE_ACCESS_DENIED(1004),
     DATA_ALREADY_EXIST(1005),
     TYPE_ERROR(1006),
+    DATA_NOT_FOUND(1007),
 
     // Auth 2000 - 2999
     AUTHORIZATION_LOGIN_FAILED(2000),
