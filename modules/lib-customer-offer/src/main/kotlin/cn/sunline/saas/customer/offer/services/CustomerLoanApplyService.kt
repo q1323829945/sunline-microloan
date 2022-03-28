@@ -43,15 +43,17 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
     fun submit(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
-        if(dtoFile.size != dtoCustomerOfferLoanAdd.uploadDocument.size){
-            throw BusinessException("file upload failed",ManagementExceptionCode.FILE_UPLOAD_FAILED)
-        }
-        for(i in dtoCustomerOfferLoanAdd.uploadDocument.indices){
-            val file = dtoFile[i]
-            val uploadDocument = dtoCustomerOfferLoanAdd.uploadDocument[i]
-            val key = "${customerOffer.customerId}/$customerOfferId/${uploadDocument.documentTemplateId}/${file.originalFilename}"
-            huaweiCloudService.putObject(PutParams(huaweiCloudTools.bucketName,key,file.inputStream))
-            dtoCustomerOfferLoanAdd.uploadDocument[i].file = key
+        dtoFile.forEach {  file ->
+            val names = file.originalFilename.split("/")
+            val templateId = names[0].toLong()
+            val fileName = names[1]
+            dtoCustomerOfferLoanAdd.uploadDocument.forEach{
+                if(templateId == it.documentTemplateId){
+                    val key = "${customerOffer.customerId}/$customerOfferId/$templateId/$fileName"
+                    huaweiCloudService.putObject(PutParams(huaweiCloudTools.bucketName,key,file.inputStream))
+                    it.file = key
+                }
+            }
         }
 
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
@@ -60,24 +62,28 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
     fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
 
-        val noFileParams = dtoCustomerOfferLoanAdd.uploadDocument.filter { it.file == null }
-
-        if(dtoFile.size != noFileParams.size){
-            throw BusinessException("file upload failed",ManagementExceptionCode.FILE_UPLOAD_FAILED)
-        }
-
         val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply")
         val originalData = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
-        dtoCustomerOfferLoanAdd.uploadDocument = originalData.uploadDocument
+
+        val fileTemplateIdList = dtoCustomerOfferLoanAdd.uploadDocument.map { it.documentTemplateId }
+        originalData.uploadDocument.forEach {
+            if(!fileTemplateIdList.contains(it.documentTemplateId)){
+                dtoCustomerOfferLoanAdd.uploadDocument.add(it)
+            }
+        }
 
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
-        for(i in noFileParams.indices){
-            val file = dtoFile[i]
-            dtoCustomerOfferLoanAdd.uploadDocument.forEach {
-                if(it.documentTemplateId == noFileParams[i].documentTemplateId){
-                    huaweiCloudService.deleteObject(DeleteParams(huaweiCloudTools.bucketName,it.file!!))
-                    val key = "${customerOffer.customerId}/$customerOfferId/${it.documentTemplateId}/${file.originalFilename}"
+        dtoFile.forEach {  file ->
+            val names = file.originalFilename.split("/")
+            val templateId = names[0].toLong()
+            val fileName = names[1]
+            dtoCustomerOfferLoanAdd.uploadDocument.forEach{
+                if(templateId == it.documentTemplateId){
+                    if(it.file != null){
+                        huaweiCloudService.deleteObject(DeleteParams(huaweiCloudTools.bucketName, it.file!!))
+                    }
+                    val key = "${customerOffer.customerId}/$customerOfferId/$templateId/$fileName"
                     huaweiCloudService.putObject(PutParams(huaweiCloudTools.bucketName,key,file.inputStream))
                     it.file = key
                 }

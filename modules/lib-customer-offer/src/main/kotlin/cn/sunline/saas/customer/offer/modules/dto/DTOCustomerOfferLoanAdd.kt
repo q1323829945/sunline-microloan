@@ -14,7 +14,7 @@ data class DTOCustomerOfferLoanAdd (
         val detail:DTODetail,
         val guarantor:DTOGuarantor,
         val financial:DTOFinancial,
-        var uploadDocument:List<DTOUploadDocument>,
+        var uploadDocument:MutableList<DTOUploadDocument>,
         val kyc:DTOKyc,
 )
 
