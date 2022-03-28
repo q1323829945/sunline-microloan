@@ -25,8 +25,6 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
-    api(project(":lib-seq-api"))
-    implementation(project(":lib-snowflake"))
 
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))

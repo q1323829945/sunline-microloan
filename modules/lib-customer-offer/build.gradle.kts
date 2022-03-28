@@ -9,8 +9,6 @@ dependencies {
     implementation(project(":lib-global"))
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
-    api(project(":lib-obs-api"))
-    api(project(":lib-seq-api"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-huaweicloud"))

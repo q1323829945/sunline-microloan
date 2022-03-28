@@ -8,13 +8,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
-    api(project(":lib-base-jpa"))
-    api(project(":lib-multi-tenant"))
-    api(project(":lib-seq-api"))
-    implementation(project(":lib-obs-api"))
-    implementation(project(":lib-huaweicloud"))
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("com.h2database:h2:1.4.200")
+
 }

@@ -8,7 +8,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
     api(project(":lib-base-jpa"))
-    api(project(":lib-seq-api"))
+    implementation(project(":lib-snowflake"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

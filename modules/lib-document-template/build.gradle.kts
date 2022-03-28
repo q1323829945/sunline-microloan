@@ -8,9 +8,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
     api(project(":lib-base-jpa"))
-    api(project(":lib-seq-api"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-obs-api"))
     implementation(project(":lib-document"))
     implementation(project(":lib-huaweicloud"))
 
