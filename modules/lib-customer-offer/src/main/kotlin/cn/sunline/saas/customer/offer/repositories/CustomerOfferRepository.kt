@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param
 interface CustomerOfferRepository: BaseRepository<CustomerOffer, Long>{
     @Query(value = "select co.id as customerOfferId\n" +
             "       ,cla.amount as amount\n" +
-            "       ,co.`datetime` as datetime \n" +
             "       ,lp.name as productName\n" +
             "       ,co.status as status\n" +
             "  from customer_offer co \n" +

@@ -14,13 +14,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.google.gson.Gson
+import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.time.Clock
-import java.time.Instant
 
 @Service
 class CustomerOfferService (private val customerOfferRepo: CustomerOfferRepository) :
@@ -40,7 +39,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
                 dtoCustomerOffer.product.productId,
                 ApplyStatus.RECORD,
                 data,
-                Instant.now(Clock.systemUTC()).toEpochMilli().toString()
+                Instant.now()
         ))
 
         val customerOfferProcedureView = objectMapper.convertValue<CustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
@@ -52,18 +51,19 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
     }
 
 
-    fun getOneById(id: Long): CustomerOffer {
-        return getOne(id) ?: throw NotFoundException("Invalid customer offer", ManagementExceptionCode.DATA_NOT_FOUND)
+    fun getOneById(id: Long): CustomerOffer? {
+        return this.getOne(id)
     }
 
 
     fun getCustomerOfferPaged(customerId:Long,pageable: Pageable): Page<DTOCustomerOfferPage>{
 
         val page = customerOfferRepo.getCustomerOfferPaged(customerId,pageable).map {
+            val customerOffer = this.getOne(it["customerOfferId"].toString().toLong())
             DTOCustomerOfferPage(
                 it["customerOfferId"].toString().toLong(),
                 it["amount"]?.run { BigDecimal(it["amount"].toString()) },
-                it["datetime"].toString(),
+                customerOffer!!.datetime.millis,
                 it["productName"].toString(),
                 ApplyStatus.valueOf(it["status"].toString())
             )

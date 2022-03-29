@@ -15,7 +15,7 @@ CREATE TABLE `customer_offer` (
   `product_id` bigint NOT NULL,
   `status` varchar(256) not null,
   `data` text not null,
-  `datetime` varchar(256) not null,
+  `datetime` tinyblob,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -24,7 +24,7 @@ CREATE TABLE `customer_offer` (
 
 CREATE TABLE `customer_loan_apply` (
   `customer_offer_id` bigint NOT NULL,
-  `amount` decimal(21,2) NOT NULL,
+  `amount` decimal(21,2),
   `data` text not null,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,

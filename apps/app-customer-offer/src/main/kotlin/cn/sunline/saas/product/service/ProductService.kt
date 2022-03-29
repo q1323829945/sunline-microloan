@@ -1,4 +1,4 @@
-package cn.sunline.saas.services
+package cn.sunline.saas.product.service
 
 import cn.sunline.saas.config.HttpConfiguration
 import cn.sunline.saas.config.IpConfig

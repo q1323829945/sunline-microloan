@@ -3,6 +3,7 @@ package cn.sunline.saas.customer.offer.modules.db
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import org.joda.time.Instant
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -34,8 +35,7 @@ class CustomerOffer (
     var data:String?,
 
     @NotNull
-    @Column(name = "datetime", nullable = false,length = 256,  columnDefinition = "varchar(256) not null")
-    var datetime:String,
+    var datetime:Instant,
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

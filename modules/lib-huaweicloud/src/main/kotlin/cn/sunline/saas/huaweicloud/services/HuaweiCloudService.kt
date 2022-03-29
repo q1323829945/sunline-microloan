@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.FileInputStream
 import java.io.InputStream
+import kotlin.math.log
 
 @Service
 class HuaweiCloudService:ObsApi {
@@ -160,6 +161,7 @@ class HuaweiCloudService:ObsApi {
         val httpClient = HttpClient()
         val status = httpClient.executeMethod(httpMethod)
 
+        logger.debug("uri:${httpMethod.uri}")
         logger.debug("status:$status")
         }
     }

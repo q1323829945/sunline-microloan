@@ -15,9 +15,8 @@ class CustomerLoanApply(
         @Column(name = "customer_offer_id")
         var customerOfferId:Long?,
 
-        @NotNull
-        @Column(name = "amount", nullable = false, columnDefinition = "decimal(21,2) not null")
-        var amount:BigDecimal,
+        @Column(name = "amount", nullable = false, columnDefinition = "decimal(21,2)")
+        var amount:BigDecimal?,
 
 
         @NotNull

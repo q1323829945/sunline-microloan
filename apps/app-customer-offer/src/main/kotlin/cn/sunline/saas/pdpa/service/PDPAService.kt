@@ -1,8 +1,9 @@
-package cn.sunline.saas.services
+package cn.sunline.saas.pdpa.service
 
 import cn.sunline.saas.config.HttpConfiguration
 import cn.sunline.saas.config.IpConfig
 import cn.sunline.saas.global.constant.HttpRequestMethod
+import cn.sunline.saas.pdpa.dto.PDPAInformation
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.multipart.FilePart
 import org.apache.commons.httpclient.methods.multipart.StringPart
@@ -19,24 +20,6 @@ class PDPAService(
     ) {
 
     private val charset = "utf-8"
-
-
-    data class PDPAInformation (
-        val personalInformation:List<PersonalInformation>,
-        val corporateInformation:List<CorporateInformation>,
-        val pdpaTemplateId:String
-    )
-
-
-    data class PersonalInformation(
-        val key:String,
-        val name:String
-    )
-
-    data class CorporateInformation(
-        val key: String,
-        val name: String
-    )
 
     fun sign(
         customerId: Long,

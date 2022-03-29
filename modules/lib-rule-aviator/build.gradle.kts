@@ -9,7 +9,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-rule-api"))
-    api(project(":lib-base-jpa"))
     implementation("com.googlecode.aviator:aviator:5.3.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

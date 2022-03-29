@@ -1,4 +1,4 @@
-package cn.sunline.saas.controllers
+package cn.sunline.saas.customeroffer.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService.DTOFile
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customeroffer.service.CustomerOfferProcedureService
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.services.PDPAService
-import cn.sunline.saas.services.ProductService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.google.gson.Gson
 import org.springframework.data.domain.Pageable
 
 /**
@@ -40,21 +40,18 @@ class CustomerOfferProcedureController {
     private lateinit var customerOfferService: CustomerOfferService
 
     @Autowired
-    private lateinit var productService: ProductService
-
-    @Autowired
-    private lateinit var pdpaService: PDPAService
+    private lateinit var customerOfferProductService: CustomerOfferProcedureService
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping(value = ["loan/initiate"], produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun recordLoanApply(@RequestPart("customerOffer") dtoCustomerOffer: DTOCustomerOfferAdd, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferView>> {
         //get product info
-        val loanProduct = productService.findById(dtoCustomerOffer.product.productId)
+        val loanProduct = customerOfferProductService.getProduct(dtoCustomerOffer.product.productId)
 
         val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
 
-        val key = pdpaService.sign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
+        val key = customerOfferProductService.pdpaSign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
 
         dtoCustomerOffer.pdpa.signature = key
         val customerOfferProcedure = customerOfferService.initiate(dtoCustomerOffer)
@@ -63,18 +60,18 @@ class CustomerOfferProcedureController {
     }
 
     @PutMapping(value = ["loan/{customerOfferId}/submit"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun submitLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>){
+    fun submitLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>?){
         val fileList = ArrayList<DTOFile>()
-        files.forEach {
+        files?.forEach {
             fileList.add(DTOFile(it.originalFilename!!, it.inputStream))
         }
         customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd,fileList)
     }
 
     @PutMapping(value = ["loan/{customerOfferId}/update"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>){
+    fun updateLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>?){
         val fileList = ArrayList<DTOFile>()
-        files.forEach {
+        files?.forEach {
             fileList.add(DTOFile(it.originalFilename!!, it.inputStream))
         }
         customerLoanApplyService.update(customerOfferId, dtoCustomerOfferLoanAdd,fileList)
@@ -83,17 +80,26 @@ class CustomerOfferProcedureController {
 
     @GetMapping("loan/{customerOfferId}/{countryCode}/retrieve")
     fun retrieveLoanApply(@PathVariable("customerOfferId")customerOfferId:Long,@PathVariable("countryCode")countryCode:String):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferLoanView>>{
-        val dtoCustomerOfferLoanView = customerLoanApplyService.retrieve(customerOfferId, countryCode)
+        val dtoCustomerOfferLoanView = customerLoanApplyService.retrieve(customerOfferId)
 
-        //add product info
-        val loanProduct = productService.findById(dtoCustomerOfferLoanView.product.productId)
-        val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
-        dtoCustomerOfferLoanView.product = dtoLoanProduct
+        val customerOffer = customerOfferService.getOneById(customerOfferId)
+        customerOffer?.run {
+            //add customer offer procedure
+            val dtoCustomerOffer = Gson().fromJson(customerOffer.data,DTOCustomerOfferAdd::class.java)
+            val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
+            dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
+            dTOCustomerOfferProcedureView.status = customerOffer.status
+            dtoCustomerOfferLoanView.customerOfferProcedure = dTOCustomerOfferProcedureView
 
-        //add pdpa info
-        val pdpa = pdpaService.retrieve(countryCode)
-        dtoCustomerOfferLoanView.pdpa = objectMapper.convertValue<PDPAInformationView>(pdpa)
+            //add product info
+            val loanProduct = customerOfferProductService.getProduct(dtoCustomerOffer.product.productId)
+            val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
+            dtoCustomerOfferLoanView.product = dtoLoanProduct
 
+            //add pdpa info
+            val pdpa = customerOfferProductService.getPDPA(countryCode)
+            dtoCustomerOfferLoanView.pdpa = objectMapper.convertValue<PDPAInformationView>(pdpa)
+        }
         return DTOResponseSuccess(dtoCustomerOfferLoanView).response()
     }
 
