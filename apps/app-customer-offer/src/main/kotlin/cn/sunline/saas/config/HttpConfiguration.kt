@@ -17,12 +17,7 @@ import java.io.InputStreamReader
 @Component
 class HttpConfiguration {
 
-
-    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String): HttpMethod {
-        return getHttpMethod(httpMethod, uri,null)
-    }
-
-    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String,parts:Array<PartBase>?): HttpMethod {
+    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String,parts:Array<PartBase>? = null): HttpMethod {
 
 
         val httpRequest = when(httpMethod){

@@ -27,27 +27,21 @@ class PDPAService(
         fileName: String,
         inputStream: InputStream
     ): String {
-
+        //uri
         val uri = "http://${ipConfig.pdpaIp}/pdpa/sign"
-
+        //parts
         val file = File(fileName)
-
         val fos = FileOutputStream(file)
-
         val bytes = ByteArray(1024)
         while (true) {
             val len = inputStream.read(bytes)
-
             if (len == -1) {
                 break
             }
-
             fos.write(bytes, 0, len)
         }
-
         fos.close()
         inputStream.close()
-
         val filePart = FilePart("signature", fileName, file, MediaType.MULTIPART_FORM_DATA_VALUE, charset)
         val customerIdPart = StringPart("customerId", customerId.toString())
         customerIdPart.contentType = MediaType.APPLICATION_JSON_VALUE
@@ -55,8 +49,10 @@ class PDPAService(
         pdpaTemplateIdPart.contentType = MediaType.APPLICATION_JSON_VALUE
         val parts = arrayOf(filePart, customerIdPart, pdpaTemplateIdPart)
 
+        //get post method
         val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.POST, uri, parts)
 
+        //send http
         try {
             httpConfiguration.sendClient(postMethod)
         } finally {
