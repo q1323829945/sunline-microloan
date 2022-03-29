@@ -16,7 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfiguration (private val tokenService: TokenService, private val userService: UserService,private val tenantContext: TenantContext) : WebSecurityConfigurerAdapter() {
 
     override fun configure(web: WebSecurity?) {
-        web!!.ignoring().antMatchers("/auth/login","/menus","/DocumentTemplate/download/**","/LoanProduct/**/retrieve","/LoanProduct/**")
+//        web!!.ignoring().antMatchers("/auth/login","/menus","/DocumentTemplate/download/**","/LoanProduct/**/retrieve","/LoanProduct/**")
+
+        web!!.ignoring().antMatchers("/auth/login","/menus","/DocumentTemplate/download/**")
     }
 
     override fun configure(http: HttpSecurity?) {
@@ -26,6 +28,7 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
+                .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(AuthenticationFilter(tokenService, userService), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(TenantDomainFilter(tenantContext), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterAfter(PermissionFilter(), UsernamePasswordAuthenticationFilter::class.java)
