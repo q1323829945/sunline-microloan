@@ -14,7 +14,22 @@ class ProductService(
 )  {
 
     fun findById(productId: Long): DTOProductView {
-        val uri = "http://${ipConfig.productIp}/LoanProduct/$productId/retrieve"
+        val uri = "http://${ipConfig.productIp}/LoanProduct/$productId"
+
+        val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri)
+
+        httpConfiguration.sendClient(postMethod)
+
+        val data = httpConfiguration.getResponse(postMethod)
+
+        val dtoProductView = Gson().fromJson(data, DTOProductView::class.java)
+        dtoProductView.productId = productId
+
+        return dtoProductView
+    }
+
+    fun retrieve(identificationCode:String):DTOProductView{
+        val uri = "http://${ipConfig.productIp}/LoanProduct/$identificationCode/retrieve"
 
         val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri)
 

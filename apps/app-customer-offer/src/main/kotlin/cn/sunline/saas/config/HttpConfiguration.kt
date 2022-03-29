@@ -27,6 +27,8 @@ class HttpConfiguration {
             DELETE -> DeleteMethod(uri)
         }
 
+        httpRequest.addRequestHeader("ExternalTune","customer-offer")
+
         if(parts != null && httpRequest is PostMethod){
             httpRequest.requestEntity = MultipartRequestEntity(parts,httpRequest.params)
         }
@@ -40,11 +42,30 @@ class HttpConfiguration {
         val status = httpClient.executeMethod(httpMethod)
 
         if(status != 200){
-            throw BusinessException("http error",ManagementExceptionCode.HTTP_ERROR)
+            showErrorInfo(httpMethod)
         }
     }
 
+    fun showErrorInfo(httpMethod:HttpMethod){
+        val map = getBody(httpMethod)
+
+        throw BusinessException(map["message"].toString(),ManagementExceptionCode.HTTP_ERROR)
+
+    }
+
     fun getResponse(httpMethod:HttpMethod):String{
+        val map = getBody(httpMethod)
+
+        if(map["code"].toString() != "0.0"){
+            val message = map["message"].toString()
+            throw BusinessException(message,ManagementExceptionCode.HTTP_ERROR)
+        }
+
+        return Gson().toJson(map["data"])
+    }
+
+
+    fun getBody(httpMethod:HttpMethod):Map<*,*>{
         val inputStream = httpMethod.responseBodyAsStream
 
         val br = BufferedReader(InputStreamReader(inputStream))
@@ -57,13 +78,6 @@ class HttpConfiguration {
             strBuffer.append(str)
         }
 
-        val map = Gson().fromJson(strBuffer.toString(),Map::class.java)
-
-        if(map["code"].toString() != "0.0"){
-            val message = map["message"].toString()
-            throw BusinessException(message,ManagementExceptionCode.HTTP_ERROR)
-        }
-
-        return Gson().toJson(map["data"])
+        return Gson().fromJson(strBuffer.toString(),Map::class.java)
     }
 }

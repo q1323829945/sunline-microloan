@@ -81,14 +81,15 @@ class LoanProductController {
 
     }
 
-    @GetMapping("{productId}/retrieve")
-    fun getProductInfo(@PathVariable productId:Long): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>>{
-        val product = loanProductService.findById(productId)
+    @GetMapping("{identificationCode}/retrieve")
+    fun getProductInfo(@PathVariable identificationCode:String): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>>{
+        val product = loanProductService.findByIdentificationCode(identificationCode)
 
         val responseProduct = objectMapper.convertValue<DTOLoanProduct>(product)
         responseProduct.productId = product.id
         return DTOResponseSuccess(responseProduct).response()
     }
+
 
 
 }
