@@ -17,7 +17,7 @@ class LoanUploadConfigureService  (private var baseRepository: LoanUploadConfigu
         return this.save(loanUploadConfigure)
     }
 
-    fun findAll():List<LoanUploadConfigure>{
+    fun findAllExist():List<LoanUploadConfigure>{
         return baseRepository.findByDeleted(false)
     }
 }

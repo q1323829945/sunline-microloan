@@ -17,6 +17,7 @@ import java.io.InputStreamReader
 @Component
 class HttpConfiguration {
 
+
     fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String,parts:Array<PartBase>? = null): HttpMethod {
 
 
@@ -46,7 +47,7 @@ class HttpConfiguration {
         }
     }
 
-    fun showErrorInfo(httpMethod:HttpMethod){
+    private fun showErrorInfo(httpMethod:HttpMethod){
         val map = getBody(httpMethod)
 
         throw BusinessException(map["message"].toString(),ManagementExceptionCode.HTTP_ERROR)

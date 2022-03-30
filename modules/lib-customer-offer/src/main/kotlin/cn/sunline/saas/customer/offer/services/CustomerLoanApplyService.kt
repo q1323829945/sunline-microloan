@@ -51,7 +51,6 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
                 }
             }
         }
-
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
         val amount = dtoCustomerOfferLoanAdd.loan?.amount
         val customerLoanApply = this.getOne(customerOfferId)?:CustomerLoanApply(customerOfferId,amount, data)
@@ -92,7 +91,6 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
                 }
             }
         }
-
 
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
 

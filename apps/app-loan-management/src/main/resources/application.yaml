@@ -49,4 +49,4 @@ logging:
   level:
     cn.sunline.saas.huaweicloud: trace
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
+    console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"

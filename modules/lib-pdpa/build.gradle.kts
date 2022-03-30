@@ -7,7 +7,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
-    api(project(":lib-multi-tenant"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-huaweicloud"))
 

@@ -16,8 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfiguration (private val tokenService: TokenService, private val userService: UserService,private val tenantContext: TenantContext) : WebSecurityConfigurerAdapter() {
 
     override fun configure(web: WebSecurity?) {
-//        web!!.ignoring().antMatchers("/auth/login","/menus","/DocumentTemplate/download/**","/LoanProduct/**/retrieve","/LoanProduct/**")
-
         web!!.ignoring().antMatchers("/auth/login","/menus","/DocumentTemplate/download/**")
     }
 

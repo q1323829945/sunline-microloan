@@ -1,7 +1,5 @@
 package cn.sunline.saas.huaweicloud.services
 
-import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
-import cn.sunline.saas.huaweicloud.exception.ObsUploadException
 import cn.sunline.saas.obs.api.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,7 +25,7 @@ class HuaweiCloudServiceTest {
     /*
     @Test
     fun `delete bucket`(){
-        huaweiCloudService.deleteBucket("lizheng-test13")
+        huaweiCloudService.deleteBucket("lizheng-test1")
     }
 
 
@@ -50,9 +48,6 @@ class HuaweiCloudServiceTest {
     fun `object upload body is error`(){
         val put = PutParams("my123.JPG",123)
 
-        assertThrows<ObsBodyTypeException> {
-            huaweiCloudService.putObject(put)
-        }
     }
 
     @Test

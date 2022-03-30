@@ -137,7 +137,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
         val oldLoanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")        //update loan product
         oldLoanProduct.name = loanProductData.name
-        oldLoanProduct.version = (oldLoanProduct.version.toLong()+1L).toString()
         oldLoanProduct.description = loanProductData.description
         oldLoanProduct.loanPurpose = loanProductData.loanPurpose
 

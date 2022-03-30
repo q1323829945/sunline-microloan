@@ -56,3 +56,4 @@ logging:
 ipconfig:
   pdpa: 127.0.0.1:8085
   product: 127.0.0.1:8083
+  loan: 127.0.0.1:8086

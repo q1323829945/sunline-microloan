@@ -2,7 +2,6 @@ package cn.sunline.saas.huaweicloud.config
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
@@ -23,7 +22,6 @@ class HuaweiCloudConfig {
 
 
     fun getCloudUploadFormatDate(): String {
-        Instant.now().zone
        return DateTime.now().withZone(DateTimeZone.forID("UTC")).toString("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
     }
 
@@ -33,10 +31,4 @@ class HuaweiCloudConfig {
         mac.init(signingKey)
         return Base64.getEncoder().encodeToString(mac.doFinal(canonicalString.toByteArray(charset("UTF-8"))))
     }
-
-}
-
-fun main() {
-    println(Instant.now().zone)
-    println(Instant.now())
 }

@@ -1,5 +1,6 @@
 package cn.sunline.saas.huaweicloud.services
 
+import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
 import cn.sunline.saas.obs.api.*
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.HttpMethod
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.FileInputStream
 import java.io.InputStream
-import kotlin.math.log
 
 @Service
 class HuaweiCloudService:ObsApi {
@@ -99,7 +99,7 @@ class HuaweiCloudService:ObsApi {
         }else if(body is InputStream){
             InputStreamRequestEntity(body)
         } else{
-            throw BusinessException("body error",ManagementExceptionCode.BODY_TYPE_ERROR)
+            throw ObsBodyTypeException("body type error",ManagementExceptionCode.BODY_TYPE_ERROR)
         }
 
         //httpPut
@@ -163,15 +163,29 @@ class HuaweiCloudService:ObsApi {
 
         logger.debug("uri:${httpMethod.uri}")
         logger.debug("status:$status")
+        if(status != 200 && status != 204){
+            getBody(httpMethod)
+            throw         }
+    }
+
+    fun getBody(httpMethod:HttpMethod){
+        val inputStream = httpMethod.responseBodyAsStream
+
+        val br = BufferedReader(InputStreamReader(inputStream))
+
+        val strBuffer = StringBuffer()
+
+        while (true){
+            val str = br.readLine()?:break
+
+            strBuffer.append(str)
         }
+
+        logger.debug("body:$strBuffer")
     }
 
 
-    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>):HttpMethod{
-        return getHttpMethod(httpMethod,uri,headerMap,null)
-    }
-
-    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: RequestEntity?):HttpMethod{
+    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: RequestEntity? = null):HttpMethod{
         val httpRequest = when(httpMethod){
             HttpRequestMethod.GET -> GetMethod(uri)
             HttpRequestMethod.POST -> PostMethod(uri)

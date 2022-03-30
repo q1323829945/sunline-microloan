@@ -15,4 +15,8 @@ class IpConfig {
     lateinit var productIp:String
 
 
+    @Value("\${ipconfig.loan}")
+    lateinit var loanIp:String
+
+
 }
