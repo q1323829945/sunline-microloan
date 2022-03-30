@@ -1,11 +1,11 @@
-# 提交客户贷款申请
+# 发起消费贷款
 
 ## 请求
 
-| Path        | /customerOffer/loan/{customerOfferId}/submit |
-| ----------- | -------------------------------------------- |
-| Method      | PUT                                          |
-| Description | 提交客户贷款申请信息                         |
+| Path        | /consumerLoan/initiate |
+| ----------- | ---------------------- |
+| Method      | POST                   |
+| Description | 发起消费贷款           |
 
 ### 请求头
 
@@ -15,16 +15,11 @@
 
 [其他属性详见](../header.md)
 
-### 路径参数
-
-| 参数            | 类型    | M/O  | 描述       |
-| --------------- | ------- | ---- | ---------- |
-| customerOfferId | integer | M    | 客户申请Id |
-
 ### 请求体
 
 | 参数                            | 类型    | M/O  | 描述                                                         |
 | ------------------------------- | ------- | ---- | ------------------------------------------------------------ |
+| customerOfferId                 | integer | M    | 客户申请ID                                                   |
 | loan                            | object  | M    | 贷款申请信息                                                 |
 | ∟ amount                        | string  | M    | 申请金额                                                     |
 | ∟ currency                      | string  | M    | 币种代码，默认本币<br />[详见附件币种代码](../appendices/currency_code.md) |
@@ -81,6 +76,7 @@
 
 ```json
 {
+  "customerOfferId": 123456789,
   "loan": {
     "amount": "1000000",
     "currency": "SGP",

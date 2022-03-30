@@ -40,5 +40,5 @@ out/
 .DS_Store
 gradle/
 
-### Gitbook ###
-.pdf
+### File ###
+*.pdf

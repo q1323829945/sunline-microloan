@@ -29,7 +29,7 @@
 | ∟ regestrationNo | string | 注册号   |
 | ∟ address        | string | 地址     |
 | ∟ businessType   | string | 业务类型 |
-| ∟ capital        | number | 资本金   |
+| ∟ capital        | string | 资本金   |
 | ∟ shareholders   | array  | 股权人   |
 | ∟∟ name          | string | 姓名     |
 | ∟∟ NRIC          | string | 身份证件 |
@@ -48,7 +48,7 @@
       "regestrationNo": "123456789",
       "address": "address",
       "businessType": "01",
-      "capital": 100000000,
+      "capital": "100000000",
       "shareholders": [
         {
           "name": "shareholders1",
@@ -81,7 +81,7 @@
       "regestrationNo": "123456789",
       "address": "address",
       "businessType": "01",
-      "capital": 100000000,
+      "capital": "100000000",
       "shareholders": [
         {
           "name": "shareholders1",

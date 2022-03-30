@@ -29,8 +29,8 @@
 | version             | string  | 版本号                                                       |
 | description         | string  | 描述                                                         |
 | amountConfiguration | object  | 金额范围参数                                                 |
-| ∟ maxValueRange     | number  | 最大金额                                                     |
-| ∟ minValueRange     | number  | 最小金额                                                     |
+| ∟ maxValueRange     | string  | 最大金额                                                     |
+| ∟ minValueRange     | string  | 最小金额                                                     |
 | termConfiguration   | object  | 期限范围参数                                                 |
 | ∟ maxValueRange     | string  | 最大期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 | ∟ minValueRange     | string  | 最小期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
@@ -45,8 +45,8 @@
         "version": "1",
         "description": "提供给中小企业极速办理贷款的感受",
         "amountConfiguration": {
-            "maxValueRange": 10000000.00,
-            "minValueRange": 10000.00
+            "maxValueRange": "10000000",
+            "minValueRange": "10000"
         },
         "termConfiguration": {
             "maxValueRange": "ONE_YEAR",

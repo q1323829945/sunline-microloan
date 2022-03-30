@@ -46,13 +46,13 @@
 | ∟version                        | string  | 版本号                                                       |
 | ∟description                    | string  | 描述                                                         |
 | ∟amountConfiguration            | object  | 金额范围参数                                                 |
-| ∟∟ maxValueRange                | number  | 最大金额                                                     |
-| ∟∟ minValueRange                | number  | 最小金额                                                     |
+| ∟∟ maxValueRange                | string  | 最大金额                                                     |
+| ∟∟ minValueRange                | string  | 最小金额                                                     |
 | ∟termConfiguration              | object  | 期限范围参数                                                 |
 | ∟∟ maxValueRange                | string  | 最大期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 | ∟∟ minValueRange                | string  | 最小期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 | loan                            | object  | 贷款申请信息                                                 |
-| ∟ amount                        | number  | 申请金额                                                     |
+| ∟ amount                        | string  | 申请金额                                                     |
 | ∟ currency                      | string  | 币种代码，默认本币<br />[详见附件币种代码](../appendices/currency_code.md) |
 | ∟ term                          | string  | 期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 | ∟ local                         | string  | 业务经营地区是否为本地<br />[参见附录字典代码—是/否](../appendices/dictionary_code.md) |
@@ -135,8 +135,8 @@
     "version": "1",
     "description": "提供给中小企业极速办理贷款的感受",
     "amountConfiguration": {
-      "maxValueRange": 10000000.0,
-      "minValueRange": 10000.0
+      "maxValueRange": "10000000",
+      "minValueRange": "10000"
     },
     "termConfiguration": {
       "maxValueRange": "ONE_YEAR",
@@ -144,7 +144,7 @@
     }
   },
   "loan": {
-    "amount": 1000000,
+    "amount": "1000000",
     "currency": "SGP",
     "term": "SIX_MONTHS",
     "local": "Y",

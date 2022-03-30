@@ -25,7 +25,7 @@
 | ----------------- | ------- | ------------------------------------------------------------ |
 | customerOffers    | array   | 客户贷款申请列表                                             |
 | ∟ customerOfferId | integer | 申请Id                                                       |
-| ∟ amount          | number  | 申请金额                                                     |
+| ∟ amount          | string  | 申请金额                                                     |
 | ∟ datetime        | string  | 申请日期                                                     |
 | ∟ productName     | string  | 产品名称                                                     |
 | ∟ status          | string  | 申请状态<br />[详见附录申请状态](../appendices/dictionary_code.md) |
@@ -38,14 +38,14 @@
     {
       "customerOfferId": 123456789,
       "amount": 6000000,
-      "datetime": "20100607T152000+08",
+      "datetime": "2010-06-07T15:20:00.325Z",
       "productName": "Micro Loan",
       "status": "RECORD"
     },
     {
       "customerOfferId": 54323455,
-      "amount": 3000000,
-      "datetime": "20100607T152000+08",
+      "amount": "3000000",
+      "datetime": "2010-06-07T15:20:00.325Z",
       "productName": "Micro Loan",
       "status": "APPROVALED"
     }

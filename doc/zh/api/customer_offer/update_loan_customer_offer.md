@@ -26,7 +26,7 @@
 | 参数                            | 类型    | M/O  | 描述                                                         |
 | ------------------------------- | ------- | ---- | ------------------------------------------------------------ |
 | loan                            | object  | O    | 贷款申请信息                                                 |
-| ∟ amount                        | number  | M?   | 申请金额                                                     |
+| ∟ amount                        | string  | M?   | 申请金额                                                     |
 | ∟ currency                      | string  | M?   | 币种代码，默认本币<br />[详见附件币种代码](../appendices/currency_code.md) |
 | ∟ term                          | string  | M?   | 期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 | ∟ local                         | string  | M?   | 业务经营地区是否为本地<br />[参见附录字典代码—是/否](../appendices/dictionary_code.md) |
@@ -82,7 +82,7 @@
 ```json
 {
   "loan": {
-    "amount": 1000000,
+    "amount": "1000000",
     "currency": "SGP",
     "term": "SIX_MONTHS",
     "local": "Y",

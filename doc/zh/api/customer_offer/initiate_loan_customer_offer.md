@@ -48,8 +48,6 @@
 }
 ```
 
-### 
-
 ## 响应
 
 ### 响应体
@@ -65,37 +63,34 @@
 | product                        | object  | 产品信息                                                     |
 | ∟ productId                    | integer | 产品Id                                                       |
 | ∟ amountConfiguration          | object  | 金额范围参数                                                 |
-| ∟∟ maxValueRange               | number  | 最大金额                                                     |
-| ∟∟ minValueRange               | number  | 最小金额                                                     |
+| ∟∟ maxValueRange               | string  | 最大金额                                                     |
+| ∟∟ minValueRange               | string  | 最小金额                                                     |
 | ∟ termConfiguration            | object  | 期限范围参数                                                 |
 | ∟∟ maxValueRange               | string  | 最大期限，期限 包括：ONE_MONTH、THREE_MONTHS、SIX_MONTHS、ONE_YEAR、TWO_YEAR、THREE_YEAR |
 | ∟∟ minValueRange               | string  | 最小期限，期限同上                                           |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
-|                                |         |                                                              |
 
 ### 响应体示例
 
 ```json
 {
-  "personalInformation": [
-    { "key": "name", "name": "Name" },
-    { "key": "aliasName", "name": "Alias Name" },
-    { "key": "sex", "name": "Sex" },
-    { "key": "dateOfBirth", "name": "Date of Birth" }
-  ],
-  "corporateInformation": [
-    { "key": "entityBasicProfile", "name": "Entity Basic Profile" },
-    { "key": "entityPreviousNames", "name": "Entity Previous Names" },
-    { "key": "entityAddresses", "name": "Entity Addresses" }
-  ],
-  "pdpaTemplateId": "123456789"
+  "customerOfferProcedure": {
+    "customerId": 123456789,
+    "customerOfferProcess": "Micro Loan Process",
+    "employee": 123455,
+    "customerOfferId": 12344566,
+    "customerOfferProcessNextTask": "application"
+  },
+  "product": {
+    "productId": 12344,
+    "amountConfiguration": {
+      "maxValueRange": "1000000000",
+      "minValueRange": "10000"
+    },
+    "termConfiguration": {
+      "maxValueRange": "THREE_YEAR",
+      "minValueRange": "THREE_MONTHS"
+    }
+  }
 }
 ```
 
