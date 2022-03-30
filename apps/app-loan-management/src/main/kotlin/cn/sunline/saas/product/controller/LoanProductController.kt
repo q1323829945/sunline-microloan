@@ -46,8 +46,6 @@ class LoanProductController {
                  @RequestParam(required = false)loanProductType: LoanProductType? = null,
                  @RequestParam(required = false)loanPurpose: String? = null,
                  pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-
-
         val paged = loanProductService.getLoanProductPaged(name,loanProductType,loanPurpose,pageable)
 
         return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOLoanProductView>(it)}).response()

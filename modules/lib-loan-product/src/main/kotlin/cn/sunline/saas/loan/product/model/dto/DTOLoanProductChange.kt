@@ -4,7 +4,6 @@ import cn.sunline.saas.fee.model.dto.DTOFeeFeatureChange
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureChange
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureChange
-import java.math.BigDecimal
 
 /**
  * @title: DTOLoanProduct
@@ -27,8 +26,8 @@ data class DTOLoanProductChange(
 
 data class DTOAmountLoanProductChangeConfiguration(
     val id:Long?,
-    val maxValueRange: BigDecimal?,
-    val minValueRange: BigDecimal?,
+    val maxValueRange: String?,
+    val minValueRange: String?,
 )
 
 data class DTOTermLoanProductChangeConfiguration(

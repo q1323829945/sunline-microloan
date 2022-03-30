@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.product.service
 
-import cn.sunline.saas.exceptions.NotFoundExceptionimport cn.sunline.saas.fee.model.db.FeeFeature
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
@@ -73,7 +74,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         loanProductData.amountConfiguration?.apply {
             loanProductAdd.configurationOptions?.add(
                 loanProductCondition.amountCondition(
-                        newProductId,this.maxValueRange, this.minValueRange
+                        newProductId, BigDecimal(this.maxValueRange), BigDecimal(this.minValueRange)
                 )
             )
         }
@@ -110,20 +111,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
 
-        loanProduct.configurationOptions?.forEach {
-            when (ConditionType.valueOf(it.type)) {
-                ConditionType.AMOUNT -> {
-                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
-                    dtoLoanProduct.amountConfiguration?.run {
-                        this.maxValueRange = it.getMaxValueRange()
-                        this.minValueRange = it.getMinValueRange()
-                    }
-                }
-                ConditionType.TERM ->{
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
-                }
-            }
-        }
+        setConfigurationOptions(loanProduct,dtoLoanProduct)
 
         dtoLoanProduct.interestFeature = interestFeature
         dtoLoanProduct.repaymentFeature = repaymentFeature
@@ -135,7 +123,8 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
     @Transactional
     fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
-        val oldLoanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")        //update loan product
+        val oldLoanProduct = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
+        //update loan product
         oldLoanProduct.name = loanProductData.name
         oldLoanProduct.description = loanProductData.description
         oldLoanProduct.loanPurpose = loanProductData.loanPurpose
@@ -144,7 +133,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         loanProductData.amountConfiguration?.apply {
             oldLoanProduct.configurationOptions?.forEach {
                 if(this.id == it.id){
-                    it.setValue(this.maxValueRange,this.minValueRange)
+                    it.setValue(BigDecimal(this.maxValueRange), BigDecimal(this.minValueRange))
                 }
             }
         }
@@ -161,20 +150,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(updateLoanProduct)
 
-        updateLoanProduct.configurationOptions?.forEach {
-            when (ConditionType.valueOf(it.type)) {
-                ConditionType.AMOUNT -> {
-                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
-                    dtoLoanProduct.amountConfiguration?.run {
-                        this.maxValueRange = it.getMaxValueRange()
-                        this.minValueRange = it.getMinValueRange()
-                    }
-                }
-                ConditionType.TERM ->{
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
-                }
-            }
-        }
+        setConfigurationOptions(updateLoanProduct,dtoLoanProduct)
 
         //update interestFeature
         var interestFeature = interestProductFeatureService.findByProductId(id)
@@ -208,7 +184,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                 )
             }
             dtoLoanProduct.repaymentFeature = repaymentFeature
-
         } else {
             loanProductData.repaymentFeature?.run {
                 repaymentFeature.payment = RepaymentFeatureModality(repaymentFeature.id,this.paymentMethod,this.frequency,this.repaymentDayType)
@@ -238,8 +213,8 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                                 id,
                                 it.feeType,
                                 it.feeMethodType,
-                                it.feeAmount,
-                                it.feeRate,
+                                BigDecimal(it.feeAmount),
+                                BigDecimal(it.feeRate),
                                 it.feeDeductType
                         )
                 )
@@ -253,22 +228,10 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
 
     fun getLoanProduct(id:Long): DTOLoanProductView {
-        val loanProduct = this.getOne(id)?:throw NotFoundException("Invalid loan product")        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
+        val loanProduct = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
 
-        loanProduct.configurationOptions?.forEach {
-            when (ConditionType.valueOf(it.type)) {
-                ConditionType.AMOUNT -> {
-                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
-                    dtoLoanProduct.amountConfiguration?.run {
-                        this.maxValueRange = it.getMaxValueRange()
-                        this.minValueRange = it.getMinValueRange()
-                    }
-                }
-                ConditionType.TERM ->{
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
-                }
-            }
-        }
+        setConfigurationOptions(loanProduct,dtoLoanProduct)
 
         val interestFeature = interestProductFeatureService.findByProductId(id)
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
@@ -308,45 +271,40 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
-        val product = this.getOne(id) ?: throw NotFoundException("Invalid loan product")        product.status = status
+        val product = this.getOne(id) ?: throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
+        product.status = status
         return save(product)
     }
 
 
     fun findByIdentificationCode(identificationCode:String):DTOLoanProductView{
-        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw NotFoundException("Invalid loan product",ManagementExceptionCode.DATA_NOT_FOUND)
+        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
 
-        product.configurationOptions?.forEach {
-            when (ConditionType.valueOf(it.type)) {
-                ConditionType.AMOUNT -> {
-                    dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
-                    dtoLoanProduct.amountConfiguration?.run {
-                        this.maxValueRange = it.getMaxValueRange()
-                        this.minValueRange = it.getMinValueRange()
-                    }
-                }
-                ConditionType.TERM ->{
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
-                }
-            }
-        }
+        setConfigurationOptions(product,dtoLoanProduct)
+
         return dtoLoanProduct
     }
 
     fun findById(id:Long):DTOLoanProductView{
-        val product = this.getOne(id)?:throw NotFoundException("Invalid loan product", ManagementExceptionCode.DATA_NOT_FOUND)
+        val product = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
 
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
 
+        setConfigurationOptions(product,dtoLoanProduct)
+
+        return dtoLoanProduct
+    }
+
+    private fun setConfigurationOptions(product:LoanProduct,dtoLoanProduct:DTOLoanProductView){
         product.configurationOptions?.forEach {
             when (ConditionType.valueOf(it.type)) {
                 ConditionType.AMOUNT -> {
                     dtoLoanProduct.amountConfiguration = objectMapper.convertValue<DTOAmountLoanProductConfigurationView>(it)
                     dtoLoanProduct.amountConfiguration?.run {
-                        this.maxValueRange = it.getMaxValueRange()
-                        this.minValueRange = it.getMinValueRange()
+                        this.maxValueRange = it.getMaxValueRange().toPlainString()
+                        this.minValueRange = it.getMinValueRange().toPlainString()
                     }
                 }
                 ConditionType.TERM ->{
@@ -354,7 +312,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                 }
             }
         }
-        return dtoLoanProduct
+
     }
 
 }

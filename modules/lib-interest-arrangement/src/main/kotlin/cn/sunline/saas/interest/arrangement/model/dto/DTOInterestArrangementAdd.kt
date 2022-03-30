@@ -3,7 +3,6 @@ package cn.sunline.saas.interest.arrangement.model.dto
 import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.InterestRate
-import java.math.BigDecimal
 
 /**
  * @title: DTOInterestArrangementAdd
@@ -15,6 +14,6 @@ data class DTOInterestArrangementAdd(
     val interestType: InterestType,
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val overdueInterestRatePercentage: BigDecimal,
+    val overdueInterestRatePercentage: String,
     val planRates: MutableList<InterestRate>
 )

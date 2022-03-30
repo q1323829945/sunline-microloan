@@ -7,6 +7,7 @@ import cn.sunline.saas.interest.util.InterestRateUtil
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.math.BigDecimal
 
 /**
  * @title: InterestArrangementFactory
@@ -24,7 +25,7 @@ class InterestArrangementFactory {
             rate = InterestRateUtil.getRate(term, dtoInterestArrangementAdd.planRates),
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
-            overdueInterestRatePercentage = dtoInterestArrangementAdd.overdueInterestRatePercentage
+            overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage)
         )
     }
 

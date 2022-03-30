@@ -33,8 +33,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
     fun `entity save`() {
 
         val amountConfiguration = DTOAmountLoanProductConfiguration(
-            maxValueRange = BigDecimal.TEN,
-            minValueRange = BigDecimal.ZERO
+            maxValueRange = "10",
+            minValueRange = "0"
         )
 
         val termConfiguration = DTOTermLoanProductConfiguration(

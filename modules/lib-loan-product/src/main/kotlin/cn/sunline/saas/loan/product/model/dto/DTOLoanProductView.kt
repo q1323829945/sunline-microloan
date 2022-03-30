@@ -6,7 +6,6 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.db.InterestFeature
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.repayment.model.db.RepaymentFeature
-import java.math.BigDecimal
 
 /**
  * @title: DTOLoanProduct
@@ -32,8 +31,8 @@ data class DTOLoanProductView(
 
 data class DTOAmountLoanProductConfigurationView(
         val id:Long,
-        var maxValueRange: BigDecimal?,
-        var minValueRange: BigDecimal?,
+        var maxValueRange: String?,
+        var minValueRange: String?,
 )
 
 data class DTOTermLoanProductConfigurationView(

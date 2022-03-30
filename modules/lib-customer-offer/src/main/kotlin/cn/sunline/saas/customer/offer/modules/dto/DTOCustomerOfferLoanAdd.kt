@@ -5,7 +5,6 @@ import cn.sunline.saas.global.constant.CurrencyType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.model.Country
-import java.math.BigDecimal
 
 data class DTOCustomerOfferLoanAdd (
         val loan:DTOLoan?,
@@ -20,7 +19,7 @@ data class DTOCustomerOfferLoanAdd (
 
 
 data class DTOLoan(
-        val amount:BigDecimal,
+        val amount:String,
         val currency: CurrencyType,
         val term: LoanTermType,
         val local: YesOrNo,
@@ -79,10 +78,10 @@ data class DTOUploadDocument(
 )
 
 data class DTOKyc(
-        val businessBlackListArea:YesOrNo,
+        val businessInBlackListArea:YesOrNo,
         val businessPlanInBlackListArea:YesOrNo,
         val businessOrPartnerSanctioned:YesOrNo,
-        val relationBlackListArea:YesOrNo,
+        val relationInBlackListArea:YesOrNo,
         val repaymentSourceInBlackListArea:YesOrNo,
         val representsNeutrality:YesOrNo,
         val representsNeutralityShared:YesOrNo,

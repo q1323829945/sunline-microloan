@@ -2,7 +2,6 @@ package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import java.math.BigDecimal
 
 
 data class DTOCustomerOfferLoanView (
@@ -40,8 +39,8 @@ data class DTOProductView(
 )
 
 data class DTOAmountConfiguration(
-        val maxValueRange: BigDecimal?,
-        val minValueRange: BigDecimal?
+        val maxValueRange: String?,
+        val minValueRange: String?
 )
 
 data class DTOTermConfiguration(

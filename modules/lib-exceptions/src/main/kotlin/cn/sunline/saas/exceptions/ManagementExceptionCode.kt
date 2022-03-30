@@ -29,21 +29,20 @@ enum class ManagementExceptionCode(val code: Int) {
     DOCUMENT_TEMPLATE_NOT_FOUND(4002),
     DOCUMENT_DIRECTORY_NOT_FOUND(4003),
 
-    //Fee 5000 - 5049
-    FEE_CONFIG_ERROR(5000)
     // Product 5000 - 5049
     PRODUCT_NOT_FOUND(5000),
-
-
-
-
-
 
     // Fee 5050 - 5099
     FEE_CONFIG_ERROR(5050),
 
-    // Interest 5100 5149
+    // Interest 5100 - 5149
     RATE_PLAN_NOT_FOUND(5100),
-    INTEREST_RATE_NOT_FOUND(5101)
+    INTEREST_RATE_NOT_FOUND(5101),
+
+    // Http 5150 - 5199
+    HTTP_ERROR(5100),
+
+    //loan 5200 - 5299
+    LOAN_UPLOAD_CONFIGURE_NOT_FOUND(5101),
 
 }

@@ -1,5 +1,6 @@
 package cn.sunline.saas.interest.controller
 
+import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.interest.exception.InterestRateNotFoundException
 import cn.sunline.saas.interest.model.InterestRate
@@ -19,21 +20,24 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 @RestController
 @RequestMapping("InterestRate")
 class InterestRateController {
 
-    data class DTOInterestRateAdd(            val period: String,
-            val rate: BigDecimal,
-            val ratePlanId:Long    )
-
-    data class DTOInterestRateView(            val id: Long,
+    data class DTOInterestRateAdd(
             val period: String,
-            val rate: BigDecimal,
-            val ratePlanId:Long    )
+            val rate: String,
+            val ratePlanId:Long
+    )
+
+    data class DTOInterestRateView(
+            val id: Long,
+            val period: String,
+            val rate: String,
+            val ratePlanId:Long
+    )
 
     data class DTOInterestRateChange(
             val identificationCode: String,
@@ -75,6 +79,8 @@ class InterestRateController {
     }
 
     @PutMapping("{id}")
+    fun updateOne(@PathVariable id: Long, @RequestBody dtoInterestRate: DTOInterestRateChange): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
+        val oldInterestRate = interestRateService.getOne(id)?: throw InterestRateNotFoundException("Invalid interestRate",ManagementExceptionCode.DATA_NOT_FOUND)
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
 
         val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
@@ -84,7 +90,8 @@ class InterestRateController {
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>> {
-        val interestRate = interestRateService.getOne(id)?: throw NotFoundException("Invalid interestRate")        interestRateService.deleteById(id)
+        val interestRate = interestRateService.getOne(id)?: throw InterestRateNotFoundException("Invalid interestRate",ManagementExceptionCode.DATA_NOT_FOUND)
+        interestRateService.deleteById(id)
         val responseInterestRate = objectMapper.convertValue<DTOInterestRateView>(interestRate)
         return DTOResponseSuccess(responseInterestRate).response()
     }

@@ -40,7 +40,7 @@ class LoanAgreementServiceTest {
         planRates.add(rate2)
         val dtoInterestArrangementAdd = DTOInterestArrangementAdd(
             InterestType.FIXED, BaseYearDays.ACTUAL_YEAR, "1",
-            BigDecimal("150"), planRates
+            "150", planRates
         )
 
         val prepaymentArrangement = mutableListOf<DTOPrepaymentArrangementAdd>()

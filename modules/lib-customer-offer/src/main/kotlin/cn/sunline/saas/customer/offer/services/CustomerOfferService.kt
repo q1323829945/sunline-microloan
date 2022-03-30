@@ -62,7 +62,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
             val customerOffer = this.getOne(it["customerOfferId"].toString().toLong())
             DTOCustomerOfferPage(
                 it["customerOfferId"].toString().toLong(),
-                it["amount"]?.run { BigDecimal(it["amount"].toString()) },
+                it["amount"]?.run { it["amount"].toString() },
                 customerOffer!!.datetime.millis,
                 it["productName"].toString(),
                 ApplyStatus.valueOf(it["status"].toString())

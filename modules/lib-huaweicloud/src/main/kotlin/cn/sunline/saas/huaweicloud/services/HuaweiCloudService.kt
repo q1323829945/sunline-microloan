@@ -1,5 +1,9 @@
 package cn.sunline.saas.huaweicloud.services
 
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.exceptions.SystemException
+import cn.sunline.saas.global.constant.HttpRequestMethod
+import cn.sunline.saas.huaweicloud.config.HuaweiCloudConfig
 import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
 import cn.sunline.saas.obs.api.*
 import org.apache.commons.httpclient.HttpClient
@@ -9,9 +13,7 @@ import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.io.ByteArrayInputStream
-import java.io.FileInputStream
-import java.io.InputStream
+import java.io.*
 
 @Service
 class HuaweiCloudService:ObsApi {
@@ -82,7 +84,7 @@ class HuaweiCloudService:ObsApi {
     override fun putObject(putParams: PutParams) {
 
         //uri
-        val uri = getUri(putParams.bucketName, huaweiCloudTools.region, putParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, putParams.key)
 
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
@@ -93,13 +95,10 @@ class HuaweiCloudService:ObsApi {
         headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
         //body
-        val body = putParams.body
-        val entity = if(body is String){
-            InputStreamRequestEntity(FileInputStream(body))
-        }else if(body is InputStream){
-            InputStreamRequestEntity(body)
-        } else{
-            throw ObsBodyTypeException("body type error",ManagementExceptionCode.BODY_TYPE_ERROR)
+        val entity = when(val body = putParams.body){
+            is String -> InputStreamRequestEntity(FileInputStream(body))
+            is InputStream -> InputStreamRequestEntity(body)
+            else -> throw ObsBodyTypeException("body type error", ManagementExceptionCode.BODY_TYPE_ERROR)
         }
 
         //httpPut
@@ -111,7 +110,7 @@ class HuaweiCloudService:ObsApi {
 
     override fun getObject(getParams: GetParams): Any? {
         //uri
-        val uri = getUri(getParams.bucketName, huaweiCloudTools.region, getParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, getParams.key)
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
         val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${getParams.key}"
@@ -132,7 +131,7 @@ class HuaweiCloudService:ObsApi {
 
     override fun deleteObject(deleteParams: DeleteParams) {
         //uri
-        val uri = getUri(deleteParams.bucketName, huaweiCloudTools.region, deleteParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, deleteParams.key)
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
         val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${deleteParams.key}"
@@ -155,7 +154,8 @@ class HuaweiCloudService:ObsApi {
                 "$contentType\n" +
                 "$requestTime\n" +
                 "$canonicalizeHeaders$canonicalizeResource"
-        return huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey, sign)    }
+        return huaweiCloudConfig.signWithHmacSha1(huaweiCloudConfig.securityKey, sign)
+    }
 
     fun sendClient(httpMethod:HttpMethod) {
         val httpClient = HttpClient()
@@ -165,7 +165,8 @@ class HuaweiCloudService:ObsApi {
         logger.debug("status:$status")
         if(status != 200 && status != 204){
             getBody(httpMethod)
-            throw         }
+            throw SystemException("http error",ManagementExceptionCode.BODY_TYPE_ERROR)
+        }
     }
 
     fun getBody(httpMethod:HttpMethod){
@@ -185,7 +186,7 @@ class HuaweiCloudService:ObsApi {
     }
 
 
-    fun getHttpMethod(httpMethod:HttpRequestMethod,uri:String,headerMap:Map<String,String>,entity: RequestEntity? = null):HttpMethod{
+    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String, headerMap:Map<String,String>, entity: RequestEntity? = null):HttpMethod{
         val httpRequest = when(httpMethod){
             HttpRequestMethod.GET -> GetMethod(uri)
             HttpRequestMethod.POST -> PostMethod(uri)

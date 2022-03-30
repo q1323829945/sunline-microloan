@@ -5,7 +5,6 @@ import cn.sunline.saas.document.template.repositories.DocumentTemplateDirectoryR
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
-import org.springframework.beans.factory.annotation.Autowired
 
 @Service
 class DocumentTemplateDirectoryService(private val documentTemplateDirectoryRepo: DocumentTemplateDirectoryRepository,private val sequence: Sequence) :

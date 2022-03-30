@@ -1,6 +1,7 @@
 package cn.sunline.saas.interest.controller
 
-import cn.sunline.saas.exceptions.NotFoundExceptionimport cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.interest.exception.RatePlanNotFoundException
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanService
@@ -14,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
 
 @RestController
 @RequestMapping("RatePlan")
 class RatePlanController {
 
-    data class DTORatesView(val id:Long,val period: String,val rate: BigDecimal)
+    data class DTORatesView(val id:Long,val period: String,val rate: String)
 
     data class DTORatePlanAdd(
             val name: String,
@@ -64,6 +64,7 @@ class RatePlanController {
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlanChange): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
+        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan",ManagementExceptionCode.DATA_NOT_FOUND)
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)
