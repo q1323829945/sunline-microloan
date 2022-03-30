@@ -10,7 +10,7 @@ import cn.sunline.saas.multi_tenant.model.Tenant
  */
 interface TenantContext {
 
-    fun get(): Tenant?
+    fun get(): Long
 
     fun set(tenantId: String)
 }

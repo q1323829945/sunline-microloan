@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":lib-obs-api"))
     implementation(project(":lib-document"))
     api(project(":lib-base-jpa"))
-    api(project(":lib-seq-api"))
+    implementation(project(":lib-seq-api"))
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

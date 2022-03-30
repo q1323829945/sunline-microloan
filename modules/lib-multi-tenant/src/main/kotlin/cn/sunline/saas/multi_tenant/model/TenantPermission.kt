@@ -16,16 +16,16 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "tenant_permission"
 )
-class TenantPermission (
+class TenantPermission(
 
     @Id
     val appID: Long?,
 
     @NotNull
     @Column(nullable = false, columnDefinition = "bigint not null")
-    var tenantId:Long,
+    var tenantId: Long,
 
     @NotNull
     @Column(nullable = false, columnDefinition = "tinyint(1) not null default false")
-    var enabled: Boolean = false,
+    var enabled: Boolean = false
 )

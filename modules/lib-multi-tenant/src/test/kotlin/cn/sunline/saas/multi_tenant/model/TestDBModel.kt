@@ -21,10 +21,9 @@ class TestDBModel(
 
     @NotNull
     @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
-    var uuid: UUID = UUID.randomUUID(),
+    var uuid: UUID = UUID.randomUUID()
 
-) //: MultiTenant()
-: MultiTenant {
+) : MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

@@ -2,6 +2,7 @@ package cn.sunline.saas.multi_tenant.jpa
 
 import cn.sunline.saas.multi_tenant.context.TenantContext
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.persistence.PrePersist
 
@@ -13,11 +14,11 @@ import javax.persistence.PrePersist
  */
 @Component
 class TenantListener<T : MultiTenant>(
-    private val context: TenantContext
+    @Autowired private val context: TenantContext
 ) {
 
     @PrePersist
     fun prePersist(o: T) {
-        context.get()?.id?.let { o.setTenantId(it) }
+        o.setTenantId(context.get())
     }
 }

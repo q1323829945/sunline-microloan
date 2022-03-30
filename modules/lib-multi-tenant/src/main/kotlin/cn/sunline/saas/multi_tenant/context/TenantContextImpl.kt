@@ -1,8 +1,5 @@
 package cn.sunline.saas.multi_tenant.context
 
-import cn.sunline.saas.multi_tenant.model.Tenant
-import cn.sunline.saas.multi_tenant.repository.TenantRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 /**
@@ -12,21 +9,16 @@ import org.springframework.stereotype.Component
  * @date 2022/2/28 14:03
  */
 @Component
-class TenantContextImpl(private val tenantRepo: TenantRepository) : TenantContext {
+class TenantContextImpl : TenantContext {
 
-    private val context = ThreadLocal<Tenant>()
+    private val context = ThreadLocal<Long>()
 
-
-    override fun get(): Tenant? {
+    override fun get(): Long {
         return context.get()
     }
 
     override fun set(tenantId: String) {
-        var tenant = tenantRepo.findByIdOrNull(tenantId.toLong())
-        if(tenant == null){
-            //TODO remote call tenant mananger service
-        }
-        context.set(tenant)
+        context.set(tenantId.toLong())
     }
 
     fun remove() {

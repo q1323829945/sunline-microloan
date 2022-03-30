@@ -14,15 +14,15 @@ import javax.validation.constraints.NotNull
     name = "tenant"
 )
 class Tenant(
-        @Id
+    @Id
     val id: Long?,
 
-        @Column(nullable = false, columnDefinition = "tinyint(1) default false")
+    @Column(nullable = false, columnDefinition = "tinyint(1) default false")
     @NotNull
     var enabled: Boolean = false,
 
-        @OneToMany(fetch = FetchType.EAGER, mappedBy = "tenantId")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tenantId")
     @OrderBy("appId ASC")
-    var permissions : MutableList<TenantPermission> = mutableListOf(),
+    var permissions: MutableList<TenantPermission> = mutableListOf()
 
-        )
+)

@@ -12,9 +12,9 @@ data class BucketParams(val bucketName: String, val createBucketConfiguration: C
 data class LifecycleConfiguration(val expiration: Int)
 data class LifecycleParams(val bucketName: String, val lifecycleConfiguration: LifecycleConfiguration)
 
-data class PutParams(val bucketName: String, val key: String, val body: Any)
-data class GetParams(val bucketName: String, val key: String)
-data class DeleteParams(val bucketName: String, val key: String)
+data class PutParams(val key: String, val body: Any)
+data class GetParams(val key: String)
+data class DeleteParams(val key: String)
 
 interface ObsApi {
 
@@ -26,7 +26,7 @@ interface ObsApi {
 
     fun putObject(putParams: PutParams)
 
-    fun getObject(getParams: GetParams):Any?
+    fun getObject(getParams: GetParams): Any?
 
     fun deleteObject(deleteParams: DeleteParams)
 

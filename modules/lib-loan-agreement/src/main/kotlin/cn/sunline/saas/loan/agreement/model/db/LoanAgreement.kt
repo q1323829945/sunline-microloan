@@ -63,7 +63,7 @@ class LoanAgreement(
     @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
     val productId: Long,
 
-    @Column(nullable = true, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(nullable = true, length = 128, columnDefinition = "varchar(128) null")
     var agreementDocument: String?,
 
     @NotNull

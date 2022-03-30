@@ -5,7 +5,6 @@ import cn.sunline.saas.document.template.modules.DocumentTemplate
 import cn.sunline.saas.document.template.repositories.DocumentTemplateRepository
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.huaweicloud.config.HuaweiCloudTools
 import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
@@ -15,41 +14,43 @@ import org.springframework.stereotype.Service
 import java.io.InputStream
 
 @Service
-class DocumentTemplateService(private val documentTemplateRepository: DocumentTemplateRepository):
-        BaseRepoService<DocumentTemplate,Long>(documentTemplateRepository){
+class DocumentTemplateService(private val documentTemplateRepository: DocumentTemplateRepository) :
+    BaseRepoService<DocumentTemplate, Long>(documentTemplateRepository) {
 
     @Autowired
-    private lateinit var huaweiCloudService: ObsApi
+    private lateinit var obs: ObsApi
 
-    @Autowired
-    private lateinit var huaweiCloudTools:HuaweiCloudTools
-
-    fun addDocumentTemplate(documentTemplate: DocumentTemplate,inputStream: InputStream):DocumentTemplate{
-        val checkTemplate = documentTemplateRepository.findByDocumentStoreReference(documentTemplate.documentStoreReference)
-        if(checkTemplate != null){
-            throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST,"document already exist")
+    fun addDocumentTemplate(documentTemplate: DocumentTemplate, inputStream: InputStream): DocumentTemplate {
+        val checkTemplate =
+            documentTemplateRepository.findByDocumentStoreReference(documentTemplate.documentStoreReference)
+        if (checkTemplate != null) {
+            throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST, "document already exist")
         }
 
-        val putParams = PutParams(huaweiCloudTools.bucketName,documentTemplate.documentStoreReference,inputStream)
+        val putParams = PutParams(documentTemplate.documentStoreReference, inputStream)
 
-        huaweiCloudService.putObject(putParams)
+        obs.putObject(putParams)
 
         return this.save(documentTemplate)
     }
 
 
-    fun updateDocumentTemplate(oldOne:DocumentTemplate,newOne:DocumentTemplate,inputStream: InputStream?):DocumentTemplate{
+    fun updateDocumentTemplate(
+        oldOne: DocumentTemplate,
+        newOne: DocumentTemplate,
+        inputStream: InputStream?
+    ): DocumentTemplate {
         inputStream?.run {
             val checkTemplate = documentTemplateRepository.findByDocumentStoreReference(newOne.documentStoreReference)
-            if(checkTemplate != null && oldOne.documentStoreReference != newOne.documentStoreReference){
-                throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST,"document already exist")
+            if (checkTemplate != null && oldOne.documentStoreReference != newOne.documentStoreReference) {
+                throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST, "document already exist")
             }
 
-            val deleteParams = DeleteParams(huaweiCloudTools.bucketName,oldOne.documentStoreReference)
-            huaweiCloudService.deleteObject(deleteParams)
+            val deleteParams = DeleteParams(oldOne.documentStoreReference)
+            obs.deleteObject(deleteParams)
 
-            val putParams = PutParams(huaweiCloudTools.bucketName,newOne.documentStoreReference,inputStream)
-            huaweiCloudService.putObject(putParams)
+            val putParams = PutParams(newOne.documentStoreReference, inputStream)
+            obs.putObject(putParams)
 
             oldOne.documentStoreReference = newOne.documentStoreReference
         }
@@ -60,17 +61,17 @@ class DocumentTemplateService(private val documentTemplateRepository: DocumentTe
         return this.save(oldOne)
     }
 
-    fun delete(documentTemplate:DocumentTemplate){
-        val deleteParams = DeleteParams(huaweiCloudTools.bucketName,documentTemplate.documentStoreReference)
-        huaweiCloudService.deleteObject(deleteParams)
+    fun delete(documentTemplate: DocumentTemplate) {
+        val deleteParams = DeleteParams(documentTemplate.documentStoreReference)
+        obs.deleteObject(deleteParams)
 
 
         documentTemplateRepository.deleteById(documentTemplate.id!!)
     }
 
     fun download(documentTemplate: DocumentTemplate): InputStream {
-        val getParams = GetParams(huaweiCloudTools.bucketName, documentTemplate.documentStoreReference)
+        val getParams = GetParams(documentTemplate.documentStoreReference)
 
-        return huaweiCloudService.getObject(getParams) as InputStream
+        return obs.getObject(getParams) as InputStream
     }
 }

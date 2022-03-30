@@ -11,7 +11,10 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 /**
@@ -66,8 +69,7 @@ class DocumentLibraryController {
 
         val key = dtoDocumentDirectoryEntry.creationDate.time.toString() + dtoDocumentDirectoryEntry.documentName
 
-        //TODO: how to get bucket
-        huaweiService.putObject(PutParams("lizheng-test",key,dtoDocumentDirectoryEntry.documentLocation))
+        huaweiService.putObject(PutParams(key,dtoDocumentDirectoryEntry.documentLocation))
 
         dtoDocumentDirectoryEntry.documentStoreReference = key
         val document = objectMapper.convertValue<Document>(dtoDocumentDirectoryEntry)

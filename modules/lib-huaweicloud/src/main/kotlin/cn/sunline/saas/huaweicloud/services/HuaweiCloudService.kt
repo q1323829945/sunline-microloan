@@ -1,9 +1,8 @@
 package cn.sunline.saas.huaweicloud.services
 
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.exceptions.UploadException
-import cn.sunline.saas.huaweicloud.config.*
+import cn.sunline.saas.huaweicloud.config.HuaweiCloudConfig
 import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
+import cn.sunline.saas.huaweicloud.exception.ObsUploadException
 import cn.sunline.saas.huaweicloud.models.HttpRequestMethod
 import cn.sunline.saas.obs.api.*
 import org.apache.commons.httpclient.HttpClient
@@ -13,13 +12,15 @@ import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.FileInputStream
+import java.io.InputStream
 
 @Service
 class HuaweiCloudService : ObsApi {
 
     @Autowired
-    private lateinit var huaweiCloudTools: HuaweiCloudTools
+    private lateinit var huaweiCloudConfig: HuaweiCloudConfig
 
     private val logger = LoggerFactory.getLogger(HuaweiCloudService::class.java)
 
@@ -29,13 +30,13 @@ class HuaweiCloudService : ObsApi {
         val uri = getUri(bucketParams.bucketName, regin)
 
         //header
-        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
         val canonicalizeResource = "/${bucketParams.bucketName}/"
         val signature =
             getSignature(HttpRequestMethod.PUT, "", "application/xml", requestTime, "", canonicalizeResource)
         val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
-        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
         headerMap["Content-Type"] = "application/xml"
 
         //body
@@ -64,15 +65,15 @@ class HuaweiCloudService : ObsApi {
 
     override fun deleteBucket(bucketName: String) {
         //uri
-        val uri = getUri(bucketName, huaweiCloudTools.region)
+        val uri = getUri(bucketName, huaweiCloudConfig.region)
 
         //header
-        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
         val canonicalizeResource = "/${bucketName}/"
         val signature = getSignature(HttpRequestMethod.DELETE, "", "", requestTime, "", canonicalizeResource)
         val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
-        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
 
         //httpDelete
@@ -85,16 +86,16 @@ class HuaweiCloudService : ObsApi {
     override fun putObject(putParams: PutParams) {
 
         //uri
-        val uri = getUri(putParams.bucketName, huaweiCloudTools.region, putParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, putParams.key)
 
 
         //header
-        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${putParams.bucketName}/${putParams.key}"
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${putParams.key}"
         val signature = getSignature(HttpRequestMethod.PUT, "", "", requestTime, "", canonicalizeResource)
         val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
-        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
         //body
         val entity = when (val body = putParams.body) {
@@ -118,15 +119,15 @@ class HuaweiCloudService : ObsApi {
 
     override fun getObject(getParams: GetParams): Any? {
         //uri
-        val uri = getUri(getParams.bucketName, huaweiCloudTools.region, getParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, getParams.key)
 
         //header
-        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${getParams.bucketName}/${getParams.key}"
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${getParams.key}"
         val signature = getSignature(HttpRequestMethod.GET, "", "", requestTime, "", canonicalizeResource)
         val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
-        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
 
         //httpGet
@@ -140,15 +141,15 @@ class HuaweiCloudService : ObsApi {
 
     override fun deleteObject(deleteParams: DeleteParams) {
         //uri
-        val uri = getUri(deleteParams.bucketName, huaweiCloudTools.region, deleteParams.key)
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, deleteParams.key)
 
         //header
-        val requestTime = huaweiCloudTools.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${deleteParams.bucketName}/${deleteParams.key}"
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${deleteParams.key}"
         val signature = getSignature(HttpRequestMethod.DELETE, "", "", requestTime, "", canonicalizeResource)
         val headerMap = mutableMapOf<String, String>()
         headerMap["Date"] = requestTime
-        headerMap["Authorization"] = "OBS ${huaweiCloudTools.accessKey}:$signature"
+        headerMap["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
         //httpDelete
         val httpDelete = getHttpMethod(HttpRequestMethod.DELETE, uri, headerMap)
@@ -171,7 +172,7 @@ class HuaweiCloudService : ObsApi {
                 "$contentType\n" +
                 "$requestTime\n" +
                 "$canonicalizeHeaders$canonicalizeResource"
-        return huaweiCloudTools.signWithHmacSha1(huaweiCloudTools.securityKey, sign)
+        return huaweiCloudConfig.signWithHmacSha1(huaweiCloudConfig.securityKey, sign)
     }
 
     fun sendClient(httpMethod: HttpMethod) {
@@ -180,7 +181,7 @@ class HuaweiCloudService : ObsApi {
 
         logger.debug("status:$status")
         if (status != 200 && status != 204) {
-            throw UploadException("file upload error", ManagementExceptionCode.FILE_UPLOAD_FAILED)
+            throw ObsUploadException("file upload failed")
         }
     }
 

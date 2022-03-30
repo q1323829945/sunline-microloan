@@ -27,7 +27,7 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
     fun getPageWithTenant(specification: Specification<T>? = null, pageable: Pageable): Page<T> {
         val tenantSpecification: Specification<T> = Specification { root: Root<T>, _, criteriaBuilder ->
             val path: Expression<Long> = root.get("tenantId")
-            val predicate = criteriaBuilder.equal(path, tenantContext.get()?.id)
+            val predicate = criteriaBuilder.equal(path, tenantContext.get())
 
             criteriaBuilder.and(predicate)
         }

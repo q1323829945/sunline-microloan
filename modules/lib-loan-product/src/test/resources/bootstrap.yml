@@ -1,6 +1,6 @@
 spring:
   application:
-    name: saas-interest
+    name: saas-loan-production
 
   profiles:
     active: default

@@ -15,6 +15,7 @@ class FileGenerationTest {
     @Autowired
     private lateinit var fileGeneration: FileGeneration
 
+    /*
     @Test
     fun `generation from docx stream`(){
         val file = FileInputStream(File("D:\\test\\ca.docx"))
@@ -43,6 +44,7 @@ class FileGenerationTest {
         }
     }
 
+
     @Test
     fun `generation from pdf stream`(){
         val file = FileInputStream(File("D:\\test\\myNewCA.pdf"))
@@ -69,5 +71,5 @@ class FileGenerationTest {
             outputFile.write(bytes)
         }
     }
-
+    */
 }

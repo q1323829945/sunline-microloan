@@ -6,10 +6,9 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-fee-util"))
-    api(project(":lib-base-jpa"))
-    api(project(":lib-multi-tenant"))
-    api(project(":lib-seq-api"))
+    implementation(project(":lib-multi-tenant"))
+    implementation(project(":lib-seq-api"))
+    api(project(":lib-fee-util"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

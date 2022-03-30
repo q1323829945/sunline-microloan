@@ -71,7 +71,7 @@ class DocumentTemplateController {
     fun updateOne(@PathVariable id: Long,@RequestBody dtoTemplate:DTODocumentTemplateAdd): ResponseEntity<DTOResponseSuccess<DTODocumentTemplateView>>{
         val oldOne = documentTemplateService.getOne(id)?:throw Exception("Invalid template")
         val newOne = objectMapper.convertValue<DocumentTemplate>(dtoTemplate)
-        val updateTemplate = documentTemplateService.updateDocumentTemplate(oldOne,newOne)
+        val updateTemplate = documentTemplateService.updateDocumentTemplate(oldOne,newOne,null)
         val responseTemplate = objectMapper.convertValue<DTODocumentTemplateView>(updateTemplate)
         return DTOResponseSuccess(responseTemplate).response()
     }

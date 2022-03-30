@@ -21,10 +21,10 @@ class AviatorRuleTest {
         map["value2"] = 5
 
         val conditions = ArrayList<Condition>()
-        val condition1 = Condition(1, "equals", "value1")
+        val condition1 = Condition(1, "equals", "value1",1)
         condition1.setValue(BigDecimal(2), null)
         conditions.add(condition1)
-        val condition2 = Condition(2, "equals", "value2")
+        val condition2 = Condition(2, "equals", "value2",1)
         condition2.setValue(BigDecimal(4), null)
         conditions.add(condition2)
 
@@ -41,10 +41,10 @@ class AviatorRuleTest {
         map["value2"] = 3
 
         val conditions = ArrayList<Condition>()
-        val condition1 = Condition(1, "equals", "value1")
+        val condition1 = Condition(1, "equals", "value1",1)
         condition1.setValue(BigDecimal(2), null)
         conditions.add(condition1)
-        val condition2 = Condition(2, "equals", "value2")
+        val condition2 = Condition(2, "equals", "value2",1)
         condition2.setValue(BigDecimal(4), null)
         conditions.add(condition2)
 

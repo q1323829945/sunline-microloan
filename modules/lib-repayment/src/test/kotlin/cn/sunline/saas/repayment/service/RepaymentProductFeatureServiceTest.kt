@@ -1,6 +1,6 @@
 package cn.sunline.saas.repayment.service
 
-import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import org.assertj.core.api.Assertions.assertThat

@@ -30,11 +30,11 @@ class LoanProductConditionComponent(
         val condition = Condition(seq.nextId(), ConditionType.TERM.name, ConditionType.TERM.getMarker(),productId)
         var maxCondition: BigDecimal? = null
         if (maxTerm != null) {
-            maxCondition = BigDecimal(maxTerm.convertDays())
+            maxCondition = BigDecimal(maxTerm.days)
         }
         var minCondition: BigDecimal? = null
         if (minTerm != null) {
-            minCondition = BigDecimal(minTerm.convertDays())
+            minCondition = BigDecimal(minTerm.days)
         }
 
         condition.setValue(maxCondition, minCondition)
@@ -45,11 +45,11 @@ class LoanProductConditionComponent(
         val condition = Condition(id, ConditionType.TERM.name, ConditionType.TERM.getMarker(),productId)
         var maxCondition: BigDecimal? = null
         if (maxTerm != null) {
-            maxCondition = BigDecimal(maxTerm.convertDays())
+            maxCondition = BigDecimal(maxTerm.days)
         }
         var minCondition: BigDecimal? = null
         if (minTerm != null) {
-            minCondition = BigDecimal(minTerm.convertDays())
+            minCondition = BigDecimal(minTerm.days)
         }
 
         condition.setValue(maxCondition, minCondition)

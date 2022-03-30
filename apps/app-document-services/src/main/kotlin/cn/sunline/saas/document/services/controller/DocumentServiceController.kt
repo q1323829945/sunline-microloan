@@ -2,9 +2,6 @@ package cn.sunline.saas.document.services.controller
 
 import cn.sunline.saas.document.generation.config.FileGeneration
 import cn.sunline.saas.document.generation.config.TemplateParams
-import cn.sunline.saas.document.model.Document
-import cn.sunline.saas.document.model.DocumentFormat
-import cn.sunline.saas.document.model.DocumentStatus
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.services.DocumentTemplateService
 import cn.sunline.saas.huaweicloud.services.HuaweiCloudService
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.io.InputStream
-import java.util.*
 
 /**
  * @title: DocumentServiceController
@@ -47,13 +43,13 @@ class DocumentServiceController {
         //get template params from db
         val documentTemplate = documentTemplateService.getOne(dtoGeneration.template_id)?:throw Exception("error")
         //get template stream from obs
-        val getParams = GetParams(documentTemplate.bucketName,documentTemplate.documentStoreReference)
+        val getParams = GetParams(documentTemplate.documentStoreReference)
         val inputStream = huaweiCloudService.getObject(getParams) as InputStream
         //pdf generation
         val templateParams = TemplateParams(inputStream,documentTemplate.fileType)
         val pdfInputStream = fileGeneration.generation(templateParams,dtoGeneration.params, dtoGeneration.generate_type)
         //save pdf in obs
-        val put = PutParams(dtoGeneration.save_bucket_name,dtoGeneration.key,pdfInputStream)
+        val put = PutParams(dtoGeneration.key,pdfInputStream)
         huaweiCloudService.putObject(put)
 
     }

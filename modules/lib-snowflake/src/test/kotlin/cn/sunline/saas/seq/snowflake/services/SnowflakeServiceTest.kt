@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = [RedisConfigTest::class])
-class SnowflakeServiceTest(@Autowired val snowflakeService: SnowflakeService) {
+class SnowflakeServiceTest(@Autowired private val snowflakeService: SnowflakeService) {
 
 
     @Test

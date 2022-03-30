@@ -1,15 +1,13 @@
 package cn.sunline.saas.huaweicloud.services
 
-import cn.sunline.saas.exceptions.UploadException
+import cn.sunline.saas.huaweicloud.exception.ObsBodyTypeException
+import cn.sunline.saas.huaweicloud.exception.ObsUploadException
 import cn.sunline.saas.obs.api.*
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 
@@ -26,10 +24,12 @@ class HuaweiCloudServiceTest {
         huaweiCloudService.createBucket(bucket)
     }
 
+    /*
     @Test
     fun `delete bucket`(){
         huaweiCloudService.deleteBucket("lizheng-test13")
     }
+
 
     @Test
     fun `object path upload`(){
@@ -44,19 +44,20 @@ class HuaweiCloudServiceTest {
         val put = PutParams("lizheng-test","stream1234.JPG",file)
         huaweiCloudService.putObject(put)
     }
+    */
 
     @Test
     fun `object upload body is error`(){
-        val put = PutParams("lizheng-test","my123.JPG",123)
+        val put = PutParams("my123.JPG",123)
 
-        assertThrows<UploadException> {
+        assertThrows<ObsBodyTypeException> {
             huaweiCloudService.putObject(put)
         }
     }
 
     @Test
     fun `get object`(){
-        val get = GetParams("lizheng-test","ok.pdf")
+        val get = GetParams("ok.pdf")
 
         val arrayInputStream = huaweiCloudService.getObject(get) as InputStream
 
@@ -77,7 +78,7 @@ class HuaweiCloudServiceTest {
 
     @Test
     fun `delete object`(){
-        val del = DeleteParams("lizheng-test","mimimi2.JPG")
+        val del = DeleteParams("mimimi2.JPG")
 
         huaweiCloudService.deleteObject(del)
     }

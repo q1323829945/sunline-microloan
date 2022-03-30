@@ -24,7 +24,6 @@ class TenantDomainFilter(private val tenantContext: TenantContext) : GenericFilt
         }
 
         tenantContext.set(domain)
-        httpServletRequest.setAttribute("tenant-domain", domain)
         chain?.doFilter(request, response)
     }
 
