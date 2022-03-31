@@ -1,6 +1,8 @@
+
+
 package cn.sunline.saas.repayment.schedule.factory
 
-import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.repayment.model.PaymentMethodType
 import cn.sunline.saas.repayment.schedule.factory.impl.EqualPrincipalCalculator
 import cn.sunline.saas.repayment.schedule.factory.impl.EqualInstallmentCalculator
 import cn.sunline.saas.repayment.schedule.factory.impl.PayInterestSchedulePrincipalMaturityCalculator

@@ -1,9 +1,8 @@
+
+
 package cn.sunline.saas.repayment.schedule.factory.impl
 
-import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
-import cn.sunline.saas.repayment.schedule.component.CalcInterestComponent
-import cn.sunline.saas.repayment.schedule.component.CalcRateComponent
-import cn.sunline.saas.repayment.schedule.component.CalcRepaymentInstallmentComponent
+import cn.sunline.saas.repayment.schedule.component.*
 import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
@@ -18,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
+import org.joda.time.Instant
+import java.util.*
 
 /**
  * 到期还本还息
@@ -41,9 +42,12 @@ class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
         val paymentMethod = dtoRepaymentScheduleCalculate.paymentMethod
         val amount = dtoRepaymentScheduleCalculate.amount
         val interestRate = dtoRepaymentScheduleCalculate.interestRate
+        val repaymentFrequency = dtoRepaymentScheduleCalculate.repaymentFrequency!!
+        val repaymentDay = dtoRepaymentScheduleCalculate.repaymentDay
         val startDate = dtoRepaymentScheduleCalculate.startDate
         val endDate = dtoRepaymentScheduleCalculate.endDate
         val baseYearDays = dtoRepaymentScheduleCalculate.baseYearDays
+        val repaymentDayType = dtoRepaymentScheduleCalculate.repaymentDayType
 
 
         val repaymentScheduleId = seq.nextId()
@@ -139,7 +143,6 @@ class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
         return repaymentSchedule
     }
 }
-
 
 
 

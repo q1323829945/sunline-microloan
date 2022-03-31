@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.repayment.schedule.component.*
@@ -15,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
+import org.joda.time.Instant
+import java.util.*
 
 /**
  * 按期付息到期还款
@@ -46,14 +65,15 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         val startDate = dtoRepaymentScheduleCalculate.startDate
         val endDate = dtoRepaymentScheduleCalculate.endDate
         val baseYearDays = dtoRepaymentScheduleCalculate.baseYearDays
+        val repaymentDayType = dtoRepaymentScheduleCalculate.repaymentDayType
 
         val repaymentScheduleId = seq.nextId()
 
         // 应还期数
-        val periods = CalcPeriodComponent.calcDuePeriods(startDate, endDate, repaymentDay, repaymentFrequency)
+        val periods = CalcPeriodComponent.calcDuePeriods(startDate,endDate,repaymentDay,repaymentFrequency)
 
         // 日利率
-        val loanRateDay = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.DAILY, baseYearDays)
+        val loanRateDay = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.DAILY,baseYearDays)
 
         // 每期利息
         var interest: BigDecimal
@@ -63,49 +83,31 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
 
         // 下一个还款日
         var currentRepaymentDateTime = DateTime(startDate)
-        var nextRepaymentDateTime = DateTime(
-            currentRepaymentDateTime.year,
-            currentRepaymentDateTime.monthOfYear,
-            repaymentDay,
-            0,
-            0
-        ).plusMonths(repaymentFrequency.ordinal)
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.getMonths())
         val finalRepaymentDateTime = DateTime(endDate)
 
 
         // 每期还款详情
-        val repaymentScheduleDetails = mutableListOf<RepaymentScheduleDetail>()
+        val repaymentScheduleDetails: MutableList<RepaymentScheduleDetail> = java.util.ArrayList()
         for (i in 0 until periods) {
 
-            nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(
-                currentRepaymentDateTime,
-                finalRepaymentDateTime,
-                nextRepaymentDateTime
-            )
-            interest = CalcInterestComponent.calcDayInterest(
-                amount,
-                loanRateDay,
-                currentRepaymentDateTime,
-                nextRepaymentDateTime
-            )
+            nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(currentRepaymentDateTime, finalRepaymentDateTime, nextRepaymentDateTime)
+            interest = CalcInterestComponent.calcDayInterest(amount,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime)
             totalInterest = totalInterest.add(interest)
             // 计划明细
             repaymentScheduleDetails += RepaymentScheduleDetail(
                 id = seq.nextId(),
                 repaymentScheduleId = repaymentScheduleId,
                 period = i + 1,
-                repaymentInstallment = if (periods == i + 1) interest.add(amount) else interest.setScale(
-                    2,
-                    RoundingMode.HALF_UP
-                ),
-                principal = if (periods == i + 1) amount else BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
-                interest = interest.setScale(2, RoundingMode.HALF_UP),
+                repaymentInstallment = if (periods == i + 1) interest.add(amount) else interest.setScale(2,RoundingMode.HALF_UP),
+                principal = if(periods == i + 1) amount else BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP),
+                interest = interest.setScale(2,RoundingMode.HALF_UP),
                 repaymentDate = nextRepaymentDateTime.toInstant(),//nextRepaymentDateTime.toDate(),
-                remainPrincipal = if (periods == i + 1) BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP) else amount
+                remainPrincipal =  if(periods == i + 1) BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP) else amount
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())
         }
 
         // 还款计划概述
@@ -143,9 +145,9 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         val repaymentScheduleDetails: MutableList<RepaymentScheduleDetail> = ArrayList()
 
         // 日利率
-        val loanRateDay = CalcRateComponent.calcBaseRate(loanRate, LoanRateType.DAILY, baseYearDays)
+        val loanRateDay = CalcRateComponent.calcBaseRate(loanRate, LoanRateType.DAILY,baseYearDays)
         // 剩余期数和当前期数
-        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate, repaymentScheduleDetail)
+        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate,repaymentScheduleDetail)
         val currentPeriod = result[0]
         val finalPeriod = result[1]
         var currentRepaymentDateTime = DateTime(repaymentDate)
@@ -154,23 +156,11 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
             if (currentPeriod <= detail.period) {
                 val nextRepaymentDateTime = DateTime(detail.repaymentDate)
                 // 每期利息
-                val interest = CalcInterestComponent.calcDayInterest(
-                    remainLoanAmount,
-                    loanRateDay,
-                    currentRepaymentDateTime,
-                    nextRepaymentDateTime
-                )
+                val interest = CalcInterestComponent.calcDayInterest(remainLoanAmount,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime)
                 detail.interest = interest
-                detail.principal = if (finalPeriod == detail.period) remainLoanAmount else BigDecimal.ZERO.setScale(
-                    2,
-                    RoundingMode.HALF_UP
-                )
-                detail.repaymentInstallment =
-                    CalcRepaymentInstallmentComponent.calcBaseRepaymentInstallment(detail.principal, interest)
-                detail.remainPrincipal = if (finalPeriod == detail.period) BigDecimal.ZERO.setScale(
-                    2,
-                    RoundingMode.HALF_UP
-                ) else remainLoanAmount
+                detail.principal = if(finalPeriod == detail.period) remainLoanAmount else BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP)
+                detail.repaymentInstallment = CalcRepaymentInstallmentComponent.calcBaseRepaymentInstallment(detail.principal,interest)
+                detail.remainPrincipal = if(finalPeriod == detail.period) BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP) else remainLoanAmount
                 // 日期滚动
                 currentRepaymentDateTime = nextRepaymentDateTime
             }
@@ -190,3 +180,29 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         return repaymentSchedule
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,31 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.repayment.schedule.component
 
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
@@ -26,7 +54,7 @@ object CalcDateComponent {
         var remainPeriods = 0
         var nextRepaymentDateTime = repaymentDateTime
         run loop@{
-            repaymentScheduleDetail.forEach{
+            repaymentScheduleDetail?.forEach{
                 val currentDateTime = DateTime(it.repaymentDate)
                 val currentYer = currentDateTime.year()
                 val currentMonth = currentDateTime.monthOfYear().get()
@@ -39,11 +67,11 @@ object CalcDateComponent {
                     if(repaymentDay>=currentDay){
                         currentPeriod = it.period + 1
                         nextPeriod = currentPeriod +1
-                        remainPeriods = remainPeriods.minus(it.period)
+                        remainPeriods = remainPeriods?.minus(it.period)
                     }else {
                         nextRepaymentDateTime = DateTime(it.repaymentDate)
                         currentPeriod = it.period
-                        remainPeriods = remainPeriods.minus(it.period).plus(1)
+                        remainPeriods = remainPeriods?.minus(it.period)?.plus(1)
                         return@loop
                     }
                 }
@@ -64,7 +92,7 @@ object CalcDateComponent {
         var day = 0
         var nextPeriod = 0
         run loop@{
-            repaymentScheduleDetail.forEach{
+            repaymentScheduleDetail?.forEach{
                 val currentDateTime = DateTime(it.repaymentDate)
                 val currentYer = currentDateTime.year()
                 val currentMonth = currentDateTime.monthOfYear().get()

@@ -1,3 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.repayment.schedule.component
 
 import cn.sunline.saas.repayment.schedule.model.dto.DTOInterestCalculator
@@ -16,7 +34,7 @@ object CalcInterestComponent {
         val nextRepaymentDateTime = dtoInterestCalculator.nextRepaymentDateTime
         val calcAmount = dtoInterestCalculator.calcAmount
         val repaymentFrequency = dtoInterestCalculator.repaymentFrequency
-        val frequency = repaymentFrequency?.ordinal ?: 1
+        val frequency = repaymentFrequency?.getMonths() ?: 1
         return if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * frequency)) == 0) {
             loanRateMonth.multiply(calcAmount).multiply(frequency.toBigDecimal()).setScale(2,RoundingMode.HALF_UP)
         } else {
