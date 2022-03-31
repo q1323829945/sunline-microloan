@@ -31,6 +31,9 @@ dependencies {
     implementation(project(":lib-organisation"))
     implementation(project(":lib-person"))
 
+    implementation(project(":lib-repayment-schedule"))
+    implementation(project(":lib-loan-product"))
+
     implementation(project(":lib-snowflake"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

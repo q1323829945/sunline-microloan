@@ -1,3 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.repayment.schedule.component.*
@@ -13,10 +28,12 @@ import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleDetailService
 import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleService
 import cn.sunline.saas.seq.Sequence
 import org.joda.time.DateTime
+import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
+import kotlin.collections.ArrayList
 
 
 /**
@@ -46,6 +63,7 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         val startDate = dtoRepaymentScheduleCalculate.startDate
         val endDate = dtoRepaymentScheduleCalculate.endDate
         val baseYearDays = dtoRepaymentScheduleCalculate.baseYearDays
+        val repaymentDayType = dtoRepaymentScheduleCalculate.repaymentDayType
 
         val repaymentScheduleId = seq.nextId()
 
@@ -53,7 +71,7 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         var currentRepaymentDateTime = DateTime(startDate)
 
         // 下一个还款日
-        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear,repaymentDay,0,0).plusMonths(repaymentFrequency.ordinal)
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear,repaymentDay,0,0).plusMonths(repaymentFrequency.getMonths())
 
         // 结束日期
         val finalRepaymentDateTime = DateTime(endDate)
@@ -109,7 +127,7 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())
         }
 
         // 还款计划概述

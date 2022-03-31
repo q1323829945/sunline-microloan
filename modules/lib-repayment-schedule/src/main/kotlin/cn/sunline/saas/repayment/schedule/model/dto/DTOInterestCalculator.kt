@@ -1,6 +1,8 @@
+
+
 package cn.sunline.saas.repayment.schedule.model.dto
 
-import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.repayment.model.RepaymentFrequency
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
