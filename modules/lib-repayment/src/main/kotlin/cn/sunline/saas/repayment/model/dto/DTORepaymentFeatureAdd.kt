@@ -19,5 +19,5 @@ data class DTORepaymentFeatureAdd(
 data class DTOPrepaymentFeatureModalityAdd (
     val term: LoanTermType,
     val type: PrepaymentType,
-    val penaltyRatio: BigDecimal?
+    val penaltyRatio: String?
 )

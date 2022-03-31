@@ -26,7 +26,7 @@ class InterestFeature(
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "interest_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    @Column(name = "interest_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val interestType: InterestType,
 
     @NotNull

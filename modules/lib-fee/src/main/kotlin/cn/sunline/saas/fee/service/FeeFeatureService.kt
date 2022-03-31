@@ -8,6 +8,7 @@ import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * @title: FeeFeatureService
@@ -27,7 +28,15 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
         val feeFeatures = mutableListOf<FeeFeature>()
 
         dtoFeeFeatures.forEach {
-            FeeUtil.validFeeConfig(it.feeMethodType,it.feeAmount,it.feeRate)
+            val feeAmount = it.feeAmount?.run {
+                BigDecimal(this)
+            }
+
+            val feeRate = it.feeRate?.run {
+                BigDecimal(this)
+            }
+
+            FeeUtil.validFeeConfig(it.feeMethodType, feeAmount, feeRate)
 
             feeFeatures.add(
                 FeeFeature(
@@ -35,8 +44,8 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
                     productId,
                     it.feeType,
                     it.feeMethodType,
-                    it.feeAmount,
-                    it.feeRate,
+                    feeAmount,
+                    feeRate,
                     it.feeDeductType
                 )
             )

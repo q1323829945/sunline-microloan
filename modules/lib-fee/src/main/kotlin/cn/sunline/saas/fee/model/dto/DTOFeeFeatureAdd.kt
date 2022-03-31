@@ -13,7 +13,7 @@ import java.math.BigDecimal
 data class DTOFeeFeatureAdd(
     val feeType: String,
     val feeMethodType: FeeMethodType,
-    val feeAmount: BigDecimal?,
-    val feeRate: BigDecimal?,
+    val feeAmount: String?,
+    val feeRate: String?,
     val feeDeductType: FeeDeductType
 )

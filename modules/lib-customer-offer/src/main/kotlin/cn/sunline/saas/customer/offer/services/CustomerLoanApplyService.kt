@@ -29,35 +29,25 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
     @Autowired
     private lateinit var customerOfferService: CustomerOfferService
 
-    fun submit(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
+     fun submit(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
-        dtoFile.forEach {  file ->
-            val names = file.originalFilename.split("/")
-            val templateId = names[0].toLong()
-            val fileName = names[1]
-            dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
-                if(templateId == it.documentTemplateId){
-                    val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
-                    huaweiCloudService.putObject(PutParams(key,file.inputStream))
-                    it.file = key
-                }
-            }
-        }
-
+        setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanAdd.uploadDocument)
 
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
-        val amount = dtoCustomerOfferLoanAdd.loan?.amount
-        val customerLoanApply = this.getOne(customerOfferId)?:CustomerLoanApply(customerOfferId,BigDecimal(amount), data)
+
+        val amount = dtoCustomerOfferLoanAdd.loan?.run {
+            BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
+        }
+
+        val customerLoanApply = this.getOne(customerOfferId)?:CustomerLoanApply(customerOfferId,amount, data)
         customerLoanApply.data = data
-        customerLoanApply.amount = BigDecimal(amount)
+        customerLoanApply.amount = amount
 
         this.save(customerLoanApply)
     }
 
-
-    fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
-
+     fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
         val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply",ManagementExceptionCode.DATA_NOT_FOUND)
         val originalData = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
 
@@ -72,21 +62,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
             }
         }
 
-        dtoFile.forEach {  file ->
-            val names = file.originalFilename.split("/")
-            val templateId = names[0].toLong()
-            val fileName = names[1]
-            dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
-                if(templateId == it.documentTemplateId){
-                    it.file?.run {
-                        huaweiCloudService.deleteObject(DeleteParams(it.file!!))
-                    }
-                    val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
-                    huaweiCloudService.putObject(PutParams(key,file.inputStream))
-                    it.file = key
-                }
-            }
-        }
+        setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanAdd.uploadDocument)
 
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
 
@@ -98,6 +74,24 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         this.save(customerLoanApply)
     }
 
+
+    private fun setUploadDocument(customerOfferId:Long, customerId:Long, dtoFile: List<DTOFile>, uploadDocumentList: List<DTOUploadDocument>?){
+         dtoFile.forEach {  file ->
+             val names = file.originalFilename.split("/")
+             val templateId = names[0].toLong()
+             val fileName = names[1]
+             uploadDocumentList?.forEach{
+                 if(templateId == it.documentTemplateId){
+                     it.file?.run {
+                         huaweiCloudService.deleteObject(DeleteParams(this))
+                     }
+                     val key = "$customerId/$customerOfferId/$templateId/$fileName"
+                     huaweiCloudService.putObject(PutParams(key,file.inputStream))
+                     it.file = key
+                 }
+             }
+        }
+    }
 
     fun retrieve(customerOfferId:Long): DTOCustomerOfferLoanView{
         val customerLoanApply = this.getOne(customerOfferId)?:return DTOCustomerOfferLoanView()

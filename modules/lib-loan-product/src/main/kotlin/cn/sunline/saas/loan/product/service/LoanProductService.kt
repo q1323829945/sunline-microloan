@@ -243,17 +243,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         return dtoLoanProduct
     }
 
-
-    private fun getValueRange(value:BigDecimal): LoanTermType? {
-        for(type in LoanTermType.values()){
-            if(value.toInt() == type.days){
-                return type
-            }
-        }
-
-        return null
-    }
-
     fun getLoanProductPaged(name:String?,
                             loanProductType: LoanProductType?,
                             loanPurpose: String?,
@@ -287,16 +276,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         return dtoLoanProduct
     }
 
-    fun findById(id:Long):DTOLoanProductView{
-        val product = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
-
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
-
-        setConfigurationOptions(product,dtoLoanProduct)
-
-        return dtoLoanProduct
-    }
-
     private fun setConfigurationOptions(product:LoanProduct,dtoLoanProduct:DTOLoanProductView){
         product.configurationOptions?.forEach {
             when (ConditionType.valueOf(it.type)) {
@@ -312,7 +291,16 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                 }
             }
         }
+    }
 
+    private fun getValueRange(value:BigDecimal): LoanTermType? {
+        for(type in LoanTermType.values()){
+            if(value.toInt() == type.days){
+                return type
+            }
+        }
+
+        return null
     }
 
 }

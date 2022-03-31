@@ -19,8 +19,6 @@ class PDPAService(
     private var httpConfiguration: HttpConfiguration
     ) {
 
-    private val charset = "utf-8"
-
     fun sign(
         customerId: Long,
         pdpaTemplateId: Long,
@@ -42,7 +40,7 @@ class PDPAService(
         }
         fos.close()
         inputStream.close()
-        val filePart = FilePart("signature", fileName, file, MediaType.MULTIPART_FORM_DATA_VALUE, charset)
+        val filePart = FilePart("signature", fileName, file, MediaType.MULTIPART_FORM_DATA_VALUE, "utf-8")
         val customerIdPart = StringPart("customerId", customerId.toString())
         customerIdPart.contentType = MediaType.APPLICATION_JSON_VALUE
         val pdpaTemplateIdPart = StringPart("pdpaTemplateId", pdpaTemplateId.toString())

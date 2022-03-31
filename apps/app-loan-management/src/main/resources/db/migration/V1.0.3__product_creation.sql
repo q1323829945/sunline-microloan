@@ -13,7 +13,7 @@ CREATE TABLE `fee_feature` (
 
 CREATE TABLE `interest_feature` (
   `id` bigint NOT NULL,
-  `interest_type` varchar(16) NOT NULL,
+  `interest_type` varchar(32) NOT NULL,
   `product_id` bigint NOT NULL,
   `rate_plan_id` bigint NOT NULL,
   `tenant_id` bigint NOT NULL,
