@@ -12,10 +12,8 @@ dependencies {
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-redis"))
-    api(project(":lib-obs-api"))
     implementation(project(":lib-global"))
-
-    api(project(":lib-base-jpa"))
+    api(project(":lib-obs-api"))
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

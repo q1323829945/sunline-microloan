@@ -33,21 +33,18 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
         dtoFile.forEach {  file ->
-            synchronized(file){
-                val names = file.originalFilename.split("/")
-                val templateId = names[0].toLong()
-                val fileName = names[1]
-                dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
-                    if(templateId == it.documentTemplateId){
-                        val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
-                        huaweiCloudService.putObject(PutParams(key,file.inputStream))
-                        it.file = key
-                    }
+            val names = file.originalFilename.split("/")
+            val templateId = names[0].toLong()
+            val fileName = names[1]
+            dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
+                if(templateId == it.documentTemplateId){
+                    val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
+                    huaweiCloudService.putObject(PutParams(key,file.inputStream))
+                    it.file = key
                 }
             }
         }
 
-        println("已经ok")
 
         val data = Gson().toJson(dtoCustomerOfferLoanAdd)
         val amount = dtoCustomerOfferLoanAdd.loan?.amount
@@ -76,19 +73,17 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         }
 
         dtoFile.forEach {  file ->
-            synchronized(file){
-                val names = file.originalFilename.split("/")
-                val templateId = names[0].toLong()
-                val fileName = names[1]
-                dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
-                    if(templateId == it.documentTemplateId){
-                        it.file?.run {
-                            huaweiCloudService.deleteObject(DeleteParams(it.file!!))
-                        }
-                        val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
-                        huaweiCloudService.putObject(PutParams(key,file.inputStream))
-                        it.file = key
+            val names = file.originalFilename.split("/")
+            val templateId = names[0].toLong()
+            val fileName = names[1]
+            dtoCustomerOfferLoanAdd.uploadDocument?.forEach{
+                if(templateId == it.documentTemplateId){
+                    it.file?.run {
+                        huaweiCloudService.deleteObject(DeleteParams(it.file!!))
                     }
+                    val key = "${customerOffer!!.customerId}/$customerOfferId/$templateId/$fileName"
+                    huaweiCloudService.putObject(PutParams(key,file.inputStream))
+                    it.file = key
                 }
             }
         }

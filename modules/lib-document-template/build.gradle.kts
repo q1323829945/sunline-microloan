@@ -1,5 +1,6 @@
 val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
+val embeddedRedisVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -14,6 +15,8 @@ dependencies {
     implementation(project(":lib-snowflake"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake"))
     testImplementation(project(":lib-huaweicloud"))
