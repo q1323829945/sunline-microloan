@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.controller
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.dto.DTORepaymentPlanView
 import cn.sunline.saas.loan.service.LoanService
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -19,8 +20,8 @@ class LoanController {
     private lateinit var loanService: LoanService
 
     @GetMapping("{productId}/{amount}/{term}/calculate")
-    fun calculate(@PathVariable("productId") productId:Long,@PathVariable("amount") amount:String,@PathVariable term:String):ResponseEntity<DTOResponseSuccess<DTORepaymentPlanView>>{
-        val dtoRepaymentPlanView = loanService.getLoanCalculate(productId, amount, term)
+    fun calculate(@PathVariable("productId") productId:Long,@PathVariable("amount") amount:String,@PathVariable term: LoanTermType):ResponseEntity<DTOResponseSuccess<DTORepaymentPlanView>>{
+        val dtoRepaymentPlanView = loanService.getLoanCalculate(productId, amount, term.days.toString())
         return DTOResponseSuccess(dtoRepaymentPlanView).response()
     }
 }
