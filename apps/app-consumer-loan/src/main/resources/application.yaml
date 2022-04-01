@@ -5,14 +5,26 @@ spring:
     database: mysql
     hibernate:
       ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: true
     show-sql: true
   flyway:
-    baseline-on-migrate: false
-    enabled: false
+    baseline-on-migrate: true
+    enabled: true
+  datasource:
+    url: "jdbc:mysql://localhost:3306/db_saas?useSSL=false&serverTimezone=UTC"
+    username: "root"
+    password: "123456"
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
 
 server:
-  port : 8089
+  port : 8086
 
 management:
   endpoints:
@@ -20,10 +32,23 @@ management:
       exposure:
         include=*:
 
-datasource:
-  default-datasource-url: "jdbc:mysql://localhost:3306"
-  default-datasource-username: "root"
-  default-datasource-password: "123456"
-  default-datasource-database: "db_saas_loan"
-  default-datasource-option-flags: "useSSL=false&serverTimezone=UTC"
-  default-datasource-driver: "com.mysql.cj.jdbc.Driver"
+huawei:
+  cloud:
+    accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
+    securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
+    region: "cn-east-3"
+    bucketName: "lizheng-test"
+
+redis:
+  server: 127.0.0.1:6379
+  useCluster: false
+  useSentinel: false
+  password:
+
+logging:
+  level:
+    cn.sunline.saas.huaweicloud: trace
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
+
+

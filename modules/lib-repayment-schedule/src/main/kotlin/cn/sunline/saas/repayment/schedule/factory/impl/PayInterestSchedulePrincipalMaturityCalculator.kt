@@ -66,7 +66,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
 
         // 下一个还款日
         var currentRepaymentDateTime = DateTime(startDate)
-        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.getMonths())
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.ordinal)
         val finalRepaymentDateTime = DateTime(endDate)
 
 
@@ -90,7 +90,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
         }
 
         // 还款计划概述

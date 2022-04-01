@@ -24,7 +24,7 @@ class FeeFeatureServiceTest(@Autowired private val feeFeatureService: FeeFeature
         val feeFeature1 = DTOFeeFeatureAdd(
             feeType = "Test1",
             feeMethodType = FeeMethodType.FIX_AMOUNT,
-            feeAmount = BigDecimal(150),
+            feeAmount = "150",
             feeRate = null,
             feeDeductType = FeeDeductType.IMMEDIATE
         )
@@ -32,7 +32,7 @@ class FeeFeatureServiceTest(@Autowired private val feeFeatureService: FeeFeature
             feeType = "Test2",
             feeMethodType = FeeMethodType.FEE_RATIO,
             feeAmount = null,
-            feeRate = BigDecimal(1.5),
+            feeRate = "1.5",
             feeDeductType = FeeDeductType.IMMEDIATE
         )
 

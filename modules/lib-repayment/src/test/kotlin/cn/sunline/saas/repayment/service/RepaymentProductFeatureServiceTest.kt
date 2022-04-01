@@ -33,7 +33,7 @@ class RepaymentProductFeatureServiceTest(
         val prepayment2  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.THREE_MONTHS,
             PrepaymentType.PARTIAL_PREPAYMENT,
-            BigDecimal(1.5)
+            "1.5"
         )
 
         val prepayment3  = DTOPrepaymentFeatureModalityAdd(

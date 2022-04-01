@@ -65,7 +65,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
         var currentRepaymentDateTime = DateTime(startDate)
 
         // 下一个还款日
-        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.getMonths())
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.ordinal)
 
         // 结束日期
         val finalRepaymentDateTime = DateTime(endDate)
@@ -93,7 +93,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
             nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(currentRepaymentDateTime, finalRepaymentDateTime, nextRepaymentDateTime)
 
             // 首期或未期不足月先按日计算利息
-            if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())) != 0){
+            if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)) != 0){
                 interest = CalcInterestComponent.calcBaseInterest(DTOInterestCalculator(remainPrincipal,loanRateMonth,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime,repaymentFrequency))
                 principal = repaymentInstallment.subtract(interest)
                 if(remainPrincipal.subtract(principal) < BigDecimal.ZERO){
@@ -124,7 +124,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
         }
 
         // 还款总额
@@ -184,7 +184,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
                 var interest: BigDecimal
                 var principal: BigDecimal
                 // 首期或未期不足月先按日计算利息
-                if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())) != 0){
+                if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)) != 0){
                     interest = CalcInterestComponent.calcBaseInterest(DTOInterestCalculator(remainLoanAmount,loanRateMonth,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime,repaymentFrequency))
                     principal = repaymentInstallment.subtract(interest)
                     if(remainLoanAmount.subtract(principal) < BigDecimal.ZERO){

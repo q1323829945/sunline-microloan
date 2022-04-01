@@ -9,7 +9,7 @@ data class DTORepaymentPlanView(
 
 data class DTOSchedule(
     val period:Long,
-    val repaymentData:String,
+    val repaymentDate:String,
     val installment:String,
     val principal:String,
     val interest:String

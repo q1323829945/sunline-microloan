@@ -50,12 +50,16 @@ class HttpConfiguration {
     private fun showErrorInfo(httpMethod:HttpMethod){
         val map = getBody(httpMethod)
 
+        println(map)
+
         throw BusinessException(map["message"].toString(),ManagementExceptionCode.HTTP_ERROR)
 
     }
 
     fun getResponse(httpMethod:HttpMethod):String{
         val map = getBody(httpMethod)
+        println(map)
+
 
         if(map["code"].toString() != "0.0"){
             val message = map["message"].toString()

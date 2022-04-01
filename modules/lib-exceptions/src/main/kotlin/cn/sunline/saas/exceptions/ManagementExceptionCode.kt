@@ -40,7 +40,7 @@ enum class ManagementExceptionCode(val code: Int) {
     INTEREST_RATE_NOT_FOUND(5101),
 
     // Http 5150 - 5199
-    HTTP_ERROR(5100),
+    HTTP_ERROR(5151),
 
     //loan 5200 - 5299
     LOAN_UPLOAD_CONFIGURE_NOT_FOUND(5101),

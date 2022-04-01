@@ -1,7 +1,7 @@
 package cn.sunline.saas.repayment.schedule.model.dto
 
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentFrequency
 import java.math.BigDecimal
 
 

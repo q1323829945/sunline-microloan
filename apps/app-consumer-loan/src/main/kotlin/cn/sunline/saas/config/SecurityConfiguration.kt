@@ -12,7 +12,7 @@ class SecurityConfiguration () : WebSecurityConfigurerAdapter() {
 
 
     override fun configure(web: WebSecurity?) {
-        web!!.ignoring().antMatchers("/auth/login","/users","/test/**","/snowflake")
+        web!!.ignoring().antMatchers("/auth/login","/users","/**","/snowflake")
     }
 
     override fun configure(http: HttpSecurity?) {
@@ -21,6 +21,8 @@ class SecurityConfiguration () : WebSecurityConfigurerAdapter() {
             .httpBasic().disable().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
-            .anyRequest().authenticated()
+            .anyRequest().authenticated().and()
+            .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
+
 }

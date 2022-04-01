@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class LoanService(val httpConfiguration: HttpConfiguration,val ipConfig: IpConfig) {
 
     fun getLoanCalculate(productId: Long, amount: String, term: String): DTORepaymentPlanView {
-        val uri = "http://${ipConfig.loanIp}/loan/$productId/$amount/$term/calculate"
+        val uri = "http://${ipConfig.loanIp}/ConsumerLoan/$productId/$amount/$term/calculate"
 
         val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri)
 
