@@ -2,13 +2,8 @@
 
 package cn.sunline.saas.repayment.schedule.component
 
-import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.interest.constant.BaseYearDays
-import cn.sunline.saas.interest.constant.InterestType
-import cn.sunline.saas.interest.service.InterestFeatureService
-import cn.sunline.saas.interest.service.InterestRateService
-import cn.sunline.saas.interest.service.RatePlanService
-import cn.sunline.saas.interest.util.InterestRateUtil
+import cn.sunline.saas.interest.component.CalInterestRateComponent
+import cn.sunline.saas.interest.model.BaseYearDays
 import cn.sunline.saas.repayment.schedule.model.enum.LoanRateType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
