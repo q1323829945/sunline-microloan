@@ -30,7 +30,6 @@ dependencies {
     implementation(project(":lib-banking-transaction"))
     implementation(project(":lib-organisation"))
     implementation(project(":lib-person"))
-
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-product"))
 

@@ -2,7 +2,7 @@
 
 package cn.sunline.saas.repayment.schedule.component
 
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import org.joda.time.DateTime
 import java.math.BigDecimal
@@ -12,7 +12,7 @@ import kotlin.math.abs
 object CalcPeriodComponent {
 
     fun calcBasePeriod(term: Int, repaymentFrequency: RepaymentFrequency): Int {
-        val months = repaymentFrequency.getMonths()
+        val months = repaymentFrequency.ordinal
         return BigDecimal(term).divide(BigDecimal(months),0,RoundingMode.HALF_UP).toInt()
     }
 
@@ -22,7 +22,7 @@ object CalcPeriodComponent {
         val startDay = startDateTime.dayOfMonth().get()
         val endDay = startDateTime.dayOfMonth().get()
         monthSpace = if((startDay == repaymentDay && endDay <= repaymentDay)) monthSpace  else monthSpace + 1
-        val months = repaymentFrequency.getMonths()
+        val months = repaymentFrequency.ordinal
         val divideAndRemainder = BigDecimal(monthSpace).divideAndRemainder(BigDecimal(months))
         // TODO 频次大于期数 异常处理
         return if(divideAndRemainder[1].toInt()>0) divideAndRemainder[0].toInt() + 1 else divideAndRemainder[0].toInt()

@@ -2,8 +2,8 @@
 
 package cn.sunline.saas.repayment.schedule.model.db
 
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction

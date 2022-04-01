@@ -2,10 +2,10 @@
 
 package cn.sunline.saas.repayment.schedule.model.dto
 
-import cn.sunline.saas.interest.model.BaseYearDays
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.RepaymentDayType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.interest.constant.BaseYearDays
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
