@@ -1,10 +1,10 @@
 package cn.sunline.saas.service.impl
 
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.interest.service.InterestFeatureService
 import cn.sunline.saas.interest.service.InterestRateService
 import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.loan.product.service.LoanProductService
-import cn.sunline.saas.repayment.model.RepaymentDayType
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleAdd
