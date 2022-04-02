@@ -11,6 +11,4 @@ import org.springframework.data.jpa.repository.Query
  * @date 2022/2/21 16:16
  */
 interface DocumentTemplateDirectoryRepository:BaseRepository<DocumentTemplateDirectory,Long>{
-    @Query(value = "select * from document_template_directory where deleted = 0", nativeQuery = true)
-    fun queryAll():List<DocumentTemplateDirectory>
 }

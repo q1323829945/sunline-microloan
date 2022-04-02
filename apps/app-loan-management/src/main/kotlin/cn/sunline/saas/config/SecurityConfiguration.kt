@@ -26,9 +26,9 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
+                .addFilterBefore(TenantDomainFilter(tenantContext), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(AuthenticationFilter(tokenService, userService), UsernamePasswordAuthenticationFilter::class.java)
-                .addFilterBefore(TenantDomainFilter(tenantContext), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterAfter(PermissionFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }

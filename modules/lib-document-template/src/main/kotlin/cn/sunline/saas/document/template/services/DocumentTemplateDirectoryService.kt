@@ -5,14 +5,23 @@ import cn.sunline.saas.document.template.repositories.DocumentTemplateDirectoryR
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
+import org.springframework.data.domain.Pageable
+import javax.persistence.criteria.Predicate
 
 @Service
 class DocumentTemplateDirectoryService(private val documentTemplateDirectoryRepo: DocumentTemplateDirectoryRepository,private val sequence: Sequence) :
     BaseMultiTenantRepoService<DocumentTemplateDirectory, Long>(documentTemplateDirectoryRepo){
 
+    fun queryAll(): List<DocumentTemplateDirectory> {
 
-    fun queryAll():List<DocumentTemplateDirectory>{
-        return documentTemplateDirectoryRepo.queryAll()
+        val page = getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"), false))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },Pageable.unpaged())
+
+        return page.toList()
+
     }
 
     fun addOne(documentTemplateDirectory: DocumentTemplateDirectory):DocumentTemplateDirectory{

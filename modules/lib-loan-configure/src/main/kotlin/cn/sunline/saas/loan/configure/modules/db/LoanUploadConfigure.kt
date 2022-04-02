@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.configure.modules.db
 
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -35,4 +36,18 @@ class LoanUploadConfigure (
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var updated: Date? = null
-)
+) : MultiTenant {
+
+        @NotNull
+        @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+        private var tenantId: Long = 0L
+
+        override fun getTenantId(): Long? {
+                return tenantId
+        }
+
+        override fun setTenantId(o: Long) {
+                tenantId = o
+        }
+
+}

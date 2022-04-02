@@ -5,6 +5,7 @@ CREATE TABLE `loan_upload_config` (
   `required` tinyint(1) NOT NULL,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,
+  `tenant_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_deleted` (`deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

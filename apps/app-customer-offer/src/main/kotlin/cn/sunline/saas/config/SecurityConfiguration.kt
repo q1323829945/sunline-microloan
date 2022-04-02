@@ -13,16 +13,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfiguration (private val tenantContext: TenantContext) : WebSecurityConfigurerAdapter() {
 
     override fun configure(web: WebSecurity?) {
-        web!!.ignoring().antMatchers("/**")
+        web!!.ignoring().antMatchers()
     }
 
     override fun configure(http: HttpSecurity?) {
         http!!
-                .cors().and()
-                .httpBasic().disable().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .anyRequest().authenticated().and()
-                .addFilterBefore(TenantDomainFilter(tenantContext), UsernamePasswordAuthenticationFilter::class.java)
+            .cors().and()
+            .httpBasic().disable().csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .authorizeRequests()
+            .anyRequest().authenticated().and()
+            .addFilterBefore(TenantDomainFilter(tenantContext), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(IgnoreAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+
     }
 }

@@ -35,7 +35,7 @@ class UploadConfigureController {
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>{
 
-        val paged = uploadConfigureService.getPaged({root, _, criteriaBuilder ->
+        val paged = uploadConfigureService.getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"),false))
             criteriaBuilder.and(*(predicates.toTypedArray()))

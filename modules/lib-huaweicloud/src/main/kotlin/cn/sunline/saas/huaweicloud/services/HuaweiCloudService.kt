@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.*
+import java.net.URLEncoder
 
 @Service
 class HuaweiCloudService:ObsApi {
@@ -84,11 +85,12 @@ class HuaweiCloudService:ObsApi {
     override fun putObject(putParams: PutParams) {
 
         //uri
-        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, putParams.key)
+        val key = URLEncoder.encode(putParams.key,"utf-8")
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
 
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${putParams.key}"
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
         val signature = getSignature(HttpRequestMethod.PUT,"","",requestTime,"",canonicalizeResource)
         val headerMap = mutableMapOf<String,String>()
         headerMap["Date"] = requestTime
@@ -109,11 +111,13 @@ class HuaweiCloudService:ObsApi {
     }
 
     override fun getObject(getParams: GetParams): Any? {
+
         //uri
-        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, getParams.key)
+        val key = URLEncoder.encode(getParams.key,"utf-8")
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${getParams.key}"
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
         val signature = getSignature(HttpRequestMethod.GET,"","",requestTime,"",canonicalizeResource)
         val headerMap = mutableMapOf<String,String>()
         headerMap["Date"] = requestTime
@@ -130,11 +134,13 @@ class HuaweiCloudService:ObsApi {
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {
+
         //uri
-        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, deleteParams.key)
+        val key = URLEncoder.encode(deleteParams.key,"utf-8")
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
         //header
         val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/${deleteParams.key}"
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
         val signature = getSignature(HttpRequestMethod.DELETE,"","",requestTime,"",canonicalizeResource)
         val headerMap = mutableMapOf<String,String>()
         headerMap["Date"] = requestTime
