@@ -11,16 +11,18 @@ class MenuService {
 
 
     init {
+        val businessConfig = Menu("businessConfig","","","")
+
         val sysConfig = Menu("sysConfig","","","")
         val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role")
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions")
         val userConfig = Menu("userConfig","sysConfig","","/dashboard/user")
-        val ratePlanConfig = Menu("ratePlanConfig","sysConfig","","/dashboard/ratePlan")
-        val documentTemplateConfig = Menu("documentTemplateConfig","sysConfig","","/dashboard/documentTemplate")
-        val loanProductConfig = Menu("loanProductConfig","sysConfig","","/dashboard/loanProduct")
-        val loanFileUploadConfig = Menu("loanFileUploadConfig","sysConfig","","/dashboard/loanFileUploadConfig")
+        val ratePlanConfig = Menu("ratePlanConfig","businessConfig","","/dashboard/ratePlan")
+        val documentTemplateConfig = Menu("documentTemplateConfig","businessConfig","","/dashboard/documentTemplate")
+        val loanProductConfig = Menu("loanProductConfig","businessConfig","","/dashboard/loanProduct")
+        val loanFileUploadConfig = Menu("loanFileUploadConfig","businessConfig","","/dashboard/loanFileUploadConfig")
 
-        menuList = listOf(sysConfig
+        menuList = listOf(businessConfig,sysConfig
             ,roleConfig
             ,permissionConfig
             ,userConfig
