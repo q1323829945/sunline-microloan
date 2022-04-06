@@ -12,16 +12,16 @@ import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureChange
  * @date 2022/3/10 11:05
  */
 data class DTOLoanProductChange(
-        val identificationCode: String,
-        val name: String,
-        val version: String,
-        val description: String,
-        val loanPurpose: String,
-        val amountConfiguration: DTOAmountLoanProductChangeConfiguration?,
-        val termConfiguration: DTOTermLoanProductChangeConfiguration?,
-        val interestFeature: DTOInterestFeatureChange?,
-        val repaymentFeature: DTORepaymentFeatureChange?,
-        val feeFeatures:MutableList<DTOFeeFeatureChange>?
+    val identificationCode: String,
+    val name: String,
+    var version: String,
+    val description: String,
+    val loanPurpose: String,
+    val amountConfiguration: DTOAmountLoanProductChangeConfiguration?,
+    val termConfiguration: DTOTermLoanProductChangeConfiguration?,
+    val interestFeature: DTOInterestFeatureChange?,
+    val repaymentFeature: DTORepaymentFeatureChange?,
+    val feeFeatures:MutableList<DTOFeeFeatureChange>?
 )
 
 data class DTOAmountLoanProductChangeConfiguration(

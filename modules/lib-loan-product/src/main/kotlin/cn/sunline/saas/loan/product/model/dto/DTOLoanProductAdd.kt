@@ -15,7 +15,7 @@ import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 data class DTOLoanProductAdd(
     val identificationCode: String,
     val name: String,
-    val version: String,
+    var version: String?,
     val description: String,
     val loanProductType: LoanProductType,
     val loanPurpose: String,

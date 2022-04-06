@@ -53,6 +53,7 @@ class LoanProductController {
 
     @PostMapping
     fun addOne(@RequestBody loanProductData: DTOLoanProductAdd): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        loanProductData.version = "1"
         val view = loanProductService.register(loanProductData)
         return DTOResponseSuccess(view).response()
     }

@@ -30,6 +30,7 @@ class DocumentTemplateController {
     @Autowired
     private lateinit var documentTemplateService: DocumentTemplateService
 
+    @Autowired
     private lateinit var appDocumentTemplateService: AppDocumentTemplateService
 
 

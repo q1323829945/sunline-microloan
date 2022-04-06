@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.persistence.criteria.Predicate
 
 @RestController
 @RequestMapping("RatePlan")
@@ -53,6 +54,15 @@ class RatePlanController {
         return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlanView>(it) }).response()
     }
 
+    @GetMapping("all")
+    fun getAll(@RequestParam("type")type:RatePlanType,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        val page = ratePlanService.getPaged({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },Pageable.unpaged())
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlanView>(it) }).response()
+    }
 
     @PostMapping
     fun addOne(@RequestBody dtoRatePlan: DTORatePlanAdd): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {

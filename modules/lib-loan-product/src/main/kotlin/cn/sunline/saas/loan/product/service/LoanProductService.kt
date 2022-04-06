@@ -1,12 +1,9 @@
 package cn.sunline.saas.loan.product.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.interest.model.db.InterestFeatureModality
-import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.service.InterestFeatureService
 import cn.sunline.saas.loan.product.component.LoanProductConditionComponent
 import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
@@ -16,8 +13,6 @@ import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.*
 import cn.sunline.saas.loan.product.repository.LoanProductRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.repayment.model.db.PrepaymentFeatureModality
-import cn.sunline.saas.repayment.model.db.RepaymentFeatureModality
 import cn.sunline.saas.repayment.service.RepaymentFeatureService
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -122,108 +117,11 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
 
     @Transactional
-    fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
-        val oldLoanProduct = this.getOne(id)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
-        //update loan product
-        oldLoanProduct.name = loanProductData.name
-        oldLoanProduct.description = loanProductData.description
-        oldLoanProduct.loanPurpose = loanProductData.loanPurpose
+    fun updateLoanProduct(id: Long, loanProductData: DTOLoanProductChange): DTOLoanProductView {
+        loanProductData.version = (loanProductData.version.toInt() + 1).toString()
+        val product = objectMapper.convertValue<DTOLoanProductAdd>(loanProductData)
 
-
-        loanProductData.amountConfiguration?.apply {
-            oldLoanProduct.configurationOptions?.forEach {
-                if(this.id == it.id){
-                    it.setValue(BigDecimal(this.maxValueRange), BigDecimal(this.minValueRange))
-                }
-            }
-        }
-
-        loanProductData.termConfiguration?.apply {
-            oldLoanProduct.configurationOptions?.forEach {
-                if(this.id == it.id){
-                    it.description = loanProductCondition.updateTermCondition(this.id,this.maxValueRange,this.minValueRange,id)
-                }
-            }
-        }
-
-        val updateLoanProduct = this.save(oldLoanProduct)
-
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(updateLoanProduct)
-
-        setConfigurationOptions(updateLoanProduct,dtoLoanProduct)
-
-        //update interestFeature
-        var interestFeature = interestProductFeatureService.findByProductId(id)
-        if(interestFeature == null){
-            interestFeature = loanProductData.interestFeature?.run {
-                interestProductFeatureService.register(
-                        id,
-                        objectMapper.convertValue(loanProductData.interestFeature)
-                )
-            }
-            dtoLoanProduct.interestFeature = interestFeature
-        } else {
-            loanProductData.interestFeature?.run {
-                interestFeature.ratePlanId = this.ratePlanId
-                interestFeature.interest = InterestFeatureModality(interestFeature.id,this.baseYearDays,this.adjustFrequency)
-                interestFeature.overdueInterest = OverdueInterestFeatureModality(interestFeature.id,this.overdueInterestRatePercentage)
-
-                val updateInterestFeature = interestProductFeatureService.save(interestFeature)
-                dtoLoanProduct.interestFeature = updateInterestFeature
-            }
-        }
-
-
-        //update repaymentFeature
-        var repaymentFeature = repaymentProductFeatureService.findByProductId(id)
-        if(repaymentFeature == null){
-            repaymentFeature = loanProductData.repaymentFeature?.run {
-                repaymentProductFeatureService.register(
-                        id,
-                        objectMapper.convertValue(loanProductData.repaymentFeature)
-                )
-            }
-            dtoLoanProduct.repaymentFeature = repaymentFeature
-        } else {
-            loanProductData.repaymentFeature?.run {
-                repaymentFeature.payment = RepaymentFeatureModality(repaymentFeature.id,this.paymentMethod,this.frequency,this.repaymentDayType)
-                repaymentFeature.prepayment.clear()
-                this.prepaymentFeatureModality.forEach {
-                    repaymentFeature.prepayment.add(
-                            PrepaymentFeatureModality(
-                                    it.id?:seq.nextId(),
-                                    it.term,
-                                    it.type,
-                                    it.penaltyRatio ?: BigDecimal.ZERO
-                            )
-                    )
-                }
-                val updateRepaymentFeature = repaymentProductFeatureService.save(repaymentFeature)
-                dtoLoanProduct.repaymentFeature = updateRepaymentFeature
-            }
-        }
-
-        //update feeFeatures
-        loanProductData.feeFeatures?.run {
-            val feeFeatures = ArrayList<FeeFeature>()
-            this.forEach {
-                feeFeatures.add(
-                        FeeFeature(
-                                it.id?:seq.nextId(),
-                                id,
-                                it.feeType,
-                                it.feeMethodType,
-                                BigDecimal(it.feeAmount),
-                                BigDecimal(it.feeRate),
-                                it.feeDeductType
-                        )
-                )
-            }
-            val updateFeeFeatures = feeProductFeatureService.save(feeFeatures).toMutableList()
-            dtoLoanProduct.feeFeatures = updateFeeFeatures
-        }
-
-        return dtoLoanProduct
+        return register(product)
     }
 
 
