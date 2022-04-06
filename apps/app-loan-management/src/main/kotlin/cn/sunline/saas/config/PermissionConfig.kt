@@ -15,11 +15,13 @@ enum class PermissionConfig (
 
     ROLE_GET("role", "roles/[0-9]+\$", RequestMethod.GET, "View role profile"),
     ROLE_GET_LIST("role", "roles(\\?.*|\$)", RequestMethod.GET, "View role list"),
+    ROLE_GET_ALL_LIST("role", "roles/all", RequestMethod.GET, "View role user list"),
     ROLE_ADD("role", "roles\$", RequestMethod.POST, "Add new role"),
     ROLE_MODIFY("role", "roles/[0-9]+\$", RequestMethod.PUT, "Modify role"),
 
     PERMISSION_GET("permission", "permissions/[0-9]+\$", RequestMethod.GET, "View permission profile"),
     PERMISSION_LIST("permission", "permissions(\\?.*|\$)", RequestMethod.GET, "View permission list"),
+    PERMISSION_ALL_LIST("permission", "permissions/all", RequestMethod.GET, "View permission all list"),
     PERMISSION_ADD("permission", "permissions\$", RequestMethod.POST, "Add new permission"),
     PERMISSION_MODIFY("permission", "permissions/[0-9]+\$", RequestMethod.PUT, "Modify permission"),
 

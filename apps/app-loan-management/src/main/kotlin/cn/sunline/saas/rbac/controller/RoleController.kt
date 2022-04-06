@@ -37,6 +37,12 @@ class RoleController {
         return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORoleView>(it)}).response()
     }
 
+    @GetMapping("all")
+    fun getAll(): ResponseEntity<DTOPagedResponseSuccess> {
+        val page = roleService.getPaged(pageable = Pageable.unpaged())
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORoleView>(it)}).response()
+    }
+
     @PostMapping
     fun addOne(@RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
         val role = objectMapper.convertValue<Role>(dtoRole)
