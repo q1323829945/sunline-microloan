@@ -2,24 +2,9 @@
 
 package cn.sunline.saas.repayment.schedule.service
 
-import cn.sunline.saas.fee.model.FeeDeductType
-import cn.sunline.saas.fee.model.FeeMethodType
-import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
-import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.BaseYearDays
-import cn.sunline.saas.interest.model.InterestType
-import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
-import cn.sunline.saas.loan.product.model.LoanProductType
-import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
-import cn.sunline.saas.loan.product.model.dto.DTOTermLoanProductConfiguration
-import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.PrepaymentType
-import cn.sunline.saas.repayment.model.RepaymentDayType
 import cn.sunline.saas.repayment.model.RepaymentFrequency
-import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
-import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.component.CalcInterestComponent
 import cn.sunline.saas.repayment.schedule.component.CalcRepaymentInstallmentComponent
@@ -29,7 +14,6 @@ import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.DTOInterestCalculator
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleCalculate
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleResetCalculate
-import cn.sunline.saas.seq.Sequence
 import mu.KotlinLogging
 import org.assertj.core.api.Assertions
 import org.joda.time.DateTime
@@ -43,137 +27,10 @@ import java.math.RoundingMode
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration,
                             @Autowired private var repaymentScheduleDetailService: RepaymentScheduleDetailService,
-                            @Autowired private var repaymentScheduleService: RepaymentScheduleService,
-                            @Autowired private var snowflakeService: Sequence,
-                            @Autowired val loanProductService: LoanProductService
+                            @Autowired private var repaymentScheduleService: RepaymentScheduleService
 ) {
 
     private var logger = KotlinLogging.logger {}
-
-
-    @Test
-    fun `entity save`() {
-
-        val amountConfiguration = DTOAmountLoanProductConfiguration(
-            maxValueRange = BigDecimal.TEN,
-            minValueRange = BigDecimal.ZERO
-        )
-
-        val termConfiguration = DTOTermLoanProductConfiguration(
-            maxValueRange = LoanTermType.ONE_YEAR,
-            minValueRange = null
-        )
-
-        val interestFeature = DTOInterestFeatureAdd(
-            interestType = InterestType.FIXED,
-            ratePlanId = 1000,
-            baseYearDays = BaseYearDays.ACCOUNT_YEAR,
-            adjustFrequency = "NOW",
-            overdueInterestRatePercentage = 150
-        )
-
-        val prepayments = mutableListOf <DTOPrepaymentFeatureModalityAdd>()
-        val prepayment1  = DTOPrepaymentFeatureModalityAdd(
-            LoanTermType.ONE_MONTH,
-            PrepaymentType.NOT_ALLOWED,
-            null
-        )
-
-        val prepayment2  = DTOPrepaymentFeatureModalityAdd(
-            LoanTermType.THREE_MONTHS,
-            PrepaymentType.PARTIAL_PREPAYMENT,
-            BigDecimal(1.5)
-        )
-
-        val prepayment3  = DTOPrepaymentFeatureModalityAdd(
-            LoanTermType.SIX_MONTHS,
-            PrepaymentType.FULL_REDEMPTION,
-            null
-        )
-
-        prepayments.add(prepayment1)
-        prepayments.add(prepayment2)
-        prepayments.add(prepayment3)
-
-        val repaymentFeature = DTORepaymentFeatureAdd(
-            PaymentMethodType.ONE_OFF_REPAYMENT,
-            RepaymentFrequency.ONE_MONTH,
-            RepaymentDayType.BASE_LOAN_DAY,
-            prepayments
-        )
-
-        val feeFeatures = mutableListOf<DTOFeeFeatureAdd>()
-        val feeFeature1 = DTOFeeFeatureAdd(
-            feeType = "Test1",
-            feeMethodType = FeeMethodType.FIX_AMOUNT,
-            feeAmount = BigDecimal(150),
-            feeRate = null,
-            feeDeductType = FeeDeductType.IMMEDIATE
-        )
-        val feeFeature2 = DTOFeeFeatureAdd(
-            feeType = "Test2",
-            feeMethodType = FeeMethodType.FEE_RATIO,
-            feeAmount = null,
-            feeRate = BigDecimal(1.5),
-            feeDeductType = FeeDeductType.IMMEDIATE
-        )
-
-        feeFeatures.add(feeFeature1)
-        feeFeatures.add(feeFeature2)
-
-
-        val loanProduct = DTOLoanProductAdd(
-            identificationCode = "SN0001",
-            name = "Micro Loan",
-            version = "1.0.0",
-            description = "test",
-            loanProductType = LoanProductType.CONSUMER_LOAN,
-            loanPurpose = "test",
-            amountConfiguration = amountConfiguration,
-            termConfiguration = termConfiguration,
-            interestFeature = interestFeature,
-            repaymentFeature = repaymentFeature,
-            feeFeatures = feeFeatures
-        )
-
-        val actual = loanProductService.register(loanProduct)
-
-
-        Assertions.assertThat(actual).isNotNull
-        //assertThat(actual.configurationOptions?.size).isEqualTo(2)
-    }
-
-
-    @Test
-    fun `calcBaseInterest`(){
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
-        val repaymentDate = DateTime(2022, 6, 21, 0, 0)
-
-        val result = CalcInterestComponent.calcBaseInterest(DTOInterestCalculator(
-            calcAmount = BigDecimal(10000),
-            loanRateMonth = BigDecimal(0.12),
-            loanRateDay = BigDecimal(0.01),
-            currentRepaymentDateTime = startDate,
-            nextRepaymentDateTime = endDate
-        ))
-        Assertions.assertThat(result).isEqualTo(repaymentDate)
-    }
-
-    @Test
-    fun `calcDayInterest`(){
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
-        val repaymentDate = DateTime(2022, 6, 21, 0, 0)
-
-        val result = CalcInterestComponent.calcDayInterest(
-            BigDecimal(10000),
-            BigDecimal(0.01),
-            startDate,
-            endDate
-        )
-        Assertions.assertThat(result).isEqualTo(repaymentDate)
-    }
 
     @Test
     fun `calcNextRepaymentDateTime`(){
@@ -310,7 +167,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         repaymentScheduleDetailService.save(plan.repaymentScheduleDetail)
         formatPlan(plan.repaymentScheduleDetail, plan)
         logger.info { "-----------------------------------更新前后-------------------------------------" }
-        val DTORepaymentScheduleResetCalculate = DTORepaymentScheduleResetCalculate(
+        val dtoRepaymentScheduleResetCalculate = DTORepaymentScheduleResetCalculate(
             repaymentScheduleId = plan.repaymentScheduleId,
             remainLoanAmount =  BigDecimal(12000.00),
             loanRate = BigDecimal(0.120000),
@@ -318,7 +175,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDate = repaymentDate,
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL
         )
-        val plan1 = repaymentScheduleCalcGeneration.calculatorReset(DTORepaymentScheduleResetCalculate)
+        val plan1 = repaymentScheduleCalcGeneration.calculatorReset(dtoRepaymentScheduleResetCalculate)
         formatPlan(plan1.repaymentScheduleDetail, plan1)
     }
 

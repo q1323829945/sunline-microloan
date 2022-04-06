@@ -45,8 +45,6 @@ object CalcDateComponent {
         }
     }
 
-
-
     fun calcResetNextRepaymentDateInfo(repaymentDateTime:DateTime,repaymentScheduleDetail: MutableList<RepaymentScheduleDetail>): DTORepaymentScheduleResetResult {
         var flag = 1
         var currentPeriod = 0
@@ -118,5 +116,4 @@ object CalcDateComponent {
         }
         return day
     }
-
 }

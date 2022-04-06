@@ -27,7 +27,7 @@ object CalcPrincipalComponent {
             }
             PaymentMethodType.EQUAL_INSTALLMENT -> {
                 //B=a*i(1+i)^(n-1)/[(1+i)^N-1]
-                val realLoanRate = loanRate.multiply(repaymentFrequency?.ordinal?.toBigDecimal())
+                val realLoanRate = loanRate.multiply(repaymentFrequency?.months?.toBigDecimal())
                 val factor = realLoanRate.add(BigDecimal.ONE).pow(period-1)
                 val factor1 = realLoanRate.add(BigDecimal.ONE).pow(periods)?.subtract(BigDecimal.ONE)
                 calcAmount.multiply(realLoanRate).multiply(factor).divide(factor1,2,RoundingMode.HALF_UP)
@@ -37,3 +37,6 @@ object CalcPrincipalComponent {
         }
     }
 }
+
+
+

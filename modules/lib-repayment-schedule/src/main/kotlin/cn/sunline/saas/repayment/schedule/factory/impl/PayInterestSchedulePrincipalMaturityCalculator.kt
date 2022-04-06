@@ -61,7 +61,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         val amount = dtoRepaymentScheduleCalculate.amount
         val interestRate = dtoRepaymentScheduleCalculate.interestRate
         val repaymentFrequency = dtoRepaymentScheduleCalculate.repaymentFrequency!!
-        val repaymentDay = dtoRepaymentScheduleCalculate.repaymentDay
+        var repaymentDay = dtoRepaymentScheduleCalculate.repaymentDay
         val startDate = dtoRepaymentScheduleCalculate.startDate
         val endDate = dtoRepaymentScheduleCalculate.endDate
         val baseYearDays = dtoRepaymentScheduleCalculate.baseYearDays
@@ -82,8 +82,12 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         var totalInterest = BigDecimal.ZERO
 
         // 下一个还款日
+        val maximumValue = startDate.toDateTime().dayOfMonth().maximumValue
+        if(repaymentDay>maximumValue){
+            repaymentDay = maximumValue
+        }
         var currentRepaymentDateTime = DateTime(startDate)
-        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.ordinal)
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear, repaymentDay,0,0).plusMonths(repaymentFrequency.months)
         val finalRepaymentDateTime = DateTime(endDate)
 
 
@@ -107,7 +111,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)
         }
 
         // 还款计划概述

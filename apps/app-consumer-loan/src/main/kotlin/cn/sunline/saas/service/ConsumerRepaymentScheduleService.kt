@@ -12,7 +12,7 @@ interface ConsumerRepaymentScheduleService {
 
     fun initiate()
 
-    fun calculate(productId: Long,amount: BigDecimal,term: Int): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
+    fun calculate(productId: Long,amount: BigDecimal,term: String): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
 
     fun save(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
 }

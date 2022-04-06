@@ -59,7 +59,7 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         val amount = dtoRepaymentScheduleCalculate.amount
         val interestRate = dtoRepaymentScheduleCalculate.interestRate
         val repaymentFrequency = dtoRepaymentScheduleCalculate.repaymentFrequency!!
-        val repaymentDay = dtoRepaymentScheduleCalculate.repaymentDay
+        var repaymentDay = dtoRepaymentScheduleCalculate.repaymentDay
         val startDate = dtoRepaymentScheduleCalculate.startDate
         val endDate = dtoRepaymentScheduleCalculate.endDate
         val baseYearDays = dtoRepaymentScheduleCalculate.baseYearDays
@@ -71,7 +71,11 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         var currentRepaymentDateTime = DateTime(startDate)
 
         // 下一个还款日
-        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear,repaymentDay,0,0).plusMonths(repaymentFrequency.ordinal)
+        val maximumValue = startDate.toDateTime().dayOfMonth().maximumValue
+        if(repaymentDay>maximumValue){
+            repaymentDay = maximumValue
+        }
+        var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear,repaymentDay,0,0).plusMonths(repaymentFrequency.months)
 
         // 结束日期
         val finalRepaymentDateTime = DateTime(endDate)

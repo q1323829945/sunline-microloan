@@ -3,10 +3,10 @@
 package cn.sunline.saas.repayment.schedule.factory
 
 import cn.sunline.saas.global.constant.PaymentMethodType
-import cn.sunline.saas.repayment.schedule.factory.impl.EqualPrincipalCalculator
 import cn.sunline.saas.repayment.schedule.factory.impl.EqualInstallmentCalculator
-import cn.sunline.saas.repayment.schedule.factory.impl.PayInterestSchedulePrincipalMaturityCalculator
+import cn.sunline.saas.repayment.schedule.factory.impl.EqualPrincipalCalculator
 import cn.sunline.saas.repayment.schedule.factory.impl.OneOffRepaymentCalculator
+import cn.sunline.saas.repayment.schedule.factory.impl.PayInterestSchedulePrincipalMaturityCalculator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

@@ -1,9 +1,8 @@
-
-
 package cn.sunline.saas.repayment.schedule.model.db
 
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -28,6 +27,7 @@ class RepaymentSchedule(
     @NotNull
     @Column(name = "term", nullable = false)
     var term: Int,// 贷款期限
+    var term: String,// 贷款期限
 
     @NotNull
     @Column(name = "interest_Rate", precision = 9, scale = 6, nullable = false)
@@ -62,3 +62,17 @@ class RepaymentSchedule(
     var updated: Date? = null
 
 )
+): MultiTenant {
+
+    @NotNull
+    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
+    }
+}
