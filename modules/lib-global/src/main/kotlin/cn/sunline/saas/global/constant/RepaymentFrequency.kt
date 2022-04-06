@@ -6,7 +6,7 @@ package cn.sunline.saas.global.constant
  * @author Kevin-Cui
  * @date 2022/3/8 16:15
  */
-enum class RepaymentFrequency(months: Int) {
+enum class RepaymentFrequency(var months: Int) {
     ONE_MONTH(1),
     THREE_MONTHS(3),
     SIX_MONTHS(6) ,

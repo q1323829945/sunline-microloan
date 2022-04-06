@@ -1,5 +1,6 @@
 package cn.sunline.saas.repayment.schedule.model.db
 
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.jetbrains.annotations.NotNull
@@ -51,5 +52,19 @@ class RepaymentScheduleDetail (
      @UpdateTimestamp
      @Temporal(TemporalType.TIMESTAMP)
      var updated : Date? = null
-)
+
+): MultiTenant {
+
+     @javax.validation.constraints.NotNull
+     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+     private var tenantId: Long = 0L
+
+     override fun getTenantId(): Long {
+          return tenantId
+     }
+
+     override fun setTenantId(o: Long) {
+          tenantId = o
+     }
+}
 
