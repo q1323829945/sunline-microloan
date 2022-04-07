@@ -19,5 +19,6 @@ data class DTOLoanAgreementAdd(
     val interestArrangement: DTOInterestArrangementAdd,
     val repaymentArrangement: DTORepaymentArrangementAdd,
     val feeArrangement: MutableList<DTOFeeArrangementAdd>,
-    val involvements: MutableList<DTOLoanAgreementInvolvement>
+    val borrower:Long,
+    val lender: MutableList<Long>
 )
