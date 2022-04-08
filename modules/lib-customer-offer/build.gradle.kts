@@ -11,7 +11,7 @@ dependencies {
     api(project(":lib-multi-tenant"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-snowflake"))
-    implementation(project(":lib-huaweicloud"))
+    implementation(project(":lib-huaweicloud-obs"))
     implementation("com.google.code.gson:gson:2.9.0")
 
 

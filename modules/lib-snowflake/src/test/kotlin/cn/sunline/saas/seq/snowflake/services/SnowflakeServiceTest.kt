@@ -2,15 +2,12 @@ package cn.sunline.saas.seq.snowflake.services
 
 import cn.sunline.saas.seq.snowflake.config.MAX_CLOCK_BACK
 import cn.sunline.saas.seq.snowflake.config.MAX_SEQUENCE
-import cn.sunline.saas.seq.snowflake.config.RedisConfigTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = [RedisConfigTest::class])
 class SnowflakeServiceTest(@Autowired private val snowflakeService: SnowflakeService) {
 
 

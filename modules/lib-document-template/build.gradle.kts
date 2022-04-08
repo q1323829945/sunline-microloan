@@ -11,7 +11,7 @@ dependencies {
     api(project(":lib-base-jpa"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-document"))
-    implementation(project(":lib-huaweicloud"))
+    implementation(project(":lib-huaweicloud-obs"))
     implementation(project(":lib-snowflake"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -19,5 +19,5 @@ dependencies {
     testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake"))
-    testImplementation(project(":lib-huaweicloud"))
+    testImplementation(project(":lib-huaweicloud-obs"))
 }

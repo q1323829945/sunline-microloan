@@ -60,7 +60,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
             newProductId,
             loanProductData.identificationCode,
             loanProductData.name,
-            loanProductData.version,
+            loanProductData.version!!,
             loanProductData.description,
             loanProductData.loanProductType,
             loanProductData.loanPurpose

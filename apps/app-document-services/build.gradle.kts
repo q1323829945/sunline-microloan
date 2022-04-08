@@ -22,7 +22,7 @@ dependencies {
 	implementation(project(":lib-response"))
 	implementation(project(":lib-document"))
 	implementation(project(":lib-obs-api"))
-	implementation(project(":lib-huaweicloud"))
+	implementation(project(":lib-huaweicloud-obs"))
 	implementation(project(":lib-document-generation"))
 	implementation(project(":lib-document-template"))
 

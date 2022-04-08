@@ -17,6 +17,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("commons-httpclient:commons-httpclient:3.1")
+    implementation("com.google.code.gson:gson:2.9.0")
 
     api("io.dapr:dapr-sdk:${daprVersion}")
     api("io.dapr:dapr-sdk-actors:${daprVersion}")
@@ -31,7 +32,7 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-configure"))
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation(project(":lib-huaweicloud-apig"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

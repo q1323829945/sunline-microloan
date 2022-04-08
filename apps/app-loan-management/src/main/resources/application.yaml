@@ -1,4 +1,6 @@
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
   main:
     banner-mode: "off"
   jpa:
@@ -25,6 +27,7 @@ spring:
 
 server:
   port : 8083
+  shutdown: graceful
 
 management:
   endpoints:
@@ -34,10 +37,23 @@ management:
 
 huawei:
   cloud:
-    accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
-    securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
-    region: "cn-east-3"
-    bucketName: "lizheng-test"
+    obs:
+      accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
+      securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
+      region: "cn-east-3"
+      bucketName: "lizheng-test"
+    iam:
+      domainUserName: "qq1323829945"
+      username: "q1323829945"
+      password: "300348sunline"
+      projectId: "a7bbc97fa36648d4a9f4fea6d1534ab8"
+    apig:
+      groupName: "loan_management"
+      environmentName: "dev"
+      appName: "loan_management"
+      ip: "139.9.123.142:8083"
+      #todo
+      domainUrl:
 
 redis:
   server: 127.0.0.1:6379

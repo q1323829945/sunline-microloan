@@ -10,7 +10,6 @@ class IpConfig {
     lateinit var pdpaIp:String
 
 
-
     @Value("\${ipconfig.product}")
     lateinit var productIp:String
 

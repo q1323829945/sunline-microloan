@@ -8,7 +8,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-huaweicloud"))
+    implementation(project(":lib-huaweicloud-obs"))
 
 
 }
