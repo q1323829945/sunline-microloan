@@ -1,6 +1,6 @@
 package cn.sunline.saas.pdpa.service
 
-import cn.sunline.saas.config.HttpConfiguration
+import cn.sunline.saas.config.AppHttpConfiguration
 import cn.sunline.saas.config.IpConfig
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.pdpa.dto.PDPAInformation
@@ -16,7 +16,7 @@ import java.io.InputStream
 @Service
 class PDPAService(
     private var ipConfig:IpConfig,
-    private var httpConfiguration: HttpConfiguration
+    private var appHttpConfiguration: AppHttpConfiguration,
     ) {
 
     fun sign(
@@ -48,16 +48,16 @@ class PDPAService(
         val parts = arrayOf(filePart, customerIdPart, pdpaTemplateIdPart)
 
         //get post method
-        val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.POST, uri, parts)
+        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.POST, uri,appHttpConfiguration.getPublicHeaders(), parts)
 
         //send http
         try {
-            httpConfiguration.sendClient(postMethod)
+            appHttpConfiguration.sendClient(postMethod)
         } finally {
             file.delete()
         }
 
-        return httpConfiguration.getResponse(postMethod)
+        return appHttpConfiguration.getResponse(postMethod)
     }
 
 
@@ -65,11 +65,11 @@ class PDPAService(
 
         val uri = "http://${ipConfig.pdpaIp}/pdpa/$countryCode/retrieve"
 
-        val postMethod = httpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri)
+        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri,appHttpConfiguration.getPublicHeaders())
 
-        httpConfiguration.sendClient(postMethod)
+        appHttpConfiguration.sendClient(postMethod)
 
-        val data = httpConfiguration.getResponse(postMethod)
+        val data = appHttpConfiguration.getResponse(postMethod)
 
         return Gson().fromJson(data, PDPAInformation::class.java)
     }

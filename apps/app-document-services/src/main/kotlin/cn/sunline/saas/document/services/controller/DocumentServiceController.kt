@@ -4,7 +4,7 @@ import cn.sunline.saas.document.generation.config.FileGeneration
 import cn.sunline.saas.document.generation.config.TemplateParams
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.services.DocumentTemplateService
-import cn.sunline.saas.huaweicloud.services.HuaweiCloudService
+import cn.sunline.saas.huaweicloud.obs.services.HuaweiCloudObsService
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.PutParams
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +32,7 @@ class DocumentServiceController {
     )
 
     @Autowired
-    private lateinit var huaweiCloudService: HuaweiCloudService
+    private lateinit var huaweiCloudService: HuaweiCloudObsService
     @Autowired
     private lateinit var documentTemplateService: DocumentTemplateService
     @Autowired

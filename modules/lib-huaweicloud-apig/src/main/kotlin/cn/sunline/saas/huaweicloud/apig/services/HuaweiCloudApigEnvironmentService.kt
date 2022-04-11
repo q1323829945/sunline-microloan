@@ -4,18 +4,11 @@ import cn.sunline.saas.gateway.api.GatewayEnvironment
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.EnvironmentCreateParams
 import cn.sunline.saas.huaweicloud.apig.constant.EnvironmentUpdateParams
-import cn.sunline.saas.huaweicloud.config.HttpConfig
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
-import java.security.MessageDigest
-import java.util.*
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 @Service
 class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {

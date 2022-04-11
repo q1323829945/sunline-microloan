@@ -17,7 +17,7 @@ dependencies {
     implementation(project(":lib-redis"))
     implementation(project(":lib-global"))
     implementation(project(":lib-redis"))
-    api(project(":lib-huaweicloud"))
+    api(project(":lib-util"))
     api(project(":lib-gateway-api"))
 
 

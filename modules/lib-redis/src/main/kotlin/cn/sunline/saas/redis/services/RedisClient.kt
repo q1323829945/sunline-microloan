@@ -87,14 +87,17 @@ class RedisClient(private var redisConfig: RedisConfig) {
 
     fun <T> addToMap(hash: String, key: String, value: T,expire:Long): Boolean {
         val hashOps = redissonClient.getMap<String, T>(hash, JsonJacksonCodec())
+        val result = hashOps.put(key, value)
         hashOps.expire(expire,TimeUnit.MINUTES)
-        return hashOps.put(key, value) != null
+        return result != null
     }
 
     fun <T> getMapItem(hash: String, key: String): T? {
         val hashOps = redissonClient.getMap<String, T>(hash, JsonJacksonCodec())
         return hashOps[key]
     }
+
+
 
     fun mapContains(hash: String, key: String): Boolean {
         val hashOps = redissonClient.getMap<String, Any>(hash, JsonJacksonCodec())

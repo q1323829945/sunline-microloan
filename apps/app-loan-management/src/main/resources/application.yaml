@@ -52,6 +52,7 @@ huawei:
       environmentName: "dev"
       appName: "loan_management"
       ip: "139.9.123.142:8083"
+      region: "cn-east-3"
       #todo
       domainUrl:
 

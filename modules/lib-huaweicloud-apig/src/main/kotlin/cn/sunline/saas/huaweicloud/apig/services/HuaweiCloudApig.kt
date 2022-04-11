@@ -1,14 +1,18 @@
 package cn.sunline.saas.huaweicloud.apig.services
 
 import cn.sunline.saas.huaweicloud.apig.config.HuaweiCloudApigConfig
-import cn.sunline.saas.huaweicloud.config.HttpConfig
 import cn.sunline.saas.redis.services.RedisClient
+import cn.sunline.saas.HttpConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 
 @Component
 class HuaweiCloudApig {
+    protected val logger = LoggerFactory.getLogger(HuaweiCloudApig::class.java)
+
     @Autowired
     protected lateinit var huaweiCloudApigConfig:HuaweiCloudApigConfig
 
@@ -19,9 +23,11 @@ class HuaweiCloudApig {
     protected lateinit var redisClient: RedisClient
 
 
+    @Value("\${huawei.cloud.apig.region}")
+    lateinit var region:String
 
     protected fun getUri(path:String):String{
-        return "https://apig.cn-east-3.myhuaweicloud.com$path"
+        return "https://apig.${region}.myhuaweicloud.com$path"
     }
 
     protected fun getHeaderMap():MutableMap<String,String>{

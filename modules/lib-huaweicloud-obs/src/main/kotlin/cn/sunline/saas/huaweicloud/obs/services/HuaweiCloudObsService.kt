@@ -2,13 +2,12 @@ package cn.sunline.saas.huaweicloud.obs.services
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.HttpRequestMethod
-import cn.sunline.saas.huaweicloud.config.HttpConfig
-import cn.sunline.saas.huaweicloud.config.HuaweiCloudConfig
+import cn.sunline.saas.huaweicloud.obs.config.HuaweiCloudConfig
 import cn.sunline.saas.huaweicloud.obs.exception.ObsBodyTypeException
 import cn.sunline.saas.obs.api.*
+import cn.sunline.saas.HttpConfig
 import org.apache.commons.httpclient.methods.*
 import org.joda.time.DateTime
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.*

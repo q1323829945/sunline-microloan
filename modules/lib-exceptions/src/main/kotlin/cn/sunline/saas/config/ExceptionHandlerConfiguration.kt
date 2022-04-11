@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
+
     @ExceptionHandler(
         BadRequestException::class, NotFoundException::class, BusinessException::class, SystemException::class
     )
@@ -30,6 +31,11 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
                 HttpStatus.BAD_REQUEST
             }
         }
+        logger.error("status:$status")
+        logger.error("statusCode:${ex.statusCode}")
+        logger.error("message:${ex.exceptionMessage}")
+        logger.error("data:${ex.data.toString()}")
+
         return DTOResponseError(ex.statusCode.code, ex.exceptionMessage, ex.user, ex.data).response(
             status
         ) as ResponseEntity<Any>

@@ -6,7 +6,8 @@ import cn.sunline.saas.huaweicloud.apig.constant.CertificateBindingParams
 import cn.sunline.saas.huaweicloud.apig.constant.CertificateDeleteParams
 import cn.sunline.saas.huaweicloud.apig.constant.DomainBindingParams
 import cn.sunline.saas.huaweicloud.apig.constant.DomainUnboundParams
-import cn.sunline.saas.huaweicloud.apig.exception.DNSException
+import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
+import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
 import org.springframework.http.MediaType
@@ -41,7 +42,8 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             val status = map["status"].toString()
 
             if(status == "4"){
-                throw DNSException("dns error")
+                logger.error("doaminBinding error")
+                throw DomainBindingException("dns error")
             }
 
             val id = map["id"].toString()
@@ -100,7 +102,8 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
                 val status = map["status"].toString()
 
                 if(status == "4"){
-                    throw DNSException("certificate error")
+                    logger.error("certificateBinding error")
+                    throw CertificateBindingException("certificate error")
                 }
 
 

@@ -1,4 +1,4 @@
-package cn.sunline.saas.huaweicloud
+package cn.sunline.saas
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

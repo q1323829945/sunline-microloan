@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-redis"))
     implementation(project(":lib-global"))
-    api(project(":lib-huaweicloud"))
+    api(project(":lib-util"))
     api(project(":lib-obs-api"))
 
 

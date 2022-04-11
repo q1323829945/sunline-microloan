@@ -2,8 +2,8 @@ package cn.sunline.saas.huaweicloud.apig.config
 
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
-import cn.sunline.saas.huaweicloud.config.HttpConfig
 import cn.sunline.saas.redis.services.RedisClient
+import cn.sunline.saas.HttpConfig
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
 import org.joda.time.DateTime
@@ -21,7 +21,7 @@ const val HUAWEI_CLOUD_IAM_TOKEN_HASH = "huawei_cloud_iam_token_hash"
 const val HUAWEI_CLOUD_IAM_TOKEN_KEY = "huawei_cloud_iam_token_key"
 
 @Component
-class HuaweiCloudApigConfig(private val httpConfig:HttpConfig,private var redisClient: RedisClient) {
+class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redisClient: RedisClient) {
 
     @Value("\${huawei.cloud.iam.domainUserName}")
     lateinit var domainUserName:String
@@ -33,10 +33,10 @@ class HuaweiCloudApigConfig(private val httpConfig:HttpConfig,private var redisC
     lateinit var projectId:String
 
     fun getToken(): String {
-
         val token = redisClient.getMapItem<String>(HUAWEI_CLOUD_IAM_TOKEN_HASH, HUAWEI_CLOUD_IAM_TOKEN_KEY)
 
         token?.run {
+            println(token)
             return this
         }
 

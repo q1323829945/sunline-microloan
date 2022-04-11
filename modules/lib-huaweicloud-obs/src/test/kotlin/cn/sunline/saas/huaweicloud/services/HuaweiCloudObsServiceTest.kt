@@ -15,7 +15,7 @@ import java.io.InputStream
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HuaweiCloudObsServiceTest {
     @Autowired
-    private lateinit var huaweiCloudService: ObsApi
+    private lateinit var huaweiCloudObsService: ObsApi
 
     /* 桶的名称不能重复
     @Test
@@ -35,7 +35,7 @@ class HuaweiCloudObsServiceTest {
     @Test
     fun `object path upload`(){
         val put = PutParams("mimimi3.JPG","src\\test\\resources\\file\\123.JPG")
-        huaweiCloudService.putObject(put)
+        huaweiCloudObsService.putObject(put)
     }
 
     @Test
@@ -43,7 +43,7 @@ class HuaweiCloudObsServiceTest {
         val file = FileInputStream(File("src\\test\\resources\\file\\123.JPG"))
 
         val put = PutParams("stream1234.JPG",file)
-        huaweiCloudService.putObject(put)
+        huaweiCloudObsService.putObject(put)
     }
 
 
@@ -52,7 +52,7 @@ class HuaweiCloudObsServiceTest {
         val put = PutParams("my123.JPG",123)
 
         assertThrows<ObsBodyTypeException> {
-            huaweiCloudService.putObject(put)
+            huaweiCloudObsService.putObject(put)
         }
     }
 
@@ -60,9 +60,9 @@ class HuaweiCloudObsServiceTest {
     fun `get object`(){
         val get = GetParams("stream1234.JPG")
 
-        val arrayInputStream = huaweiCloudService.getObject(get) as InputStream
+        val arrayInputStream = huaweiCloudObsService.getObject(get) as InputStream
 
-        val outputStream = FileOutputStream(File("qqq.pdf"))
+        val outputStream = FileOutputStream(File("qqq.jpg"))
 
         val bytes = ByteArray(1024)
         while (true){
@@ -79,6 +79,6 @@ class HuaweiCloudObsServiceTest {
     @Test
     fun `delete object`(){
         val del = DeleteParams("mimimi3.JPG")
-        huaweiCloudService.deleteObject(del)
+        huaweiCloudObsService.deleteObject(del)
     }
 }

@@ -41,9 +41,14 @@ enum class ManagementExceptionCode(val code: Int) {
 
     // Http 5150 - 5199
     HTTP_ERROR(5151),
-    DNS_ERROR(5152),
 
     //loan 5200 - 5299
     LOAN_UPLOAD_CONFIGURE_NOT_FOUND(5101),
+
+    //huawei cloud 5300 - 5349
+    DOMAIN_BINDING_ERROR(5300),
+    CERTIFICATE_BINDING_ERROR(5301),
+
+
 
 }

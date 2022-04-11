@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
+    implementation(project(":lib-util"))
 
     implementation(project(":lib-repayment"))
     implementation(project(":lib-fee"))

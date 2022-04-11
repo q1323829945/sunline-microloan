@@ -1,4 +1,4 @@
-package cn.sunline.saas.huaweicloud.config
+package cn.sunline.saas.huaweicloud.obs.config
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

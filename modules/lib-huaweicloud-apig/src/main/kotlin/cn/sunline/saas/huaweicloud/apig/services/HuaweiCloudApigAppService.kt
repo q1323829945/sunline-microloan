@@ -125,8 +125,6 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
                 )
             }
 
-            println(resultList)
-
             return resultList
         }
 
