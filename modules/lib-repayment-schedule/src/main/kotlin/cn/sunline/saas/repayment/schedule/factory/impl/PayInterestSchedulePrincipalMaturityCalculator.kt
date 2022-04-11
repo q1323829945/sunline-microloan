@@ -111,7 +111,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
             )
 
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.getMonths())
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)
         }
 
         // 还款计划概述

@@ -23,6 +23,9 @@ dependencies {
     implementation(project(":lib-redis"))
     implementation(project(":lib-dapr-wrapper"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation(project(":lib-global"))
+    implementation(project(":lib-global-constant"))
+
     api(project(":lib-seq-api"))
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-agreement"))
