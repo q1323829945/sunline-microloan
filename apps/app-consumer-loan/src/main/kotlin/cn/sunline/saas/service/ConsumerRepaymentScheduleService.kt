@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
-@Service
 interface ConsumerRepaymentScheduleService {
 
     fun initiate()

@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
-
+@Service
 class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
 
     @Autowired
