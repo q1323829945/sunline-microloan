@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-	id("org.springframework.boot") version "2.6.3" apply false
+	id("org.springframework.boot") version "2.6.6" apply false
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"  apply false
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.jpa") version "1.6.10" apply false
@@ -28,6 +28,7 @@ val nettyVersion by extra { "4.1.74.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }
 val logVersion by extra { "2.1.21" }
 val daprVersion by extra { "1.4.0"}
+val hibernatetypeVersion by extra {"2.15.1"}
 
 subprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
