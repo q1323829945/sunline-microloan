@@ -18,7 +18,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation(project(":lib-global"))
-    implementation(project(":lib-global-constant"))
     implementation("joda-time:joda-time:2.10.13")
     implementation("io.github.microutils:kotlin-logging:${logVersion}")
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")

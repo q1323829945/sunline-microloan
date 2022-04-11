@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
-@Service
 interface RatePlanManagerService {
 
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>

@@ -71,7 +71,7 @@ CREATE TABLE `repayment_feature_modality` (
   `id` bigint NOT NULL,
   `frequency` varchar(32) NOT NULL,
   `payment_method` varchar(64) NOT NULL,
-  `repaymentDayType` varchar(32) NOT NULL,
+  `repayment_day_type` varchar(32) NOT NULL,
   `tenant_id` bigint NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

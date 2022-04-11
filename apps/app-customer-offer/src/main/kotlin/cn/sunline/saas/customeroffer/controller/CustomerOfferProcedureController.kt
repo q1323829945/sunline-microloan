@@ -71,8 +71,8 @@ class CustomerOfferProcedureController {
     }
 
     @GetMapping("loanUploadTemplate")
-    fun getLoanUploadTemplate():ResponseEntity<DTOResponseSuccess<List<DTOUploadConfigureView>>>{
-        val list = loanUploadConfigureService.findAllExist()
+    fun getLoanUploadTemplate(@RequestParam(required = true) productId: Long):ResponseEntity<DTOResponseSuccess<List<DTOUploadConfigureView>>>{
+        val list = loanUploadConfigureService.findAllExist(productId)
         val responseEntity = objectMapper.convertValue<List<DTOUploadConfigureView>>(list)
         return DTOResponseSuccess(responseEntity).response()
     }

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 
-@Service
 interface InterestRateManagerService {
 
     fun getPaged(ratePlanId: Long?, pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>

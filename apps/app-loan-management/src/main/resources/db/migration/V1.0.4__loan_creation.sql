@@ -3,6 +3,7 @@ CREATE TABLE `loan_upload_config` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `name` varchar(256) NOT NULL,
   `required` tinyint(1) NOT NULL,
+  `product_id` bigint NOT NULL,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,
   `tenant_id` bigint NOT NULL,

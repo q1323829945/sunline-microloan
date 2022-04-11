@@ -18,9 +18,11 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
 
+@Service
 class InterestRateManagerServiceImpl : InterestRateManagerService {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
