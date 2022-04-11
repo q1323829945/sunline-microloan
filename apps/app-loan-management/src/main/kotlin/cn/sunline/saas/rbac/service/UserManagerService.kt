@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
 
-@Service
 interface UserManagerService {
 
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>

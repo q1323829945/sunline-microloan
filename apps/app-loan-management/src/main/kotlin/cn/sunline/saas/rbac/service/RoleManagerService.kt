@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
-@Service
 interface RoleManagerService {
 
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>

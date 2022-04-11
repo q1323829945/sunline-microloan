@@ -25,6 +25,10 @@ class LoanUploadConfigure (
         @Column( nullable = false, columnDefinition = "tinyint(1) not null")
         var required: Boolean,
 
+        @NotNull
+        @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+        var productId: Long,
+
         @Column(nullable = false, columnDefinition = "tinyint(1) default false")
         @NotNull
         var deleted: Boolean = false,

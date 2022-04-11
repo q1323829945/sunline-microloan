@@ -5,6 +5,7 @@ import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureAdd
 import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loanuploadconfigure.exception.ConfigureNotFoundException
+import cn.sunline.saas.loanuploadconfigure.service.UploadConfigureService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -27,7 +28,10 @@ import javax.persistence.criteria.Predicate
 @RequestMapping("/LoanUploadConfigure")
 class UploadConfigureController {
     @Autowired
-    private lateinit var uploadConfigureService: LoanUploadConfigureService
+    private lateinit var loanUploadConfigureService: LoanUploadConfigureService
+
+    @Autowired
+    private lateinit var appLoanUploadConfigureService: UploadConfigureService
 
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -35,19 +39,15 @@ class UploadConfigureController {
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>{
 
-        val paged = uploadConfigureService.getPageWithTenant({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"),false))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        },pageable)
+        val paged = appLoanUploadConfigureService.getPaged(pageable)
 
-        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOUploadConfigureView>(it) }).response()
+        return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
     @PostMapping
     fun addUploadConfigure(@RequestBody dtoUploadConfigureAdd: DTOUploadConfigureAdd): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
         val uploadConfigure = objectMapper.convertValue<LoanUploadConfigure>(dtoUploadConfigureAdd)
-        val save = uploadConfigureService.addOne(uploadConfigure)
+        val save = loanUploadConfigureService.addOne(uploadConfigure)
         val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(save)
 
         return DTOResponseSuccess(responseEntity).response()
@@ -55,9 +55,9 @@ class UploadConfigureController {
 
     @DeleteMapping("{id}")
     fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
-        val uploadConfigure = uploadConfigureService.getOne(id)?:throw ConfigureNotFoundException("Invalid configure")
+        val uploadConfigure = loanUploadConfigureService.getOne(id)?:throw ConfigureNotFoundException("Invalid configure")
         uploadConfigure.deleted = true
-        val save = uploadConfigureService.save(uploadConfigure)
+        val save = loanUploadConfigureService.save(uploadConfigure)
         val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(save)
 
         return DTOResponseSuccess(responseEntity).response()

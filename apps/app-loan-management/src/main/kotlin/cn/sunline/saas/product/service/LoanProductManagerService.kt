@@ -19,7 +19,6 @@ import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 
-@Service
 interface LoanProductManagerService {
     fun getPaged(name:String?,
                  loanProductType: LoanProductType?,
