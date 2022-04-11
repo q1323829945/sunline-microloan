@@ -46,7 +46,8 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
 
             if(status == "4"){
                 logger.error("doaminBinding error")
-                throw DomainBindingException("dns error")
+                logger.error(map.toString())
+                throw DomainBindingException("doaminBinding error")
             }
 
             val id = map["id"].toString()
@@ -106,7 +107,8 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
 
                 if(status == "4"){
                     logger.error("certificateBinding error")
-                    throw CertificateBindingException("certificate error")
+                    logger.error(map.toString())
+                    throw CertificateBindingException("certificateBinding error")
                 }
 
 

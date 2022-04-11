@@ -22,6 +22,9 @@ class HuaweiCloudObsService:ObsApi {
     @Autowired
     private lateinit var httpConfig: HttpConfig
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0021.html
+     */
     override fun createBucket(bucketParams: BucketParams) {
         val regin = bucketParams.createBucketConfiguration.locationConstraint
         //uri
@@ -56,10 +59,16 @@ class HuaweiCloudObsService:ObsApi {
     }
 
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0034.html
+     */
     override fun putBucketLifecycleConfiguration(lifecycleParams: LifecycleParams) {
         TODO("Not yet implemented")
     }
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0025.html
+     */
     override fun deleteBucket(bucketName: String) {
         //uri
         val uri = getUri(bucketName, huaweiCloudConfig.region)
@@ -80,6 +89,9 @@ class HuaweiCloudObsService:ObsApi {
         httpConfig.sendClient(httpDelete)
     }
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0080.html
+     */
     override fun putObject(putParams: PutParams) {
 
         //uri
@@ -108,6 +120,9 @@ class HuaweiCloudObsService:ObsApi {
         httpConfig.sendClient(httpPut)
     }
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0083.html
+     */
     override fun getObject(getParams: GetParams): Any? {
 
         //uri
@@ -131,6 +146,9 @@ class HuaweiCloudObsService:ObsApi {
         return httpGet.responseBodyAsStream
     }
 
+    /**
+     * https://support.huaweicloud.com/api-obs/obs_04_0085.html
+     */
     override fun deleteObject(deleteParams: DeleteParams) {
 
         //uri
@@ -151,7 +169,7 @@ class HuaweiCloudObsService:ObsApi {
         httpConfig.sendClient(httpDelete)
     }
 
-    fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
+    private fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{
         val sign = "${requestMode.name}\n" +
                 "$md5\n" +
                 "$contentType\n" +
@@ -161,11 +179,12 @@ class HuaweiCloudObsService:ObsApi {
     }
 
 
-    fun getUri(bucketName: String,region:String,key:String):String{
+    private fun getUri(bucketName: String,region:String,key:String):String{
         return "http://$bucketName.obs.$region.myhuaweicloud.com/$key"
     }
 
-    fun getUri(bucketName: String,region:String):String{
+    private fun getUri(bucketName: String,region:String):String{
         return "http://$bucketName.obs.$region.myhuaweicloud.com"
     }
+    
 }

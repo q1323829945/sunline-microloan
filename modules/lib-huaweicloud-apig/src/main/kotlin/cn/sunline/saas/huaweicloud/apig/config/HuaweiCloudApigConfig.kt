@@ -96,9 +96,4 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
             )
         )
     }
-
-    private fun getNowTime():String{
-        return DateTime.now().withZone(DateTimeZone.forID("UTC")).toString("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.ENGLISH)
-    }
-
 }
