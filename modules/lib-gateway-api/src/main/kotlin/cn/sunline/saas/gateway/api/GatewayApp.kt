@@ -1,18 +1,18 @@
 package cn.sunline.saas.gateway.api
 
-
+import cn.sunline.saas.gateway.api.dto.*
 
 
 interface GatewayApp {
-    fun create(appCreateParams: Any):Any?
+    fun create(appCreateParams: AppCreateParams):AppResponseParams
 
-    fun update(appUpdateParams: Any):Any?
+    fun update(appUpdateParams: AppUpdateParams):AppResponseParams
 
     fun delete(id:String)
 
-    fun auths(authsParams: Any):Any?
+    fun auths(authsParams: AuthsParams): List<AppAuthsResponseParams>
 
     fun revokeAuths(id:String)
 
-    fun getOne(appName:String):Any?
+    fun getPaged(appPagedParams: AppPagedParams):List<AppResponseParams>
 }

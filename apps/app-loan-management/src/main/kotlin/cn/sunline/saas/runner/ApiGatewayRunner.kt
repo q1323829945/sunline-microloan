@@ -5,6 +5,8 @@ import cn.sunline.saas.gateway.api.GatewayApi
 import cn.sunline.saas.gateway.api.GatewayApp
 import cn.sunline.saas.gateway.api.GatewayEnvironment
 import cn.sunline.saas.gateway.api.GatewayGroup
+import cn.sunline.saas.gateway.api.constant.ActionType
+import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
@@ -31,11 +33,12 @@ class ApiGatewayRunner(
 
     var environmentId:String? = null
     var groupId:String? = null
+    var appId:String? = null
 
     override fun run(vararg args: String?) {
-        environmentId = reloadEnvironment()
-        groupId = reloadGroup()
-        val appId = reloadApp()
+        reloadEnvironment()
+        reloadGroup()
+        reloadApp()
 
         reloadApi(groupId!!)
         onlineApi(environmentId!!, groupId!!)
@@ -45,26 +48,26 @@ class ApiGatewayRunner(
         }
     }
 
-    fun reloadEnvironment():String{
+    fun reloadEnvironment(){
         println("init environment ...")
-        var environmentId = huaweiCloudApigEnvironmentService.getOne(environmentName)
-        environmentId?:run{
-            environmentId = huaweiCloudApigEnvironmentService.create(EnvironmentCreateParams(environmentName))
+        val environmentList = huaweiCloudApigEnvironmentService.getPaged(EnvironmentPagedParams(name = environmentName))
+        environmentId =  if(environmentList.isEmpty()){
+            huaweiCloudApigEnvironmentService.create(EnvironmentCreateParams(environmentName)).id
+        } else{
+            environmentList[0].id
         }
         println("init environment finish")
-
-        return environmentId.toString()
     }
 
-    fun reloadGroup():String{
+    fun reloadGroup(){
         println("init group ...")
-        var groupId = huaweiCloudApigGroupService.getOne(groupName)
-        groupId?:run{
-            groupId = huaweiCloudApigGroupService.create(GroupCreateParams(groupName))
+        val groupList = huaweiCloudApigGroupService.getPaged(GroupPagedParams(name = groupName))
+        groupId = if(groupList.isEmpty()){
+            huaweiCloudApigGroupService.create(GroupCreateParams(groupName)).id
+        } else{
+            groupList[0].id
         }
         println("init group finish")
-
-        return groupId.toString()
 
     }
 
@@ -83,31 +86,29 @@ class ApiGatewayRunner(
 
     }
 
-    fun registerApi(apiConfiguration:ApiConfiguration,apiList:List<*>){
+    fun registerApi(apiConfiguration:ApiConfiguration,apiList:List<ApiResponseParams>){
 
         println("register api ...")
         val nameList = apiList.map {
-            it as ApiResponsePage
-            it.name
+            it.apiName
         }
 
         apiConfiguration.apiParamsList.forEach{
-            if(!nameList.contains(it.name)){
+            if(!nameList.contains(it.apiName)){
                 huaweiCloudApigApiService.register(it)
             }
         }
         println("register api finish")
     }
 
-    fun deleteApi(apiConfiguration:ApiConfiguration,apiList:List<*>){
+    fun deleteApi(apiConfiguration:ApiConfiguration,apiList:List<ApiResponseParams>){
         println("delete api ...")
         val nameList = apiConfiguration.apiParamsList.map {
-            it.name
+            it.apiName
         }
 
         apiList.forEach {
-            it as ApiResponsePage
-            if(!nameList.contains(it.name)){
+            if(!nameList.contains(it.apiName)){
                 huaweiCloudApigApiService.delete(it.id)
             }
         }
@@ -122,42 +123,42 @@ class ApiGatewayRunner(
         val apiList = getApiList(groupId)
 
         val idList = apiList.map {
-            it as ApiResponsePage
             it.id
         }
 
-        huaweiCloudApigApiService.batchPublish(BatchPublishParams(
+        huaweiCloudApigApiService.batchPublish(
+            BatchPublishParams(
             ActionType.online,
             idList,
             environmentId
-        ))
+        )
+        )
 
         println("api online finish")
     }
 
-    fun getApiList(groupId: String): List<*> {
-        val pageParams = ApiPageParams(
-            page_size = 0,
-            group_id = groupId
+    fun getApiList(groupId: String): List<ApiResponseParams> {
+        val pageParams = ApiPagedParams(
+            pageSize = 0,
+            groupId = groupId
         )
 
-        return huaweiCloudApigApiService.getPaged(pageParams) as List<*>
+        return huaweiCloudApigApiService.getPaged(pageParams)
     }
 
-    fun reloadApp():String?{
+    fun reloadApp(){
         println("init app ...")
         appName?.run {
-            var appId = huaweiCloudApigAppService.getOne(this)
-            appId?:run{
-                appId = huaweiCloudApigAppService.create(AppCreateParams(this))
+            val appList = huaweiCloudApigAppService.getPaged(AppPagedParams(name = appName))
+            appId = if(appList.isEmpty()){
+                huaweiCloudApigAppService.create(AppCreateParams(this)).id
+            } else {
+                appList[0].id
             }
             println("init app finish")
-
-            return appId.toString()
         }
-
         println("appName is null ")
-        return null
+        println("init app finish")
     }
 
     fun auths(appId:String,groupId: String,environmentId: String){
@@ -165,7 +166,6 @@ class ApiGatewayRunner(
 
         val apiList = getApiList(groupId)
         val idList = apiList.map {
-            it as ApiResponsePage
             it.id
         }
 

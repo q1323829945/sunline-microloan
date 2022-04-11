@@ -1,29 +1,6 @@
 package cn.sunline.saas.huaweicloud.apig.constant
 
-data class BatchPublishParams(
-    val action:ActionType, // online offline
-    val apis:List<String>,
-    val env_id:String,
-    val remark:String? = null
-)
-
-
-data class OfflineParams(
-    val api_id:String,
-    val env_id:String,
-)
-
-
-data class OnlineParams(
-    val api_id:String,
-    val env_id:String,
-    val remark:String? = null
-)
-
-data class ApiUpdateParams(
-    val api_id:String,
-    val apiParams: ApiParams
-)
+import cn.sunline.saas.gateway.api.constant.ReqMethodType
 
 data class ApiParams(
     val group_id:String,
@@ -31,7 +8,7 @@ data class ApiParams(
     val type:Int, //1:open 2:private
     val version:String? = null,
     val req_protocol:ReqProtocolEnum, //HTTP or HTTPS or BOTH; default HTTPS
-    val req_method:ReqMethod, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
+    val req_method:ReqMethodType, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
     val req_uri:String,
     val match_mode:MatchMode? = null, // SWA or NORMAL;default NORMAL
     val remark:String? = null,
@@ -60,7 +37,7 @@ data class BackendApi(
     val url_domain:String,
     val version:String? = null,
     val req_protocol:ReqProtocolEnum, //HTTP or HTTPS
-    val req_method:ReqMethod, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
+    val req_method:ReqMethodType, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
     val req_uri:String,
     val timeout:Int, //1 - 60000
     val remark:String? = null,
@@ -116,7 +93,7 @@ data class PolicyHttps(
     val name:String,
     val url_domain:String,
     val req_protocol:ReqProtocolEnum, //HTTP or HTTPS or BOTH; default HTTPS
-    val req_method:ReqMethod, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
+    val req_method:ReqMethodType, // GET POST PUT DELETE HEAD PATCH OPTIONS ANY
     val req_uri:String,
     val timeout:Int, //1 - 60000
     val vpc_status:Int? = null, //1:use VPC 2:not use VPC
@@ -156,16 +133,6 @@ data class AuthOpt(
     val app_code_auth_type:AppCodeAuthTypeEnum? = null //DISABLE HEADER default DISABLE;effective when RegisterParams auth_type is APP
 )
 
-data class ApiPageParams(
-    val id:String? = null,
-    val name:String? = null,
-    val group_id:String? = null,
-    val env_id:String? = null,
-    val page_no:Int? = null,
-    val page_size:Int? = null,
-
-)
-
 data class ApiResponsePage(
     val id:String,
     val name:String,
@@ -174,13 +141,10 @@ data class ApiResponsePage(
     val req_uri:String
 )
 
-
-
 // enum
 enum class Type{
     STRING,NUMBER
 }
-
 
 enum class Location{
     PATH,QUERY,HEADER
@@ -202,10 +166,6 @@ enum class MatchMode{
     SWA,NORMAL
 }
 
-enum class ReqMethod{
-    GET,POST,PUT,DELETE,HEAD,PATCH,OPTIONS,ANY
-}
-
 enum class InvocationType{
     async,sync
 }
@@ -224,8 +184,4 @@ enum class ReqProtocolEnum {
 
 enum class AppCodeAuthTypeEnum{
     DISABLE,HEADER
-}
-
-enum class ActionType{
-    online,offline
 }

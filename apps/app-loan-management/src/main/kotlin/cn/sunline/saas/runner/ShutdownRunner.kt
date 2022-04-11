@@ -1,8 +1,8 @@
 package cn.sunline.saas.runner
 
-import cn.sunline.saas.huaweicloud.apig.constant.ActionType
+import cn.sunline.saas.gateway.api.constant.ActionType
+import cn.sunline.saas.gateway.api.dto.BatchPublishParams
 import cn.sunline.saas.huaweicloud.apig.constant.ApiResponsePage
-import cn.sunline.saas.huaweicloud.apig.constant.BatchPublishParams
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.annotation.PreDestroy
@@ -19,7 +19,6 @@ class ShutdownRunner {
         val list = apiGatewayRunner.getApiList(apiGatewayRunner.groupId!!)
 
         val idList = list.map {
-            it as ApiResponsePage
             it.id
         }
 

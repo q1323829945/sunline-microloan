@@ -1,9 +1,11 @@
 package cn.sunline.saas.huaweicloud.apig.services
 
 import cn.sunline.saas.gateway.api.GatewayGroup
+import cn.sunline.saas.gateway.api.dto.GroupCreateParams
+import cn.sunline.saas.gateway.api.dto.GroupPagedParams
+import cn.sunline.saas.gateway.api.dto.GroupResponseParams
+import cn.sunline.saas.gateway.api.dto.GroupUpdateParams
 import cn.sunline.saas.global.constant.HttpRequestMethod
-import cn.sunline.saas.huaweicloud.apig.constant.GroupCreateParams
-import cn.sunline.saas.huaweicloud.apig.constant.GroupUpdateParams
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
 import org.springframework.http.MediaType
@@ -16,59 +18,54 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
      * create api:
      * https://support.huaweicloud.com/api-apig/apig-api-180713016.html
      */
-    override fun create(createParams: Any): Any? {
-        if(createParams is GroupCreateParams){
-            //uri
-            val uri = getUri("/v1.0/apigw/api-groups")
+    override fun create(createParams: GroupCreateParams): GroupResponseParams {
+        //uri
+        val uri = getUri("/v1.0/apigw/api-groups")
 
-            //body
-            val body = StringRequestEntity(Gson().toJson(createParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
+        //body
+        val body = StringRequestEntity(Gson().toJson(createParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
+        //get httpMethod
+        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
 
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+        //sendClint
+        httpConfig.sendClient(httpMethod)
 
-            //get responseBody
-            val responseBody = httpConfig.getResponseBody(httpMethod)
+        //get responseBody
+        val responseBody = httpConfig.getResponseBody(httpMethod)
 
-            val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = Gson().fromJson(responseBody, Map::class.java)
 
-            return map["id"]
-        }
-
-        return null
-
+        return GroupResponseParams(
+            id = map["id"].toString()
+        )
     }
 
     /**
      * update api
      * https://support.huaweicloud.com/api-apig/apig-api-180713017.html
      */
-    override fun update(updateParams: Any): Any? {
-        if(updateParams is GroupUpdateParams){
-            //uri
-            val uri = getUri("/v1.0/apigw/api-groups/${updateParams.id}")
+    override fun update(updateParams: GroupUpdateParams): GroupResponseParams {
+        //uri
+        val uri = getUri("/v1.0/apigw/api-groups/${updateParams.id}")
 
-            //body
-            val body = StringRequestEntity(Gson().toJson(updateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
+        //body
+        val body = StringRequestEntity(Gson().toJson(updateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.PUT, uri, getHeaderMap(), body)
+        //get httpMethod
+        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.PUT, uri, getHeaderMap(), body)
 
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+        //sendClint
+        httpConfig.sendClient(httpMethod)
 
-            //get responseBody
-            val responseBody = httpConfig.getResponseBody(httpMethod)
+        //get responseBody
+        val responseBody = httpConfig.getResponseBody(httpMethod)
 
-            val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = Gson().fromJson(responseBody, Map::class.java)
 
-            return map["id"]
-        }
-
-        return null
+        return GroupResponseParams(
+            id = map["id"].toString()
+        )
     }
 
     /**
@@ -88,9 +85,9 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713022.html
      */
-    override fun getOne(groupName: String): Any? {
+    override fun getPaged(groupPagedParams: GroupPagedParams):List<GroupResponseParams> {
         //uri
-        val uri = getUri("/v1.0/apigw/api-groups?name=${URLEncoder.encode(groupName, "utf-8")}")
+        val uri = getUri("/v1.0/apigw/api-groups?name=${URLEncoder.encode(groupPagedParams.name, "utf-8")}")
 
         //get httpMethod
         val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.GET, uri, getHeaderMap())
@@ -105,12 +102,13 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
 
         val list = map["groups"] as List<*>
 
-        if(list.isNotEmpty()){
-            return (list[0] as Map<*, *>)["id"]
+
+        return list.map {
+            it as Map<*,*>
+            GroupResponseParams(
+                id = it["id"].toString()
+            )
         }
-
-
-        return null
     }
 
 }

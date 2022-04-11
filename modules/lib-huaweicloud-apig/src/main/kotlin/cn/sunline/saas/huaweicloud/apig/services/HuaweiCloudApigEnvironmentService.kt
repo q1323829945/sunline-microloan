@@ -1,9 +1,11 @@
 package cn.sunline.saas.huaweicloud.apig.services
 
 import cn.sunline.saas.gateway.api.GatewayEnvironment
+import cn.sunline.saas.gateway.api.dto.EnvironmentCreateParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentPagedParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentResponseParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentUpdateParams
 import cn.sunline.saas.global.constant.HttpRequestMethod
-import cn.sunline.saas.huaweicloud.apig.constant.EnvironmentCreateParams
-import cn.sunline.saas.huaweicloud.apig.constant.EnvironmentUpdateParams
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
 import org.springframework.http.MediaType
@@ -15,60 +17,53 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713052.html
      */
-    override fun create(environmentCreateParams: Any): Any? {
-        if(environmentCreateParams is EnvironmentCreateParams){
-            //uri
-            val uri = getUri("/v1.0/apigw/envs")
+    override fun create(environmentCreateParams: EnvironmentCreateParams): EnvironmentResponseParams {
+        //uri
+        val uri = getUri("/v1.0/apigw/envs")
 
-            //body
-            val body = StringRequestEntity(Gson().toJson(environmentCreateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
+        //body
+        val body = StringRequestEntity(Gson().toJson(environmentCreateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
+        //get httpMethod
+        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
 
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+        //sendClint
+        httpConfig.sendClient(httpMethod)
 
-            //get responseBody
-            val responseBody = httpConfig.getResponseBody(httpMethod)
+        //get responseBody
+        val responseBody = httpConfig.getResponseBody(httpMethod)
 
-            val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = Gson().fromJson(responseBody, Map::class.java)
 
-            return map["id"]
-        }
-
-        return null
+        return EnvironmentResponseParams(
+            id = map["id"].toString()
+        )
     }
 
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713053.html
      */
-    override fun update(environmentUpdateParams: Any): Any? {
+    override fun update(environmentUpdateParams: EnvironmentUpdateParams): EnvironmentResponseParams {
+        //uri
+        val uri = getUri("/v1.0/apigw/envs/${environmentUpdateParams.id}")
 
-        if(environmentUpdateParams is EnvironmentUpdateParams){
-            //uri
-            val uri = getUri("/v1.0/apigw/envs/${environmentUpdateParams.id}")
+        //body
+        val body = StringRequestEntity(Gson().toJson(environmentUpdateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
 
-            //body
-            val body = StringRequestEntity(Gson().toJson(environmentUpdateParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
+        //get httpMethod
+        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.PUT, uri, getHeaderMap(), body)
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.PUT, uri, getHeaderMap(), body)
+        //sendClint
+        httpConfig.sendClient(httpMethod)
 
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+        //get responseBody
+        val responseBody = httpConfig.getResponseBody(httpMethod)
 
-            //get responseBody
-            val responseBody = httpConfig.getResponseBody(httpMethod)
+        val map = Gson().fromJson(responseBody, Map::class.java)
 
-            val map = Gson().fromJson(responseBody, Map::class.java)
-
-            return map["id"]
-        }
-
-
-
-        return null
+        return EnvironmentResponseParams(
+            id = map["id"].toString()
+        )
     }
 
     override fun delete(id: String) {
@@ -85,9 +80,9 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713055.html
      */
-    override fun getOne(environmentName: String): Any? {
+    override fun getPaged(environmentPagedParams: EnvironmentPagedParams):List<EnvironmentResponseParams> {
         //uri
-        val uri = getUri("/v1.0/apigw/envs?name=${URLEncoder.encode(environmentName, "utf-8")}")
+        val uri = getUri("/v1.0/apigw/envs?name=${URLEncoder.encode(environmentPagedParams.name, "utf-8")}")
 
         //get httpMethod
         val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.GET, uri, getHeaderMap())
@@ -102,11 +97,11 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
 
         val list = map["envs"] as List<*>
 
-        if(list.isNotEmpty()){
-            return (list[0] as Map<*, *>)["id"]
+        return list.map {
+            it as Map<*,*>
+            EnvironmentResponseParams(
+                id = it["id"].toString()
+            )
         }
-
-
-        return null
     }
 }

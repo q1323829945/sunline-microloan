@@ -1,11 +1,13 @@
 package cn.sunline.saas.gateway.api
 
+import cn.sunline.saas.gateway.api.dto.*
+
 interface GatewayDomain {
-    fun domainBinding(domainParams:Any):Any?
+    fun domainBinding(domainParams: DomainBindingParams): DomainResponseParams
 
-    fun domainUnbound(domainParams:Any)
+    fun domainUnbound(domainParams: DomainUnboundParams)
 
-    fun certificateBinding(certificateBindingParams:Any)
+    fun certificateBinding(certificateBindingParams: CertificateBindingParams)
 
-    fun certificateDelete(certificateDeleteParams:Any)
+    fun certificateDelete(certificateDeleteParams: CertificateDeleteParams)
 }

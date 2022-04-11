@@ -1,12 +1,17 @@
 package cn.sunline.saas.gateway.api
 
+import cn.sunline.saas.gateway.api.dto.EnvironmentCreateParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentPagedParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentResponseParams
+import cn.sunline.saas.gateway.api.dto.EnvironmentUpdateParams
+
 
 interface GatewayEnvironment {
-    fun create(environmentCreateParams: Any):Any?
+    fun create(environmentCreateParams: EnvironmentCreateParams):EnvironmentResponseParams
 
-    fun update(environmentUpdateParams: Any):Any?
+    fun update(environmentUpdateParams: EnvironmentUpdateParams):EnvironmentResponseParams
 
     fun delete(id:String)
 
-    fun getOne(environmentName:String):Any?
+    fun getPaged(environmentPagedParams: EnvironmentPagedParams):List<EnvironmentResponseParams>
 }

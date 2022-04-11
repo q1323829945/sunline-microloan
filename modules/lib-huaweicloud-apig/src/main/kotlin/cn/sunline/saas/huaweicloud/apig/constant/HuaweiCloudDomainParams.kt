@@ -1,25 +1,24 @@
 package cn.sunline.saas.huaweicloud.apig.constant
 
-data class DomainBindingParams(
+data class HuaweiCloudDomainBindingParams(
     val group_id:String,
     val url_domain:String
 )
 
-data class DomainUnboundParams(
+data class HuaweiCloudDomainUnboundParams(
     val group_id:String,
     val url_domain:String
 )
 
 
-data class CertificateBindingParams(
+data class HuaweiCloudCertificateBindingParams(
     val group_id:String,
     val name:String,
     val cert_content:String,
-    val private_key:String,
-    val url_domain:String
+    val private_key:String
 )
 
-data class CertificateDeleteParams(
+data class HuaweiCloudCertificateDeleteParams(
     val group_id:String,
     val url_domain:String
 )

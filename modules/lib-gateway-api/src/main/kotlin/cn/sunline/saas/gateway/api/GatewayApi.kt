@@ -1,21 +1,23 @@
 package cn.sunline.saas.gateway.api
 
+import cn.sunline.saas.gateway.api.dto.*
+
 interface  GatewayApi{
 
 
-    fun register(registerParams: Any):Any?
+    fun register(registerParams: APiCreateParams): ApiResponseParams
 
-    fun update(apiUpdateParams: Any):Any?
+    fun update(apiUpdateParams: APiUpdateParams): ApiResponseParams
 
     fun delete(id:String)
 
-    fun online(onlineParams: Any)
+    fun online(onlineParams: OnlineParams)
 
-    fun offline(offlineParams: Any)
+    fun offline(offlineParams: OfflineParams)
 
-    fun batchPublish(batchPublishParams: Any)
+    fun batchPublish(batchPublishParams: BatchPublishParams)
 
-    fun getPaged(pageParams:Any):Any?
+    fun getPaged(pageParams: ApiPagedParams):List<ApiResponseParams>
 
 
 }
