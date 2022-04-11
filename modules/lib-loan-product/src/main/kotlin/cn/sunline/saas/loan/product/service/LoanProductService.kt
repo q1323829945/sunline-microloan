@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import javax.persistence.criteria.Predicate
 import javax.transaction.Transactional
 
 /**
@@ -146,15 +145,18 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                             loanPurpose: String?,
                             pageable: Pageable): Page<LoanProduct> {
 
-        val paged = this.getPaged({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            name?.run { predicates.add(criteriaBuilder.like(root.get("name"),"$name%")) }
-            loanProductType?.run { predicates.add(criteriaBuilder.equal(root.get<LoanProductType>("loanProductType"),loanProductType)) }
-            loanPurpose?.run { predicates.add(criteriaBuilder.equal(root.get<String>("loanPurpose"),loanPurpose)) }
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        },pageable)
-
-        return paged
+        val page = loanProductRepos.getLoanProductPaged(name,loanProductType,loanPurpose,pageable)
+//            .map {
+//            val customerOffer = this.getLoanProductPaged(it["customerOfferId"].toString().toLong())
+//            DTOCustomerOfferPage(
+//                it["customerOfferId"].toString().toLong(),
+//                it["amount"]?.run { it["amount"].toString() },
+//                customerOffer!!.datetime.millis,
+//                it["productName"].toString(),
+//                ApplyStatus.valueOf(it["status"].toString())
+//            )
+//        }
+        return page
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
@@ -164,14 +166,16 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     }
 
 
-    fun findByIdentificationCode(identificationCode:String):DTOLoanProductView{
-        val product = loanProductRepos.findByIdentificationCode(identificationCode)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
+    fun findByIdentificationCode(identificationCode:String):MutableList<DTOLoanProductView>{
+        val productList = loanProductRepos.findByIdentificationCode(identificationCode)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
 
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
-
-        setConfigurationOptions(product,dtoLoanProduct)
-
-        return dtoLoanProduct
+        var list = ArrayList<DTOLoanProductView>()
+        for(product in productList){
+            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
+            setConfigurationOptions(product,dtoLoanProduct)
+            list.add(dtoLoanProduct)
+        }
+        return list
     }
 
     private fun setConfigurationOptions(product:LoanProduct,dtoLoanProduct:DTOLoanProductView){

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("auth")
 class AuthController {
     data class DTOLogin(val username: String, val password: String)
-    data class DTOLoginResponse(val token: String)
+    data class DTOLoginResponse(val token: String,val username: String,val email: String)
 
     @Autowired
     private lateinit var userService: UserService
@@ -28,7 +28,9 @@ class AuthController {
         val user = userService.validate(dtoLogin.username, dtoLogin.password)?: throw ManagementException(ManagementExceptionCode.AUTHORIZATION_LOGIN_FAILED)
         val tokenExpire = DateTime.now().plusHours(1).toDate()
         val token = tokenService.generateToken(user.id!!, user, user.jwtKey, tokenExpire)
-        return DTOResponseSuccess(DTOLoginResponse(token)).response()
+        val username = user.username
+        val email = user.email
+        return DTOResponseSuccess(DTOLoginResponse(token,username,email)).response()
     }
 
 }
