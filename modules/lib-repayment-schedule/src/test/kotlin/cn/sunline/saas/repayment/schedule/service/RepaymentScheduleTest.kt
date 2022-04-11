@@ -2,16 +2,14 @@
 
 package cn.sunline.saas.repayment.schedule.service
 
-import cn.sunline.saas.interest.model.BaseYearDays
-import cn.sunline.saas.repayment.model.PaymentMethodType
-import cn.sunline.saas.repayment.model.RepaymentFrequency
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
-import cn.sunline.saas.repayment.schedule.component.CalcInterestComponent
 import cn.sunline.saas.repayment.schedule.component.CalcRepaymentInstallmentComponent
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
-import cn.sunline.saas.repayment.schedule.model.dto.DTOInterestCalculator
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleCalculate
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleResetCalculate
 import mu.KotlinLogging
@@ -79,11 +77,11 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
     @Test
     fun `generationAvgCapitalCalculatorFixedDayOneMonth`() {
 
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
@@ -104,11 +102,11 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
      */
     @Test
     fun `generationAvgCapitalCalculatorFixedDayThreeMonth`() {
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
@@ -125,11 +123,11 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
      */
     @Test
     fun `generationAvgCapitalCalculatorFixedDaySixMonth`() {
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
@@ -148,12 +146,12 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
     fun `generationAvgCapitalCalculatorAdvanceFixedDayOneMonth`() {
 
         // 3002316369063375008
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
@@ -186,12 +184,12 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
     @Test
     fun `generationCapitalInterestCalculatorAdvance`() {
         //1414654968295159232
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
             startDate = startDate,
@@ -226,12 +224,12 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
 
         // 1834102985732160007
 
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
             startDate = startDate,
@@ -263,12 +261,12 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
     @Test
     fun `generationRepaymentPrincipalInterestCalculatorAdvance`() {
         // 6977441507173528274
-        val startDate = DateTime(2022, 3, 21, 0, 0)
-        val endDate = DateTime(2023, 3, 21, 0, 0)
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculate = DTORepaymentScheduleCalculate(
             amount = BigDecimal(12000.00),
-            term = 12,
+            term = "12",
             interestRate = BigDecimal(0.120000),
             paymentMethod = PaymentMethodType.ONE_OFF_REPAYMENT,
             startDate = startDate,
