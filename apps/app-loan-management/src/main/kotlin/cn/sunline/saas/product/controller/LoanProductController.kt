@@ -1,10 +1,14 @@
 package cn.sunline.saas.product.controller
 
+import cn.sunline.saas.exceptions.ManagementException
+import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.*
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.product.dto.DTOLoanProductStatus
+import cn.sunline.saas.product.service.LoanProductManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -15,78 +19,48 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
+import javax.persistence.criteria.Predicate
 
 
 @RestController
 @RequestMapping("/LoanProduct")
 class LoanProductController {
 
-
-    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-    data class DTOLoanProductStatus(
-            val status: BankingProductStatus
-    )
-
-    data class DTOLoanProduct(
-        var productId:Long,
-        val identificationCode:String,
-        val name:String,
-        val version:String? = null,
-        val description:String,
-        val amountConfiguration: DTOAmountLoanProductConfiguration?,
-        val termConfiguration: DTOTermLoanProductConfiguration?,
-    )
-
     @Autowired
-    private lateinit var loanProductService: LoanProductService
+    private lateinit var loanProductManagerService: LoanProductManagerService
 
     @GetMapping
     fun getPaged(@RequestParam(required = false)name:String? = null,
                  @RequestParam(required = false)loanProductType: LoanProductType? = null,
                  @RequestParam(required = false)loanPurpose: String? = null,
                  pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        val paged = loanProductService.getLoanProductPaged(name,loanProductType,loanPurpose,pageable)
-
-        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOLoanProductView>(it)}).response()
+        return loanProductManagerService.getPaged(name,loanProductType,loanPurpose,pageable)
     }
 
     @PostMapping
     fun addOne(@RequestBody loanProductData: DTOLoanProductAdd): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        loanProductData.version = "1"
-        val view = loanProductService.register(loanProductData)
-        return DTOResponseSuccess(view).response()
+        return loanProductManagerService.addOne(loanProductData)
     }
 
     @GetMapping("{id}")
     fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val view = loanProductService.getLoanProduct(id)
-        return DTOResponseSuccess(view).response()
+        return loanProductManagerService.getOne(id)
     }
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProductChange): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val view = loanProductService.updateLoanProduct(id,dtoLoanProduct)
-        return DTOResponseSuccess(view).response()
-
+        return loanProductManagerService.updateOne(id,dtoLoanProduct)
     }
 
     @PutMapping("status/{id}")
     fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-
-        val loanProduct = loanProductService.updateLoanProductStatus(id,dtoLoanProduct.status)
-
-        return DTOResponseSuccess(loanProduct).response()
-
+        return loanProductManagerService.updateStatus(id,dtoLoanProduct)
     }
 
     @GetMapping("{identificationCode}/retrieve")
-    fun getProductInfo(@PathVariable identificationCode:String): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>>{
-        val product = loanProductService.findByIdentificationCode(identificationCode)
-
-        val responseProduct = objectMapper.convertValue<DTOLoanProduct>(product)
-        responseProduct.productId = product.id
-        return DTOResponseSuccess(responseProduct).response()
+    fun getProductInfo(@PathVariable identificationCode:String): ResponseEntity<DTOPagedResponseSuccess>{
+        return loanProductManagerService.getProductInfo(identificationCode)
     }
 
 

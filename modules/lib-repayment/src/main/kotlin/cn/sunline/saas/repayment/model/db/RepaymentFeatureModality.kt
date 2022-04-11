@@ -28,12 +28,12 @@ class RepaymentFeatureModality(
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "frequency" ,nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var frequency: RepaymentFrequency,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "repayment_day_type" ,nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var repaymentDayType: RepaymentDayType
 
 ) : MultiTenant {

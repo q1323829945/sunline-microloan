@@ -3,6 +3,7 @@ package cn.sunline.saas.loan.product.model.dto
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureChange
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureChange
+import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureChange
 
 /**
@@ -16,6 +17,7 @@ data class DTOLoanProductChange(
     val name: String,
     var version: String,
     val description: String,
+    val loanProductType: LoanProductType,
     val loanPurpose: String,
     val amountConfiguration: DTOAmountLoanProductChangeConfiguration?,
     val termConfiguration: DTOTermLoanProductChangeConfiguration?,
