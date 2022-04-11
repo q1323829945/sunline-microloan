@@ -64,6 +64,6 @@ redis:
 
 logging:
   level:
-    cn.sunline.saas.huaweicloud: trace
+    cn.sunline.saas: debug
   pattern:
     console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"

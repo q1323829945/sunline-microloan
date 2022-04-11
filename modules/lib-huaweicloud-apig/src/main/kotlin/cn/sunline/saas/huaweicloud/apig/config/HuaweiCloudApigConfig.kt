@@ -36,7 +36,6 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
         val token = redisClient.getMapItem<String>(HUAWEI_CLOUD_IAM_TOKEN_HASH, HUAWEI_CLOUD_IAM_TOKEN_KEY)
 
         token?.run {
-            println(token)
             return this
         }
 

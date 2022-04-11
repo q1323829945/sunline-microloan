@@ -10,6 +10,8 @@ import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
 import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
 import com.google.gson.Gson
 import org.apache.commons.httpclient.methods.StringRequestEntity
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 
 const val DOMAIN_HASH_MAP = "domain_hash_map"
@@ -17,6 +19,7 @@ const val CERTIFICATE_HASH_MAP = "certificate_hash_map"
 
 class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
 
+    protected val logger: Logger = LoggerFactory.getLogger(HuaweiCloudApigDomainService::class.java)
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713154.html
      */
