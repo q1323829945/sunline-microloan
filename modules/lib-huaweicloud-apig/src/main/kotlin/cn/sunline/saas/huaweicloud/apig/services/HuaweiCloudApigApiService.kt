@@ -6,8 +6,6 @@ import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import com.google.gson.Gson
-import org.apache.commons.httpclient.methods.StringRequestEntity
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,20 +23,12 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
             registerParams.reqMethodType,
             registerParams.groupId,
             registerParams.domainUrl,
+            registerParams.authType!!,
             registerParams.remark
             )
 
-        //body
-        val body = StringRequestEntity(Gson().toJson(apiParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
-
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
-
         //get responseBody
-        val responseBody = httpConfig.getResponseBody(httpMethod)
+        val responseBody = sendClient(uri,HttpRequestMethod.POST,apiParams)
 
         val map = Gson().fromJson(responseBody, Map::class.java)
 
@@ -60,19 +50,12 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
             apiUpdateParams.reqMethodType,
             apiUpdateParams.groupId,
             apiUpdateParams.domainUrl,
-            apiUpdateParams.remark
+            apiUpdateParams.authType!!,
+            apiUpdateParams.remark,
         )
-        //body
-        val body = StringRequestEntity(Gson().toJson(apiParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
-
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.PUT, uri, getHeaderMap(), body)
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
 
         //get responseBody
-        val responseBody = httpConfig.getResponseBody(httpMethod)
+        val responseBody = sendClient(uri,HttpRequestMethod.PUT,apiParams)
 
         val map = Gson().fromJson(responseBody, Map::class.java)
 
@@ -88,11 +71,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/$id")
 
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.DELETE, uri, getHeaderMap())
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
+        sendClient(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -102,14 +81,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/publish/${onlineParams.api_id}")
 
-        //body
-        val body = StringRequestEntity(Gson().toJson(onlineParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
-
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
+        sendClient(uri,HttpRequestMethod.POST,onlineParams)
 
     }
 
@@ -120,11 +92,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/publish/${offlineParams.api_id}?env_id=${offlineParams.env_id}")
 
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.DELETE, uri, getHeaderMap())
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
+        sendClient(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -134,37 +102,25 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/publish?action=${batchPublishParams.action}")
 
-        //body
-        val body = StringRequestEntity(Gson().toJson(batchPublishParams), MediaType.APPLICATION_JSON_VALUE, "utf-8")
 
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
+        sendClient(uri,HttpRequestMethod.POST,batchPublishParams)
     }
 
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713031.html
      */
-    override fun getPaged(pageParams: ApiPagedParams): List<ApiResponseParams> {
+    override fun getPaged(pageParams: ApiPagedParams): ApiPageResponseParams {
         //uri
         val uri = getUri(getPagePath(pageParams))
 
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.GET, uri, getHeaderMap())
 
-        //sendClint
-        httpConfig.sendClient(httpMethod)
-
-        //get responseBody
-        val responseBody = httpConfig.getResponseBody(httpMethod)
+        val responseBody = sendClient(uri,HttpRequestMethod.GET)
 
         val map = Gson().fromJson(responseBody, Map::class.java)
 
         val list = map["apis"] as List<*>
 
-        return list.map {
+        val apis = list.map {
             it as Map<*,*>
             ApiResponseParams(
                 id = it["id"].toString(),
@@ -173,8 +129,14 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
                 envId = it["run_env_id"]?.toString(),
                 backendUri =  it["req_uri"].toString()
             )
-
         }
+
+
+        return ApiPageResponseParams(
+            total = (map["total"] as Double).toInt(),
+            size = (map["size"] as Double).toInt(),
+            apis = apis
+        )
     }
 
     private fun getPagePath(pageParams: ApiPagedParams):String{
@@ -206,7 +168,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
     }
 
 
-    private fun getApiParams(name:String,uri:String,reqMethod: ReqMethodType,groupId:String,domainUrl:String,remark:String? = null):ApiParams{
+    private fun getApiParams(name:String,uri:String,reqMethod: ReqMethodType,groupId:String,domainUrl:String,authType:AuthType,remark:String? = null):ApiParams{
         return ApiParams(
             group_id = groupId,
             name = name,
@@ -216,7 +178,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
             req_uri = uri,
             match_mode = MatchMode.NORMAL,
             remark = remark,
-            auth_type = AuthType.APP,
+            auth_type = authType,
             backend_type = BackendType.HTTP,
             cors = true,
             backend_api = BackendApi(

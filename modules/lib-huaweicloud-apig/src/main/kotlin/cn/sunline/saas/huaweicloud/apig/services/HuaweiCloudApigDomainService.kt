@@ -7,17 +7,12 @@ import cn.sunline.saas.huaweicloud.apig.constant.*
 import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
 import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
 import com.google.gson.Gson
-import org.apache.commons.httpclient.methods.StringRequestEntity
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 
 const val DOMAIN_HASH_MAP = "domain_hash_map"
 const val CERTIFICATE_HASH_MAP = "certificate_hash_map"
 
 class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
 
-    protected val logger: Logger = LoggerFactory.getLogger(HuaweiCloudApigDomainService::class.java)
     /**
      * https://support.huaweicloud.com/api-apig/apig-api-180713154.html
      */
@@ -29,18 +24,8 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             group_id = domainParams.groupId!!,
             url_domain = domainParams.urlDomain
         )
-
-        //body
-        val body = StringRequestEntity(Gson().toJson(request), MediaType.APPLICATION_JSON_VALUE, "utf-8")
-
-        //get httpMethod
-        val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
-
-        //sendClint
-        httpConfig.sendClient(httpMethod)
-
         //get responseBody
-        val responseBody = httpConfig.getResponseBody(httpMethod)
+        val responseBody = sendClient(uri,HttpRequestMethod.POST,request)
 
         val map = Gson().fromJson(responseBody, Map::class.java)
 
@@ -70,11 +55,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             //uri
             val uri = getUri("/v1.0/apigw/api-groups/${domainParams.groupId}/domains/$this")
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.DELETE, uri, getHeaderMap())
-
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+            sendClient(uri,HttpRequestMethod.DELETE)
         }
     }
 
@@ -93,17 +74,9 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
                 cert_content = certificateBindingParams.certContent,
                 private_key = certificateBindingParams.privateKey,
             )
-            //body
-            val body = StringRequestEntity(Gson().toJson(request), MediaType.APPLICATION_JSON_VALUE, "utf-8")
-
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, getHeaderMap(), body)
-
-            //sendClint
-            httpConfig.sendClient(httpMethod)
 
             //get responseBody
-            val responseBody = httpConfig.getResponseBody(httpMethod)
+            val responseBody = sendClient(uri,HttpRequestMethod.POST,request)
 
             val map = Gson().fromJson(responseBody, Map::class.java)
 
@@ -131,11 +104,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             //uri
             val uri = getUri("/v1.0/apigw/api-groups/${certificateDeleteParams.groupId}/domains/$domainId/certificate/$this")
 
-            //get httpMethod
-            val httpMethod = httpConfig.getHttpMethod(HttpRequestMethod.DELETE, uri, getHeaderMap())
-
-            //sendClint
-            httpConfig.sendClient(httpMethod)
+            sendClient(uri,HttpRequestMethod.DELETE)
         }
     }
 }

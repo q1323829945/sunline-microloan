@@ -17,7 +17,8 @@ interface  GatewayApi{
 
     fun batchPublish(batchPublishParams: BatchPublishParams)
 
-    fun getPaged(pageParams: ApiPagedParams):List<ApiResponseParams>
+    fun getPaged(pageParams: ApiPagedParams):ApiPageResponseParams
+
 
 
 }

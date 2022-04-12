@@ -43,3 +43,10 @@ data class AppPagedParams(
     val pageNo:Int? = null,
     val pageSize:Int? = null,
 )
+
+
+data class AppPagedResponseParams(
+    val total:Int,
+    val size:Int,
+    val apps:List<AppResponseParams>
+)

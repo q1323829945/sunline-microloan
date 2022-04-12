@@ -23,3 +23,9 @@ data class GroupPagedParams(
     val pageNo:Int? = null,
     val pageSize:Int? = null,
 )
+
+data class GroupPagedResponseParams(
+    val total: Int,
+    val size: Int,
+    val groups: List<GroupResponseParams>
+)

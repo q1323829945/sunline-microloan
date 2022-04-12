@@ -1,6 +1,7 @@
 package cn.sunline.saas.gateway.api.dto
 
 import cn.sunline.saas.gateway.api.constant.ActionType
+import cn.sunline.saas.gateway.api.constant.AuthType
 import cn.sunline.saas.gateway.api.constant.ReqMethodType
 
 data class APiCreateParams(
@@ -9,6 +10,7 @@ data class APiCreateParams(
     val reqMethodType: ReqMethodType,
     val groupId:String,
     val domainUrl:String,
+    val authType:AuthType? = null,
     val remark:String? = null
 )
 
@@ -20,6 +22,7 @@ data class APiUpdateParams(
     val reqMethodType: ReqMethodType,
     val groupId:String,
     val domainUrl:String,
+    val authType:AuthType? = null,
     val remark:String? = null
 )
 
@@ -59,4 +62,11 @@ data class ApiPagedParams(
     val pageSize:Int? = null,
     val groupId:String? = null,
     val evnId:String? = null
+)
+
+
+data class ApiPageResponseParams(
+    val total: Int,
+    val size: Int,
+    val apis:List<ApiResponseParams>
 )

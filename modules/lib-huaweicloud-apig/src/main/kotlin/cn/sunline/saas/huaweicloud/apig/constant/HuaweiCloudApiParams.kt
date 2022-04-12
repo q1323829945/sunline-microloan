@@ -1,5 +1,6 @@
 package cn.sunline.saas.huaweicloud.apig.constant
 
+import cn.sunline.saas.gateway.api.constant.AuthType
 import cn.sunline.saas.gateway.api.constant.ReqMethodType
 
 data class ApiParams(
@@ -12,7 +13,7 @@ data class ApiParams(
     val req_uri:String,
     val match_mode:MatchMode? = null, // SWA or NORMAL;default NORMAL
     val remark:String? = null,
-    val auth_type:AuthType,  //NONE APP IAM AUTHORIZER
+    val auth_type: AuthType,  //NONE APP IAM AUTHORIZER
     val auth_opt:AuthOpt? = null,
     val authorizer_id:String? = null,
     val backend_type:BackendType, // HTTP FUNCTION MOCK
@@ -133,14 +134,6 @@ data class AuthOpt(
     val app_code_auth_type:AppCodeAuthTypeEnum? = null //DISABLE HEADER default DISABLE;effective when RegisterParams auth_type is APP
 )
 
-data class ApiResponsePage(
-    val id:String,
-    val name:String,
-    val group_id:String,
-    val run_env_id:String?,
-    val req_uri:String
-)
-
 // enum
 enum class Type{
     STRING,NUMBER
@@ -152,10 +145,6 @@ enum class Location{
 
 enum class Origin{
     REQUEST,CONSTANT,SYSTEM
-}
-
-enum class AuthType{
-    NONE,APP,IAM,AUTHORIZER
 }
 
 enum class BackendType{

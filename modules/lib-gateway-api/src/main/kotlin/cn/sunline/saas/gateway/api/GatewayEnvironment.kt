@@ -1,9 +1,6 @@
 package cn.sunline.saas.gateway.api
 
-import cn.sunline.saas.gateway.api.dto.EnvironmentCreateParams
-import cn.sunline.saas.gateway.api.dto.EnvironmentPagedParams
-import cn.sunline.saas.gateway.api.dto.EnvironmentResponseParams
-import cn.sunline.saas.gateway.api.dto.EnvironmentUpdateParams
+import cn.sunline.saas.gateway.api.dto.*
 
 
 interface GatewayEnvironment {
@@ -13,5 +10,5 @@ interface GatewayEnvironment {
 
     fun delete(id:String)
 
-    fun getPaged(environmentPagedParams: EnvironmentPagedParams):List<EnvironmentResponseParams>
+    fun getPaged(environmentPagedParams: EnvironmentPagedParams): EnvironmentPagedResponseParams
 }

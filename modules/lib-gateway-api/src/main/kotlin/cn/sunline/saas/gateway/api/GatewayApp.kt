@@ -14,5 +14,5 @@ interface GatewayApp {
 
     fun revokeAuths(id:String)
 
-    fun getPaged(appPagedParams: AppPagedParams):List<AppResponseParams>
+    fun getPaged(appPagedParams: AppPagedParams):AppPagedResponseParams
 }

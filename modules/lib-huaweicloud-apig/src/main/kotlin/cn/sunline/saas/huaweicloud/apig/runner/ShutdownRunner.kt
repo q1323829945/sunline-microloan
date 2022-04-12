@@ -1,8 +1,7 @@
-package cn.sunline.saas.runner
+package cn.sunline.saas.huaweicloud.apig.runner
 
 import cn.sunline.saas.gateway.api.constant.ActionType
 import cn.sunline.saas.gateway.api.dto.BatchPublishParams
-import cn.sunline.saas.huaweicloud.apig.constant.ApiResponsePage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.annotation.PreDestroy
@@ -11,7 +10,7 @@ import javax.annotation.PreDestroy
 class ShutdownRunner {
 
     @Autowired
-    private lateinit var apiGatewayRunner:ApiGatewayRunner
+    private lateinit var apiGatewayRunner: ApiGatewayRunner
 
     @PreDestroy
     fun apiOffLine(){

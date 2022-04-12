@@ -37,6 +37,7 @@ management:
 
 huawei:
   cloud:
+    appType: "MANAGEMENT"
     obs:
       accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
       securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
@@ -49,8 +50,8 @@ huawei:
       projectId: "a7bbc97fa36648d4a9f4fea6d1534ab8"
     apig:
       groupName: "loan_management"
-      environmentName: "dev"
-      appName: "loan_management"
+      environmentName: "RELEASE"
+      appName:
       ip: "139.9.123.142:8083"
       region: "cn-east-3"
       #todo

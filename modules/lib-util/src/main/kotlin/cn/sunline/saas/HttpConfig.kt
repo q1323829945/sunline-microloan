@@ -42,6 +42,7 @@ class HttpConfig {
         }
 
 
+
         return httpRequest
     }
 
@@ -84,6 +85,11 @@ class HttpConfig {
 
     private fun getBody(httpMethod: HttpMethod):String{
         val inputStream = httpMethod.responseBodyAsStream
+
+        inputStream?: run {
+            return ""
+        }
+
 
         val br = BufferedReader(InputStreamReader(inputStream))
 

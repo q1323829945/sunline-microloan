@@ -1,9 +1,6 @@
 package cn.sunline.saas.gateway.api
 
-import cn.sunline.saas.gateway.api.dto.GroupCreateParams
-import cn.sunline.saas.gateway.api.dto.GroupPagedParams
-import cn.sunline.saas.gateway.api.dto.GroupResponseParams
-import cn.sunline.saas.gateway.api.dto.GroupUpdateParams
+import cn.sunline.saas.gateway.api.dto.*
 
 
 interface GatewayGroup {
@@ -13,6 +10,6 @@ interface GatewayGroup {
 
     fun delete(id:String)
 
-    fun getPaged(groupPagedParams: GroupPagedParams):List<GroupResponseParams>
+    fun getPaged(groupPagedParams: GroupPagedParams): GroupPagedResponseParams
 
 }

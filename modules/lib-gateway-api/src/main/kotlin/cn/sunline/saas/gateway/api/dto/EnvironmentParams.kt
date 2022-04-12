@@ -25,3 +25,9 @@ data class EnvironmentPagedParams(
     val pageNo:Int? = null,
     val pageSize:Int? = null,
 )
+
+data class EnvironmentPagedResponseParams(
+    val total:Int,
+    val size:Int,
+    val envs:List<EnvironmentResponseParams>
+)
