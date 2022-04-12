@@ -35,7 +35,7 @@ class ApiGatewayRunner(
     @Value("\${huawei.cloud.apig.domainUrl}")
     var domainUrl:String? = null
 
-    @Value("\${huawei.cloud.appType}")
+    @Value("\${huawei.cloud.apig.appType}")
     private lateinit var appType:AppType
 
     var environmentId:String? = null

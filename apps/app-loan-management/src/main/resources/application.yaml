@@ -37,7 +37,6 @@ management:
 
 huawei:
   cloud:
-    appType: "MANAGEMENT"
     obs:
       accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
       securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
@@ -49,6 +48,7 @@ huawei:
       password: "300348sunline"
       projectId: "a7bbc97fa36648d4a9f4fea6d1534ab8"
     apig:
+      appType: "MANAGEMENT"
       groupName: "loan_management"
       environmentName: "RELEASE"
       appName:
