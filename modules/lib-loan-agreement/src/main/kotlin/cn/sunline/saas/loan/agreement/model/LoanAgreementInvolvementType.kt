@@ -7,5 +7,5 @@ package cn.sunline.saas.loan.agreement.model
  * @date 2022/3/25 16:34
  */
 enum class LoanAgreementInvolvementType {
-    DEBTOR,CREDITOR
+    LOAN_LENDER,LOAN_BORROWER
 }

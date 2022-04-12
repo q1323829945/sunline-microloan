@@ -8,9 +8,7 @@ import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
-import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementInvolvement
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import org.assertj.core.api.Assertions.assertThat
@@ -58,11 +56,8 @@ class LoanAgreementServiceTest {
         )
         feeArrangement.add(dtoFeeArrangementAdd)
 
-        val dtoLoanAgreementInvolvement = mutableListOf<DTOLoanAgreementInvolvement>()
-        val loanAgreementInvolvement1 = DTOLoanAgreementInvolvement(1, LoanAgreementInvolvementType.CREDITOR)
-        val loanAgreementInvolvement2 = DTOLoanAgreementInvolvement(2, LoanAgreementInvolvementType.DEBTOR)
-        dtoLoanAgreementInvolvement.add(loanAgreementInvolvement1)
-        dtoLoanAgreementInvolvement.add(loanAgreementInvolvement2)
+        val lender = mutableListOf<Long>()
+        lender.add(2)
 
         val dtoLoanAgreementAdd =
             DTOLoanAgreementAdd(
@@ -73,7 +68,8 @@ class LoanAgreementServiceTest {
                 interestArrangement = dtoInterestArrangementAdd,
                 repaymentArrangement = dtoRepaymentArrangementAdd,
                 feeArrangement = feeArrangement,
-                involvements = dtoLoanAgreementInvolvement
+                borrower = 1,
+                lender = lender
             )
         val actual = loanAgreementService.registered(dtoLoanAgreementAdd)
 

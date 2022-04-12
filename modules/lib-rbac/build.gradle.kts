@@ -7,6 +7,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
     implementation(project(":lib-exceptions"))
+    implementation(project(":lib-global"))
     api(project(":lib-base-jpa"))
 
 

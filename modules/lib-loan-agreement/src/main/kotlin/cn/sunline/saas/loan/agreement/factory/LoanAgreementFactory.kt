@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.agreement.factory
 
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreementInvolvement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
@@ -27,11 +28,22 @@ class LoanAgreementFactory {
         val now = Instant.now()
         val term = dtoLoanAgreementAdd.term
         val involvements = mutableListOf<LoanAgreementInvolvement>()
-        dtoLoanAgreementAdd.involvements.forEach {
+        dtoLoanAgreementAdd.lender.forEach {
             involvements.add(
-                LoanAgreementInvolvement(id = seq.nextId(), partyId = it.partyId, involvementType = it.involvementType)
+                LoanAgreementInvolvement(
+                    id = seq.nextId(),
+                    partyId = it,
+                    involvementType = LoanAgreementInvolvementType.LOAN_LENDER
+                )
             )
         }
+        involvements.add(
+            LoanAgreementInvolvement(
+                id = seq.nextId(),
+                partyId = dtoLoanAgreementAdd.borrower,
+                involvementType = LoanAgreementInvolvementType.LOAN_BORROWER
+            )
+        )
         return LoanAgreement(
             id = loanAgreementId,
             signedDate = now,

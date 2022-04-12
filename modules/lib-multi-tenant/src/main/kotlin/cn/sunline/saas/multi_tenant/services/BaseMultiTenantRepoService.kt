@@ -2,8 +2,8 @@ package cn.sunline.saas.multi_tenant.services
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
 import cn.sunline.saas.base_jpa.services.BaseRepoService
-import cn.sunline.saas.multi_tenant.context.TenantContext
-import org.springframework.beans.factory.annotation.Autowired
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -21,17 +21,15 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
     private val baseRepository: BaseRepository<T, ID>
 ) :
     BaseRepoService<T, ID>(baseRepository) {
-    @Autowired
-    private lateinit var tenantContext: TenantContext
 
     fun getPageWithTenant(specification: Specification<T>? = null, pageable: Pageable): Page<T> {
         val tenantSpecification: Specification<T> = Specification { root: Root<T>, _, criteriaBuilder ->
             val path: Expression<Long> = root.get("tenantId")
-            val predicate = criteriaBuilder.equal(path, tenantContext.get())
+            val predicate = criteriaBuilder.equal(path, ContextUtil.getTenant())
 
             criteriaBuilder.and(predicate)
-        }.and(specification)
-
+        }
+        tenantSpecification.and(specification)
 
         return getPaged(tenantSpecification, pageable)
     }

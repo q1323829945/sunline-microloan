@@ -20,7 +20,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
 
     implementation("io.dapr:dapr-sdk:${daprVersion}")
-    implementation("io.dapr:dapr-sdk-actors:${daprVersion}")
     implementation("io.dapr:dapr-sdk-springboot:${daprVersion}")
 
     implementation(project(":lib-exceptions"))
@@ -38,6 +37,8 @@ dependencies {
     implementation(project(":lib-loan-configure"))
     implementation(project(":lib-interest-util"))
     implementation(project(":lib-huaweicloud-apig"))
+    implementation(project(":lib-snowflake"))
+    implementation(project(":lib-partner-integrated"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

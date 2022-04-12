@@ -4,7 +4,6 @@ import cn.sunline.saas.huaweicloud.apig.constant.ActionType
 import cn.sunline.saas.huaweicloud.apig.constant.ApiResponsePage
 import cn.sunline.saas.huaweicloud.apig.constant.BatchPublishParams
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import javax.annotation.PreDestroy
 
