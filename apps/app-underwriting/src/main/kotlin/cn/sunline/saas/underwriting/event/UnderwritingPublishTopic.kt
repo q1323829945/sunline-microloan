@@ -7,5 +7,5 @@ package cn.sunline.saas.underwriting.event
  * @date 2022/4/7 15:46
  */
 enum class UnderwritingPublishTopic {
-   RETRIEVE_CUSTOMER_CREDIT_RATING
+   RETRIEVE_CUSTOMER_CREDIT_RATING,EXECUTE_CREDIT_RISK
 }

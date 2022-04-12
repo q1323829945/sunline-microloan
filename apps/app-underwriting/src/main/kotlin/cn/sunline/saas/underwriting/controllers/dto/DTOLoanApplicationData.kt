@@ -1,4 +1,4 @@
-package cn.sunline.saas.underwriting.model.db
+package cn.sunline.saas.underwriting.controllers.dto
 
 /**
  * @title: DTOUnderwriting
@@ -6,12 +6,12 @@ package cn.sunline.saas.underwriting.model.db
  * @author Kevin-Cui
  * @date 2022/4/8 16:31
  */
-class UnderwritingApplicationData (
+data class DTOLoanApplicationData (
     val applId:Long,
-    val detail:Detail,
+    val detail:DTODetail,
 )
 
-class Detail(
+data class DTODetail(
     val customerId:Long,
     val name:String,
     val registrationNo:String,

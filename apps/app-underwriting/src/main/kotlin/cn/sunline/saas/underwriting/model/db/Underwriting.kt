@@ -39,16 +39,16 @@ class Underwriting(
     val applicationData: UnderwritingApplicationData,
 
     @Column(name = "customer_credit_rate", nullable = false, length = 32, columnDefinition = "varchar(32) null")
-    var customerCreditRate: String?,
+    var customerCreditRate: String? = null,
 
     @Column(name = "credit_risk", nullable = false, length = 32, columnDefinition = "varchar(32) null")
-    var creditRisk: String?,
+    var creditRisk: String? = null,
 
     @Column(name = "fraud_evaluation", nullable = false, length = 32, columnDefinition = "varchar(32) null")
-    var fraudEvaluation: String?,
+    var fraudEvaluation: String? = null,
 
     @Column(name = "regulatory_compliance", nullable = false, length = 32, columnDefinition = "varchar(32) null")
-    var regulatoryCompliance: String?,
+    var regulatoryCompliance: String? = null,
 
     @CreationTimestamp
     var created: Instant? = null,

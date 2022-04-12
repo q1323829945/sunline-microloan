@@ -1,5 +1,7 @@
 package cn.sunline.saas.underwriting.event
 
+import cn.sunline.saas.underwriting.model.db.Underwriting
+
 /**
  * @title: UnderwritingPublish
  * @description: TODO
@@ -8,5 +10,7 @@ package cn.sunline.saas.underwriting.event
  */
 interface UnderwritingPublish {
 
-    fun retrieveCustomerCreditRating(partner: String, customerId: Long)
+    fun retrieveCustomerCreditRating(applicationId:Long,partner: String, customerId: Long)
+
+    fun execCreditRisk(partner:String,underwriting: Underwriting)
 }

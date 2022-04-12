@@ -1,9 +1,12 @@
 package cn.sunline.saas.underwriting.controllers
 
+import cn.sunline.saas.underwriting.controllers.dto.DTOCustomerCreditRating
+import cn.sunline.saas.underwriting.controllers.dto.DTOLoanApplicationData
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.service.UnderwritingService
-import io.dapr.Topic
-import io.dapr.client.domain.CloudEvent
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -20,13 +23,27 @@ import reactor.core.publisher.Mono
 @RequestMapping("Underwriting")
 class UnderwritingController(private val integratedConfigurationService: UnderwritingService) {
 
-    @Topic(name = "submit", pubsubName = "underwriting-pub-sub")
-    @PostMapping("/Initiate")
-    fun initiate(@RequestBody(required = false) cloudEvent: CloudEvent<UnderwritingApplicationData>): Mono<Unit> {
-        return Mono.fromRunnable {
-            //TODO submit data convert to UnderwritingApplicationData
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-            integratedConfigurationService.initiate(cloudEvent.data)
+    @PostMapping("/Initiate")
+    fun initiate(@RequestBody(required = false) dtoApplicationData: DTOLoanApplicationData): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.initiate(
+                objectMapper.convertValue<UnderwritingApplicationData>(
+                    dtoApplicationData
+                )
+            )
+        }
+    }
+
+
+    @PostMapping("/CustomerCreditRating")
+    fun callBackCustomerCreditRating(@RequestBody(required = false) dtoCustomerCreditRating: DTOCustomerCreditRating): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.updateCustomerCreditRating(
+                dtoCustomerCreditRating.applId,
+                dtoCustomerCreditRating.customerCreditRate
+            )
         }
     }
 }
