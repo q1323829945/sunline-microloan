@@ -20,7 +20,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
 
     implementation("io.dapr:dapr-sdk:${daprVersion}")
-    implementation("io.dapr:dapr-sdk-actors:${daprVersion}")
     implementation("io.dapr:dapr-sdk-springboot:${daprVersion}")
 
     implementation(project(":lib-exceptions"))

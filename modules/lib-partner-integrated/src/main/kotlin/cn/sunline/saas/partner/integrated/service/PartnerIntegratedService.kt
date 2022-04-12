@@ -1,10 +1,10 @@
 package cn.sunline.saas.partner.integrated.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
-import cn.sunline.saas.multi_tenant.context.TenantContext
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.partner.integrated.model.db.PartnerIntegrated
 import cn.sunline.saas.partner.integrated.repository.PartnerIntegratedRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
@@ -17,18 +17,15 @@ import org.springframework.stereotype.Service
 class PartnerIntegratedService(private val partnerIntegratedRepo: PartnerIntegratedRepository) :
     BaseRepoService<PartnerIntegrated, Long>(partnerIntegratedRepo) {
 
-    @Autowired
-    private lateinit var tenantContext: TenantContext
-
     fun get(): PartnerIntegrated? {
-        return getOne(tenantContext.get())
+        return getOne(ContextUtil.getTenant())
     }
 
     fun registered(partnerIntegrated: PartnerIntegrated): PartnerIntegrated {
         var poPartnerIntegrated = partnerIntegrated
         if (partnerIntegrated.tenantId == 0L) {
             poPartnerIntegrated = PartnerIntegrated(
-                tenantContext.get(),
+                ContextUtil.getTenant(),
                 partnerIntegrated.customerCreditRatingPartner,
                 partnerIntegrated.creditRiskPartner,
                 partnerIntegrated.regulatoryCompliancePartner,

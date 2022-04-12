@@ -11,7 +11,6 @@ dependencies {
     implementation(project(":lib-global"))
     implementation("joda-time:joda-time:2.10.13")
     implementation("io.github.microutils:kotlin-logging:${logVersion}")
-    implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation(project(":lib-exceptions"))
     api(project(":lib-base-jpa"))
     implementation(project(":lib-interest"))
@@ -23,7 +22,4 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake"))
-}
-repositories {
-    mavenCentral()
 }

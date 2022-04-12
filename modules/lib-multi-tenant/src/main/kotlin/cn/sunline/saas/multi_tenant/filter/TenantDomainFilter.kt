@@ -1,8 +1,9 @@
 package cn.sunline.saas.multi_tenant.filter
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.multi_tenant.context.TenantContext
-import cn.sunline.saas.multi_tenant.model.Tenant
+import cn.sunline.saas.global.constant.meta.Header
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import org.springframework.http.MediaType
 import org.springframework.web.filter.GenericFilterBean
 import javax.servlet.FilterChain
@@ -11,10 +12,10 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class TenantDomainFilter(private val tenantContext: TenantContext) : GenericFilterBean() {
+class TenantDomainFilter : GenericFilterBean() {
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
-        var domain = httpServletRequest.getHeader("X-Tenant-Domain") ?: run {
+        var domain = httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.name) ?: run {
             handleException(
                 response!!,
                 ManagementExceptionCode.AUTHORIZATION_TENANT_DOMAIN_MISSING,
@@ -23,7 +24,7 @@ class TenantDomainFilter(private val tenantContext: TenantContext) : GenericFilt
             return
         }
 
-        tenantContext.set(domain)
+        ContextUtil.setTenant(domain)
         chain?.doFilter(request, response)
     }
 

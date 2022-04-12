@@ -1,12 +1,12 @@
 package cn.sunline.saas.config
 
+import cn.sunline.saas.HttpConfig
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.multi_tenant.context.TenantContext
-import cn.sunline.saas.HttpConfig
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import com.google.gson.Gson
 import org.apache.commons.httpclient.HttpMethod
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -14,16 +14,11 @@ import java.io.InputStreamReader
 @Component
 class AppHttpConfiguration: HttpConfig() {
 
-    @Autowired
-    private lateinit var tenantContext: TenantContext
-
-
     fun getPublicHeaders():Map<String,String>{
         val map = mutableMapOf<String,String>()
 
         map["ExternalTune"] = "customer-offer"
-        map["X-Tenant-Domain"] = tenantContext.get().toString()
-
+        map["X-Tenant-Domain"] = ContextUtil.getTenant().toString()
 
         return map
     }

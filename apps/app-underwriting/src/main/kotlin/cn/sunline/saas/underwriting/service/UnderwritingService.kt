@@ -2,12 +2,10 @@ package cn.sunline.saas.underwriting.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
-import cn.sunline.saas.underwriting.event.impl.UnderwritingPublishImpl
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.model.db.Underwriting
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.repository.UnderwritingRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 
@@ -29,8 +27,7 @@ class UnderwritingService(
         //TODO save underwriting data
 
         this.underwritingPublish.retrieveCustomerCreditRating(
-            dtoUnderwritingAdd.requestId,
-            underwritingInvoke?.getPartnerIntegrated()?.customerCreditRatingPartner.toString(),
+            underwritingInvoke.getPartnerIntegrated()?.customerCreditRatingPartner.toString(),
             dtoUnderwritingAdd.detail.customerId
         )
     }

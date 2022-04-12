@@ -1,6 +1,7 @@
 package cn.sunline.saas.multi_tenant.service
 
-import cn.sunline.saas.multi_tenant.context.TenantContext
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.multi_tenant.model.TestDBModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,19 +19,16 @@ import org.springframework.data.domain.Sort
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MultiTenantRepoServiceTest(@Autowired val testDBModelService: TestDBModelService) {
 
-    @Autowired
-    private lateinit var context : TenantContext
-
     @Test
     fun `entity listener`() {
-        context.set("100")
+        ContextUtil.setTenant("100")
         val actual = testDBModelService.save(TestDBModel())
         assertThat(actual.getTenantId()).isEqualTo(100L)
     }
 
     @Test
     fun `get list with tenant`() {
-        context.set("200")
+        ContextUtil.setTenant("200")
         val actual = mutableListOf<TestDBModel>()
         actual.add(TestDBModel())
         actual.add(TestDBModel())

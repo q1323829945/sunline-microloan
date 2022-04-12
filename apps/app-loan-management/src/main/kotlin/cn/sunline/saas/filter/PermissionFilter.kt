@@ -1,5 +1,6 @@
-package cn.sunline.saas.config
+package cn.sunline.saas.filter
 
+import cn.sunline.saas.config.PermissionConfig
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.response.outputErrorStream

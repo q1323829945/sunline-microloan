@@ -1,6 +1,8 @@
 package cn.sunline.saas.rbac.filters
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setUserId
 import cn.sunline.saas.rbac.services.TokenService
 import cn.sunline.saas.rbac.services.UserService
 import org.springframework.http.MediaType
@@ -41,7 +43,7 @@ class AuthenticationFilter (
                 SecurityContextHolder.getContext().authentication = authentication
             }
         }
-
+        ContextUtil.setUserId(authUsername)
         chain?.doFilter(request, response)
     }
 

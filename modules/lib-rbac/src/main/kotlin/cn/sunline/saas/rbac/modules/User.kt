@@ -77,7 +77,7 @@ class User (
         var updated: Date? = null
 ): UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        val roles = roles?.mapNotNull { it.permissions }
+        val roles = roles.mapNotNull { it.permissions }
         val permissions = roles.flatMap { it.mapNotNull { p -> p.name } }
         return permissions.map { SimpleGrantedAuthority(it) }.toMutableList()
     }

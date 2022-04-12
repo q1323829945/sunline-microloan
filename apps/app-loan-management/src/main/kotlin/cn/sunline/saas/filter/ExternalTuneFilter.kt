@@ -1,4 +1,4 @@
-package cn.sunline.saas.config
+package cn.sunline.saas.filter
 
 import org.springframework.web.filter.GenericFilterBean
 import javax.servlet.FilterChain

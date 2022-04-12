@@ -17,7 +17,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.math.BigDecimal
 
 /**
  * @title: RatePlanServiceTest
@@ -60,7 +59,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
         val prepayment2  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.THREE_MONTHS,
             PrepaymentType.PARTIAL_PREPAYMENT,
-            BigDecimal(1.5)
+            "1.5"
         )
 
         val prepayment3  = DTOPrepaymentFeatureModalityAdd(
@@ -84,7 +83,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
         val feeFeature1 = DTOFeeFeatureAdd(
             feeType = "Test1",
             feeMethodType = FeeMethodType.FIX_AMOUNT,
-            feeAmount = BigDecimal(150),
+            feeAmount = "150",
             feeRate = null,
             feeDeductType = FeeDeductType.IMMEDIATE
         )
@@ -92,7 +91,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             feeType = "Test2",
             feeMethodType = FeeMethodType.FEE_RATIO,
             feeAmount = null,
-            feeRate = BigDecimal(1.5),
+            feeRate = "1.5",
             feeDeductType = FeeDeductType.IMMEDIATE
         )
 

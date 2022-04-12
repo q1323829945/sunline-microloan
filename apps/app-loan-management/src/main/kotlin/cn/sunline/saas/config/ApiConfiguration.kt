@@ -11,12 +11,8 @@ class ApiConfiguration(private val groupId:String,private val domainUrl:String) 
 
         val menus = getApiParams("查询菜单","/menus",MatchMode.NORMAL,ReqMethod.GET,"查询菜单测试")
 
-        val getOneProduct = getApiParams("查询单个产品","/LoanProduct/{id}",MatchMode.NORMAL,ReqMethod.GET,"查询单个产品")
-
-
         apiParamsList.add(login)
         apiParamsList.add(menus)
-//        apiParamsList.add(getOneProduct)
     }
 
     private fun getApiParams(name:String,uri:String,matchMode: MatchMode,reqMethod: ReqMethod,remark:String? = null):ApiParams{

@@ -3,7 +3,6 @@ val mysqlConnectorVersion: String by rootProject.extra
 val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
-val daprVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -19,14 +18,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
 
-    api("io.dapr:dapr-sdk:${daprVersion}")
-    api("io.dapr:dapr-sdk-actors:${daprVersion}")
-    api("io.dapr:dapr-sdk-springboot:${daprVersion}")
-
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
-    implementation(project(":lib-mq"))
+    implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-global"))
 
