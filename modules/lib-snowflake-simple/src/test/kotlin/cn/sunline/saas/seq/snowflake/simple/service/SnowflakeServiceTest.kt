@@ -1,4 +1,4 @@
-package cn.sunline.saas.seq.snowflake.services
+package cn.sunline.saas.seq.snowflake.simple.service
 
 import cn.sunline.saas.seq.snowflake.config.MAX_CLOCK_BACK
 import cn.sunline.saas.seq.snowflake.config.MAX_SEQUENCE
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SnowflakeServiceTest(@Autowired private val snowflakeService: SnowflakeService) {
+class SnowflakeServiceTest(@Autowired private val snowflakeService: SnowflakeSimpleService) {
 
 
     @Test

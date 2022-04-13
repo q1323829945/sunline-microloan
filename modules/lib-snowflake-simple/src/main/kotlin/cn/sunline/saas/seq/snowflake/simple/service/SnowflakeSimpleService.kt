@@ -1,10 +1,11 @@
-package cn.sunline.saas.seq.snowflake.services
+package cn.sunline.saas.seq.snowflake.simple.service
 
-import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.seq.snowflake.config.*
+import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
-class SnowflakeService: Sequence {
+@Service
+class SnowflakeSimpleService {
     private var sequence: Long = 0
     private var lastTimestamp: Long = 0
     private var clockBack: Long = 0
@@ -16,7 +17,7 @@ class SnowflakeService: Sequence {
     }
 
     @Synchronized
-    override fun nextId(): Long {
+    fun nextId(): Long {
         var timestamp = timeGen()
 
         if (timestamp < lastTimestamp) {
@@ -61,4 +62,5 @@ class SnowflakeService: Sequence {
     private fun timeGen(): Long {
         return System.currentTimeMillis()
     }
+
 }
