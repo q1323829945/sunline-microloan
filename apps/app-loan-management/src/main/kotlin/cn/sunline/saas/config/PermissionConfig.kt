@@ -39,7 +39,7 @@ enum class PermissionConfig (
     INTEREST_RATE_ADD("interestRate", "InterestRate\$", RequestMethod.POST, "Add interestRate"),
     INTEREST_RATE_GET_LIST("interestRate", "InterestRate(\\?.*|\$)", RequestMethod.GET, "View interestRate list"),
     INTEREST_RATE_MODIFY("interestRate", "InterestRate/[0-9]+\$", RequestMethod.PUT, "Modify interestRate"),
-    INTEREST_RATE_DELETE("interestRate", "InterestRate/[0-9]+\$", RequestMethod.DELETE, "Delete interestRate"),
+    INTEREST_RATE_DELETE("interestRate", "InterestRate/[0-9]+/[0-9]+\$", RequestMethod.DELETE, "Delete interestRate"),
 
     DOCUMENT_TEMPLATE_ADD("documentTemplate", "DocumentTemplate\$", RequestMethod.POST, "Add documentTemplate"),
     DOCUMENT_TEMPLATE_GET_LIST("documentTemplate", "DocumentTemplate(\\?.*|\$)", RequestMethod.GET, "View documentTemplate list"),

@@ -18,5 +18,5 @@ interface InterestRateManagerService {
 
     fun updateOne(id: Long, dtoInterestRate: DTOInterestRateChange): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>>
 
-    fun deleteOne(id: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>>
+    fun deleteOne(id: Long,ratePlanId: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRateView>>
 }

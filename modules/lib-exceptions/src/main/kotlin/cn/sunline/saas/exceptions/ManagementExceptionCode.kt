@@ -41,7 +41,7 @@ enum class ManagementExceptionCode(val code: Int) {
     // Interest 5100 - 5149
     RATE_PLAN_NOT_FOUND(5100),
     INTEREST_RATE_NOT_FOUND(5101),
-
+    RATE_PLAN_HAS_BEEN_USED(5102),
     // Http 5150 - 5199
     HTTP_ERROR(5151),
 
