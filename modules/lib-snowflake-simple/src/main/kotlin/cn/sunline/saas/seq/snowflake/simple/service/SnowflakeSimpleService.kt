@@ -13,15 +13,13 @@ class SnowflakeSimpleService:Sequence {
     @Synchronized
     override fun nextId(): Long {
         var currentTime = timeGen()
-        val random = Random.nextLong(4096) + 1
-        seq = (seq + 1) and (-1L xor (-1L shl 10))
+        seq = (seq + 1) and (-1L xor (-1L shl 22))
 
         if(seq == 0L){
             currentTime = tilNextMillis(currentTime)
         }
 
         return (currentTime shl 22) or
-                (random shl 10) or
                 seq
     }
 
