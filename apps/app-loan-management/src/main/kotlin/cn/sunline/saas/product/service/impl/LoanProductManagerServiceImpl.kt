@@ -1,6 +1,5 @@
 package cn.sunline.saas.product.service.impl
 
-import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
@@ -8,7 +7,9 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductChange
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.product.dto.DTOBaseLoanProductView
 import cn.sunline.saas.product.dto.DTOLoanProductStatus
+import cn.sunline.saas.product.exception.LoanProductBusinessException
 import cn.sunline.saas.product.service.LoanProductManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -21,7 +22,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import javax.persistence.criteria.Predicate
 
 
 @Service
@@ -41,25 +41,12 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
     }
 
     override fun addOne(loanProductData: DTOLoanProductAdd): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        checkTermConditions(loanProductData.termConfiguration?.maxValueRange?.days!!,loanProductData.termConfiguration?.minValueRange?.days!!)
+        checkAmountConditions(BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!),BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!))
         loanProductData.version = "1"
-        val termMaxValueRange = loanProductData.termConfiguration?.maxValueRange?.days
-        val termMinValueRange = loanProductData.termConfiguration?.minValueRange?.days
-        if(termMaxValueRange!! < termMinValueRange!!){
-            throw ManagementException(ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR)
-        }
-        val amountMaxValueRange = BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!)
-        val amountMinValueRange = BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!)
-        if(amountMaxValueRange < amountMinValueRange){
-            throw ManagementException(ManagementExceptionCode.PRODUCT_AMOUNT_CONFIG_MAX_MIN_ERROR)
-        }
-        val oldLoanProduct = loanProductService.getPaged({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"), loanProductData.identificationCode))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("version"), loanProductData.version))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.ofSize(1)).firstOrNull()
+        val oldLoanProduct = loanProductService.findByIdentificationCode(loanProductData.identificationCode).firstOrNull()
         if(oldLoanProduct != null){
-            throw ManagementException(ManagementExceptionCode.PRODUCT_EXIST)
+            throw LoanProductBusinessException("This loan's product has already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val view = loanProductService.register(loanProductData)
         return DTOResponseSuccess(view).response()
@@ -71,25 +58,15 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
     }
 
     override fun updateOne(id: Long, dtoLoanProduct: DTOLoanProductChange): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val termMaxValueRange = dtoLoanProduct.termConfiguration?.maxValueRange?.days
-        val termMinValueRange = dtoLoanProduct.termConfiguration?.minValueRange?.days
-        if(termMaxValueRange!! < termMinValueRange!!){
-            throw ManagementException(ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR)
-        }
-        val amountMaxValueRange = BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!)
-        val amountMinValueRange = BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!)
-        if(amountMaxValueRange < amountMinValueRange){
-            throw ManagementException(ManagementExceptionCode.PRODUCT_AMOUNT_CONFIG_MAX_MIN_ERROR)
-        }
+        checkTermConditions(dtoLoanProduct.termConfiguration?.maxValueRange?.days!!,dtoLoanProduct.termConfiguration?.minValueRange?.days!!)
+        checkAmountConditions(BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!),BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!))
         val view = loanProductService.updateLoanProduct(id,dtoLoanProduct)
         return DTOResponseSuccess(view).response()
 
     }
 
     override fun updateStatus(id: Long, dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-
         val loanProduct = loanProductService.updateLoanProductStatus(id,dtoLoanProduct.status)
-
         return DTOResponseSuccess(loanProduct).response()
 
     }
@@ -97,6 +74,23 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
     override fun getProductInfo(identificationCode:String): ResponseEntity<DTOPagedResponseSuccess> {
         val productList = loanProductService.findByIdentificationCode(identificationCode)
         return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProductView>(it)}).response()
+    }
+
+    override fun getAll(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        val paged = loanProductService.getAllLoanProduct(pageable)
+        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOBaseLoanProductView>(it)}).response()
+    }
+
+    private fun checkTermConditions(termMaxValueRange: Int,termMinValueRange: Int){
+        if(termMaxValueRange < termMinValueRange){
+            throw LoanProductBusinessException("The term's config of product was error", ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR)
+        }
+    }
+
+    private fun checkAmountConditions(amountMaxValueRange: BigDecimal,amountMinValueRange: BigDecimal){
+        if(amountMaxValueRange < amountMinValueRange){
+            throw LoanProductBusinessException("The amount's config of product was error", ManagementExceptionCode.PRODUCT_AMOUNT_CONFIG_MAX_MIN_ERROR)
+        }
     }
 
 }

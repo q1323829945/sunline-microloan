@@ -140,13 +140,14 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         return dtoLoanProduct
     }
 
-    fun getLoanProductPaged(name:String?,
-                            loanProductType: LoanProductType?,
-                            loanPurpose: String?,
-                            pageable: Pageable): Page<LoanProduct> {
+    fun getLoanProductPaged(
+        name: String?,
+        loanProductType: LoanProductType?,
+        loanPurpose: String?,
+        pageable: Pageable
+    ): Page<LoanProduct> {
 
-        val page = loanProductRepos.getLoanProductPaged(name,loanProductType,loanPurpose,pageable)
-//            .map {
+        //            .map {
 //            val customerOffer = this.getLoanProductPaged(it["customerOfferId"].toString().toLong())
 //            DTOCustomerOfferPage(
 //                it["customerOfferId"].toString().toLong(),
@@ -156,7 +157,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 //                ApplyStatus.valueOf(it["status"].toString())
 //            )
 //        }
-        return page
+        return loanProductRepos.getLoanProductPaged(name, loanProductType, loanPurpose, pageable)
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
@@ -189,7 +190,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
                     }
                 }
                 ConditionType.TERM ->{
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id,getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
+                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(it.id.toString(),getValueRange(it.getMaxValueRange()),getValueRange(it.getMinValueRange()))
                 }
             }
         }
@@ -205,4 +206,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         return null
     }
 
+    fun getAllLoanProduct(pageable: Pageable): Page<LoanProduct> {
+        return loanProductRepos.getAllLoanProduct(pageable)
+    }
 }

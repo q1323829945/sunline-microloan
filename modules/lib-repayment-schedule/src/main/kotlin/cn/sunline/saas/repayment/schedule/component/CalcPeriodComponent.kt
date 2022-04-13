@@ -32,7 +32,7 @@ object CalcPeriodComponent {
     }
 
     fun calcRemainPeriods(
-        repaymentDate: DateTime,
+        repaymentDate: String,
         repaymentScheduleDetail: MutableList<RepaymentScheduleDetail>
     ): Array<Int> {
         repaymentScheduleDetail.sortBy { it.period }
@@ -40,7 +40,7 @@ object CalcPeriodComponent {
         var currentPeriod = 0;
         var finalPeriod = 0
         var firstFlag = false
-        val repaymentDateTime = DateTime(repaymentDate)
+        val repaymentDateTime = CalcDateComponent.parseViewToInstant(repaymentDate).toDateTime()
         for (detail in repaymentScheduleDetail) {
             val dateTime = detail.repaymentDate
             if (dateTime > repaymentDateTime) {

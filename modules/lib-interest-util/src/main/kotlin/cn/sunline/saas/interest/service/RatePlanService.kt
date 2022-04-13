@@ -1,6 +1,7 @@
 package cn.sunline.saas.interest.service
 
 import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.repository.RatePlanRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
@@ -29,5 +30,9 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
         oldRatePlan.name = newRatePlan.name
         oldRatePlan.rates = newRatePlan.rates
         return save(oldRatePlan)
+    }
+
+    fun findByType(type: RatePlanType): RatePlan? {
+       return ratePlanRepository.findByType(type)
     }
 }

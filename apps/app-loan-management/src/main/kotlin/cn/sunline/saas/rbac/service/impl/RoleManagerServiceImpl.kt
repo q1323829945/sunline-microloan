@@ -4,6 +4,7 @@ import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.rbac.dto.DTORoleChange
 import cn.sunline.saas.rbac.dto.DTORoleView
+import cn.sunline.saas.rbac.exception.RoleBusinessException
 import cn.sunline.saas.rbac.exception.RoleNotFoundException
 import cn.sunline.saas.rbac.modules.Role
 import cn.sunline.saas.rbac.service.RoleManagerService
@@ -24,7 +25,7 @@ import javax.persistence.criteria.Predicate
 
 
 @Service
-class RoleManagerServiceImpl: RoleManagerService {
+class  RoleManagerServiceImpl: RoleManagerService {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @Autowired
@@ -45,13 +46,9 @@ class RoleManagerServiceImpl: RoleManagerService {
 
     override fun addOne(dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
         val role = objectMapper.convertValue<Role>(dtoRole)
-        val oldRole = roleService.getPaged({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("name"), role.name))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.ofSize(1)).firstOrNull()
+        val oldRole = roleService.getByName(role.name)
         if(oldRole != null){
-            throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST)
+            throw RoleBusinessException("This role has already exist",ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val savedRole = roleService.save(role)
         val responseRole = objectMapper.convertValue<DTORoleView>(savedRole)

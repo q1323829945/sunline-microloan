@@ -26,7 +26,7 @@ class UploadConfigureService {
         },pageable).map {
             val product = loanProductService.getLoanProduct(it.productId)
             DTOUploadConfigureView(
-                id = it.id!!,
+                id = it.id!!.toString(),
                 name = it.name,
                 productName = product.name,
                 required = it.required

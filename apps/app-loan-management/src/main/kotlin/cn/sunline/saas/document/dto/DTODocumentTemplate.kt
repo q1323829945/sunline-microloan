@@ -15,7 +15,7 @@ data class DTODocumentTemplateAdd(
 )
 
 data class DTODocumentTemplateView(
-    val id:Long,
+    val id:String,
     val name:String,
     var documentStoreReference:String,
     val directoryId: Long,

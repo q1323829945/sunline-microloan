@@ -4,7 +4,7 @@ import cn.sunline.saas.rbac.controller.RoleController
 
 
 data class DTORoleView(
-    val id: Long,
+    val id: String,
     val name: String,
     val remark: String,
     val permissions: List<DTOPermissionView>

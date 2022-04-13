@@ -12,7 +12,7 @@ data class DTOTemplateDirectoryAdd(
 )
 
 data class DTOTemplateDirectoryListView(
-    val id:Long,
+    val id:String,
     val name:String,
     val parentId: Long?,
     val tenantId:Long,
@@ -22,7 +22,7 @@ data class DTOTemplateDirectoryListView(
 )
 
 data class DTOTemplateDirectoryView(
-    val id:Long,
+    val id:String,
     val name:String,
     val parentId: Long?,
     val tenantId:Long,
