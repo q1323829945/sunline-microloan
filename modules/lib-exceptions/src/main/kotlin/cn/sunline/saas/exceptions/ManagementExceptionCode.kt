@@ -51,5 +51,8 @@ enum class ManagementExceptionCode(val code: Int) {
     CERTIFICATE_BINDING_ERROR(5301),
 
 
+    //underwriting 5350 - 5399
+    UNDERWRITING_NOT_FOUND(5350)
+
 
 }

@@ -2,6 +2,7 @@ package cn.sunline.saas.underwriting.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
+import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.model.db.Underwriting
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
@@ -23,12 +24,30 @@ class UnderwritingService(
 ) :
     BaseRepoService<Underwriting, Long>(underwritingRepository) {
 
-    fun initiate(dtoUnderwritingAdd: UnderwritingApplicationData): Unit {
-        //TODO save underwriting data
+    fun initiate(underwritingApplicationData: UnderwritingApplicationData) {
+        save(
+            Underwriting(
+                underwritingApplicationData.applId,
+                underwritingApplicationData.detail.customerId,
+                underwritingApplicationData
+            )
+        )
 
         this.underwritingPublish.retrieveCustomerCreditRating(
+            underwritingApplicationData.applId,
             underwritingInvoke.getPartnerIntegrated()?.customerCreditRatingPartner.toString(),
-            dtoUnderwritingAdd.detail.customerId
+            underwritingApplicationData.detail.customerId
+        )
+    }
+
+    fun updateCustomerCreditRating(applicationId: Long, customerCreditRating: String) {
+        val underwriting = getOne(applicationId) ?: throw UnderwritingNotFound("underwriting data not found")
+        underwriting.customerCreditRate = customerCreditRating
+        save(underwriting)
+
+        this.underwritingPublish.execCreditRisk(
+            underwritingInvoke.getPartnerIntegrated()?.creditRiskPartner.toString(),
+            underwriting
         )
     }
 }
