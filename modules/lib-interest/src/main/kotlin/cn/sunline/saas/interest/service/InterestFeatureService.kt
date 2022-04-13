@@ -28,4 +28,8 @@ class InterestFeatureService(private val interestFeatureRepository: InterestFeat
     fun findByProductId(productId:Long):InterestFeature?{
         return interestFeatureRepository.findByProductId(productId)
     }
+
+    fun findByRatePlanId(ratePlanId:Long): MutableList<InterestFeature>?{
+        return interestFeatureRepository.findByRatePlanId(ratePlanId)
+    }
 }
