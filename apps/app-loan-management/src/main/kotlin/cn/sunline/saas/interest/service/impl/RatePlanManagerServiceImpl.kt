@@ -1,10 +1,11 @@
 package cn.sunline.saas.interest.service.impl
 
-import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.interest.dto.DTORatePlanAdd
 import cn.sunline.saas.interest.dto.DTORatePlanChange
 import cn.sunline.saas.interest.dto.DTORatePlanView
+import cn.sunline.saas.interest.dto.DTOSimpleRatePlanView
+import cn.sunline.saas.interest.exception.RatePlanBusinessException
 import cn.sunline.saas.interest.exception.RatePlanNotFoundException
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
@@ -42,18 +43,14 @@ class RatePlanManagerServiceImpl: RatePlanManagerService {
             predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
-        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlanView>(it) }).response()
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTOSimpleRatePlanView>(it) }).response()
     }
 
     override fun addOne(dtoRatePlan: DTORatePlanAdd): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
-        val typeRatePlan = ratePlanService.getPaged({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("type"), ratePlan.type))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.ofSize(1)).firstOrNull()
-        if(typeRatePlan != null){
-            throw ManagementException(ManagementExceptionCode.RATE_PLAN_TYPE_EXIST)
+        val typeRatePlan = ratePlanService.findByType(ratePlan.type)
+        if(typeRatePlan != null && ratePlan.type == RatePlanType.STANDARD){
+            throw RatePlanBusinessException("The standard type of rate plan has exist，Only one is allowed", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val savedRatePlan = ratePlanService.addOne(ratePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)
@@ -61,8 +58,7 @@ class RatePlanManagerServiceImpl: RatePlanManagerService {
     }
 
     override fun updateOne(id: Long,dtoRatePlan: DTORatePlanChange): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan",
-            ManagementExceptionCode.DATA_NOT_FOUND)
+        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         val responseRatePlan = objectMapper.convertValue<DTORatePlanView>(savedRatePlan)

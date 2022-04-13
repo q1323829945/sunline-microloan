@@ -11,6 +11,7 @@
 val jjwtVersion: String by rootProject.extra
 val mysqlConnectorVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
+val jacksonVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -21,6 +22,7 @@ dependencies {
     implementation("joda-time:joda-time:2.10.13")
     implementation("io.github.microutils:kotlin-logging:${logVersion}")
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-exceptions"))
     api(project(":lib-base-jpa"))
     api(project(":lib-interest"))

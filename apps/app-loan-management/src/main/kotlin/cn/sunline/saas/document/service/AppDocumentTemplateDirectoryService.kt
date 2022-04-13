@@ -40,7 +40,7 @@ class AppDocumentTemplateDirectoryService {
                 dtoDirectoryList.addAll(getDirectoryTree(directoryList, directory.id,path))
                 val dtoTemplateList = objectMapper.convertValue<List<DTODocumentTemplateView>>(directory.templates)
 
-                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!,directory.name,parentId,directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList,path)
+                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!.toString(),directory.name,parentId,directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList,path)
                 responseList.add(dtoDirectory)
             }
 

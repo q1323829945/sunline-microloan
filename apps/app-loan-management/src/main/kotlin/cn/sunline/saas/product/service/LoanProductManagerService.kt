@@ -35,4 +35,6 @@ interface LoanProductManagerService {
     fun updateStatus(id: Long, dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>>
 
     fun getProductInfo(identificationCode:String): ResponseEntity<DTOPagedResponseSuccess>
+
+    fun getAll(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>
 }

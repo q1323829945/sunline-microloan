@@ -1,9 +1,9 @@
 package cn.sunline.saas.loan.configure.modules.dto
 
 data class DTOUploadConfigureView(
-        val id:Long,
-        val name:String,
-        val productName:String?,
-        val required:Boolean
+        val id:String? = null,
+        val name:String? = null,
+        val productName:String? = null,
+        val required:Boolean? = null
 )
 

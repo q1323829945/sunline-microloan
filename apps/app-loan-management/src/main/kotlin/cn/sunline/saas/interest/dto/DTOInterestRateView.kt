@@ -4,8 +4,8 @@ import cn.sunline.saas.global.constant.LoanTermType
 
 
 data class DTOInterestRateView(
-    val id: Long,
+    val id: String,
     val period: LoanTermType,
     val rate: String,
-    val ratePlanId:Long
+    val ratePlanId:String
 )

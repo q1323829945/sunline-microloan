@@ -2,18 +2,18 @@
 
 package cn.sunline.saas.repayment.schedule.model.dto
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.interest.constant.BaseYearDays
-import org.joda.time.DateTime
 import org.joda.time.Instant
 import java.math.BigDecimal
 
 
-data class DTORepaymentScheduleCalculate  (
+data class DTORepaymentScheduleCalculateTrial  (
     var amount: BigDecimal,
-    var term: String,
+    var term: LoanTermType,
     var interestRate: BigDecimal,
     var paymentMethod: PaymentMethodType,
     var startDate: Instant,

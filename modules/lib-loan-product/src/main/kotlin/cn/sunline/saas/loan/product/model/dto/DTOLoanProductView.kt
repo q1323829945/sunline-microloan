@@ -14,7 +14,7 @@ import cn.sunline.saas.repayment.model.db.RepaymentFeature
  * @date 2022/3/14 11:28
  */
 data class DTOLoanProductView(
-        val id:Long,
+        val id:String,
         val identificationCode: String,
         val name: String,
         val version: String,
@@ -30,13 +30,13 @@ data class DTOLoanProductView(
 )
 
 data class DTOAmountLoanProductConfigurationView(
-        val id:Long,
+        val id: String,
         var maxValueRange: String?,
         var minValueRange: String?,
 )
 
 data class DTOTermLoanProductConfigurationView(
-        val id:Long,
+        val id: String,
         var maxValueRange: LoanTermType?,
         var minValueRange: LoanTermType?,
 )

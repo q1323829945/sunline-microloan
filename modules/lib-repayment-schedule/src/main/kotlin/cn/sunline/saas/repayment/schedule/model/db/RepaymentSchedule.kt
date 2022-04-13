@@ -1,5 +1,6 @@
 package cn.sunline.saas.repayment.schedule.model.db
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.multi_tenant.model.MultiTenant
@@ -19,23 +20,32 @@ class RepaymentSchedule(
     @Id
     @Column(name = "repayment_schedule_id", nullable = false)
     var repaymentScheduleId: Long, // id
+    var id: Long, // id
 
     @NotNull
     @Column(name = "amount", precision = 15, scale = 2, nullable = false)
     var amount: BigDecimal,// 贷款金额 installment
+    @Column(name = "installment", precision = 15, scale = 2, nullable = false)
+    var installment: BigDecimal,// 贷款金额 installment
 
     @NotNull
     @Column(name = "term", nullable = false)
-    var term: Int,// 贷款期限
     var term: String,// 贷款期限
 
     @NotNull
+
+
+
+
+
     @Column(name = "interest_Rate", precision = 9, scale = 6, nullable = false)
     var interestRate: BigDecimal, // 贷款利率
 
     @NotNull
     @Column(name = "repayment_type", length = 8, nullable = false)
     var paymentMethod: PaymentMethodType, //还款类型
+    @Column(name = "term", nullable = false)
+    var term: LoanTermType, // 贷款期限
 
     @NotNull
     @Column(name = "total_interest", precision = 15, scale = 2, nullable = false)
@@ -50,8 +60,12 @@ class RepaymentSchedule(
 
     @OneToMany(fetch = FetchType.EAGER, targetEntity = RepaymentScheduleDetail::class, mappedBy = "repaymentScheduleId")
     @NotFound(action= NotFoundAction.IGNORE)
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "repayment_schedule_id")
+//    @NotFound(action= NotFoundAction.IGNORE)
     @OrderBy("id ASC")
     var repaymentScheduleDetail: MutableList<RepaymentScheduleDetail> = mutableListOf(),
+    var schedule: MutableList<RepaymentScheduleDetail> = mutableListOf(),
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -61,7 +75,6 @@ class RepaymentSchedule(
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
 
-)
 ): MultiTenant {
 
     @NotNull

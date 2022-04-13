@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("permissions")
 class PermissionController {
-    data class DTOPermission(val id: Long, val tag: String, val name: String, val remark: String)
+    data class DTOPermission(val id: String, val tag: String, val name: String, val remark: String)
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -41,7 +41,7 @@ class PermissionController {
         val permission = objectMapper.convertValue<Permission>(dtoPermission)
         val savedPermission = permissionService.save(permission)
         val dtoSavedPermission = objectMapper.convertValue<DTOPermission>(savedPermission)
-        return DTOResponseSuccess(dtoPermission).response()
+        return DTOResponseSuccess(dtoSavedPermission).response()
     }
 
 }

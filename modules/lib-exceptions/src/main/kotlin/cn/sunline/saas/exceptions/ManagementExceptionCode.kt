@@ -34,7 +34,6 @@ enum class ManagementExceptionCode(val code: Int) {
     PRODUCT_NOT_FOUND(5000),
     PRODUCT_TERM_CONFIG_MAX_MIN_ERROR(5001),
     PRODUCT_AMOUNT_CONFIG_MAX_MIN_ERROR(5002),
-    PRODUCT_EXIST(5003),
 
     // Fee 5050 - 5099
     FEE_CONFIG_ERROR(5050),
@@ -42,8 +41,6 @@ enum class ManagementExceptionCode(val code: Int) {
     // Interest 5100 - 5149
     RATE_PLAN_NOT_FOUND(5100),
     INTEREST_RATE_NOT_FOUND(5101),
-    RATE_PLAN_TYPE_EXIST(5102),
-    INTEREST_RATE_TYPE_EXIST(5103),
 
     // Http 5150 - 5199
     HTTP_ERROR(5151),

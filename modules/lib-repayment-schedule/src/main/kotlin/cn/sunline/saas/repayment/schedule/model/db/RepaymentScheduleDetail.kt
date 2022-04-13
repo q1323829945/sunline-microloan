@@ -26,8 +26,8 @@ class RepaymentScheduleDetail (
      var period : Int,// 当期期数
 
      @NotNull
-     @Column(name = "repayment_installment", precision = 15, scale = 2, nullable = false)
-     var repaymentInstallment : BigDecimal, // 当期还款金额
+     @Column(name = "installment", precision = 15, scale = 2, nullable = false)
+     var installment : BigDecimal, // 当期还款金额
 
      @NotNull
      @Column(name = "principal", precision = 15, scale = 2,  nullable = false)
@@ -36,10 +36,10 @@ class RepaymentScheduleDetail (
      @NotNull
      @Column(name = "interest", precision = 15, scale = 2,  nullable = false)
      var interest : BigDecimal, // 当期应还利息
-
-     @NotNull
-     @Column(name = "remain_principal", precision = 15, scale = 2,  nullable = false)
-     var remainPrincipal : BigDecimal, // 当期剩余本金
+//
+//     @NotNull
+//     @Column(name = "remain_principal", precision = 15, scale = 2,  nullable = false)
+//     var remainPrincipal : BigDecimal, // 剩余本金
 
      @NotNull
      @Column(name = "repayment_date", nullable = false)

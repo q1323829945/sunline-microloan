@@ -5,6 +5,7 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.rbac.dto.DTOUserAdd
 import cn.sunline.saas.rbac.dto.DTOUserChange
 import cn.sunline.saas.rbac.dto.DTOUserView
+import cn.sunline.saas.rbac.exception.UserBusinessException
 import cn.sunline.saas.rbac.exception.UserNotFoundException
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.service.UserManagerService
@@ -41,13 +42,9 @@ class UserManagerServiceImpl: UserManagerService {
 
     override fun addOne(dtoUser: DTOUserAdd): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
         val user = objectMapper.convertValue<User>(dtoUser)
-        val oldUser = userService.getPaged({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("username"), user.username))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.ofSize(1)).firstOrNull()
+        val oldUser = userService.getByUsername(user.username)
         if(oldUser != null){
-            throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST)
+            throw UserBusinessException("This user has already exist",ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val registeredUser = userService.register(user)
         val responseUser = objectMapper.convertValue<DTOUserView>(registeredUser)

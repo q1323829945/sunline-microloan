@@ -58,7 +58,7 @@ enum class PermissionConfig (
     LOAN_PRODUCT_MODIFY("LoanProduct", "LoanProduct/[0-9]+\$", RequestMethod.PUT, "Modify loanProduct"),
     LOAN_PRODUCT_MODIFY_STATUS("LoanProduct", "LoanProduct/status/[0-9]+\$", RequestMethod.PUT, "Modify loanProduct status"),
     LOAN_PRODUCT_GET_HISTORY_VERSION_LIST("LoanProduct","LoanProduct/(.*?)/retrieve",RequestMethod.GET,"View IdentificationCode loanProduct history Version list"),
-
+    LOAN_PRODUCT_GET_BASE_INFO_LIST("LoanProduct","LoanProduct/all",RequestMethod.GET,"View IdentificationCode loanProduct base info list"),
     LOAN_UPLOAD_CONFIGURE_ADD("LoanUploadConfigure", "LoanUploadConfigure\$", RequestMethod.POST, "Add LoanUploadConfigure"),
     LOAN_UPLOAD_CONFIGURE_GET_LIST("LoanUploadConfigure", "LoanUploadConfigure(\\?.*|\$)", RequestMethod.GET, "View LoanUploadConfigure list"),
     LOAN_UPLOAD_CONFIGURE_DELETE("LoanUploadConfigure", "LoanUploadConfigure/[0-9]+\$", RequestMethod.DELETE, "Modify LoanUploadConfigure status"),

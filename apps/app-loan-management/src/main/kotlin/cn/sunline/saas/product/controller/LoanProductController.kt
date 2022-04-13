@@ -3,6 +3,7 @@ package cn.sunline.saas.product.controller
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.*
@@ -63,6 +64,9 @@ class LoanProductController {
         return loanProductManagerService.getProductInfo(identificationCode)
     }
 
-
+    @GetMapping("all")
+    fun getAll(): ResponseEntity<DTOPagedResponseSuccess> {
+        return loanProductManagerService.getAll(pageable = Pageable.unpaged())
+    }
 
 }
