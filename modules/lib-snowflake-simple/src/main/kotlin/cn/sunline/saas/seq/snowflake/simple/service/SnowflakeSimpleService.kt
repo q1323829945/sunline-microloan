@@ -1,53 +1,28 @@
 package cn.sunline.saas.seq.snowflake.simple.service
 
-import cn.sunline.saas.seq.snowflake.config.*
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
+
+import cn.sunline.saas.seq.Sequence
+import kotlin.random.Random
 
 @Service
-class SnowflakeSimpleService {
-    private var sequence: Long = 0
-    private var lastTimestamp: Long = 0
-    private var clockBack: Long = 0
-    lateinit var snowflakeConfig: SnowflakeConfig
+class SnowflakeSimpleService:Sequence {
+    var seq = 0L
 
-    @PostConstruct
-    private fun initialize() {
-        snowflakeConfig = SnowflakeConfig()
-    }
 
     @Synchronized
-    fun nextId(): Long {
-        var timestamp = timeGen()
+    override fun nextId(): Long {
+        var currentTime = timeGen()
+        val random = Random.nextLong(4096) + 1
+        seq = (seq + 1) and (-1L xor (-1L shl 10))
 
-        if (timestamp < lastTimestamp) {
-            if (sequence == 0L) {
-                clockBack = (clockBack + 1) and MAX_CLOCK_BACK
-            }
-
-            sequence = (sequence + 1) and MAX_SEQUENCE //seq in 0 ... MAX_SEQUENCE
-
-            if (clockBack == 0L) {
-                timestamp = tilNextMillis(lastTimestamp)
-            }
-        } else if (lastTimestamp == timestamp) {
-            sequence = (sequence + 1) and MAX_SEQUENCE //seq in 0 ... MAX_SEQUENCE
-            if (sequence == 0L) {
-                timestamp = tilNextMillis(lastTimestamp)
-            }
-            clockBack = 0
-        } else {
-            sequence = 0
-            clockBack = 0
+        if(seq == 0L){
+            currentTime = tilNextMillis(currentTime)
         }
 
-        lastTimestamp = timestamp
-
-        return ((timestamp - INIT_TIMESTAMP) shl TIMESTAMP_SHIFT) or
-                (snowflakeConfig.workId shl WORKER_ID_SHIFT) or
-                (snowflakeConfig.datacenterId shl DATACENTER_ID_SHIFT) or
-                (clockBack shl CLOCK_BACK_SHIFT) or
-                sequence
+        return (currentTime shl 22) or
+                (random shl 10) or
+                seq
     }
 
     private fun tilNextMillis(lastTimestamp: Long): Long {
@@ -59,8 +34,8 @@ class SnowflakeSimpleService {
         return timestamp
     }
 
+
     private fun timeGen(): Long {
         return System.currentTimeMillis()
     }
-
 }

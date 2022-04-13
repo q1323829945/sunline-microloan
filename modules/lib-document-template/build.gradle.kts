@@ -18,6 +18,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
     testImplementation("com.h2database:h2:1.4.200")
-    testImplementation(project(":lib-snowflake"))
+    testImplementation(project(":lib-snowflake-simple"))
     testImplementation(project(":lib-huaweicloud-obs"))
 }
