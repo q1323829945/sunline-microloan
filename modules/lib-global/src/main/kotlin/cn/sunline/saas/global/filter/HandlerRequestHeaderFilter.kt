@@ -29,6 +29,8 @@ class HandlerRequestHeaderFilter(private val seq: Sequence): Filter {
         }else{
             ContextUtil.setRequestId(requestId)
         }
+
+        chain?.doFilter(request, response)
     }
 
 }
