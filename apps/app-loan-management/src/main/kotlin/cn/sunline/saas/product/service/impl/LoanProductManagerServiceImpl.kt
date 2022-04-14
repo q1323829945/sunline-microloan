@@ -1,6 +1,7 @@
 package cn.sunline.saas.product.service.impl
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
@@ -44,9 +45,11 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
         checkTermConditions(loanProductData.termConfiguration?.maxValueRange?.days!!,loanProductData.termConfiguration?.minValueRange?.days!!)
         checkAmountConditions(BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!),BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!))
         loanProductData.version = "1"
-        val oldLoanProduct = loanProductService.findByIdentificationCode(loanProductData.identificationCode).firstOrNull()
-        if(oldLoanProduct != null){
-            throw LoanProductBusinessException("This loan's product has already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
+        val oldLoanProduct = loanProductService.findByIdentificationCode(loanProductData.identificationCode).maxByOrNull {
+            it.version
+        }
+        if(oldLoanProduct != null && oldLoanProduct.status == BankingProductStatus.INITIATED){
+            throw LoanProductBusinessException("The version of loan's product has already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val view = loanProductService.register(loanProductData)
         return DTOResponseSuccess(view).response()
@@ -58,17 +61,17 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
     }
 
     override fun updateOne(id: Long, dtoLoanProduct: DTOLoanProductChange): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        checkProductStatus(id)
         checkTermConditions(dtoLoanProduct.termConfiguration?.maxValueRange?.days!!,dtoLoanProduct.termConfiguration?.minValueRange?.days!!)
         checkAmountConditions(BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!),BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!))
         val view = loanProductService.updateLoanProduct(id,dtoLoanProduct)
         return DTOResponseSuccess(view).response()
-
     }
 
-    override fun updateStatus(id: Long, dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-        val loanProduct = loanProductService.updateLoanProductStatus(id,dtoLoanProduct.status)
-        return DTOResponseSuccess(loanProduct).response()
-
+    override fun updateStatus(id: Long, dtoLoanProductStatus: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
+        checkProductStatus(id)
+        val view = loanProductService.updateLoanProductStatus(id,dtoLoanProductStatus.status)
+        return DTOResponseSuccess(view).response()
     }
 
     override fun getProductInfo(identificationCode:String): ResponseEntity<DTOPagedResponseSuccess> {
@@ -93,4 +96,11 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
         }
     }
 
+    private fun checkProductStatus(id: Long){
+        val loanProduct = loanProductService.getLoanProduct(id)
+        val status = loanProduct.status
+        if(BankingProductStatus.INITIATED != status){
+            throw LoanProductBusinessException("The status of product was not INITIATED,non-supported update", ManagementExceptionCode.PRODUCT_STATUS_ERROR)
+        }
+    }
 }

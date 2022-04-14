@@ -18,7 +18,7 @@ data class DTORepaymentScheduleCalculateTrial  (
     var paymentMethod: PaymentMethodType,
     var startDate: Instant,
     var endDate: Instant,
-    var repaymentFrequency: RepaymentFrequency? = null,
+    var repaymentFrequency: RepaymentFrequency = RepaymentFrequency.ONE_MONTH,
     var baseYearDays: BaseYearDays = BaseYearDays.ACCOUNT_YEAR,
     var repaymentDay: Int = 21,
     var repaymentDayType: RepaymentDayType = RepaymentDayType.BASE_LOAN_DAY

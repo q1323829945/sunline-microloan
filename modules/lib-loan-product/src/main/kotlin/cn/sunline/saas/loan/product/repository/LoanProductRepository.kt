@@ -6,6 +6,7 @@ import cn.sunline.saas.loan.product.model.db.LoanProduct
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 /**
  * @title: LoanProductRepository
@@ -34,9 +35,9 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
             "where " +
                 "if(:loanProductType is not null and :loanProductType != '' , loan_product_type =:loanProductType,1=1) " +
             "and " +
-                "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose =:loanPurpose,1=1) " +
+                "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose like %:loanPurpose%,1=1) " +
             "and " +
-                "if(:name is not null and :name != '' , name =:name,1=1)"
+                "if(:name is not null and :name != '' , name like %:name%,1=1)"
             , countQuery = "select count(1) from loan_product lp2 " +
                 "inner join " +
                 "(select identification_code,max(version) max_version from loan_product lp group by identification_code) lp3 " +
@@ -44,14 +45,14 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
                 "where " +
                 "if(:loanProductType is not null and :loanProductType != '' , loan_product_type =:loanProductType,1=1) " +
                 "and " +
-                "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose =:loanPurpose,1=1) " +
+                "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose like %:loanPurpose%,1=1) " +
                 "and " +
-                "if(:name is not null and :name != '' , name =:name,1=1)"
+                "if(:name is not null and :name != '' , name like %:name%,1=1)"
             , nativeQuery = true
     )
-    fun getLoanProductPaged(name:String?,
-                            loanProductType: LoanProductType?,
-                            loanPurpose: String?,
+    fun getLoanProductPaged(@Param("name")name:String?,
+                            @Param("loanProductType")loanProductType: String?,
+                            @Param("loanPurpose")loanPurpose: String?,
                             pageable: Pageable
     ): Page<LoanProduct>
 
