@@ -21,6 +21,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.transaction.Transactional
@@ -117,9 +118,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
     @Transactional
     fun updateLoanProduct(id: Long, loanProductData: DTOLoanProductChange): DTOLoanProductView {
-        loanProductData.version = (loanProductData.version.toInt() + 1).toString()
         val product = objectMapper.convertValue<DTOLoanProductAdd>(loanProductData)
-
         return register(product)
     }
 
@@ -146,18 +145,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         loanPurpose: String?,
         pageable: Pageable
     ): Page<LoanProduct> {
-
-        //            .map {
-//            val customerOffer = this.getLoanProductPaged(it["customerOfferId"].toString().toLong())
-//            DTOCustomerOfferPage(
-//                it["customerOfferId"].toString().toLong(),
-//                it["amount"]?.run { it["amount"].toString() },
-//                customerOffer!!.datetime.millis,
-//                it["productName"].toString(),
-//                ApplyStatus.valueOf(it["status"].toString())
-//            )
-//        }
-        return loanProductRepos.getLoanProductPaged(name, loanProductType, loanPurpose, pageable)
+        return loanProductRepos.getLoanProductPaged(name, loanProductType?.name, loanPurpose, pageable)
     }
 
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
@@ -169,7 +157,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
 
     fun findByIdentificationCode(identificationCode:String):MutableList<DTOLoanProductView>{
         val productList = loanProductRepos.findByIdentificationCode(identificationCode)?:throw LoanProductNotFoundException("Invalid loan product",ManagementExceptionCode.PRODUCT_NOT_FOUND)
-
         var list = ArrayList<DTOLoanProductView>()
         for(product in productList){
             val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)

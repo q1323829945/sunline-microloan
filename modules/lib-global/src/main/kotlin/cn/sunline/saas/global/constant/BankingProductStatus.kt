@@ -7,5 +7,5 @@ package cn.sunline.saas.global.constant
  * @date 2022/3/3 17:20
  */
 enum class BankingProductStatus {
-    INITIATED,ANNOUNCED,SOLD,OBSOLETE,ACTIVE
+    INITIATED,SOLD,OBSOLETE
 }

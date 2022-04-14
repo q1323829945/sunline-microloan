@@ -32,7 +32,7 @@ interface LoanProductManagerService {
 
     fun updateOne(id: Long, dtoLoanProduct: DTOLoanProductChange): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>>
 
-    fun updateStatus(id: Long, dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>>
+    fun updateStatus(id: Long, dtoLoanProductStatus: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>>
 
     fun getProductInfo(identificationCode:String): ResponseEntity<DTOPagedResponseSuccess>
 

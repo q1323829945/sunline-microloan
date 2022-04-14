@@ -1,16 +1,13 @@
 package cn.sunline.saas.repayment.schedule.service
 
 
-import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
-import cn.sunline.saas.repayment.schedule.model.dto.*
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleAdd
 import cn.sunline.saas.repayment.schedule.repository.RepaymentScheduleRepository
 import cn.sunline.saas.seq.Sequence
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -22,9 +19,6 @@ class RepaymentScheduleService(private val repaymentScheduleRepository: Repaymen
 
     @Autowired
     private lateinit var seq: Sequence
-
-    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
 
     @Transactional
     fun register(dtoRepaymentScheduleAdd: DTORepaymentScheduleAdd): RepaymentSchedule {

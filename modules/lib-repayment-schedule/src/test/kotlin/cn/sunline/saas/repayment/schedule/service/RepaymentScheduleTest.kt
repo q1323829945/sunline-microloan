@@ -26,7 +26,6 @@ import java.math.RoundingMode
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration,
-                            @Autowired private var repaymentScheduleDetailService: RepaymentScheduleDetailService,
                             @Autowired private var repaymentScheduleService: RepaymentScheduleService
 ) {
 
@@ -43,37 +42,6 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val result = CalcDateComponent.calcNextRepaymentDateTime(startDate, endDate, repaymentDate)
         Assertions.assertThat(result).isEqualTo(repaymentDate)
     }
-
-    @Test
-    fun `calcCapitalInterest`(){
-        val result1 = CalcRepaymentInstallmentComponent.calcCapitalInstallment(
-            BigDecimal(12000),
-            BigDecimal(0.01),
-            12,
-            RepaymentFrequency.ONE_MONTH
-        )
-        Assertions.assertThat(result1.setScale(2,RoundingMode.HALF_UP)).isEqualTo(BigDecimal(1066.19).setScale(2,RoundingMode.HALF_UP))
-
-        val result2 = CalcRepaymentInstallmentComponent.calcCapitalInstallment(
-            BigDecimal(12000),
-            BigDecimal(0.01),
-            13,
-            RepaymentFrequency.ONE_MONTH
-        )
-        Assertions.assertThat(result2.setScale(2,RoundingMode.HALF_UP)).isEqualTo(BigDecimal(988.98).setScale(2,RoundingMode.HALF_UP))
-    }
-
-
-    @Test
-    fun `calcBaseRepaymentInstallment`(){
-        val result = CalcRepaymentInstallmentComponent.calcBaseRepaymentInstallment(
-            BigDecimal(12000),
-            BigDecimal(0.01),
-        )
-        Assertions.assertThat(result.setScale(2,RoundingMode.HALF_UP)).isEqualTo(BigDecimal(12000.01).setScale(2,RoundingMode.HALF_UP))
-    }
-
-
 
     /**
      * 等额本金 指定还款日，按月
@@ -97,9 +65,9 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
-        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
-        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
-        formatPlan(register)
+//        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+//        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+//        formatPlan(register)
     }
 
 
@@ -335,54 +303,27 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         for (schedule in repaymentSchedule.schedule) {
             val lbmStr =
-                "\t第" + schedule.period + "期" +
-                        "\t还款金额: " + schedule.installment +
-                        "\t本金: " + schedule.principal +
-                        "\t利息: " + schedule.interest +
-                        "\t还款日期：" + schedule.repaymentDate +
-                        "\t还款日期：" + schedule.repaymentDate
-            if (allLoansStr == "") {
-                allLoansStr = lbmStr
-            } else {
-                allLoansStr += """
-              
-              $lbmStr
-              """.trimIndent()
-            }
+                        "\t the" + schedule.period + " period" +
+                        "\t repaymentInstallment: " + schedule.installment +
+                        "\t principal: " + schedule.principal +
+                        "\t interest: " + schedule.interest +
+                        "\t repaymentDate: " + schedule.repaymentDate
+            allLoansStr += lbmStr + "\n\r"
         }
-        logger.info (
-            " \t还款计划编号：${repaymentSchedule.id} " +
-                    "\t贷款利率: ${repaymentSchedule.interestRate} " +
-//                    "\t还款总额：${repaymentSchedule.totalRepayment} " +
-                    "\n\r $allLoansStr"
-        )
+        logger.info("\t scheduleId: ${repaymentSchedule.id} " + "\t interestRate: ${repaymentSchedule.interestRate} \n\r " + "$allLoansStr")
     }
 
     private fun formatPlanView(repaymentSchedule: DTORepaymentScheduleTrialView) {
         var allLoansStr = ""
-        val format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         for (schedule in repaymentSchedule.schedule) {
             val lbmStr =
-                "\t第" + schedule.period + "期" +
-                        "\t还款金额: " + schedule.installment +
-                        "\t本金: " + schedule.principal +
-                        "\t利息: " + schedule.interest +
-                        "\t还款日期：" + schedule.repaymentDate +
-                        "\t还款日期：" + schedule.repaymentDate
-            if (allLoansStr == "") {
-                allLoansStr = lbmStr
-            } else {
-                allLoansStr += """
-              
-              $lbmStr
-              """.trimIndent()
-            }
+                "\t the " + schedule.period + " period" +
+                "\t repaymentInstallment: " + schedule.installment +
+                "\t principal: " + schedule.principal +
+                "\t interest: " + schedule.interest +
+                "\t repaymentDate: " + schedule.repaymentDate
+            allLoansStr += lbmStr + "\n\r"
         }
-        logger.info (
-            " \t还款计划编号：${repaymentSchedule} " +
-                    "\t贷款利率: ${repaymentSchedule.interestRate} " +
-//                    "\t还款总额：${repaymentSchedule.totalRepayment} " +
-                    "\n\r $allLoansStr"
-        )
+        logger.info ("\n\r interestRate: ${repaymentSchedule.interestRate} \n\r" + "$allLoansStr")
     }
 }

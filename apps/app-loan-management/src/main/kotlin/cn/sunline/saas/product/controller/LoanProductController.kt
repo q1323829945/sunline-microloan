@@ -55,8 +55,8 @@ class LoanProductController {
     }
 
     @PutMapping("status/{id}")
-    fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-        return loanProductManagerService.updateStatus(id,dtoLoanProduct)
+    fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProductStatus: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
+        return loanProductManagerService.updateStatus(id,dtoLoanProductStatus)
     }
 
     @GetMapping("{identificationCode}/retrieve")
