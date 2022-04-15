@@ -1,7 +1,6 @@
 package cn.sunline.saas.underwriting.controllers
 
-import cn.sunline.saas.underwriting.controllers.dto.DTOCustomerCreditRating
-import cn.sunline.saas.underwriting.controllers.dto.DTOLoanApplicationData
+import cn.sunline.saas.underwriting.controllers.dto.*
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -43,6 +42,36 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
             integratedConfigurationService.updateCustomerCreditRating(
                 dtoCustomerCreditRating.applId,
                 dtoCustomerCreditRating.customerCreditRate
+            )
+        }
+    }
+
+    @PostMapping("/CustomerCreditRisk")
+    fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.updateCreditRisk(
+                dtoCreditRisk.applId,
+                dtoCreditRisk.creditRisk
+            )
+        }
+    }
+
+    @PostMapping("/RegulatoryCompliance")
+    fun callBackRegulatoryCompliance(@RequestBody(required = false) dtoRegulatoryCompliance: DTORegulatoryCompliance): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.updateRegulatoryCompliance(
+                dtoRegulatoryCompliance.applId,
+                dtoRegulatoryCompliance.regulatoryCompliance
+            )
+        }
+    }
+
+    @PostMapping("/FraudEvaluation")
+    fun callBackFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.updateFraudEvaluation(
+                dtoFraudEvaluation.applId,
+                dtoFraudEvaluation.fraudEvaluation
             )
         }
     }

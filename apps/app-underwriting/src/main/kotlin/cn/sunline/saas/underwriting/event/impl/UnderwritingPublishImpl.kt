@@ -4,6 +4,8 @@ import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.event.dto.DTOExecCreditRisk
+import cn.sunline.saas.underwriting.event.dto.DTOExecFraudEvaluation
+import cn.sunline.saas.underwriting.event.dto.DTOExecRegulatoryCompliance
 import cn.sunline.saas.underwriting.event.dto.DTORetrieveCustomerCreditRating
 import cn.sunline.saas.underwriting.model.db.Underwriting
 import org.springframework.stereotype.Component
@@ -37,6 +39,32 @@ class UnderwritingPublishImpl : UnderwritingPublish {
             PUBSUB_NAME,
             UnderwritingPublishTopic.EXECUTE_CREDIT_RISK.toString(),
             dtoExecCreditRisk
+        )
+    }
+
+    override fun execRegulatoryCompliance(partner: String, underwriting: Underwriting) {
+        val dTOExecRegulatoryCompliance = DTOExecRegulatoryCompliance(
+            underwriting.id,partner,
+            underwriting.creditRisk!!
+        )
+
+        DaprHelper.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.EXECUTE_REGULATORY_COMPLIANCE.toString(),
+            dTOExecRegulatoryCompliance
+        )
+    }
+
+    override fun execFraudEvaluation(partner: String, underwriting: Underwriting) {
+        val dtoExecFraudEvaluation = DTOExecFraudEvaluation(
+            underwriting.id,partner,
+            underwriting.fraudEvaluation!!
+        )
+
+        DaprHelper.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.FRAUD_EVALUATION.toString(),
+            dtoExecFraudEvaluation
         )
     }
 }

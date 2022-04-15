@@ -50,4 +50,32 @@ class UnderwritingService(
             underwriting
         )
     }
+
+    fun updateCreditRisk(applicationId: Long,creditRisk:String){
+        val underwriting = getOne(applicationId) ?: throw UnderwritingNotFound("underwriting data not found")
+        underwriting.creditRisk = creditRisk
+        save(underwriting)
+
+        this.underwritingPublish.execRegulatoryCompliance(
+            underwritingInvoke.getPartnerIntegrated()?.regulatoryCompliancePartner.toString(),
+            underwriting
+        )
+    }
+
+    fun updateRegulatoryCompliance(applicationId: Long,regulatoryCompliance:String){
+        val underwriting = getOne(applicationId) ?: throw UnderwritingNotFound("underwriting data not found")
+        underwriting.regulatoryCompliance = regulatoryCompliance
+        save(underwriting)
+
+        this.underwritingPublish.execFraudEvaluation(
+            underwritingInvoke.getPartnerIntegrated()?.fraudEvaluationPartner.toString(),
+            underwriting
+        )
+    }
+
+    fun updateFraudEvaluation(applicationId: Long,fraudEvaluation:String){
+        val underwriting = getOne(applicationId) ?: throw UnderwritingNotFound("underwriting data not found")
+        underwriting.fraudEvaluation = fraudEvaluation
+        save(underwriting)
+    }
 }

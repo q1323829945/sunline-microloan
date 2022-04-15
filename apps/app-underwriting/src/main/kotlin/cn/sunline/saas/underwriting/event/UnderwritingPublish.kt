@@ -13,4 +13,8 @@ interface UnderwritingPublish {
     fun retrieveCustomerCreditRating(applicationId:Long,partner: String, customerId: Long)
 
     fun execCreditRisk(partner:String,underwriting: Underwriting)
+
+    fun execRegulatoryCompliance(partner: String, underwriting: Underwriting)
+
+    fun execFraudEvaluation(partner: String, underwriting: Underwriting)
 }
