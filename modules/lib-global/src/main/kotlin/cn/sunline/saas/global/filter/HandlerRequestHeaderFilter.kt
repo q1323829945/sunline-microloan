@@ -30,7 +30,8 @@ class HandlerRequestHeaderFilter(private val seq: Sequence): Filter {
             ContextUtil.setRequestId(requestId)
         }
 
-        chain?.doFilter(request, response)
+        request.getRequestDispatcher(httpServletRequest.servletPath).forward(request,response)
+//        chain?.doFilter(request, response)
     }
 
 }

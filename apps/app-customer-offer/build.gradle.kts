@@ -19,10 +19,6 @@ dependencies {
     implementation("commons-httpclient:commons-httpclient:3.1")
     implementation("com.google.code.gson:gson:2.9.0")
 
-    api("io.dapr:dapr-sdk:${daprVersion}")
-    api("io.dapr:dapr-sdk-actors:${daprVersion}")
-    api("io.dapr:dapr-sdk-springboot:${daprVersion}")
-
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))

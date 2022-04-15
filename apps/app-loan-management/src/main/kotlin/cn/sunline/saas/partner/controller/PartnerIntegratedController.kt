@@ -1,6 +1,5 @@
 package cn.sunline.saas.partner.controller
 
-import cn.sunline.saas.partner.integrated.model.db.PartnerIntegrated
 import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.partner.integrated.service.PartnerIntegratedService
 import cn.sunline.saas.response.DTOResponseSuccess

@@ -4,6 +4,7 @@ val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
 val hibernatetypeVersion: String by rootProject.extra
+val daprVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -18,6 +19,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.vladmihalcea:hibernate-types-55:${hibernatetypeVersion}")
+
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-global"))

@@ -19,9 +19,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
 
-    implementation("io.dapr:dapr-sdk:${daprVersion}")
-    implementation("io.dapr:dapr-sdk-springboot:${daprVersion}")
-
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-menu"))

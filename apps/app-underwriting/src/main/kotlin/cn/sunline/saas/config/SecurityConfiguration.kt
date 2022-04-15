@@ -1,12 +1,20 @@
 package cn.sunline.saas.config
 
+import cn.sunline.saas.global.filter.HandlerRequestHeaderFilter
+import cn.sunline.saas.multi_tenant.filter.TenantDomainFilter
+import cn.sunline.saas.seq.Sequence
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration(private val seq: Sequence) : WebSecurityConfigurerAdapter() {
+    override fun configure(web: WebSecurity?) {
+        web!!.ignoring().antMatchers("/**")
+    }
 
     override fun configure(http: HttpSecurity?) {
         http!!
@@ -15,5 +23,6 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests()
             .anyRequest().authenticated()
+
     }
 }

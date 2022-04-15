@@ -1,11 +1,14 @@
 package cn.sunline.saas.underwriting.controllers
 
+import cn.sunline.saas.dapr_wrapper.DaprHelper
+import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.controllers.dto.*
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.dapr.client.domain.HttpExtension
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -33,6 +36,17 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
                 )
             )
         }
+    }
+
+    @PostMapping("/test")
+    fun initiate2(@RequestBody(required = false) dtoApplicationData: DTOLoanApplicationData): String? {
+        return DaprHelper.invoke(
+            "app-loan-management",
+            "/menus",
+            null,
+            HttpExtension.GET,
+            String::class.java
+        )
     }
 
 
