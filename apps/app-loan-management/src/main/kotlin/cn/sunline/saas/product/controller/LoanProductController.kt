@@ -18,6 +18,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
@@ -64,9 +65,14 @@ class LoanProductController {
         return loanProductManagerService.getProductInfo(identificationCode)
     }
 
-    @GetMapping("all")
-    fun getAll(): ResponseEntity<DTOPagedResponseSuccess> {
-        return loanProductManagerService.getAll(pageable = Pageable.unpaged())
+    @GetMapping("{identificationCode}/history")
+    fun getLoanProductHistoryList(@PathVariable identificationCode:String): ResponseEntity<DTOPagedResponseSuccess>{
+        return loanProductManagerService.getLoanProductHistoryList(identificationCode)
+    }
+
+    @GetMapping("allByStatus")
+    fun getAllByStatus(): ResponseEntity<DTOPagedResponseSuccess> {
+        return loanProductManagerService.getLoanProductListByStatus(BankingProductStatus.SOLD,Pageable.unpaged())
     }
 
 }

@@ -53,6 +53,6 @@ class AuthenticationFilter (
         httpServletResponse.contentType = MediaType.APPLICATION_JSON_VALUE
         httpServletResponse.status = HttpServletResponse.SC_BAD_REQUEST
 
-        httpServletResponse.outputStream.println("{\"message\": \"$message\", \"code\": ${exceptionCode.code} }")
+        httpServletResponse.outputStream.println("{\"exceptionMessage\": \"$message\", \"statusCode\": ${exceptionCode.code} }")
     }
 }

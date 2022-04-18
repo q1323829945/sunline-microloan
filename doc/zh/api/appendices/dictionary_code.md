@@ -14,7 +14,7 @@
 |                              | COMMISSION_SALE                          | 受托销售协议   |
 |                              | SERVICING_MANDATE                        | 维护授权协议   |
 |                              | CHANNEL_ACCESS                           | 渠道销售协议   |
-| 贷款产品状态（BankingProductStatus） | INITIATED                                | 初始化      |
+| 贷款产品状态（BankingProductStatus） | INITIATED                                | 已建立      |
 |                              | SOLD                                     | 已发布      |
 |                              | OBSOLETE                                 | 已下架      |
 | 贷款期限类型（LoanTermType）       | ONE_MONTH                                | 一个月      |
