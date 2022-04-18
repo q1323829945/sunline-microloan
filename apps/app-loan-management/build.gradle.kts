@@ -19,6 +19,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
 
+
+//    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-menu"))
