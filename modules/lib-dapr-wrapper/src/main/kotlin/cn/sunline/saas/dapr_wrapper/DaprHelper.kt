@@ -7,6 +7,7 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import io.dapr.client.DaprClientBuilder
 import io.dapr.client.domain.HttpExtension
+import io.dapr.client.domain.InvokeMethodRequest
 import io.dapr.client.domain.Metadata
 
 /**
@@ -29,19 +30,24 @@ object DaprHelper {
     fun <T> invoke(
         applId: String, methodName: String, request: Any?, httpExtension: HttpExtension, clazz: Class<T>
     ): T? {
-        val metadata = mutableMapOf<String, String>()
+
         val result = client.invokeMethod(
-            applId, methodName, request, httpExtension, metadata, clazz
+            applId, methodName, request, setHttpExtension(httpExtension), clazz
         )
+
         return result.block()
     }
 
+
     fun publish(pubsubName: String, topicName: String, data: Any, ttlInSeconds: Long = 1000): Unit {
         metadata[Metadata.TTL_IN_SECONDS] = ttlInSeconds.toString()
-
         client.publishEvent(
             pubsubName, topicName, data, metadata
         ).block()
     }
 
+
+    private fun setHttpExtension(httpExtension: HttpExtension):HttpExtension{
+        return HttpExtension(httpExtension.method,httpExtension.queryParams, metadata)
+    }
 }

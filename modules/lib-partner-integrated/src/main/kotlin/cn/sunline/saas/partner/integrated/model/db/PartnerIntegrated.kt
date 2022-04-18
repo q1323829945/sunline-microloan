@@ -7,6 +7,7 @@ import cn.sunline.saas.partner.integrated.model.RegulatoryCompliancePartner
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -55,8 +56,10 @@ class PartnerIntegrated(
     var fraudEvaluationPartner: FraudEvaluationPartner,
 
     @CreationTimestamp
-    var created: Instant? = null,
+    @Temporal(TemporalType.TIMESTAMP)
+    var created: Date? = null,
 
     @UpdateTimestamp
-    var updated: Instant? = null
+    @Temporal(TemporalType.TIMESTAMP)
+    var updated: Date? = null
 )

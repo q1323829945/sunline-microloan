@@ -8,7 +8,7 @@ import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.dapr.client.domain.HttpExtension
+import io.dapr.Topic
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,54 +38,46 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
         }
     }
 
-    @PostMapping("/test")
-    fun initiate2(@RequestBody(required = false) dtoApplicationData: DTOLoanApplicationData): String? {
-        return DaprHelper.invoke(
-            "app-loan-management",
-            "/menus",
-            null,
-            HttpExtension.GET,
-            String::class.java
-        )
-    }
-
-
+    @Topic(name = "CALL_BACK_CUSTOMER_CREDIT_RATING", pubsubName = "underwriting-pub-sub")
     @PostMapping("/CustomerCreditRating")
     fun callBackCustomerCreditRating(@RequestBody(required = false) dtoCustomerCreditRating: DTOCustomerCreditRating): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCustomerCreditRating(
-                dtoCustomerCreditRating.applId,
-                dtoCustomerCreditRating.customerCreditRate
+                dtoCustomerCreditRating.data.applId,
+                dtoCustomerCreditRating.data.customerCreditRate
             )
         }
     }
 
+    @Topic(name = "CALL_BACK_CREDIT_RISK", pubsubName = "underwriting-pub-sub")
     @PostMapping("/CustomerCreditRisk")
     fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCreditRisk(
-                dtoCreditRisk.applId,
-                dtoCreditRisk.creditRisk
+                dtoCreditRisk.data.applId,
+                dtoCreditRisk.data.creditRisk
             )
         }
     }
 
+    @Topic(name = "CALL_BACK_REGULATORY_COMPLIANCE", pubsubName = "underwriting-pub-sub")
     @PostMapping("/RegulatoryCompliance")
     fun callBackRegulatoryCompliance(@RequestBody(required = false) dtoRegulatoryCompliance: DTORegulatoryCompliance): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateRegulatoryCompliance(
-                dtoRegulatoryCompliance.applId,
-                dtoRegulatoryCompliance.regulatoryCompliance
+                dtoRegulatoryCompliance.data.applId,
+                dtoRegulatoryCompliance.data.regulatoryCompliance
             )
         }
     }
 
+    @Topic(name = "CALL_BACK_CUSTOMER_FRAUD_EVALUATION", pubsubName = "underwriting-pub-sub")
     @PostMapping("/FraudEvaluation")
     fun callBackFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateFraudEvaluation(
-                dtoFraudEvaluation.applId,
-                dtoFraudEvaluation.fraudEvaluation
+                dtoFraudEvaluation.data.applId,
+                dtoFraudEvaluation.data.fraudEvaluation
             )
         }
     }

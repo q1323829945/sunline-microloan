@@ -20,9 +20,12 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
         web!!.ignoring().antMatchers("/auth/login"
             ,"/menus"
             ,"/DocumentTemplate/download/**"
-            ,"RatePlan/all"
-            ,"roles/all"
-            ,"permissions/all")
+            ,"/RatePlan/all"
+            ,"/menus/test"
+            ,"/roles/all"
+            ,"/permissions/all"
+            ,"/PartnerIntegrated/Retrieve"
+            ,"/PartnerIntegrated/test")
     }
 
     override fun configure(http: HttpSecurity?) {
@@ -31,6 +34,7 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
                 .httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/PartnerIntegrated/Retrieve").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(TenantDomainFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)

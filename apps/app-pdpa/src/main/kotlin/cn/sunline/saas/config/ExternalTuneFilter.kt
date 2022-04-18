@@ -14,16 +14,16 @@ class ExternalTuneFilter : GenericFilterBean()  {
 
         val httpServletRequest = request as HttpServletRequest
 
-        val externalTune = httpServletRequest.getHeader("ExternalTune")
-
-        externalTune?: run {
-            handleException(
-                response!!,
-                ManagementExceptionCode.AUTHORIZATION_TOKEN_VALIDATION_FAILED,
-                "Authentication validation failed"
-            )
-            return
-        }
+//        val externalTune = httpServletRequest.getHeader("ExternalTune")
+//
+//        externalTune?: run {
+//            handleException(
+//                response!!,
+//                ManagementExceptionCode.AUTHORIZATION_TOKEN_VALIDATION_FAILED,
+//                "Authentication validation failed"
+//            )
+//            return
+//        }
 
         request.getRequestDispatcher(httpServletRequest.servletPath).forward(request,response)
     }

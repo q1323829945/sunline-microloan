@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @SpringBootApplication
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled=true)
-class ConsumerLoanApplication
+class CustomerCreditRatingWrapperApplication
 
 fun main(args : Array<String>) {
-    runApplication<ConsumerLoanApplication>(*args)
+    runApplication<CustomerCreditRatingWrapperApplication>(*args)
 }

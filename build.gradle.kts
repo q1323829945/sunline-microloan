@@ -49,6 +49,11 @@ subprojects {
 	dependencies {
 		implementation(kotlin("reflect"))
 		implementation(kotlin("stdlib-jdk8"))
+
+
+		api("io.dapr:dapr-sdk:${daprVersion}")
+		api("io.dapr:dapr-sdk-springboot:${daprVersion}")
+		api("com.squareup.okhttp3:okhttp:4.9.0")
 	}
 
 	configurations {
@@ -85,6 +90,9 @@ subprojects {
 }
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
+
+
 }
 repositories {
 	mavenCentral()

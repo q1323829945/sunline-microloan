@@ -1,8 +1,7 @@
 package cn.sunline.saas.global.filter
 
 import cn.sunline.saas.global.constant.meta.Header
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setRequestId
+import cn.sunline.saas.global.util.*
 import cn.sunline.saas.seq.Sequence
 import org.springframework.stereotype.Component
 import javax.servlet.Filter
@@ -30,8 +29,15 @@ class HandlerRequestHeaderFilter(private val seq: Sequence): Filter {
             ContextUtil.setRequestId(requestId)
         }
 
+        httpServletRequest.getHeader(Header.USER_AUTHORIZATION.name)?.run {
+            ContextUtil.setUserId(this)
+        }
+
+        httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.name)?.run {
+            ContextUtil.setTenant(this)
+        }
+
         request.getRequestDispatcher(httpServletRequest.servletPath).forward(request,response)
-//        chain?.doFilter(request, response)
     }
 
 }

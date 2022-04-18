@@ -1,6 +1,7 @@
 package cn.sunline.saas.rbac.filters
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setUserId
 import cn.sunline.saas.rbac.services.TokenService
@@ -22,7 +23,7 @@ class AuthenticationFilter (
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
         val authToken = httpServletRequest.getHeader("X-Authorization")
-        val authUsername = httpServletRequest.getHeader("X-Authorization-Username")?: run{
+        val authUsername = httpServletRequest.getHeader(Header.USER_AUTHORIZATION.name)?: run{
             handleException(response!!, ManagementExceptionCode.AUTHORIZATION_USERNAME_MISSING, "Missing authorization username")
             return
         }

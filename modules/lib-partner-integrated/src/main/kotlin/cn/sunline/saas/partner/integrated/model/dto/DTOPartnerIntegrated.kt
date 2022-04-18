@@ -6,9 +6,9 @@ import cn.sunline.saas.partner.integrated.model.FraudEvaluationPartner
 import cn.sunline.saas.partner.integrated.model.RegulatoryCompliancePartner
 
 data class DTOPartnerIntegrated(
-    val id: Long,
-    val customerCreditRatingPartner: CustomerCreditRatingPartner,
-    val creditRiskPartner: CreditRiskPartner,
-    val regulatoryCompliancePartner: RegulatoryCompliancePartner,
-    val fraudEvaluationPartner: FraudEvaluationPartner
+    val id: Long? = null,
+    val customerCreditRatingPartner: CustomerCreditRatingPartner? = null,
+    val creditRiskPartner: CreditRiskPartner? = null,
+    val regulatoryCompliancePartner: RegulatoryCompliancePartner? = null,
+    val fraudEvaluationPartner: FraudEvaluationPartner? = null
 )

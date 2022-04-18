@@ -7,8 +7,10 @@ import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.dapr.Topic
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 
 @RestController
@@ -29,10 +31,9 @@ class PartnerIntegratedController(private val partnerIntegratedService: PartnerI
     }
 
     @GetMapping("/Retrieve")
-    fun retrieve(): ResponseEntity<DTOResponseSuccess<DTOPartnerIntegrated>> {
+    fun retrieve(): DTOPartnerIntegrated? {
         val integratedConfiguration = partnerIntegratedService.get() ?: Unit
-        val responseIntegratedConfiguration =
-            objectMapper.convertValue<DTOPartnerIntegrated>(integratedConfiguration)
-        return DTOResponseSuccess(responseIntegratedConfiguration).response()
+        return objectMapper.convertValue<DTOPartnerIntegrated>(integratedConfiguration)
     }
+
 }
