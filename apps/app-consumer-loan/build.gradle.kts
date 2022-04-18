@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
     implementation(project(":lib-dapr-wrapper"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-global"))
 
