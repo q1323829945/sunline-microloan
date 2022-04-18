@@ -27,7 +27,7 @@ val redissonVersion by extra { "3.16.8" }
 val nettyVersion by extra { "4.1.74.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }
 val logVersion by extra { "2.1.21" }
-val daprVersion by extra { "1.4.0"}
+val daprVersion by extra { "1.5.0"}
 val hibernatetypeVersion by extra {"2.15.1"}
 
 subprojects {
@@ -50,10 +50,6 @@ subprojects {
 		implementation(kotlin("reflect"))
 		implementation(kotlin("stdlib-jdk8"))
 
-
-		implementation("io.dapr:dapr-sdk:${daprVersion}")
-		implementation("io.dapr:dapr-sdk-springboot:${daprVersion}")
-		implementation("com.squareup.okhttp3:okhttp:4.9.0")
 	}
 
 	configurations {
