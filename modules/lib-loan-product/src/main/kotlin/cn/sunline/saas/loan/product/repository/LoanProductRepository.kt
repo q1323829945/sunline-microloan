@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.product.repository
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
+import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import org.springframework.data.domain.Page
@@ -18,6 +19,7 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
 
     fun findByIdentificationCode(identificationCode:String):MutableList<LoanProduct>?
 
+    fun findByIdentificationCodeAndStatus(identificationCode:String,bankingProductStatus: BankingProductStatus):MutableList<LoanProduct>?
 
     @Query(value ="select lp2.id," +
                     "lp2.description," +
@@ -30,9 +32,9 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
                     "lp2.`version` " +
             "from loan_product lp2 " +
             "inner join " +
-                "(select identification_code,max(version) max_version from loan_product lp group by identification_code) lp3 " +
+                "(select identification_code,max(version) max_version from loan_product lp group by identification_code,version) lp3 " +
             "on lp2.identification_code = lp3.identification_code and lp2 .version =lp3.max_version " +
-            "where " +
+            "where status <> 'OBSOLETE' and " +
                 "if(:loanProductType is not null and :loanProductType != '' , loan_product_type =:loanProductType,1=1) " +
             "and " +
                 "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose like %:loanPurpose%,1=1) " +
@@ -40,9 +42,9 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
                 "if(:name is not null and :name != '' , name like %:name%,1=1)"
             , countQuery = "select count(1) from loan_product lp2 " +
                 "inner join " +
-                "(select identification_code,max(version) max_version from loan_product lp group by identification_code) lp3 " +
+                "(select identification_code,max(version) max_version from loan_product lp group by identification_code,version) lp3 " +
                 "on lp2.identification_code = lp3.identification_code and lp2 .version =lp3.max_version " +
-                "where " +
+                "where  status <> 'OBSOLETE' and " +
                 "if(:loanProductType is not null and :loanProductType != '' , loan_product_type =:loanProductType,1=1) " +
                 "and " +
                 "if(:loanPurpose is not null and :loanPurpose != '' , loan_purpose like %:loanPurpose%,1=1) " +
@@ -68,9 +70,10 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
             "lp2.`version` " +
             "from loan_product lp2 " +
             "inner join " +
-            "(select identification_code,max(version) max_version from loan_product lp group by identification_code) lp3 " +
+            "(select identification_code,max(version) max_version,status from loan_product lp group by identification_code,status having status = :bankingProductStatus) lp3 " +
             "on lp2.identification_code = lp3.identification_code and lp2 .version =lp3.max_version "
         , nativeQuery = true
     )
-    fun getAllLoanProduct(pageable: Pageable): Page<LoanProduct>
+    fun getLoanProductListByStatus(@Param("bankingProductStatus")bankingProductStatus: String,pageable: Pageable): Page<LoanProduct>
+
 }

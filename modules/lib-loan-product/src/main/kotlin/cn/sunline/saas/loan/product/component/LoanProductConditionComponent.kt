@@ -41,7 +41,7 @@ class LoanProductConditionComponent(
         return condition
     }
 
-    fun updateTermCondition(id:Long,maxTerm: LoanTermType?, minTerm: LoanTermType?,productId:Long): String {
+    fun updateTermCondition(id:Long,maxTerm: LoanTermType?, minTerm: LoanTermType?,productId:Long): Condition {
         val condition = Condition(id, ConditionType.TERM.name, ConditionType.TERM.getMarker(),productId)
         var maxCondition: BigDecimal? = null
         if (maxTerm != null) {
@@ -53,7 +53,7 @@ class LoanProductConditionComponent(
         }
 
         condition.setValue(maxCondition, minCondition)
-        return condition.description
+        return condition
     }
 
 }

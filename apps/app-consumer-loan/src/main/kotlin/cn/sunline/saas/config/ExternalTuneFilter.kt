@@ -28,12 +28,12 @@ class ExternalTuneFilter : GenericFilterBean()  {
         request.getRequestDispatcher(httpServletRequest.servletPath).forward(request,response)
     }
 
-    private fun handleException(response: ServletResponse, exceptionCode: ManagementExceptionCode, message: String) {
+    private fun handleException(response: ServletResponse, exceptionCode: ManagementExceptionCode, exceptionMessage: String) {
         val httpServletResponse = response as HttpServletResponse
         httpServletResponse.contentType = MediaType.APPLICATION_JSON_VALUE
         httpServletResponse.status = HttpServletResponse.SC_BAD_REQUEST
-
-        httpServletResponse.outputStream.println("{\"message\": \"$message\", \"code\": ${exceptionCode.code} }")
+//        AuthenticationException
+        httpServletResponse.outputStream.println("{\"exceptionMessage\": \"$exceptionMessage\", \"statusCode\": ${exceptionCode.code} }")
     }
 
 }
