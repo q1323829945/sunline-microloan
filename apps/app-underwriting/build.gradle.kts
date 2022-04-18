@@ -4,7 +4,6 @@ val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
 val hibernatetypeVersion: String by rootProject.extra
-val daprVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")

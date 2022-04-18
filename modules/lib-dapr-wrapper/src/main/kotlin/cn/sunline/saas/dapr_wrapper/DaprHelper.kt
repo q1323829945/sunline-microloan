@@ -7,7 +7,6 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import io.dapr.client.DaprClientBuilder
 import io.dapr.client.domain.HttpExtension
-import io.dapr.client.domain.InvokeMethodRequest
 import io.dapr.client.domain.Metadata
 
 /**
