@@ -2,7 +2,6 @@ package cn.sunline.saas.credit.rating.controllers
 
 import cn.sunline.saas.credit.rating.dto.DTOCreditRating
 import cn.sunline.saas.credit.rating.service.CustomerCreditRatingService
-import io.dapr.Topic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,8 +21,6 @@ class CustomerCreditRatingController {
     @Autowired
     private lateinit var customerCreditRatingService: CustomerCreditRatingService
 
-
-    @Topic(name = "RETRIEVE_CUSTOMER_CREDIT_RATING", pubsubName = "underwriting-pub-sub")
     @PostMapping
     fun getCreditRating(@RequestBody(required = false) creditRating: DTOCreditRating): Mono<Unit> {
         //TODO:

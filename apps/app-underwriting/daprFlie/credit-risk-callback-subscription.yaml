@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: CALL_BACK_CREDIT_RISK
+spec:
+  topic: CALL_BACK_CREDIT_RISK
+  route: /Underwriting/CreditRisk
+  pubsubname: underwriting-pub-sub
+scopes:
+  - app-underwriting
+

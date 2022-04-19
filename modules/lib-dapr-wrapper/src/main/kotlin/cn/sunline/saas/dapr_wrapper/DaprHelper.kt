@@ -46,9 +46,9 @@ object DaprHelper {
     }
 
 
-    fun <T> binding(bindingName:String,bindingOperation:String,clazz: T):Unit{
+    fun <T> binding(bindingName:String,bindingOperation:String,data: Any,clazz: Class<T>):Unit{
         client.invokeBinding(
-            bindingName,bindingOperation,clazz
+            bindingName,bindingOperation,data, metadata,clazz
         ).block()
     }
 

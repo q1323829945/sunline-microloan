@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: EXECUTE_REGULATORY_COMPLIANCE
+spec:
+  topic: EXECUTE_REGULATORY_COMPLIANCE
+  route: /RegulatoryCompliance
+  pubsubname: underwriting-pub-sub
+scopes:
+- app-regulatory-compliance-wrapper
+

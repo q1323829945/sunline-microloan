@@ -1,6 +1,5 @@
 package cn.sunline.saas.loan.controllers
 
-import cn.sunline.saas.loan.dto.DTOLoanApplication
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.loan.service.ConsumerRepaymentScheduleService
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import reactor.core.publisher.Mono
 
 /**
  * @title: ConsumerLoanController
@@ -27,7 +25,7 @@ class ConsumerLoanController {
     private lateinit var consumerRepaymentScheduleService: ConsumerRepaymentScheduleService
 
     @PostMapping("/Initiate")
-    fun initiate(dtoLoanApplication: DTOLoanApplication){
+    fun initiate(){
     }
 
 

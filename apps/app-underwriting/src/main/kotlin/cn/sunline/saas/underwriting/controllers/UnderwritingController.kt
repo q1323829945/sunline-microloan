@@ -6,7 +6,6 @@ import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.dapr.Topic
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,8 +24,6 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-
-    @Topic(name = "INITIATE_UNDERWRITING", pubsubName = "underwriting-pub-sub")
     @PostMapping("/Initiate")
     fun initiate(@RequestBody(required = false) dtoApplication: DTOLoanApplication): Mono<Unit> {
         return Mono.fromRunnable {
@@ -38,7 +35,6 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
         }
     }
 
-    @Topic(name = "CALL_BACK_CUSTOMER_CREDIT_RATING", pubsubName = "underwriting-pub-sub")
     @PostMapping("/CustomerCreditRating")
     fun callBackCustomerCreditRating(@RequestBody(required = false) dtoCustomerCreditRating: DTOCustomerCreditRating): Mono<Unit> {
         return Mono.fromRunnable {
@@ -49,7 +45,6 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
         }
     }
 
-    @Topic(name = "CALL_BACK_CREDIT_RISK", pubsubName = "underwriting-pub-sub")
     @PostMapping("/CreditRisk")
     fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
         return Mono.fromRunnable {
@@ -60,7 +55,6 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
         }
     }
 
-    @Topic(name = "CALL_BACK_REGULATORY_COMPLIANCE", pubsubName = "underwriting-pub-sub")
     @PostMapping("/RegulatoryCompliance")
     fun callBackRegulatoryCompliance(@RequestBody(required = false) dtoRegulatoryCompliance: DTORegulatoryCompliance): Mono<Unit> {
         return Mono.fromRunnable {
@@ -71,7 +65,6 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
         }
     }
 
-    @Topic(name = "CALL_BACK_CUSTOMER_FRAUD_EVALUATION", pubsubName = "underwriting-pub-sub")
     @PostMapping("/FraudEvaluation")
     fun callBackFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
         return Mono.fromRunnable {

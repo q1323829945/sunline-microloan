@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: CALL_BACK_CUSTOMER_CREDIT_RATING
+spec:
+  topic: CALL_BACK_CUSTOMER_CREDIT_RATING
+  route: /Underwriting/CustomerCreditRating
+  pubsubname: underwriting-pub-sub
+scopes:
+  - app-underwriting
+
