@@ -1,7 +1,5 @@
 package cn.sunline.saas.underwriting.controllers
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
-import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.controllers.dto.*
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.service.UnderwritingService
@@ -27,12 +25,14 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+
+    @Topic(name = "INITIATE_UNDERWRITING", pubsubName = "underwriting-pub-sub")
     @PostMapping("/Initiate")
-    fun initiate(@RequestBody(required = false) dtoApplicationData: DTOLoanApplicationData): Mono<Unit> {
+    fun initiate(@RequestBody(required = false) dtoApplication: DTOLoanApplication): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.initiate(
                 objectMapper.convertValue<UnderwritingApplicationData>(
-                    dtoApplicationData
+                    dtoApplication.data
                 )
             )
         }
@@ -50,7 +50,7 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     }
 
     @Topic(name = "CALL_BACK_CREDIT_RISK", pubsubName = "underwriting-pub-sub")
-    @PostMapping("/CustomerCreditRisk")
+    @PostMapping("/CreditRisk")
     fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCreditRisk(

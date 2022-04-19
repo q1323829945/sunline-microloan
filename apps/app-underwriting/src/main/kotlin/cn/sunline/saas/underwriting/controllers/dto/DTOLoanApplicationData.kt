@@ -6,6 +6,10 @@ package cn.sunline.saas.underwriting.controllers.dto
  * @author Kevin-Cui
  * @date 2022/4/8 16:31
  */
+data class DTOLoanApplication(
+    val data:DTOLoanApplicationData
+)
+
 data class DTOLoanApplicationData (
     val applId:Long,
     val detail:DTODetail,

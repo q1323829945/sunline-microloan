@@ -22,6 +22,8 @@ class HandlerRequestHeaderFilter(private val seq: Sequence): Filter {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
+
+        println(httpServletRequest.requestURI)
         val requestId = httpServletRequest.getHeader(Header.REQUEST_ID.name)
         if(requestId.isNullOrEmpty()){
             ContextUtil.setRequestId(seq.nextId().toString())

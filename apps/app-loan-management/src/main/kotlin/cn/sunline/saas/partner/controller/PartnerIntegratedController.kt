@@ -7,8 +7,10 @@ import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import io.dapr.Topic
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Mono
 
 
 @RestController
@@ -34,4 +36,12 @@ class PartnerIntegratedController(private val partnerIntegratedService: PartnerI
         return objectMapper.convertValue<DTOPartnerIntegrated>(integratedConfiguration)
     }
 
+    @Topic(name = "RETRIEVE_CUSTOMER_CREDIT_RATING", pubsubName = "underwriting-pub-sub")
+    @PostMapping("/test")
+    fun getCreditRisk(@RequestBody(required = false) str:String): Mono<Unit> {
+        println(str)
+        return Mono.fromRunnable(){
+//            creditRiskService.getCreditRisk(dtoCreditRisk)
+        }
+    }
 }
