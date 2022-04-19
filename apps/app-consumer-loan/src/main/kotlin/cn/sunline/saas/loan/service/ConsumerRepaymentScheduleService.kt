@@ -11,7 +11,7 @@ import java.math.BigDecimal
 @Service
 interface ConsumerRepaymentScheduleService {
 
-    fun initiate(dtoLoanApplication: DTOLoanApplication)
+    fun initiate()
 
     fun calculate(productId: Long,amount: BigDecimal,term: Int): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
 

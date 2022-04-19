@@ -64,7 +64,10 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    override fun initiate(dtoLoanApplication: DTOLoanApplication) {
+    override fun initiate() {
+    }
+
+    private fun initiateUnderwriting(dtoLoanApplication: DTOLoanApplication) {
         dtoLoanApplication.applId = ContextUtil.getRequestId().toLong()
         DaprHelper.publish(
             "underwriting-pub-sub",

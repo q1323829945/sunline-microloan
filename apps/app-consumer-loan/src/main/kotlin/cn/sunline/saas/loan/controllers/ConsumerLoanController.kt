@@ -27,10 +27,7 @@ class ConsumerLoanController {
     private lateinit var consumerRepaymentScheduleService: ConsumerRepaymentScheduleService
 
     @PostMapping("/Initiate")
-    fun initiate(dtoLoanApplication: DTOLoanApplication) : Mono<Unit> {
-        return Mono.fromRunnable(){
-            consumerRepaymentScheduleService.initiate(dtoLoanApplication)
-        }
+    fun initiate(dtoLoanApplication: DTOLoanApplication){
     }
 
 
