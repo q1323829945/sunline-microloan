@@ -1,5 +1,7 @@
 package cn.sunline.saas.loan.agreement.service
 
+import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementAccount
+import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
@@ -59,6 +61,10 @@ class LoanAgreementServiceTest {
         val lender = mutableListOf<Long>()
         lender.add(2)
 
+        val lendingAccount = DTODisbursementAccount("123455","120")
+        val paymentAccount = mutableListOf(DTODisbursementAccount("123455","120"))
+        val disbursementArrangement = DTODisbursementArrangementAdd(paymentAccount,lendingAccount)
+
         val dtoLoanAgreementAdd =
             DTOLoanAgreementAdd(
                 productId = 1,
@@ -69,7 +75,8 @@ class LoanAgreementServiceTest {
                 repaymentArrangement = dtoRepaymentArrangementAdd,
                 feeArrangement = feeArrangement,
                 borrower = 1,
-                lender = lender
+                lender = lender,
+                disbursementArrangement = disbursementArrangement
             )
         val actual = loanAgreementService.registered(dtoLoanAgreementAdd)
 

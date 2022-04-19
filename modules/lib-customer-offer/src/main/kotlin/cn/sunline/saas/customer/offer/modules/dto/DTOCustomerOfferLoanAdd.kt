@@ -1,10 +1,10 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.OwnershipType
-import cn.sunline.saas.global.constant.CurrencyType
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
-import cn.sunline.saas.global.model.Country
+import cn.sunline.saas.global.model.CountryType
 
 data class DTOCustomerOfferLoanAdd (
         val loan:DTOLoan?,
@@ -19,11 +19,11 @@ data class DTOCustomerOfferLoanAdd (
 
 
 data class DTOLoan(
-        val amount:String,
-        val currency: CurrencyType,
-        val term: LoanTermType,
-        val local: YesOrNo,
-        val employ:String,
+    val amount:String,
+    val currency: CurrencyType,
+    val term: LoanTermType,
+    val local: YesOrNo,
+    val employ:String,
 )
 
 data class DTOCompany(
@@ -55,7 +55,7 @@ data class DTOGuarantor(
 data class DTOGuarantors(
         val name:String,
         val NRIC:String,
-        val nationality: Country,
+        val nationality: CountryType,
         val mobileArea:String,
         val mobileNumber:String,
         val email:String,

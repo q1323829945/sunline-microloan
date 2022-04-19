@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.agreement.model.dto
 
+import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
@@ -20,5 +21,6 @@ data class DTOLoanAgreementAdd(
     val repaymentArrangement: DTORepaymentArrangementAdd,
     val feeArrangement: MutableList<DTOFeeArrangementAdd>,
     val borrower:Long,
-    val lender: MutableList<Long>
+    val lender: MutableList<Long>,
+    val disbursementArrangement:DTODisbursementArrangementAdd
 )

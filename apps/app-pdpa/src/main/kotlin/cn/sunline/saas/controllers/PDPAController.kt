@@ -1,6 +1,6 @@
 package cn.sunline.saas.controllers
 
-import cn.sunline.saas.global.model.Country
+import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.pdpa.factory.PDPAFactory
 import cn.sunline.saas.pdpa.modules.PDPAInformation
 import cn.sunline.saas.pdpa.services.PDPAService
@@ -25,7 +25,7 @@ class PDPAController {
 
     @GetMapping("{countryCode}/retrieve")
     fun getPDPAInformation(@PathVariable countryCode: String): ResponseEntity<DTOResponseSuccess<PDPAInformation>> {
-        val pdpa = pdpaFactory.getInstance(Country.valueOf(countryCode)).getPDPA()
+        val pdpa = pdpaFactory.getInstance(CountryType.valueOf(countryCode)).getPDPA()
         return DTOResponseSuccess(pdpa).response()
     }
 

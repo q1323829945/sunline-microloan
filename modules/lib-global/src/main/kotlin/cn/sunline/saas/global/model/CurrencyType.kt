@@ -1,4 +1,4 @@
-package cn.sunline.saas.global.constant
+package cn.sunline.saas.global.model
 
 enum class CurrencyType(
         val number:String,

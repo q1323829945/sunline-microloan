@@ -6,7 +6,7 @@ package cn.sunline.saas.global.model
  * @author Kevin-Cui
  * @date 2022/3/21 11:43
  */
-enum class Country(
+enum class CountryType(
     val countryCode: String,
     val countryName: String,
     val numberCode: String,

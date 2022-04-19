@@ -13,9 +13,9 @@ class CountryTest {
 
     @Test
     fun `enum item`(){
-        assertThat(Country.values().size).isEqualTo(16)
+        assertThat(CountryType.values().size).isEqualTo(16)
 
-        val china = Country.CHN
+        val china = CountryType.CHN
         assertThat(china.countryCode).isEqualTo("CHN")
         assertThat(china.countryName).isEqualTo("China")
         assertThat(china.numberCode).isEqualTo("156")
