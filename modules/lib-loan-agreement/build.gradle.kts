@@ -8,6 +8,7 @@ dependencies {
     api(project(":lib-interest-arrangement"))
     api(project(":lib-fee-arrangement"))
     api(project(":lib-repayment-arrangement"))
+    implementation(project(":lib-disbursement"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
 

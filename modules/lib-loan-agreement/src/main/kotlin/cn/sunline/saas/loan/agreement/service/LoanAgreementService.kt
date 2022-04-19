@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.agreement.service
 
+import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.interest.arrangement.service.InterestArrangementService
 import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
@@ -34,6 +35,9 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
     @Autowired
     private lateinit var feeArrangementService: FeeArrangementService
 
+    @Autowired
+    private lateinit var disbursementArrangementService: DisbursementArrangementService
+
     @Transactional
     fun registered(dtoLoanAgreementAdd: DTOLoanAgreementAdd): DTOLoanAgreementView {
         val loanAgreement = save(loanAgreementFactory.instance(dtoLoanAgreementAdd))
@@ -43,8 +47,15 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         val repaymentArrangement =
             repaymentArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.repaymentArrangement)
         val feeArrangement = feeArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.feeArrangement)
+        val disbursementArrangement =
+            disbursementArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.disbursementArrangement)
 
-
-        return DTOLoanAgreementView(loanAgreement, interestArrangement, repaymentArrangement, feeArrangement)
+        return DTOLoanAgreementView(
+            loanAgreement,
+            interestArrangement,
+            repaymentArrangement,
+            feeArrangement,
+            disbursementArrangement
+        )
     }
 }
