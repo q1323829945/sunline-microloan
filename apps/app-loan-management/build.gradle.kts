@@ -37,8 +37,5 @@ dependencies {
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-partner-integrated"))
 
-
-    implementation(project(":lib-dapr-wrapper"))
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
