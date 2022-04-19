@@ -8,6 +8,8 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.service.InterestFeatureService
+import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
+import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.component.LoanProductConditionComponent
 import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.loan.product.model.ConditionType
@@ -58,9 +60,17 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     @Autowired
     private lateinit var feeProductFeatureService: FeeFeatureService
 
+    @Autowired
+    private lateinit var loanUploadConfigureService: LoanUploadConfigureService
+
     @Transactional
     fun register(loanProductData: DTOLoanProductAdd): DTOLoanProductView {
         val newProductId = seq.nextId()
+        val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
+        loanProductData.loanUploadConfigureFeatures?.forEach{
+            val loanUploadConfigure = loanUploadConfigureService.getOne(it) ?: throw Exception("loanUploadConfigure Not Found")
+            loanUploadConfigureList.add(loanUploadConfigure)
+        }
         val loanProductAdd = LoanProduct(
             newProductId,
             loanProductData.identificationCode,
@@ -68,8 +78,11 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
             loanProductData.version!!,
             loanProductData.description,
             loanProductData.loanProductType,
-            loanProductData.loanPurpose
+            loanProductData.loanPurpose,
+            loanUploadConfigureList
         )
+
+
 
         loanProductData.amountConfiguration?.apply {
             loanProductAdd.configurationOptions?.add(
@@ -108,11 +121,8 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         }
 
         val loanProduct = loanProductRepos.save(loanProductAdd)
-
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
-
         setConfigurationOptions(loanProduct,dtoLoanProduct)
-
         dtoLoanProduct.interestFeature = interestFeature
         dtoLoanProduct.repaymentFeature = repaymentFeature
         dtoLoanProduct.feeFeatures = feeFeatures
@@ -133,7 +143,6 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         dtoLoanProduct.interestFeature = interestFeature
         dtoLoanProduct.repaymentFeature = repaymentFeature
         dtoLoanProduct.feeFeatures = feeFeatures
-
         return dtoLoanProduct
     }
 
@@ -219,6 +228,13 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
     @Transactional
     fun updateLoanProduct(id:Long,loanProductData: DTOLoanProductChange): DTOLoanProductView {
         val oldLoanProduct = this.getOne(id)?:throw Exception("Invalid loan product")
+
+        val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
+        loanProductData.loanUploadConfigureFeatures?.forEach{
+            val loanUploadConfigure = loanUploadConfigureService.getOne(it) ?: throw Exception("loanUploadConfigure Not Found")
+            loanUploadConfigureList.add(loanUploadConfigure)
+        }
+        oldLoanProduct.loanUploadConfigureFeatures = loanUploadConfigureList
 
         //update loan product
         loanProductData.amountConfiguration?.apply {
@@ -332,5 +348,9 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         }
 
         return dtoLoanProduct
+    }
+
+    fun getLoanProductLoanUploadConfigureMapping(loanUploadConfigureId: Long): Long{
+        return loanProductRepos.getLoanProductLoanUploadConfigureMapping(loanUploadConfigureId)
     }
 }

@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.product.model.db
 
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.rule.engine.model.Condition
@@ -45,6 +46,14 @@ class LoanProduct(
     @NotNull
     @Column(name = "loan_purpose", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
     var loanPurpose: String,
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "loan_product_upload_configure_mapping",
+        joinColumns = [JoinColumn(name = "product_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "loan_upload_configure_id", referencedColumnName = "id")]
+    )
+    var loanUploadConfigureFeatures: MutableList<LoanUploadConfigure>? = mutableListOf()
 ) : MultiTenant {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull
         ])
 class LoanUploadConfigure (
         @Id
-        var id: Long? = null,
+        var id: Long,
 
         @NotNull
         @Column(name = "name", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
@@ -24,10 +24,6 @@ class LoanUploadConfigure (
         @NotNull
         @Column( nullable = false, columnDefinition = "tinyint(1) not null")
         var required: Boolean,
-
-        @NotNull
-        @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
-        var productId: Long,
 
         @Column(nullable = false, columnDefinition = "tinyint(1) default false")
         @NotNull

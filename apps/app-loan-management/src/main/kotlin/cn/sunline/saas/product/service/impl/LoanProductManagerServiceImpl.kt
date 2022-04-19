@@ -48,6 +48,7 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
         val oldLoanProduct = loanProductService.findByIdentificationCode(loanProductData.identificationCode).maxByOrNull {
             it.version
         }
+
         if(oldLoanProduct != null && oldLoanProduct.status == BankingProductStatus.INITIATED){
             throw LoanProductBusinessException("The version of loan's product has already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
