@@ -31,7 +31,6 @@ dependencies {
     implementation(project(":lib-dapr-wrapper"))
 
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
-    implementation("com.google.code.gson:gson:2.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

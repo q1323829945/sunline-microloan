@@ -46,6 +46,13 @@ object DaprHelper {
     }
 
 
+    fun <T> binding(bindingName:String,bindingOperation:String,clazz: T):Unit{
+        client.invokeBinding(
+            bindingName,bindingOperation,clazz
+        ).block()
+    }
+
+
     private fun setHttpExtension(httpExtension: HttpExtension):HttpExtension{
         return HttpExtension(httpExtension.method,httpExtension.queryParams, metadata)
     }
