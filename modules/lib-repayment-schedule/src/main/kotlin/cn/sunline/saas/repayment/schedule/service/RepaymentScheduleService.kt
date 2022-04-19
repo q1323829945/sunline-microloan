@@ -43,18 +43,14 @@ class RepaymentScheduleService(private val repaymentScheduleRepository: Repaymen
         val repaymentSchedule = RepaymentSchedule(
             id = repaymentScheduleId,
             installment = totalRepayment.subtract(totalInterest),
-            term = dtoRepaymentScheduleAdd.term,
+            term = dtoRepaymentScheduleAdd.term!!,
             interestRate = dtoRepaymentScheduleAdd.interestRate,
-//            totalInterest = totalInterest,
-//            totalRepayment = totalRepayment,
             schedule = repaymentScheduleDetail
         )
         return save(repaymentSchedule)
     }
 
     fun updateOne(oldRepaymentSchedule: RepaymentSchedule, newRepaymentSchedule: RepaymentSchedule): RepaymentSchedule {
-//        oldRepaymentSchedule.totalRepayment = newRepaymentSchedule.totalRepayment
-//        oldRepaymentSchedule.totalInterest = newRepaymentSchedule.totalInterest
         oldRepaymentSchedule.interestRate = newRepaymentSchedule.interestRate
         oldRepaymentSchedule.schedule = newRepaymentSchedule.schedule
         return save(oldRepaymentSchedule)

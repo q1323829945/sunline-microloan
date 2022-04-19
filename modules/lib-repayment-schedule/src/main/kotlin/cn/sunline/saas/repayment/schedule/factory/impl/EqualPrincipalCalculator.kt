@@ -15,12 +15,13 @@
 
 package cn.sunline.saas.repayment.schedule.factory.impl
 
+import cn.sunline.saas.interest.util.InterestRateUtil
+import cn.sunline.saas.interest.util.InterestUtil
 import cn.sunline.saas.repayment.schedule.component.*
 import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.*
-import cn.sunline.saas.repayment.schedule.model.enum.LoanRateType
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -37,20 +38,17 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
 
     override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
 
-        val term = dtoRepaymentScheduleCalculateTrial.term
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
         val amount = dtoRepaymentScheduleCalculateTrial.amount
         val interestRate = dtoRepaymentScheduleCalculateTrial.interestRate
-        val repaymentFrequency = dtoRepaymentScheduleCalculateTrial.repaymentFrequency!!
+        val repaymentFrequency = dtoRepaymentScheduleCalculateTrial.repaymentFrequency
         var repaymentDay = dtoRepaymentScheduleCalculateTrial.repaymentDay
         val startDate = dtoRepaymentScheduleCalculateTrial.startDate
         val endDate = dtoRepaymentScheduleCalculateTrial.endDate
         val baseYearDays = dtoRepaymentScheduleCalculateTrial.baseYearDays
-        val repaymentDayType = dtoRepaymentScheduleCalculateTrial.repaymentDayType
-
 
         // 开始日期
-        var currentRepaymentDateTime = DateTime(startDate)
+        var currentRepaymentDateTime = startDate.toDateTime()
 
         // 下一个还款日
         val maximumValue = startDate.toDateTime().dayOfMonth().maximumValue
@@ -60,40 +58,39 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         var nextRepaymentDateTime = DateTime(currentRepaymentDateTime.year, currentRepaymentDateTime.monthOfYear,repaymentDay,0,0).plusMonths(repaymentFrequency.months)
 
         // 结束日期
-        val finalRepaymentDateTime = DateTime(endDate)
+        val finalRepaymentDateTime = endDate.toDateTime()
 
         // 应还期数
         val periods = CalcPeriodComponent.calcDuePeriods(startDate, endDate, repaymentDay, repaymentFrequency)
 
         // 每期应还本金
-        var principal = CalcPrincipalComponent.calcBasePrincipal(
-            DTOPrincipalCalculator(amount,paymentMethod,BigDecimal.ZERO,periods,0,repaymentFrequency)
-        )
+        var principal = CalcInstallmentComponent.calcBasePrincipal(DTOPrincipalCalculator(amount,paymentMethod,BigDecimal.ZERO,periods,0,repaymentFrequency))
 
-        // 月利率
-        val loanRateMonth = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.MONTHLY, null)
+        // 每期利率
+        val loanRateMonth = InterestRateUtil.toMonthRate(interestRate)
 
         // 日利率
-        val loanRateDay = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.DAILY, baseYearDays)
+        val loanRateDay = InterestRateUtil.toDayRate(baseYearDays,interestRate)
 
-        // 总利息
-        var totalInterest = BigDecimal.ZERO
+        // 每期利息
+        var interest : BigDecimal
 
         // 剩余本金
         var remainPrincipal: BigDecimal = amount
 
         // 每期还款详情
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
-
         for (i in 0 until periods) {
             // 还款日
             nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(currentRepaymentDateTime,finalRepaymentDateTime,nextRepaymentDateTime)
 
-            // 每期利息
-            val interest = CalcInterestComponent.calcBaseInterest(
-                DTOInterestCalculator(remainPrincipal,loanRateMonth,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime,repaymentFrequency)
-            )
-            totalInterest = totalInterest.add(interest)
+            // 首期或未期不足月先按日计算利息
+            interest = if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)) != 0){
+                InterestUtil.calDaysInterest(remainPrincipal,loanRateDay,currentRepaymentDateTime.toInstant(),nextRepaymentDateTime.toInstant())
+            }else{
+                // 每期利息
+                InterestUtil.calMonthInterest(remainPrincipal,loanRateMonth.multiply(repaymentFrequency.months.toBigDecimal()))
+            }
 
             if (i + 1 == periods && (remainPrincipal != BigDecimal.ZERO)) {
                 principal = remainPrincipal
@@ -103,47 +100,41 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
             // 计划明细
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
                 period = i + 1,
-                installment = CalcRepaymentInstallmentComponent.calcBaseRepaymentInstallment(principal,interest),
+                installment = CalcInstallmentComponent.calcBaseRepaymentInstallment(principal,interest),
                 principal = principal,
                 interest = interest,
                 repaymentDate = CalcDateComponent.formatInstantToView(nextRepaymentDateTime.toInstant()),
                 remainPrincipal = remainPrincipal
             )
-
             currentRepaymentDateTime = nextRepaymentDateTime
-            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.ordinal)
+            nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)
         }
-
         // 还款计划概述
-        val totalRepayment = amount.add(totalInterest)
         return DTORepaymentScheduleTrialView(
-            interestRate = interestRate.setScale(6, RoundingMode.HALF_UP),
+            interestRate = interestRate,
             schedule = dtoRepaymentScheduleDetailTrialView
         )
     }
 
-    override fun calResetRepaymentSchedule(
-        dtoRepaymentScheduleResetCalculate: DTORepaymentScheduleResetCalculate
-    ): RepaymentSchedule {
+    override fun calResetRepaymentSchedule(dtoRepaymentScheduleResetCalculate: DTORepaymentScheduleResetCalculate): RepaymentSchedule {
 
         var remainLoanAmount = dtoRepaymentScheduleResetCalculate.remainLoanAmount
         val repaymentDate = dtoRepaymentScheduleResetCalculate.repaymentDate
         val baseYearDays = dtoRepaymentScheduleResetCalculate.baseYearDays
         val repaymentSchedule = dtoRepaymentScheduleResetCalculate.oldRepaymentSchedule
         val interestRate = dtoRepaymentScheduleResetCalculate.oldRepaymentSchedule.interestRate
-        val repaymentFrequency = dtoRepaymentScheduleResetCalculate.repaymentFrequency
         val paymentMethod = dtoRepaymentScheduleResetCalculate.paymentMethod
         val repaymentScheduleDetail = repaymentSchedule.schedule
-
+        val repaymentFrequency = dtoRepaymentScheduleResetCalculate.repaymentFrequency
 
         // 每期还款详情
         val repaymentScheduleDetails: MutableList<RepaymentScheduleDetail> = ArrayList()
 
-        // 月利率
-        val loanRateMonth = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.MONTHLY, null)
+        // 每期利率
+        val loanRateMonth = InterestRateUtil.toMonthRate(interestRate)
 
         // 日利率
-        val loanRateDay = CalcRateComponent.calcBaseRate(interestRate, LoanRateType.DAILY, baseYearDays)
+        val loanRateDay = InterestRateUtil.toDayRate(baseYearDays,interestRate)
 
         // 剩余期数和当前期数
         val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate, repaymentScheduleDetail)
@@ -152,22 +143,19 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
         val periods = result[2]
 
         // 每期应还本金
-        var principal = CalcPrincipalComponent.calcBasePrincipal(
-            DTOPrincipalCalculator(
-                remainLoanAmount, paymentMethod, BigDecimal.ZERO, periods, 0, null
-            )
-        )
-        var currentRepaymentDateTime = DateTime(repaymentDate)
-        var totalInterest = BigDecimal.ZERO
+        var principal = CalcInstallmentComponent.calcBasePrincipal(DTOPrincipalCalculator(remainLoanAmount, paymentMethod, BigDecimal.ZERO, periods, 0, null))
+        var currentRepaymentDateTime = repaymentDate.toDateTime()
         for (detail in repaymentScheduleDetail) {
             if (currentPeriod <= detail.period) {
                 val nextRepaymentDateTime = DateTime(detail.repaymentDate)
-                // 每期利息
-                val interest = CalcInterestComponent.calcBaseInterest(
-                    DTOInterestCalculator(
-                        remainLoanAmount,loanRateMonth,loanRateDay,currentRepaymentDateTime,nextRepaymentDateTime,null
-                    )
-                )
+                // 首期或未期不足月先按日计算利息
+                val interest = if(nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)) != 0){
+                    InterestUtil.calDaysInterest(remainLoanAmount,loanRateDay,currentRepaymentDateTime.toInstant(),nextRepaymentDateTime.toInstant())
+                }else{
+                    // 每期利息
+                    InterestUtil.calMonthInterest(remainLoanAmount,loanRateMonth.multiply(repaymentFrequency.months.toBigDecimal()))
+                }
+
                 if (finalPeriod == detail.period && (remainLoanAmount != BigDecimal.ZERO)) {
                     principal = remainLoanAmount
                 }
@@ -175,22 +163,15 @@ class EqualPrincipalCalculator: BaseRepaymentScheduleCalculator {
 
                 detail.principal = principal
                 detail.interest = interest
-//                detail.remainPrincipal = remainLoanAmount
-                detail.installment = CalcRepaymentInstallmentComponent.calcBaseRepaymentInstallment(principal, interest)
+                detail.installment = CalcInstallmentComponent.calcBaseRepaymentInstallment(principal, interest)
 
                 // 日期滚动
                 currentRepaymentDateTime = nextRepaymentDateTime
             }
-
-            totalInterest = totalInterest.add(detail.interest)
             repaymentScheduleDetails += detail
         }
         repaymentSchedule.schedule = repaymentScheduleDetails
-        repaymentSchedule.interestRate = interestRate.setScale(6, RoundingMode.HALF_UP)
-//        repaymentSchedule.totalInterest = totalInterest
-//        repaymentSchedule.totalRepayment = repaymentSchedule.amount.add(totalInterest)
-
-
+        repaymentSchedule.interestRate = interestRate
         return repaymentSchedule
     }
 }

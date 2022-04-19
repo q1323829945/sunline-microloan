@@ -38,28 +38,26 @@ class UploadConfigureController {
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>{
-
         val paged = appLoanUploadConfigureService.getPaged(pageable)
+        return DTOPagedResponseSuccess(paged.map { it }).response()
+    }
 
+    @GetMapping("all")
+    fun getAll(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>{
+        val paged = appLoanUploadConfigureService.getPaged(pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
     @PostMapping
     fun addUploadConfigure(@RequestBody dtoUploadConfigureAdd: DTOUploadConfigureAdd): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
-        val uploadConfigure = objectMapper.convertValue<LoanUploadConfigure>(dtoUploadConfigureAdd)
-        val save = loanUploadConfigureService.addOne(uploadConfigure)
-        val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(save)
-
-        return DTOResponseSuccess(responseEntity).response()
+        val result = appLoanUploadConfigureService.addUploadConfigure(dtoUploadConfigureAdd)
+        return DTOResponseSuccess(result).response()
     }
 
     @DeleteMapping("{id}")
     fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
-        val uploadConfigure = loanUploadConfigureService.getOne(id)?:throw ConfigureNotFoundException("Invalid configure")
-        uploadConfigure.deleted = true
-        val save = loanUploadConfigureService.save(uploadConfigure)
-        val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(save)
-
+        val result = appLoanUploadConfigureService.deleteUploadConfigure(id)
+        val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(result)
         return DTOResponseSuccess(responseEntity).response()
     }
 }

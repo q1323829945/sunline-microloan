@@ -17,54 +17,43 @@ import javax.validation.constraints.NotNull
 @Entity
 @Table(name = "repayment_schedule")
 class RepaymentSchedule(
+
     @Id
-    @Column(name = "repayment_schedule_id", nullable = false)
-    var repaymentScheduleId: Long, // id
     var id: Long, // id
 
     @NotNull
-    @Column(name = "amount", precision = 15, scale = 2, nullable = false)
-    var amount: BigDecimal,// 贷款金额 installment
     @Column(name = "installment", precision = 15, scale = 2, nullable = false)
+    @Column(name = "installment", precision = 15, scale = 2, nullable = false, columnDefinition = "decimal(15,2) not null")
+
+
     var installment: BigDecimal,// 贷款金额 installment
 
     @NotNull
-    @Column(name = "term", nullable = false)
-    var term: String,// 贷款期限
-
-    @NotNull
-
-
-
-
-
     @Column(name = "interest_Rate", precision = 9, scale = 6, nullable = false)
+    @Column(name = "interest_Rate", precision = 9, scale = 6, nullable = false, columnDefinition = "decimal(9,6) not null")
+
+
+
+
+
+
+
+
+
     var interestRate: BigDecimal, // 贷款利率
 
     @NotNull
-    @Column(name = "repayment_type", length = 8, nullable = false)
-    var paymentMethod: PaymentMethodType, //还款类型
     @Column(name = "term", nullable = false)
+
+    @Column(name = "term", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Enumerated(value = EnumType.STRING)
+
     var term: LoanTermType, // 贷款期限
 
-    @NotNull
-    @Column(name = "total_interest", precision = 15, scale = 2, nullable = false)
-    var totalInterest: BigDecimal,// 总利息金额
-
-    @NotNull
-    @Column(name = "total_repayment", precision = 15, scale = 2, nullable = false)
-    var totalRepayment: BigDecimal,// 总还款金额
-
-    @Column(name = "repayment_frequency", nullable = true)
-    var repaymentFrequency: RepaymentFrequency? = null,// 频率
-
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = RepaymentScheduleDetail::class, mappedBy = "repaymentScheduleId")
-    @NotFound(action= NotFoundAction.IGNORE)
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "repayment_schedule_id")
 //    @NotFound(action= NotFoundAction.IGNORE)
     @OrderBy("id ASC")
-    var repaymentScheduleDetail: MutableList<RepaymentScheduleDetail> = mutableListOf(),
     var schedule: MutableList<RepaymentScheduleDetail> = mutableListOf(),
 
     @CreationTimestamp

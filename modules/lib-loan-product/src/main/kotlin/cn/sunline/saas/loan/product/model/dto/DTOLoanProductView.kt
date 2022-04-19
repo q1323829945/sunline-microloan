@@ -4,6 +4,7 @@ import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.db.InterestFeature
+import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.repayment.model.db.RepaymentFeature
 
@@ -26,7 +27,8 @@ data class DTOLoanProductView(
         var termConfiguration: DTOTermLoanProductConfigurationView?,
         var interestFeature: InterestFeature?,
         var repaymentFeature: RepaymentFeature?,
-        var feeFeatures:MutableList<FeeFeature>?
+        var feeFeatures:MutableList<FeeFeature>?,
+        var loanUploadConfigureFeatures:MutableList<LoanUploadConfigure>?
 )
 
 data class DTOAmountLoanProductConfigurationView(

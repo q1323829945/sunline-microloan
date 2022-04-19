@@ -5,9 +5,9 @@ import java.math.BigDecimal
 
 
 data class DTORepaymentScheduleAdd (
-    val installment: BigDecimal,
+    val installment: BigDecimal?,
     val interestRate: BigDecimal,
-    val term: LoanTermType,
+    var term: LoanTermType?,
     val schedule: MutableList<DTORepaymentScheduleDetailAdd>
 )
 

@@ -3,6 +3,7 @@ package cn.sunline.saas.loan.product.model.dto
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
+import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 
@@ -23,7 +24,8 @@ data class DTOLoanProductAdd(
     val termConfiguration: DTOTermLoanProductConfiguration?,
     val interestFeature: DTOInterestFeatureAdd?,
     val repaymentFeature: DTORepaymentFeatureAdd?,
-    val feeFeatures:MutableList<DTOFeeFeatureAdd>?
+    val feeFeatures:MutableList<DTOFeeFeatureAdd>?,
+    var loanUploadConfigureFeatures:List<Long>? = listOf()
 )
 
 data class DTOAmountLoanProductConfiguration(

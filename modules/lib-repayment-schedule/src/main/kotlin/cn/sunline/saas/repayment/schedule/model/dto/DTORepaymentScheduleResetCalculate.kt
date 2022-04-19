@@ -7,12 +7,13 @@ import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import org.joda.time.DateTime
+import org.joda.time.Instant
 import java.math.BigDecimal
 
 
 data class DTORepaymentScheduleResetCalculate (
     var remainLoanAmount: BigDecimal,
-    var repaymentDate: String,
+    var repaymentDate: Instant,
     var repaymentDay: Int,
     var baseYearDays: BaseYearDays,
     var paymentMethod: PaymentMethodType,

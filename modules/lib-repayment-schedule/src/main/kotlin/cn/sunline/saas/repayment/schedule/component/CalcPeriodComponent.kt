@@ -12,11 +12,6 @@ import kotlin.math.abs
 
 object CalcPeriodComponent {
 
-    fun calcBasePeriod(term: Int, repaymentFrequency: RepaymentFrequency): Int {
-        val months = repaymentFrequency.months
-        return BigDecimal(term).divide(BigDecimal(months),0,RoundingMode.HALF_UP).toInt()
-    }
-
     fun calcDuePeriods(startDateInstant: Instant, endDateInstant: Instant, repaymentDay: Int, repaymentFrequency: RepaymentFrequency): Int{
         val startDateTime = startDateInstant.toDateTime()
         val endDateTime = endDateInstant.toDateTime()
@@ -32,7 +27,7 @@ object CalcPeriodComponent {
     }
 
     fun calcRemainPeriods(
-        repaymentDate: String,
+        repaymentDate: Instant,
         repaymentScheduleDetail: MutableList<RepaymentScheduleDetail>
     ): Array<Int> {
         repaymentScheduleDetail.sortBy { it.period }
@@ -40,7 +35,7 @@ object CalcPeriodComponent {
         var currentPeriod = 0;
         var finalPeriod = 0
         var firstFlag = false
-        val repaymentDateTime = CalcDateComponent.parseViewToInstant(repaymentDate).toDateTime()
+        val repaymentDateTime = repaymentDate.toDateTime()
         for (detail in repaymentScheduleDetail) {
             val dateTime = detail.repaymentDate
             if (dateTime > repaymentDateTime) {
@@ -52,7 +47,7 @@ object CalcPeriodComponent {
             }
             finalPeriod++
         }
-        return arrayOf(currentPeriod, finalPeriod, periods,)
+        return arrayOf(currentPeriod, finalPeriod, periods)
     }
 
 }
