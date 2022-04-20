@@ -69,10 +69,11 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
 
     private fun initiateUnderwriting(dtoLoanApplication: DTOLoanApplication) {
         dtoLoanApplication.applId = ContextUtil.getRequestId().toLong()
-        DaprHelper.publish(
-            "underwriting-pub-sub",
+        DaprHelper.binding(
             "INITIATE_UNDERWRITING",
-            dtoLoanApplication
+            "create",
+            dtoLoanApplication,
+            DTOLoanApplication::class.java
         )
     }
 

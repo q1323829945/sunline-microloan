@@ -8,6 +8,7 @@ import cn.sunline.saas.gateway.api.constant.ActionType
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.huaweicloud.apig.config.ApiConfiguration
 import cn.sunline.saas.huaweicloud.apig.config.AppType
+import com.sun.org.slf4j.internal.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
@@ -19,6 +20,7 @@ class ApiGatewayRunner(
     val huaweiCloudApigApiService: GatewayApi,
     val huaweiCloudApigAppService: GatewayApp
 ): CommandLineRunner {
+    protected val logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
 
     @Value("\${huawei.cloud.apig.groupName}")
     lateinit var groupName:String
@@ -56,30 +58,30 @@ class ApiGatewayRunner(
     }
 
     fun reloadEnvironment(){
-        println("init environment ...")
+        logger.debug("init environment ...")
         val environmentList = huaweiCloudApigEnvironmentService.getPaged(EnvironmentPagedParams(name = environmentName)).envs
         environmentId =  if(environmentList.isEmpty()){
             huaweiCloudApigEnvironmentService.create(EnvironmentCreateParams(environmentName)).id
         } else{
             environmentList[0].id
         }
-        println("init environment finish")
+        logger.debug("init environment finish")
     }
 
     fun reloadGroup(){
-        println("init group ...")
+        logger.debug("init group ...")
         val groupList = huaweiCloudApigGroupService.getPaged(GroupPagedParams(name = groupName)).groups
         groupId = if(groupList.isEmpty()){
             huaweiCloudApigGroupService.create(GroupCreateParams(groupName)).id
         } else{
             groupList[0].id
         }
-        println("init group finish")
+        logger.debug("init group finish")
 
     }
 
     fun reloadApi(groupId:String){
-        println("init api ...")
+        logger.debug("init api ...")
 
         val apiConfiguration = ApiConfiguration(groupId,ip,appType)
 
@@ -89,13 +91,13 @@ class ApiGatewayRunner(
 
         deleteApi(apiConfiguration, apiList)
 
-        println("init api finish")
+        logger.debug("init api finish")
 
     }
 
     fun registerApi(apiConfiguration:ApiConfiguration,apiList:List<ApiResponseParams>){
 
-        println("register api ...")
+        logger.debug("register api ...")
         val nameList = apiList.map {
             it.apiName
         }
@@ -105,11 +107,12 @@ class ApiGatewayRunner(
                 huaweiCloudApigApiService.register(it)
             }
         }
-        println("register api finish")
+        logger.debug("register api finish")
     }
 
     fun deleteApi(apiConfiguration:ApiConfiguration,apiList:List<ApiResponseParams>){
-        println("delete api ...")
+
+        logger.debug("delete api ...")
         val nameList = apiConfiguration.apiParamsList.map {
             it.apiName
         }
@@ -120,11 +123,12 @@ class ApiGatewayRunner(
             }
         }
 
-        println("delete api finish")
+        logger.debug("delete api finish")
     }
 
     fun onlineApi(environmentId:String,groupId:String){
-        println("api online ...")
+
+        logger.debug("api online ...")
 
 
         val apiList = getApiList(groupId)
@@ -141,7 +145,7 @@ class ApiGatewayRunner(
             )
         )
 
-        println("api online finish")
+        logger.debug("api online finish")
     }
 
     fun getApiList(groupId: String): List<ApiResponseParams> {
@@ -170,8 +174,7 @@ class ApiGatewayRunner(
     }
 
     fun reloadApp(){
-        println("init app ...")
-        println(appName)
+        logger.debug("init app ...")
         appName?.run {
             if(this.isNotEmpty()){
                 val appList = huaweiCloudApigAppService.getPaged(AppPagedParams(name = appName)).apps
@@ -180,17 +183,17 @@ class ApiGatewayRunner(
                 } else {
                     appList[0].id
                 }
-                println("init app finish")
+                logger.debug("init app finish")
 
                 return
             }
         }
-        println("appName is null or empty")
-        println("init app finish")
+        logger.debug("appName is null or empty")
+        logger.debug("init app finish")
     }
 
     fun auths(appId:String,groupId: String,environmentId: String){
-        println("auth api ...")
+        logger.debug("auth api ...")
 
         val apiList = getApiList(groupId)
         val idList = apiList.map {
@@ -203,7 +206,7 @@ class ApiGatewayRunner(
 
 
 
-        println("auth api finish")
+        logger.debug("auth api finish")
     }
 
 }

@@ -25,11 +25,11 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping("/Initiate")
-    fun initiate(@RequestBody(required = false) dtoApplication: DTOLoanApplication): Mono<Unit> {
+    fun initiate(@RequestBody(required = false) dtoApplication: DTOLoanApplicationData): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.initiate(
                 objectMapper.convertValue<UnderwritingApplicationData>(
-                    dtoApplication.data
+                    dtoApplication
                 )
             )
         }
@@ -39,8 +39,8 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackCustomerCreditRating(@RequestBody(required = false) dtoCustomerCreditRating: DTOCustomerCreditRating): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCustomerCreditRating(
-                dtoCustomerCreditRating.data.applId,
-                dtoCustomerCreditRating.data.customerCreditRate
+                dtoCustomerCreditRating.applId,
+                dtoCustomerCreditRating.customerCreditRate
             )
         }
     }
@@ -49,8 +49,8 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCreditRisk(
-                dtoCreditRisk.data.applId,
-                dtoCreditRisk.data.creditRisk
+                dtoCreditRisk.applId,
+                dtoCreditRisk.creditRisk
             )
         }
     }
@@ -59,8 +59,8 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackRegulatoryCompliance(@RequestBody(required = false) dtoRegulatoryCompliance: DTORegulatoryCompliance): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateRegulatoryCompliance(
-                dtoRegulatoryCompliance.data.applId,
-                dtoRegulatoryCompliance.data.regulatoryCompliance
+                dtoRegulatoryCompliance.applId,
+                dtoRegulatoryCompliance.regulatoryCompliance
             )
         }
     }
@@ -69,8 +69,8 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateFraudEvaluation(
-                dtoFraudEvaluation.data.applId,
-                dtoFraudEvaluation.data.fraudEvaluation
+                dtoFraudEvaluation.applId,
+                dtoFraudEvaluation.fraudEvaluation
             )
         }
     }

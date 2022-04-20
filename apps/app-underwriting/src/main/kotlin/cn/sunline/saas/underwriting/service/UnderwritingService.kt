@@ -1,6 +1,7 @@
 package cn.sunline.saas.underwriting.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
+import cn.sunline.saas.underwriting.event.UnderwritingBinding
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service
 class UnderwritingService(
     private val underwritingRepository: UnderwritingRepository,
     private val underwritingInvoke: UnderwritingInvoke,
-    private val underwritingPublish: UnderwritingPublish
+    private val underwritingBinding: UnderwritingBinding
 ) :
     BaseRepoService<Underwriting, Long>(underwritingRepository) {
 
@@ -33,7 +34,7 @@ class UnderwritingService(
             )
         )
 
-        this.underwritingPublish.retrieveCustomerCreditRating(
+        this.underwritingBinding.retrieveCustomerCreditRating(
             underwritingApplicationData.applId,
             underwritingInvoke.getPartnerIntegrated()?.customerCreditRatingPartner.toString(),
             underwritingApplicationData.detail.customerId
@@ -45,7 +46,7 @@ class UnderwritingService(
         underwriting.customerCreditRate = customerCreditRating
         save(underwriting)
 
-        this.underwritingPublish.execCreditRisk(
+        this.underwritingBinding.execCreditRisk(
             underwritingInvoke.getPartnerIntegrated()?.creditRiskPartner.toString(),
             underwriting
         )
@@ -56,7 +57,7 @@ class UnderwritingService(
         underwriting.creditRisk = creditRisk
         save(underwriting)
 
-        this.underwritingPublish.execRegulatoryCompliance(
+        this.underwritingBinding.execRegulatoryCompliance(
             underwritingInvoke.getPartnerIntegrated()?.regulatoryCompliancePartner.toString(),
             underwriting
         )
@@ -67,7 +68,7 @@ class UnderwritingService(
         underwriting.regulatoryCompliance = regulatoryCompliance
         save(underwriting)
 
-        this.underwritingPublish.execFraudEvaluation(
+        this.underwritingBinding.execFraudEvaluation(
             underwritingInvoke.getPartnerIntegrated()?.fraudEvaluationPartner.toString(),
             underwriting
         )

@@ -32,4 +32,5 @@ class PartnerIntegratedController(private val partnerIntegratedService: PartnerI
         val integratedConfiguration = partnerIntegratedService.get() ?: Unit
         return objectMapper.convertValue<DTOPartnerIntegrated>(integratedConfiguration)
     }
+
 }

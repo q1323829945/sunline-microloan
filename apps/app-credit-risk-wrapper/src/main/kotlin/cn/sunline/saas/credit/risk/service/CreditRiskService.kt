@@ -13,10 +13,11 @@ class CreditRiskService {
         //TODO:
         val creditRisk = "10"
 
-        DaprHelper.publish(
-            "underwriting-pub-sub",
+        DaprHelper.binding(
             "CALL_BACK_CREDIT_RISK",
-            DTOCallBackCreditRisk(dtoCreditRisk.data.applicationId,creditRisk)
+            "create",
+            DTOCallBackCreditRisk(dtoCreditRisk.data.applicationId,creditRisk),
+            DTOCreditRisk::class.java
         )
     }
 }

@@ -13,10 +13,11 @@ class CustomerCreditRatingService {
         //TODO:
         val customerCreditRate = "10"
 
-        DaprHelper.publish(
-            "underwriting-pub-sub",
+        DaprHelper.binding(
             "CALL_BACK_CUSTOMER_CREDIT_RATING",
-            DTOCallBackCustomerCreditRating(creditRating.data.applicationId,customerCreditRate)
+            "create",
+            DTOCallBackCustomerCreditRating(creditRating.data.applicationId,customerCreditRate),
+            DTOCreditRating::class.java
         )
     }
 }

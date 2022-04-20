@@ -13,10 +13,11 @@ class RegulatoryComplianceService {
         //TODO:
         val regulatoryCompliance = "10"
 
-        DaprHelper.publish(
-            "underwriting-pub-sub",
+        DaprHelper.binding(
             "CALL_BACK_REGULATORY_COMPLIANCE",
-            DTOCallBackRegulatoryCompliance(creditRating.data.applicationId,regulatoryCompliance)
+            "create",
+            DTOCallBackRegulatoryCompliance(creditRating.data.applicationId,regulatoryCompliance),
+            DTORegulatoryCompliance::class.java
         )
     }
 }
