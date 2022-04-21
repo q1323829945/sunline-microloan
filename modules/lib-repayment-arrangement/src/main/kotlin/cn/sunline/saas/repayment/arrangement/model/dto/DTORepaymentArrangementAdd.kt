@@ -13,11 +13,17 @@ data class DTORepaymentArrangementAdd(
     val paymentMethod: PaymentMethodType,
     val frequency: RepaymentFrequency,
     val repaymentDayType: RepaymentDayType,
-    val prepaymentArrangement: MutableList<DTOPrepaymentArrangementAdd>
+    val prepaymentArrangement: MutableList<DTOPrepaymentArrangementAdd>,
+    val repaymentAccount: MutableList<DTORepaymentAccount>
 )
 
 data class DTOPrepaymentArrangementAdd(
     val term: LoanTermType,
     val type: PrepaymentType,
     val penaltyRatio: BigDecimal
+)
+
+data class DTORepaymentAccount(
+    val repaymentAccount: String,
+    val repaymentAccountBank: String
 )
