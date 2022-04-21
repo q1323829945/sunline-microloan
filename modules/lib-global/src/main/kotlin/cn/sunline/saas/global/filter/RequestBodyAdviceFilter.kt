@@ -49,15 +49,15 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
                     this as Map<String,String>
                     httpHeaders.setAll(this)
 
-                    this[Header.REQUEST_ID.name.lowercase()]?.run {
+                    this[Header.REQUEST_ID.name]?.run {
                         ContextUtil.setRequestId(this)
                     }
 
-                    this[Header.USER_AUTHORIZATION.name.lowercase()]?.run {
+                    this[Header.USER_AUTHORIZATION.name]?.run {
                         ContextUtil.setRequestId(this)
                     }
 
-                    this[Header.TENANT_AUTHORIZATION.name.lowercase()]?.run {
+                    this[Header.TENANT_AUTHORIZATION.name]?.run {
                         ContextUtil.setRequestId(this)
                     }
                 }
