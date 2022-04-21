@@ -15,8 +15,7 @@ class FraudEvaluationService {
         DaprHelper.binding(
             "CALL_BACK_CUSTOMER_FRAUD_EVALUATION",
             "create",
-            DTOCallBackFraudEvaluation(dtoFraudEvaluation.data.applicationId,fraudEvaluation),
-            DTOFraudEvaluation::class.java
+            DTOCallBackFraudEvaluation(dtoFraudEvaluation.applicationId,fraudEvaluation)
         )
     }
 }

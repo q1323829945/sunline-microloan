@@ -16,8 +16,7 @@ class CreditRiskService {
         DaprHelper.binding(
             "CALL_BACK_CREDIT_RISK",
             "create",
-            DTOCallBackCreditRisk(dtoCreditRisk.data.applicationId,creditRisk),
-            DTOCreditRisk::class.java
+            DTOCallBackCreditRisk(dtoCreditRisk.applicationId,creditRisk)
         )
     }
 }

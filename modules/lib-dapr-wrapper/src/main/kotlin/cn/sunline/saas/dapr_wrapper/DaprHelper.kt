@@ -5,6 +5,7 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getRequestId
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
+import io.dapr.client.DaprClient
 import io.dapr.client.DaprClientBuilder
 import io.dapr.client.domain.HttpExtension
 import io.dapr.client.domain.Metadata
@@ -17,7 +18,12 @@ import io.dapr.client.domain.Metadata
  */
 object DaprHelper {
 
-    private val client = DaprClientBuilder().build()
+    private var client: DaprClient
+
+    init {
+        System.setProperty("dapr.api.protocol","HTTP")
+        client = DaprClientBuilder().build()
+    }
 
     private val metadata =
         mutableMapOf<String, String>(
@@ -29,7 +35,6 @@ object DaprHelper {
     fun <T> invoke(
         applId: String, methodName: String, request: Any?, httpExtension: HttpExtension, clazz: Class<T>
     ): T? {
-
         val result = client.invokeMethod(
             applId, methodName, request, setHttpExtension(httpExtension), clazz
         )
@@ -41,15 +46,19 @@ object DaprHelper {
     fun publish(pubsubName: String, topicName: String, data: Any, ttlInSeconds: Long = 1000): Unit {
         metadata[Metadata.TTL_IN_SECONDS] = ttlInSeconds.toString()
         client.publishEvent(
-            pubsubName, topicName, data, metadata
+            pubsubName, topicName, setBindingRequest(data), metadata
         ).block()
     }
 
 
-    fun <T> binding(bindingName:String,bindingOperation:String,data: Any,clazz: Class<T>):Unit{
+    fun binding(bindingName:String,bindingOperation:String,data: Any):Unit{
         client.invokeBinding(
-            bindingName,bindingOperation,data, metadata,clazz
+            bindingName,bindingOperation,setBindingRequest(data), metadata,BindingRequest::class.java
         ).block()
+    }
+
+    private fun setBindingRequest(data: Any):BindingRequest{
+        return BindingRequest(data, metadata)
     }
 
 

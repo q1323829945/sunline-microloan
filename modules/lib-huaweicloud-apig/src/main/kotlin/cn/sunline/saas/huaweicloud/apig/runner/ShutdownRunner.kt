@@ -2,14 +2,15 @@ package cn.sunline.saas.huaweicloud.apig.runner
 
 import cn.sunline.saas.gateway.api.constant.ActionType
 import cn.sunline.saas.gateway.api.dto.BatchPublishParams
-import com.sun.org.slf4j.internal.LoggerFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import javax.annotation.PreDestroy
 
 @Component
 class ShutdownRunner {
-    protected val logger = LoggerFactory.getLogger(ShutdownRunner::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ShutdownRunner::class.java)
 
     @Autowired
     private lateinit var apiGatewayRunner: ApiGatewayRunner

@@ -18,7 +18,6 @@ class FraudEvaluationController {
     @PostMapping
     fun getFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
         //TODO:
-        println(dtoFraudEvaluation)
         return Mono.fromRunnable(){
             fraudEvaluationService.getFraudEvaluation(dtoFraudEvaluation)
         }

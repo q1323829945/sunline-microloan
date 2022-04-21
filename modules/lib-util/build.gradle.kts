@@ -10,6 +10,7 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
 
     implementation(project(":lib-exceptions"))
+    implementation("commons-io:commons-io:2.11.0")
     implementation(project(":lib-global"))
     implementation("commons-httpclient:commons-httpclient:3.1")
 

@@ -9,11 +9,11 @@ import org.apache.commons.httpclient.HttpMethod
 import org.apache.commons.httpclient.methods.*
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity
 import org.apache.commons.httpclient.methods.multipart.PartBase
+import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.nio.charset.Charset
 
 @Component
 class HttpConfig {
@@ -90,18 +90,7 @@ class HttpConfig {
             return ""
         }
 
-
-        val br = BufferedReader(InputStreamReader(inputStream))
-
-        val strBuffer = StringBuffer()
-
-        while (true){
-            val str = br.readLine()?:break
-
-            strBuffer.append(str)
-        }
-
-        return strBuffer.toString()
+        return IOUtils.toString(inputStream, Charset.forName("utf-8"))
     }
 
     fun getResponseBody(httpMethod:HttpMethod):String{

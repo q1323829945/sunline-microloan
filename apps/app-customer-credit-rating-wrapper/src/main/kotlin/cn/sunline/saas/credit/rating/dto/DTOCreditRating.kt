@@ -1,10 +1,6 @@
 package cn.sunline.saas.credit.rating.dto
 
 data class DTOCreditRating(
-    val data: DTOCreditRatingData,
-)
-
-data class DTOCreditRatingData(
     val applicationId:Long,
     val partner: String,
     val customerId: Long

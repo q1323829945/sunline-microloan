@@ -16,8 +16,7 @@ class CustomerCreditRatingService {
         DaprHelper.binding(
             "CALL_BACK_CUSTOMER_CREDIT_RATING",
             "create",
-            DTOCallBackCustomerCreditRating(creditRating.data.applicationId,customerCreditRate),
-            DTOCreditRating::class.java
+            DTOCallBackCustomerCreditRating(creditRating.applicationId,customerCreditRate)
         )
     }
 }

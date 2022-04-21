@@ -20,8 +20,7 @@ class UnderwritingBindingImpl: UnderwritingBinding {
         DaprHelper.binding(
             UnderwritingPublishTopic.RETRIEVE_CUSTOMER_CREDIT_RATING.toString(),
             BINDING_OPERATION,
-            dtoRetrieveCustomerCreditRating,
-            DTORetrieveCustomerCreditRating::class.java
+            dtoRetrieveCustomerCreditRating
         )
     }
 
@@ -34,8 +33,7 @@ class UnderwritingBindingImpl: UnderwritingBinding {
         DaprHelper.binding(
             UnderwritingPublishTopic.EXECUTE_CREDIT_RISK.toString(),
             BINDING_OPERATION,
-            dtoExecCreditRisk,
-            DTOExecCreditRisk::class.java
+            dtoExecCreditRisk
         )
     }
 
@@ -48,8 +46,7 @@ class UnderwritingBindingImpl: UnderwritingBinding {
         DaprHelper.binding(
             UnderwritingPublishTopic.EXECUTE_REGULATORY_COMPLIANCE.toString(),
             BINDING_OPERATION,
-            dTOExecRegulatoryCompliance,
-            DTOExecRegulatoryCompliance::class.java
+            dTOExecRegulatoryCompliance
         )
     }
 
@@ -61,8 +58,7 @@ class UnderwritingBindingImpl: UnderwritingBinding {
         DaprHelper.binding(
             UnderwritingPublishTopic.FRAUD_EVALUATION.toString(),
             BINDING_OPERATION,
-            dtoExecFraudEvaluation,
-            DTOExecFraudEvaluation::class.java
+            dtoExecFraudEvaluation
         )
     }
 }

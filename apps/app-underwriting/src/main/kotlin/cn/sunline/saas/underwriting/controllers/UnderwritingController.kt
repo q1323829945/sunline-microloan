@@ -1,11 +1,13 @@
 package cn.sunline.saas.underwriting.controllers
 
+import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.underwriting.controllers.dto.*
 import cn.sunline.saas.underwriting.model.db.UnderwritingApplicationData
 import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -73,5 +75,21 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
                 dtoFraudEvaluation.fraudEvaluation
             )
         }
+    }
+    data class Test(
+        val id:String,
+        val name:String
+    )
+
+    @GetMapping("test2")
+    fun test2(){
+        val t = Test("1","publish")
+        DaprHelper.publish("underwriting-pub-sub","RETRIEVE_CUSTOMER_CREDIT_RATING",t)
+    }
+
+    @GetMapping("test3")
+    fun test3(){
+        val t = Test("1","bindingRabbitMq")
+        DaprHelper.binding("mytest3","create",t)
     }
 }

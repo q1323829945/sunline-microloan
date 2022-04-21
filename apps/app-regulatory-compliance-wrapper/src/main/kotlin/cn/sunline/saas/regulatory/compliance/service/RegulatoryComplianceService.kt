@@ -16,8 +16,7 @@ class RegulatoryComplianceService {
         DaprHelper.binding(
             "CALL_BACK_REGULATORY_COMPLIANCE",
             "create",
-            DTOCallBackRegulatoryCompliance(creditRating.data.applicationId,regulatoryCompliance),
-            DTORegulatoryCompliance::class.java
+            DTOCallBackRegulatoryCompliance(creditRating.applicationId,regulatoryCompliance)
         )
     }
 }

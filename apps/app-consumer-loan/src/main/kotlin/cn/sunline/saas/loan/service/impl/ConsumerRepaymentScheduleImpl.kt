@@ -72,8 +72,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
         DaprHelper.binding(
             "INITIATE_UNDERWRITING",
             "create",
-            dtoLoanApplication,
-            DTOLoanApplication::class.java
+            dtoLoanApplication
         )
     }
 

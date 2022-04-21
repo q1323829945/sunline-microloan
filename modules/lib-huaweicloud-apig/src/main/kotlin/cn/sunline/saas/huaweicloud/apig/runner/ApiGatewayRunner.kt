@@ -8,7 +8,8 @@ import cn.sunline.saas.gateway.api.constant.ActionType
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.huaweicloud.apig.config.ApiConfiguration
 import cn.sunline.saas.huaweicloud.apig.config.AppType
-import com.sun.org.slf4j.internal.LoggerFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
@@ -20,7 +21,7 @@ class ApiGatewayRunner(
     val huaweiCloudApigApiService: GatewayApi,
     val huaweiCloudApigAppService: GatewayApp
 ): CommandLineRunner {
-    protected val logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
 
     @Value("\${huawei.cloud.apig.groupName}")
     lateinit var groupName:String
