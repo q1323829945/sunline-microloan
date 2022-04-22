@@ -2,7 +2,6 @@ package cn.sunline.saas.dapr_wrapper
 
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getRequestId
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import io.dapr.client.DaprClient
@@ -28,7 +27,6 @@ object DaprHelper {
     private val metadata =
         mutableMapOf<String, String>(
             Header.TENANT_AUTHORIZATION.name to ContextUtil.getTenant().toString(),
-            Header.REQUEST_ID.name to ContextUtil.getRequestId(),
             Header.USER_AUTHORIZATION.name to ContextUtil.getUserId()
         )
 
