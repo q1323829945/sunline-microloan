@@ -1,13 +1,14 @@
 package cn.sunline.saas.global.filter
 
 import cn.sunline.saas.global.constant.meta.Header
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.global.util.setUserId
+import cn.sunline.saas.global.util.*
 import cn.sunline.saas.seq.Sequence
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
@@ -29,12 +30,18 @@ class HandlerRequestHeaderFilter(private val seq: Sequence): Filter {
         val httpServletRequest = request as HttpServletRequest
 
         logger.debug(httpServletRequest.requestURI)
+        val requestId = httpServletRequest.getHeader(Header.REQUEST_ID.key)
+        if(requestId.isNullOrEmpty()){
+            ContextUtil.setRequestId(seq.nextId().toString())
+        }else{
+            ContextUtil.setRequestId(requestId)
+        }
 
-        httpServletRequest.getHeader(Header.USER_AUTHORIZATION.name)?.run {
+        httpServletRequest.getHeader(Header.USER_AUTHORIZATION.key)?.run {
             ContextUtil.setUserId(this)
         }
 
-        httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.name)?.run {
+        httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.key)?.run {
             ContextUtil.setTenant(this)
         }
 

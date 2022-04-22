@@ -11,14 +11,17 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: true
     show-sql: true
+    use_sql_comments: true
   flyway:
     baseline-on-migrate: true
     enabled: true
   datasource:
-    url: "jdbc:mysql://localhost:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+#    url: "jdbc:mysql://localhost:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    url: "jdbc:log4jdbc:mysql://localhost:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
     username: "root"
     password: "123456"
-    driver-class-name: "com.mysql.cj.jdbc.Driver"
+#    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    driver-class-name: "net.sf.log4jdbc.DriverSpy"
   servlet:
     multipart:
       max-file-size: 100MB
@@ -65,6 +68,13 @@ redis:
 
 logging:
   level:
-    cn.sunline.saas: debug
+    cn.sunline.saas: trace
+    jdbc:
+      sqlonly: OFF
+      audit: OFF
+      resultsettable: OFF
+      connection: OFF
+      sqltiming: INFO
+      resultset: OFF
   pattern:
     console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"

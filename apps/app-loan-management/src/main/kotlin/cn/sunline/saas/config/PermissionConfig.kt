@@ -62,6 +62,12 @@ enum class PermissionConfig (
     LOAN_UPLOAD_CONFIGURE_GET_LIST("LoanUploadConfigure", "LoanUploadConfigure(\\?.*|\$)", RequestMethod.GET, "View LoanUploadConfigure list"),
     LOAN_UPLOAD_CONFIGURE_DELETE("LoanUploadConfigure", "LoanUploadConfigure/[0-9]+\$", RequestMethod.DELETE, "Modify LoanUploadConfigure status"),
 
+    RISK_CONTROL_RULE_ADD("RiskControlRule", "RiskControlRule\$", RequestMethod.POST, "Add RiskControlRule"),
+    RISK_CONTROL_RULE_LIST("RiskControlRule", "RiskControlRule(\\?.*|\$)", RequestMethod.GET, "View RiskControlRule list"),
+    RISK_CONTROL_RULE_SORT("RiskControlRule", "RiskControlRule/sort\$", RequestMethod.PUT, "change RiskControlRule sort"),
+    RISK_CONTROL_RULE_MODIFY("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.PUT, "Modify RiskControlRule"),
+    RISK_CONTROL_RULE_DELETE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.DELETE, "Delete RiskControlRule"),
+
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),

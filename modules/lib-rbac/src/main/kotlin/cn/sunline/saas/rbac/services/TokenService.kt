@@ -15,8 +15,15 @@ class TokenService {
         val claims = Jwts.claims(mapOf(
                 TOKEN_KEY_USERNAME to user.username,
                 TOKEN_KEY_USERID to userId,
-                TOKEN_KEY_ROLES to user.authorities.map { it.authority }
+//                TOKEN_KEY_ROLES to user.authorities.map { it.authority }
         ))
+//
+//        val claims = Jwts.claims(mapOf(
+//            TOKEN_KEY_USERNAME to user.username,
+//            TOKEN_KEY_USERID to userId,
+//            TOKEN_KEY_ROLES to user.authorities.map { it.authority }
+//        ))
+
 
         return Jwts.builder()
                 .setClaims(claims)
