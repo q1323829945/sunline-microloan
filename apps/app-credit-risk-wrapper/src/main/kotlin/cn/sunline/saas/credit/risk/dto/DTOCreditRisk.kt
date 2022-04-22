@@ -2,7 +2,6 @@ package cn.sunline.saas.credit.risk.dto
 
 data class DTOCreditRisk(
     val applicationId:Long,
-    val partner: String,
     val customerId: Long
 )
 

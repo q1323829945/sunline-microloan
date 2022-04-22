@@ -57,6 +57,16 @@ class PartnerIntegrated(
     @Column(name = "disbursement_partner", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var disbursementPartner: DisbursementPartner,
 
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(
+        name = "financial_accounting_partner",
+        nullable = false,
+        length = 32,
+        columnDefinition = "varchar(32) not null"
+    )
+    var financialAccountingPartner: FinancialAccountingPartner,
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var created: Date? = null,
