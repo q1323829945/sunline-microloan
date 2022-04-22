@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":lib-document"))
     implementation(project(":lib-huaweicloud-obs"))
     implementation(project(":lib-snowflake"))
+    implementation(project(":lib-loan-configure"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

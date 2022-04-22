@@ -9,7 +9,7 @@ CREATE TABLE `document_template_directory` (
   `parent_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK14b3i1hjojchu040erkdt5m8a` (`parent_id`),
-  CONSTRAINT `FK14b3i1hjojchu040erkdt5m8a` FOREIGN KEY (`parent_id`) REFERENCES `document_template_directory` (`id`)
+  CONSTRAINT `FK14b3i1hjojchu040erkdt5m8a` FOREIGN KEY (`parent_id`) REFERENCES `document_template_directory` (`id`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `document_template` (

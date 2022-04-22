@@ -2,12 +2,14 @@ CREATE TABLE `loan_upload_config` (
   `id` bigint NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `name` varchar(256) NOT NULL,
+  `directory_id` bigint NOT NULL,
   `required` tinyint(1) NOT NULL,
   `created` datetime(6) DEFAULT NULL,
   `updated` datetime(6) DEFAULT NULL,
   `tenant_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_deleted` (`deleted`)
+  KEY `idx_deleted` (`deleted`),
+  CONSTRAINT `FK9iuykkrwaiwph24v8aeu6on77` FOREIGN KEY (`directory_id`) REFERENCES `document_template_directory` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `customer_offer` (
