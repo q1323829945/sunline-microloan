@@ -1,13 +1,12 @@
 package cn.sunline.saas.rule.engine.api
 
-import cn.sunline.saas.rule.engine.model.Condition
 
 data class RuleResult(
         val result:Any,
-        val reason:String
+        val reason:String? =  null
 )
 
 interface RuleApi {
-    fun execute(data:Map<String,Any>,conditions: List<Condition>):RuleResult
+    fun execute(data:Map<String,Any>,conditions: List<String>):RuleResult
 
 }

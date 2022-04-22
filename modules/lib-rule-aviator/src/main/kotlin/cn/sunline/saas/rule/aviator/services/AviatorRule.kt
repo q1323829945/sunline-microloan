@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service
 @Service
 class AviatorRule: RuleApi {
 
-    override fun execute(data: Map<String, Any>, conditions: List<Condition>): RuleResult {
+    override fun execute(data: Map<String, Any>, conditions: List<String>): RuleResult {
 
         val reasonStringBuffer = StringBuffer("(")
         for(idx in conditions.indices){
-            reasonStringBuffer.append(conditions[idx].description)
+            reasonStringBuffer.append(conditions[idx])
             if(idx != conditions.size -1){
                 reasonStringBuffer.append(") && (")
             }

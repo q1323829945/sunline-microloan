@@ -8,10 +8,12 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-exceptions"))
+    implementation(project(":lib-rule-aviator"))
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake-simple"))
+    testImplementation(project(":lib-rule-aviator"))
 }
