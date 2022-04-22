@@ -1,4 +1,4 @@
-package cn.sunline.saas.banking.transaction.model
+package cn.sunline.saas.global.constant
 
 /**
  * @title: TransactionStatus

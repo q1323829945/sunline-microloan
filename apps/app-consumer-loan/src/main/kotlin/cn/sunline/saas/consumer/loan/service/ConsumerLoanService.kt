@@ -50,18 +50,17 @@ class ConsumerLoanService {
 
         //TODO Communicate Customer
 
-        account()
     }
 
-    fun account() {
+    fun lending(){
+        //TODO create lending instruction
+
         //TODO position keeping
         bankingTransactionService.registered()
 
         //TODO financial accounting
         consumerLoanPublish.financialAccounting()
-    }
 
-    fun lending(){
         consumerLoanPublish.disbursement()
     }
 }

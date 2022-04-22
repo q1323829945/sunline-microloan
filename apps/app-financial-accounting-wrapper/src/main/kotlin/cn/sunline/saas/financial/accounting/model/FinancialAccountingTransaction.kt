@@ -1,4 +1,4 @@
-package cn.sunline.saas.banking.transaction.model
+package cn.sunline.saas.financial.accounting.model
 
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
@@ -16,9 +16,9 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "banking_transaction"
+    name = "financial_accounting_transaction"
 )
-class BankingTransaction(
+class FinancialAccountingTransaction(
     @Id
     val id: Long,
 
@@ -57,24 +57,6 @@ class BankingTransaction(
     @NotNull
     @Column(nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
     val amount: BigDecimal,
-
-    @Column(
-        name = "applied_fee",
-        nullable = true,
-        scale = 19,
-        precision = 2,
-        columnDefinition = "number(19,2) null"
-    )
-    val appliedFee: BigDecimal?,
-
-    @Column(
-        name = "applied_rate",
-        nullable = true,
-        scale = 9,
-        precision = 6,
-        columnDefinition = "number(9,6) null"
-    )
-    val appliedRate: BigDecimal?
 
 ) : MultiTenant {
 

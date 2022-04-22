@@ -19,12 +19,12 @@ class ConsumerLoanController {
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
 
-    @PostMapping("/Initiate")
+    @PostMapping("/Underwriting")
     fun initiate() {
         consumerLoanService.underwriting()
     }
 
-    @PostMapping("/Initiate/LoanAgreement")
+    @PostMapping("/LoanAgreement")
     fun initiateLoanAgreement() {
         consumerLoanService.createLoanAgreement()
     }

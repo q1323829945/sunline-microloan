@@ -2,7 +2,6 @@ package cn.sunline.saas.fraud.evaluation.dto
 
 data class DTOFraudEvaluation(
     val applicationId:Long,
-    val partner: String,
     val customerId: Long
 )
 
