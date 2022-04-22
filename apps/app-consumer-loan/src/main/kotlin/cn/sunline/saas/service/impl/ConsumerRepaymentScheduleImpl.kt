@@ -124,7 +124,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
         val newRepaymentSchedule = repaymentScheduleCalcGeneration.calculatorReset(
             DTORepaymentScheduleResetCalculate(
                 remainLoanAmount = remainLoanAmount,
-                repaymentDate = repaymentDate,
+                repaymentDate = CalcDateComponent.parseViewToInstant(repaymentDate),
                 repaymentDay = repaymentDay,
                 baseYearDays = interestProduct?.interest?.baseYearDays!!,
                 paymentMethod = repaymentFeature?.payment?.paymentMethod!!,

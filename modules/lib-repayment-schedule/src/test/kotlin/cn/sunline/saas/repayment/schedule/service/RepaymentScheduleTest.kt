@@ -77,7 +77,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
             amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000).setScale(6,RoundingMode.HALF_UP),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
             endDate = endDate,
@@ -104,7 +104,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
             amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000).setScale(6,RoundingMode.HALF_UP),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
             endDate = endDate,
@@ -132,7 +132,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
             amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000).setScale(6,RoundingMode.HALF_UP),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
             endDate = endDate,
@@ -158,9 +158,9 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
-            amount = BigDecimal(12000.00),
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
             startDate = startDate,
             endDate = endDate,
@@ -168,41 +168,112 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDay = 21
         )
 
+        // 预览
         val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
         val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
         val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
         formatPlan(register)
-        logger.info { "-----------------------------------更新前后-------------------------------------" }
-//        val dtoRepaymentScheduleResetCalculate = DTORepaymentScheduleResetCalculate(
-//            repaymentScheduleId = plan.repaymentScheduleId,
-//            remainLoanAmount =  BigDecimal(12000.00),
-//            loanRate = BigDecimal(0.120000),
-//            baseYearDays = BaseYearDays.ACCOUNT_YEAR,
-//            repaymentDate = repaymentDate,
-//            paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
-//        )
-//        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrialAdd)
-//        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
-//        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
-//        formatPlan(register)
     }
 
-
-    /**
-     *  按期付息到期还款 指定还款日，按月 提前还款
-     */
     @Test
-    fun `generationRepaymentPrincipalCalculatorAdvance`() {
-
-        // 1834102985732160007
+    fun `generationEqualInstallmentFixedDayThreeMonth`() {
 
         val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
-        val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
-            amount = BigDecimal(12000.00),
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.THREE_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationEqualInstallmentFixedDaySixMonth`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.SIX_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationEqualInstallmentFixedDayTwelveMonth`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationPayInterestSchedulePrincipalMaturityFixedDayOneMonth`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
             startDate = startDate,
             endDate = endDate,
@@ -210,59 +281,130 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDay = 21
         )
 
+        // 预览
         val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
         val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
         val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
         formatPlan(register)
-        logger.info { "-----------------------------------更新前后-------------------------------------" }
-//        val dtoRepaymentScheduleResetCalculate = DTORepaymentScheduleResetCalculate(
-//            repaymentScheduleId = plan.repaymentScheduleId,
-//            remainLoanAmount =  BigDecimal(12000.00),
-//            loanRate = BigDecimal(0.120000),
-//            baseYearDays = BaseYearDays.ACCOUNT_YEAR,
-//            repaymentDate = repaymentDate,
-//            paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY
-//        )
-//        val plan1 =repaymentScheduleCalcGeneration.calculatorReset(dtoRepaymentScheduleResetCalculate)
-//        formatPlan(plan1.repaymentScheduleDetail, plan1)
     }
 
-    /**
-     *  到期还本还息 指定还款日，按月 提前还款
-     */
     @Test
-    fun `generationRepaymentPrincipalInterestCalculatorAdvance`() {
-        // 6977441507173528274
+    fun `generationPayInterestSchedulePrincipalMaturityFixedDayThreeMonth`() {
+
         val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
-        val repaymentDate = DateTime(2022, 6, 21, 0, 0)
         val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
-            amount = BigDecimal(12000.00),
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
             term = LoanTermType.ONE_YEAR,
-            interestRate = BigDecimal(0.120000),
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.THREE_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationPayInterestSchedulePrincipalMaturityFixedDaySixMonth`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.SIX_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationPayInterestSchedulePrincipalMaturityFixedDayTwelveMonth`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
+            paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
+            startDate = startDate,
+            endDate = endDate,
+            repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS,
+            repaymentDay = 21
+        )
+
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
+
+    @Test
+    fun `generationOneOffRepaymentFixedDay`() {
+        val startDate = DateTime(2022, 3, 21, 0, 0).toInstant()
+        val endDate = DateTime(2023, 3, 21, 0, 0).toInstant()
+        val dtoRepaymentScheduleCalculateTrial = DTORepaymentScheduleCalculateTrial(
+            amount = BigDecimal(12000.00).setScale(2,RoundingMode.HALF_UP),
+            term = LoanTermType.ONE_YEAR,
+            interestRate = BigDecimal(12.000000).setScale(6,RoundingMode.HALF_UP),
             paymentMethod = PaymentMethodType.ONE_OFF_REPAYMENT,
             startDate = startDate,
             endDate = endDate,
-            repaymentFrequency = RepaymentFrequency.ONE_MONTH,
             repaymentDay = 21
         )
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
-        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
-        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
-        formatPlan(register)
-        logger.info { "-----------------------------------更新前后-------------------------------------" }
-//        val dtoRepaymentScheduleResetCalculate = DTORepaymentScheduleResetCalculate(
-//            repaymentScheduleId = plan.,
-//            remainLoanAmount =  BigDecimal(12000.00),
-//            loanRate = BigDecimal(0.120000),
-//            baseYearDays = BaseYearDays.ACCOUNT_YEAR,
-//            repaymentDate = repaymentDate,
-//            paymentMethod = PaymentMethodType.ONE_OFF_REPAYMENT
-//        )
-//        val plan1 =repaymentScheduleCalcGeneration.calculatorReset(dtoRepaymentScheduleResetCalculate)
-//        formatPlan(plan1.repaymentScheduleDetail, plan1)
-    }
 
+        // 预览
+        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        Assertions.assertThat(plan).isNotNull
+        formatPlanView(plan)
+
+        // 保存
+        val dtoRepaymentScheduleAdd = objectMapper.convertValue<DTORepaymentScheduleAdd>(plan)
+        dtoRepaymentScheduleAdd.term = LoanTermType.ONE_YEAR
+        val register = repaymentScheduleService.register(dtoRepaymentScheduleAdd)
+        Assertions.assertThat(register).isNotNull
+        formatPlan(register)
+    }
 
     @Test
     fun `register`() {
@@ -293,7 +435,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         val format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         for (schedule in repaymentSchedule.schedule) {
             val lbmStr =
-                        "\t the" + schedule.period + " period" +
+                        "\t the " + schedule.period + " period" +
                         "\t repaymentInstallment: " + schedule.installment +
                         "\t principal: " + schedule.principal +
                         "\t interest: " + schedule.interest +

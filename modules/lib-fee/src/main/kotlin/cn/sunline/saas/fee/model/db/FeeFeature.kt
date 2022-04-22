@@ -2,6 +2,7 @@ package cn.sunline.saas.fee.model.db
 
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
+import cn.sunline.saas.global.constant.LoanFeeType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -28,7 +29,8 @@ class FeeFeature(
 
     @NotNull
     @Column(name = "fee_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val feeType: String,
+    @Enumerated(value = EnumType.STRING)
+    val feeType: LoanFeeType,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

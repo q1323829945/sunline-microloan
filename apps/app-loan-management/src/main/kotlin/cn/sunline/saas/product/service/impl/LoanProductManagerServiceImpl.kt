@@ -54,9 +54,16 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
         }
 
         loanProductData.repaymentFeature?.prepaymentFeatureModality?.groupBy { it.term }?.map { it->
-            val count = it.value.count ()
+            val count = it.value.count()
             if(count > 1){
                 throw LoanProductBusinessException("the type of prepayment's term was already exist,only one allowed",ManagementExceptionCode.DATA_ALREADY_EXIST)
+            }
+        }
+
+        loanProductData.feeFeatures?.groupBy { it.feeType }?.map{ it ->
+            val count = it.value.count()
+            if(count > 1){
+                throw LoanProductBusinessException("the feeType of feeFeatures was more than once,only one allowed",ManagementExceptionCode.DATA_ALREADY_EXIST)
             }
         }
 
@@ -76,9 +83,16 @@ class LoanProductManagerServiceImpl: LoanProductManagerService {
         checkAmountConditions(BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!),BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!))
 
         dtoLoanProduct.repaymentFeature?.prepaymentFeatureModality?.groupBy { it.term }?.map { it->
-            val count = it.value.count ()
+            val count = it.value.count()
             if(count > 1){
                 throw LoanProductBusinessException("the type of prepayment's term was already exist,only one allowed",ManagementExceptionCode.DATA_ALREADY_EXIST)
+            }
+        }
+
+        dtoLoanProduct.feeFeatures?.groupBy { it.feeType }?.map{ it ->
+            val count = it.value.count()
+            if(count > 1){
+                throw LoanProductBusinessException("the feeType of feeFeatures was more than once,only one allowed",ManagementExceptionCode.DATA_ALREADY_EXIST)
             }
         }
 
