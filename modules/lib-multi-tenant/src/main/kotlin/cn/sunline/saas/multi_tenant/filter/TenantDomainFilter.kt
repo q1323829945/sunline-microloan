@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse
 class TenantDomainFilter : GenericFilterBean() {
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
-        var domain = httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.name) ?: run {
+        var domain = httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.key) ?: run {
             handleException(
                 response!!,
                 ManagementExceptionCode.AUTHORIZATION_TENANT_DOMAIN_MISSING,

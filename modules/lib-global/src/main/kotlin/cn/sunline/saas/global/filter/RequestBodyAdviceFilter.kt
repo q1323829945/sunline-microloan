@@ -2,8 +2,7 @@ package cn.sunline.saas.global.filter
 
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.global.util.setUserId
+import cn.sunline.saas.global.util.setRequestId
 import com.google.gson.Gson
 import org.apache.commons.io.IOUtils
 import org.springframework.core.MethodParameter
@@ -50,12 +49,16 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
                     this as Map<String,String>
                     httpHeaders.setAll(this)
 
-                    this[Header.USER_AUTHORIZATION.name]?.run {
-                        ContextUtil.setUserId(this)
+                    this[Header.REQUEST_ID.key]?.run {
+                        ContextUtil.setRequestId(this)
                     }
 
-                    this[Header.TENANT_AUTHORIZATION.name]?.run {
-                        ContextUtil.setTenant(this)
+                    this[Header.USER_AUTHORIZATION.key]?.run {
+                        ContextUtil.setRequestId(this)
+                    }
+
+                    this[Header.TENANT_AUTHORIZATION.key]?.run {
+                        ContextUtil.setRequestId(this)
                     }
                 }
 

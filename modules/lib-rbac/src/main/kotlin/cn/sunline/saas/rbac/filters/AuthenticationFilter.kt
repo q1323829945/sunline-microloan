@@ -23,7 +23,7 @@ class AuthenticationFilter (
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
         val authToken = httpServletRequest.getHeader("X-Authorization")
-        val authUsername = httpServletRequest.getHeader(Header.USER_AUTHORIZATION.name)?: run{
+        val authUsername = httpServletRequest.getHeader(Header.USER_AUTHORIZATION.key)?: run{
             handleException(response!!, ManagementExceptionCode.AUTHORIZATION_USERNAME_MISSING, "Missing authorization username")
             return
         }

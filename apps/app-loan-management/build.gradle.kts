@@ -36,6 +36,8 @@ dependencies {
     implementation(project(":lib-huaweicloud-apig"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-partner-integrated"))
+    implementation(project(":lib-risk-control"))
+    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

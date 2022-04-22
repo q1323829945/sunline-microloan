@@ -52,7 +52,10 @@ enum class ManagementExceptionCode(val code: Int) {
 
 
     //underwriting 5350 - 5399
-    UNDERWRITING_NOT_FOUND(5350)
+    UNDERWRITING_NOT_FOUND(5350),
+
+    //risk control rule 5400-5450
+    RISK_CONTROL_RULE_NOT_FOUND(5400),
 
 
 }
