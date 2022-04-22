@@ -2,6 +2,7 @@ package cn.sunline.saas.fee.model.dto
 
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
+import cn.sunline.saas.global.constant.LoanFeeType
 import java.math.BigDecimal
 
 /**
@@ -11,9 +12,9 @@ import java.math.BigDecimal
  * @date 2022/3/14 10:47
  */
 data class DTOFeeFeatureAdd(
-    val feeType: String,
+    val feeType: LoanFeeType,
     val feeMethodType: FeeMethodType,
-    val feeAmount: String?,
-    val feeRate: String?,
+    val feeAmount: BigDecimal?,
+    val feeRate: BigDecimal?,
     val feeDeductType: FeeDeductType
 )

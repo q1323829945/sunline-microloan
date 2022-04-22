@@ -3,6 +3,7 @@ package cn.sunline.saas.fee.service
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
+import cn.sunline.saas.global.constant.LoanFeeType
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,17 +22,17 @@ class FeeFeatureServiceTest(@Autowired private val feeFeatureService: FeeFeature
     fun `entity save`() {
         val feeFeatures = mutableListOf<DTOFeeFeatureAdd>()
         val feeFeature1 = DTOFeeFeatureAdd(
-            feeType = "Test1",
+            feeType = LoanFeeType.PREPAYMENT,
             feeMethodType = FeeMethodType.FIX_AMOUNT,
-            feeAmount = "150",
+            feeAmount = BigDecimal(150),
             feeRate = null,
             feeDeductType = FeeDeductType.IMMEDIATE
         )
         val feeFeature2 = DTOFeeFeatureAdd(
-            feeType = "Test2",
+            feeType = LoanFeeType.OVERDUE,
             feeMethodType = FeeMethodType.FEE_RATIO,
             feeAmount = null,
-            feeRate = "1.5",
+            feeRate = BigDecimal(1.5),
             feeDeductType = FeeDeductType.IMMEDIATE
         )
 

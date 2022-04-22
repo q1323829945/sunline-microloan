@@ -81,14 +81,14 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
 
         val feeFeatures = mutableListOf<DTOFeeFeatureAdd>()
         val feeFeature1 = DTOFeeFeatureAdd(
-            feeType = "Test1",
+            feeType = LoanFeeType.PREPAYMENT,
             feeMethodType = FeeMethodType.FIX_AMOUNT,
             feeAmount = "150",
             feeRate = null,
             feeDeductType = FeeDeductType.IMMEDIATE
         )
         val feeFeature2 = DTOFeeFeatureAdd(
-            feeType = "Test2",
+            feeType = LoanFeeType.OVERDUE,
             feeMethodType = FeeMethodType.FEE_RATIO,
             feeAmount = null,
             feeRate = "1.5",
