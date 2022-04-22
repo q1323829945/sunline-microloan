@@ -1,5 +1,6 @@
 package cn.sunline.saas.document.template.modules
 
+import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -36,9 +37,17 @@ class DocumentTemplateDirectory(
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null,
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "directory_id")
-    var templates: MutableList<DocumentTemplate> = mutableListOf()
+    var templates: MutableList<DocumentTemplate> = mutableListOf(),
+
+    @Column(name = "directory_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Enumerated(value = EnumType.STRING)
+    var directoryType: DirectoryType = DirectoryType.TEMPLATE,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "directory_id")
+    var loanUploadConfigures: MutableList<LoanUploadConfigure> = mutableListOf()
 
 ) :  MultiTenant {
 
