@@ -1,4 +1,4 @@
-package cn.sunline.saas.loan.product.model
+package cn.sunline.saas.global.constant
 
 /**
  * @title: LoanFeeType
