@@ -29,7 +29,8 @@ class PartnerIntegratedService(private val partnerIntegratedRepo: PartnerIntegra
                 partnerIntegrated.customerCreditRatingPartner,
                 partnerIntegrated.creditRiskPartner,
                 partnerIntegrated.regulatoryCompliancePartner,
-                partnerIntegrated.fraudEvaluationPartner
+                partnerIntegrated.fraudEvaluationPartner,
+                partnerIntegrated.disbursementPartner
             )
         }
         return save(poPartnerIntegrated)

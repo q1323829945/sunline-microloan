@@ -38,7 +38,11 @@ class RepaymentArrangement(
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "repayment_id")
-    val prepayment: MutableList<PrepaymentArrangement>
+    val prepayment: MutableList<PrepaymentArrangement>,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "repayment_id")
+    val repaymentAccounts: MutableList<RepaymentAccount>
 
 ) : MultiTenant {
 

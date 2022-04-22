@@ -1,6 +1,7 @@
 package cn.sunline.saas.repayment.arrangement.factory
 
 import cn.sunline.saas.repayment.arrangement.model.db.PrepaymentArrangement
+import cn.sunline.saas.repayment.arrangement.model.db.RepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentArrangement
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.seq.Sequence
@@ -32,14 +33,26 @@ class RepaymentArrangementFactory {
             )
         }
 
+        val repaymentAccount = mutableListOf<RepaymentAccount>()
+
+        dtoRepaymentArrangementAdd.repaymentAccount.forEach {
+            repaymentAccount.add(
+                RepaymentAccount(
+                    id = seq.nextId(),
+                    repaymentAccount = it.repaymentAccount,
+                    repaymentAccountBank = it.repaymentAccountBank
+                )
+            )
+        }
+
         return RepaymentArrangement(
             id = agreementId,
             paymentMethod = dtoRepaymentArrangementAdd.paymentMethod,
             frequency = dtoRepaymentArrangementAdd.frequency,
             repaymentDayType = dtoRepaymentArrangementAdd.repaymentDayType,
-            prepayment = prepaymentArrangement
+            prepayment = prepaymentArrangement,
+            repaymentAccounts = repaymentAccount
         )
-
     }
 
 }

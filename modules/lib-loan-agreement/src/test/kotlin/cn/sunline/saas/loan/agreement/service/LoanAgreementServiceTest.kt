@@ -1,6 +1,5 @@
 package cn.sunline.saas.loan.agreement.service
 
-import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementAccount
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.constant.FeeDeductType
@@ -12,6 +11,7 @@ import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -47,9 +47,13 @@ class LoanAgreementServiceTest {
         val dtoPrepaymentArrangementAdd1 =
             DTOPrepaymentArrangementAdd(LoanTermType.ONE_MONTH, PrepaymentType.NOT_ALLOWED, BigDecimal("150"))
         prepaymentArrangement.add(dtoPrepaymentArrangementAdd1)
+
+        val dtoRepaymentAccount = mutableListOf<DTORepaymentAccount>()
+        dtoRepaymentAccount.add(DTORepaymentAccount("123455", "120"))
+        dtoRepaymentAccount.add(DTORepaymentAccount("1234555566666", "1201111"))
         val dtoRepaymentArrangementAdd = DTORepaymentArrangementAdd(
             PaymentMethodType.ONE_OFF_REPAYMENT,
-            RepaymentFrequency.SIX_MONTHS, RepaymentDayType.BASE_LOAN_DAY, prepaymentArrangement
+            RepaymentFrequency.SIX_MONTHS, RepaymentDayType.BASE_LOAN_DAY, prepaymentArrangement, dtoRepaymentAccount
         )
         val feeArrangement = mutableListOf<DTOFeeArrangementAdd>()
         val dtoFeeArrangementAdd = DTOFeeArrangementAdd(
@@ -61,9 +65,7 @@ class LoanAgreementServiceTest {
         val lender = mutableListOf<Long>()
         lender.add(2)
 
-        val lendingAccount = DTODisbursementAccount("123455","120")
-        val paymentAccount = mutableListOf(DTODisbursementAccount("123455","120"))
-        val disbursementArrangement = DTODisbursementArrangementAdd(paymentAccount,lendingAccount)
+        val disbursementArrangement = DTODisbursementArrangementAdd("123455", "120")
 
         val dtoLoanAgreementAdd =
             DTOLoanAgreementAdd(

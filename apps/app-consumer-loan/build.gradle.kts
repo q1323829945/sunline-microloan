@@ -25,9 +25,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-global"))
-
     implementation(project(":lib-repayment-schedule"))
-    implementation(project(":lib-loan-product"))
+    implementation(project(":lib-loan-agreement"))
+    implementation(project(":lib-banking-transaction"))
+    implementation(project(":lib-organisation"))
+    implementation(project(":lib-person"))
 
     implementation(project(":lib-snowflake"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")

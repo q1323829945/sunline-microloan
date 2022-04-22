@@ -12,7 +12,6 @@ object ContextUtil {
     private val context = ThreadLocal<MutableMap<String, String>>()
 
     internal const val TENANT_KEY = "TENANT_ID"
-    internal const val REQUEST_KEY = "REQUEST_ID"
     internal const val USER_KEY = "USER_ID"
 
     internal fun put(key: String, value: String) {
@@ -35,14 +34,6 @@ fun ContextUtil.setTenant(tenantId: String) {
 
 fun ContextUtil.getTenant(): Long {
     return get(TENANT_KEY)?.toLong() ?: throw ContextNullException("tenant id is null in context")
-}
-
-fun ContextUtil.setRequestId(requestId: String) {
-    put(REQUEST_KEY, requestId)
-}
-
-fun ContextUtil.getRequestId(): String {
-    return get(REQUEST_KEY)?: throw ContextNullException("request id is null in context")
 }
 
 fun ContextUtil.setUserId(userId: String) {
