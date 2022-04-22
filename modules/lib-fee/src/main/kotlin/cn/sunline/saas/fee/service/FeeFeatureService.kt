@@ -28,15 +28,7 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
         val feeFeatures = mutableListOf<FeeFeature>()
 
         dtoFeeFeatures.forEach {
-            val feeAmount = it.feeAmount?.run {
-                BigDecimal(this)
-            }
-
-            val feeRate = it.feeRate?.run {
-                BigDecimal(this)
-            }
-
-            FeeUtil.validFeeConfig(it.feeMethodType, feeAmount, feeRate)
+            FeeUtil.validFeeConfig(it.feeMethodType, it.feeAmount, it.feeRate)
 
             feeFeatures.add(
                 FeeFeature(
@@ -44,8 +36,8 @@ class FeeFeatureService(private val feeFeatureRepo: FeeFeatureRepository) :
                     productId,
                     it.feeType,
                     it.feeMethodType,
-                    feeAmount,
-                    feeRate,
+                    it.feeAmount,
+                    it.feeRate,
                     it.feeDeductType
                 )
             )
