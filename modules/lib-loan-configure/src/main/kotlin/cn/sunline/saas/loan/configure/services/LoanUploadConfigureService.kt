@@ -18,15 +18,4 @@ class LoanUploadConfigureService  (private var baseRepository: LoanUploadConfigu
         loanUploadConfigure.id = sequence.nextId()
         return this.save(loanUploadConfigure)
     }
-
-    fun findAllExist(productId:Long):List<LoanUploadConfigure>{
-
-        val page = getPageWithTenant({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"),false))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("productId"),productId))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-        return page.toList()
-    }
 }

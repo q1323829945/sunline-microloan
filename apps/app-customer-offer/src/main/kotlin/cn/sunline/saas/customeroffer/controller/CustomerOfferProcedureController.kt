@@ -70,13 +70,6 @@ class CustomerOfferProcedureController {
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 
-    @GetMapping("loanUploadTemplate")
-    fun getLoanUploadTemplate(@RequestParam(required = true) productId: Long):ResponseEntity<DTOResponseSuccess<List<DTOUploadConfigureView>>>{
-        val list = loanUploadConfigureService.findAllExist(productId)
-        val responseEntity = objectMapper.convertValue<List<DTOUploadConfigureView>>(list)
-        return DTOResponseSuccess(responseEntity).response()
-    }
-
     private fun getDTOFileList(files: List<MultipartFile>?):List<CustomerLoanApplyService.DTOFile>{
         val fileList = ArrayList<CustomerLoanApplyService.DTOFile>()
         files?.forEach {
