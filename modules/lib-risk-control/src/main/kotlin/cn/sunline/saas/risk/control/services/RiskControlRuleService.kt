@@ -4,7 +4,6 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.risk.control.exception.RiskControlRuleNotFoundException
-import cn.sunline.saas.risk.control.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.modules.RuleType
 import cn.sunline.saas.risk.control.modules.db.RiskControlRule
 import cn.sunline.saas.risk.control.modules.db.RiskControlRuleParam
@@ -30,9 +29,6 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     @Autowired
     private lateinit var sequence: Sequence
 
-    @Autowired
-    private lateinit var riskControlRuleParamService: RiskControlRuleParamService
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):RiskControlRule{
@@ -48,7 +44,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
         riskControlRule.description = setDescription(riskControlRule.params)
 
-        return riskControlRuleRepository.save(riskControlRule)
+        return save(riskControlRule)
     }
 
     fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
@@ -64,11 +60,11 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
 
     @Transactional
-    fun updateRiskControlRule(id:Long,dtoRiskControlRuleChange:DTORiskControlRuleChange):RiskControlRule{
-        val oldOne = this.getOne(id)?:throw RiskControlRuleNotFoundException("Invalid risk control rule")
+    fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): RiskControlRule {
+        val oldOne = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
 
         dtoRiskControlRuleChange.params?.forEach {
-            it.id?: run {
+            it.id ?: run {
                 it.id = sequence.nextId().toString()
                 it.ruleId = oldOne.id.toString()
             }
@@ -79,31 +75,14 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         oldOne.name = newOne.name
         oldOne.remark = newOne.remark
         oldOne.params = newOne.params
-
-        oldOne.params.forEach {
-            println(it.id)
-            println(it.ruleId)
-            println(it.dataSourceType)
-            println(it.threshold)
-            println(it.relationalOperatorType)
-        }
-
-
         oldOne.description = setDescription(newOne.params)
 
-        val save = this.save(oldOne)
-
-        riskControlRuleParamService.deleteByRuleId(null)
-
-        return save
+        return save(oldOne)
     }
 
     @Transactional
     fun deleteRiskControlRule(id:Long){
         val riskControlRule = this.getOne(id)?:throw RiskControlRuleNotFoundException("Invalid risk control rule")
-
-        riskControlRuleParamService.deleteByRuleId(id)
-
         riskControlRuleRepository.delete(riskControlRule)
     }
 

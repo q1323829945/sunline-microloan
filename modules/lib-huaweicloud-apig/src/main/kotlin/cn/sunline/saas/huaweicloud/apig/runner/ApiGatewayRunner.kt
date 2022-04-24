@@ -21,7 +21,7 @@ class ApiGatewayRunner(
     val huaweiCloudApigApiService: GatewayApi,
     val huaweiCloudApigAppService: GatewayApp
 ): CommandLineRunner {
-    private val logger: Logger = LoggerFactory.getLogger(CommandLineRunner::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ApiGatewayRunner::class.java)
 
     @Value("\${huawei.cloud.apig.groupName}")
     lateinit var groupName:String
