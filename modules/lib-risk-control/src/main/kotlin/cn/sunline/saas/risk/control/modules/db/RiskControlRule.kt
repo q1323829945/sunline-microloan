@@ -42,12 +42,13 @@ class RiskControlRule (
     var description: String? = null,
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE])
     @JoinColumn(name = "rule_id")
     var params:MutableList<RiskControlRuleParam> = mutableListOf(),
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false)
     var created: Date? = null,
 
     @UpdateTimestamp

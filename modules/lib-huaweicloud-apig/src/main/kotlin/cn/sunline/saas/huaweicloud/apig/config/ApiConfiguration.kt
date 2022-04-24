@@ -65,6 +65,13 @@ class ApiConfiguration(private val groupId:String,private val domainUrl:String,p
         apiParamsList.add(getApiParams("addLoanUploadConfigure","/LoanUploadConfigure",ReqMethodType.POST,"新增贷款申请上传配置"))
         apiParamsList.add(getApiParams("deleteLoanUploadConfigure","/LoanUploadConfigure/{id}",ReqMethodType.DELETE,"删除贷款申请上传配置"))
 
+
+        apiParamsList.add(getApiParams("addRiskControlRule","/RiskControlRule",ReqMethodType.POST,"新增风控规则"))
+        apiParamsList.add(getApiParams("updateRiskControlRule","/RiskControlRule/{id}",ReqMethodType.PUT,"修改风控规则"))
+        apiParamsList.add(getApiParams("deleteRiskControlRule","/RiskControlRule/{id}",ReqMethodType.DELETE,"删除风控规则"))
+        apiParamsList.add(getApiParams("queryRiskControlRuleAllList","/RiskControlRule",ReqMethodType.GET,"查询风控规则列表"))
+        apiParamsList.add(getApiParams("RiskControlRuleSort","/RiskControlRule/sort",ReqMethodType.PUT,"风控规则排序"))
+
     }
 
     private fun getApiParams(apiName:String,backendUri:String,reqMethodType: ReqMethodType,remark:String? = null):APiCreateParams{
