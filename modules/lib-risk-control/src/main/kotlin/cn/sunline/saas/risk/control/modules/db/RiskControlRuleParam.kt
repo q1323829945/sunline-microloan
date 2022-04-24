@@ -17,17 +17,17 @@ class RiskControlRuleParam (
     @Id
     val id: Long,
 
-    @Column(name = "rule_id", nullable = false, columnDefinition = "bigint null")
+    @Column(name = "rule_id", columnDefinition = "bigint null")
     var ruleId: Long?,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "data_source", nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(name = "data_source",  length = 128, columnDefinition = "varchar(128) not null")
     var dataSourceType: DataSourceType,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "relation_operator", nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(name = "relation_operator", length = 128, columnDefinition = "varchar(128) not null")
     var relationalOperatorType: RelationalOperatorType,
 
     @NotNull
