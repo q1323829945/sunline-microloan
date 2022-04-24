@@ -33,7 +33,6 @@ class RepaymentFeatureFactory {
 
         val prepayments = mutableListOf<PrepaymentFeatureModality>()
         for (temp in interestFeatureData.prepaymentFeatureModality) {
-            val penaltyRatio = BigDecimal(temp.penaltyRatio) ?: BigDecimal.ZERO
             val penaltyRatio = temp.penaltyRatio ?: BigDecimal.ZERO
 
             prepayments.add(
