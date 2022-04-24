@@ -56,7 +56,7 @@ class UploadConfigureService {
     fun deleteUploadConfigure(id: Long): DTOUploadConfigureView {
         val mapping = loanProductService.getLoanProductLoanUploadConfigureMapping(id)
         if(mapping>0){
-            throw LoanUploadConfigureBusinessException("The config is using,no-supported deleted",ManagementExceptionCode.STATUS_ERROR)
+            throw LoanUploadConfigureBusinessException("The config is using,no-supported deleted",ManagementExceptionCode.LOAN_UPLOAD_CONFIGURE_NOT_FOUND)
         }
         val uploadConfigure = loanUploadConfigureService.getOne(id) ?: throw ConfigureNotFoundException("Invalid configure")
         uploadConfigure.deleted = true
