@@ -29,6 +29,10 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     @Autowired
     private lateinit var sequence: Sequence
 
+
+    @Autowired
+    private lateinit var riskControlRuleParamService: RiskControlRuleParamService
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):RiskControlRule{
@@ -77,7 +81,11 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         oldOne.params = newOne.params
         oldOne.description = setDescription(newOne.params)
 
-        return save(oldOne)
+        val save = this.save(oldOne)
+
+        riskControlRuleParamService.deleteByRuleId(null)
+
+        return save
     }
 
     @Transactional

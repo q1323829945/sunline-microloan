@@ -81,4 +81,6 @@ enum class PermissionConfig (
     DOCUMENT_TEMPLATE_MENU("menu","documentTemplateConfig", RequestMethod.GET,"View formal documentTemplateConfig menu"),
     LOAN_PRODUCT_MENU("menu","loanProductConfig", RequestMethod.GET,"View formal loanProductConfig menu"),
     LOAN_UPLOAD_CONFIGURE_MENU("menu","loanFileUploadConfig", RequestMethod.GET,"View formal loanUploadConfig menu"),
+    RISK_CONTROL_RULE_MENU("menu","riskControlRuleConfig", RequestMethod.GET,"View formal RiskControlRuleConfig menu"),
+
 }
