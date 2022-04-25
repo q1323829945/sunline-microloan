@@ -43,7 +43,7 @@ class RiskControlServiceTest {
                     DataSourceType.SOURCE1,
                     RelationalOperatorType.LT,
                     "123"
-                )
+                    )
                 )
             ),RiskControlRule(
                 2,
