@@ -70,6 +70,7 @@ enum class PermissionConfig (
     RISK_CONTROL_RULE_SORT("RiskControlRule", "RiskControlRule/sort\$", RequestMethod.PUT, "change RiskControlRule sort"),
     RISK_CONTROL_RULE_MODIFY("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.PUT, "Modify RiskControlRule"),
     RISK_CONTROL_RULE_DELETE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.DELETE, "Delete RiskControlRule"),
+    RISK_CONTROL_RULE_GET_ONE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.GET, "Get One RiskControlRule"),
 
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),

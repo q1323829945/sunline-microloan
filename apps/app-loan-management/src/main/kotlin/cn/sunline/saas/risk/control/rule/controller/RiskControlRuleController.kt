@@ -34,6 +34,15 @@ class RiskControlRuleController {
         return DTOResponseSuccess(responseEntity).response()
     }
 
+    @GetMapping("{id}")
+    fun getDetail(@PathVariable id: String):ResponseEntity<DTOResponseSuccess<DTORiskControlRuleView>>{
+        val riskControlRule = riskControlRuleService.getDetail(id.toLong())
+
+        val responseEntity = objectMapper.convertValue<DTORiskControlRuleView>(riskControlRule)
+
+        return DTOResponseSuccess(responseEntity).response()
+    }
+
     @PostMapping
     fun addOne(@RequestBody dtoRiskControlRuleAdd: DTORiskControlRuleAdd):ResponseEntity<DTOResponseSuccess<DTORiskControlRuleView>>{
         val riskControlRule = riskControlRuleService.addRiskControlRule(dtoRiskControlRuleAdd)
