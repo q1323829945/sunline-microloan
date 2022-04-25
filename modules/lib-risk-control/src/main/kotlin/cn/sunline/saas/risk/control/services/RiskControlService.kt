@@ -20,28 +20,24 @@ class RiskControlService {
     fun execute(customerId:Long,rules:List<RiskControlRule>): ExecuteResult{
         //TODO:
 
-        val result = run outside@{
-            rules.forEach {  riskControlRule ->
-                val map = mutableMapOf<String,Any>()
-                val conditions = mutableListOf<String>()
-                conditions.add(riskControlRule.description!!)
-                riskControlRule.params.forEach {
-                    map[it.dataSourceType.name] = DataSourceFactory.instance(it.dataSourceType).calculation(customerId)
-                }
-                val result = ruleApi.execute(map,conditions)
-                if(result.result == false){
-                    return@outside ExecuteResult(
-                        false,
-                        "${riskControlRule.name} fail ,because ${riskControlRule.description} -> ${result.reason}"
-                    )
-                }
+        rules.forEach {  riskControlRule ->
+            val map = mutableMapOf<String,Number>()
+            val conditions = mutableListOf<String>()
+            conditions.add(riskControlRule.description!!)
+            riskControlRule.params.forEach {
+                map[it.dataSourceType.name] = DataSourceFactory.instance(it.dataSourceType).calculation(customerId)
             }
-        }
-
-        if(result is ExecuteResult){
-            return result
+            val result = ruleApi.execute(map,conditions)
+            if(result.result == false){
+                return ExecuteResult(
+                    false,
+                    "${riskControlRule.name} fail ,because ${riskControlRule.description} -> ${result.reason}"
+                )
+            }
         }
 
         return ExecuteResult(true)
     }
+
+
 }
