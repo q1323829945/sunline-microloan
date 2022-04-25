@@ -24,6 +24,7 @@ class ConsumerLoanController {
         consumerLoanService.underwriting()
     }
 
+
     @PostMapping("/LoanAgreement")
     fun initiateLoanAgreement() {
         consumerLoanService.createLoanAgreement()

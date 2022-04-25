@@ -29,7 +29,12 @@ class DisbursementArrangement(
 
     @NotNull
     @Column(name = "disbursement_account_bank", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val disbursementAccountBank: String
+    val disbursementAccountBank: String,
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "disbursement_lend_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    val disbursementLendType:DisbursementLendType
 
 ) : MultiTenant {
 
