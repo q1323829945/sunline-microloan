@@ -1,7 +1,8 @@
-package cn.sunline.saas.risk.control.modules.db
+package cn.sunline.saas.risk.control.rule.modules.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.risk.control.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*

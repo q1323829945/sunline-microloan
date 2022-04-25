@@ -1,8 +1,8 @@
-package cn.sunline.saas.risk.control.services
+package cn.sunline.saas.risk.control.rule.services
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.risk.control.modules.db.RiskControlRuleParam
-import cn.sunline.saas.risk.control.repositories.RiskControlRuleParamRepository
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
+import cn.sunline.saas.risk.control.rule.repositories.RiskControlRuleParamRepository
 import org.springframework.stereotype.Service
 
 @Service

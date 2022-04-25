@@ -3,8 +3,8 @@ package cn.sunline.saas.risk.control.datasource.factory
 import cn.sunline.saas.risk.control.datasource.factory.impl.Source1
 import cn.sunline.saas.risk.control.datasource.factory.impl.Source2
 import cn.sunline.saas.risk.control.datasource.factory.impl.Source3
-import cn.sunline.saas.risk.control.modules.DataSourceType
-import cn.sunline.saas.risk.control.modules.DataSourceType.*
+import cn.sunline.saas.risk.control.rule.modules.DataSourceType
+import cn.sunline.saas.risk.control.rule.modules.DataSourceType.*
 
 
 object DataSourceFactory{
