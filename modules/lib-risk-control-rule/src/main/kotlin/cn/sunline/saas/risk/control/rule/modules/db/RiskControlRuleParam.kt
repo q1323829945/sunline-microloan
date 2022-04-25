@@ -1,7 +1,7 @@
-package cn.sunline.saas.risk.control.modules.db
+package cn.sunline.saas.risk.control.rule.modules.db
 
-import cn.sunline.saas.risk.control.modules.DataSourceType
-import cn.sunline.saas.risk.control.modules.RelationalOperatorType
+import cn.sunline.saas.risk.control.rule.modules.DataSourceType
+import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 import javax.validation.constraints.NotNull

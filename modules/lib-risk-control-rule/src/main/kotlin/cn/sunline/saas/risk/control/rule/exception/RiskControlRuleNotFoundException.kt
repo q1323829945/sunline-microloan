@@ -1,4 +1,4 @@
-package cn.sunline.saas.risk.control.exception
+package cn.sunline.saas.risk.control.rule.exception
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException

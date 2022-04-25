@@ -2,12 +2,12 @@ package cn.sunline.saas.risk.control.rule.controller
 
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.risk.control.modules.RuleType
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleChange
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleSort
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleView
-import cn.sunline.saas.risk.control.services.RiskControlRuleService
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleChange
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleSort
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleView
+import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

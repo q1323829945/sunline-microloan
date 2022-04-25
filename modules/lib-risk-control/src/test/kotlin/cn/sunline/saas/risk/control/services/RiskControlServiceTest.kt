@@ -1,10 +1,12 @@
 package cn.sunline.saas.risk.control.services
 
-import cn.sunline.saas.risk.control.modules.DataSourceType
-import cn.sunline.saas.risk.control.modules.RelationalOperatorType
-import cn.sunline.saas.risk.control.modules.RuleType
-import cn.sunline.saas.risk.control.modules.db.RiskControlRule
-import cn.sunline.saas.risk.control.modules.db.RiskControlRuleParam
+import cn.sunline.saas.risk.control.rule.modules.DataSourceType
+import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,19 +15,15 @@ import org.springframework.boot.test.context.SpringBootTest
 class RiskControlServiceTest {
 
     @Autowired
-    private lateinit var riskControlRuleService: RiskControlRuleService
-
-    @Autowired
     private lateinit var riskControlService: RiskControlService
 
     @Test
     fun execute(){
         val list = getList()
 
-        val result = riskControlService.execute(list)
+        val result = riskControlService.execute(1,list)
 
-        println(result.result)
-        println(result.reason)
+        assertThat(result.result).isEqualTo(false)
 
     }
 
@@ -38,13 +36,15 @@ class RiskControlServiceTest {
                 1,
                 "",
                 "SOURCE1 < 123",
-                params = mutableListOf(RiskControlRuleParam(
+                params = mutableListOf(
+                    RiskControlRuleParam(
                     1,
                     2,
                     DataSourceType.SOURCE1,
                     RelationalOperatorType.LT,
                     "123"
-                ))
+                )
+                )
             ),RiskControlRule(
                 2,
                 "第二条规则",

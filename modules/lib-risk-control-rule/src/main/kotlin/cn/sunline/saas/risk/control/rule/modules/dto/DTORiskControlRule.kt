@@ -1,11 +1,12 @@
-package cn.sunline.saas.risk.control.modules.dto
+package cn.sunline.saas.risk.control.rule.modules.dto
 
-import cn.sunline.saas.risk.control.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+
 
 data class DTORiskControlRuleAdd (
     var id:String?,
     val name:String,
-    val ruleType:RuleType,
+    val ruleType: RuleType,
     var sort:Long? = null,
     val remark: String? = null,
     val description:String? = null,
