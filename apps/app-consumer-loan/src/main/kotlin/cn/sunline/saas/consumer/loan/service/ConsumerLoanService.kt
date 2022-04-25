@@ -4,7 +4,7 @@ import cn.sunline.saas.banking.transaction.service.BankingTransactionService
 import cn.sunline.saas.consumer.loan.event.ConsumerLoanPublish
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
-import cn.sunline.saas.organisation.service.OrganisationService
+import cn.sunline.saas.party.organisation.service.OrganisationService
 import cn.sunline.saas.person.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
