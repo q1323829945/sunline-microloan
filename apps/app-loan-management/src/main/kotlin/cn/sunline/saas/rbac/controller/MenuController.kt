@@ -35,7 +35,7 @@ class MenuController {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping
-    fun getMenu(@RequestHeader("USER_AUTHORIZATION")username:String): ResponseEntity<DTOResponseSuccess<List<DTOMenuView>>> {
+    fun getMenu(@RequestHeader("X-Authorization-Username")username:String): ResponseEntity<DTOResponseSuccess<List<DTOMenuView>>> {
         val user = userService.getByUsername(username)?:throw UserNotFoundException("Invalid user",ManagementExceptionCode.DATA_NOT_FOUND)
         val permissionSetList = user.roles.map {
             it.permissions
@@ -53,6 +53,8 @@ class MenuController {
         }
 
         val resultMenu = menuService.getPermissionMenu(menuNameSet)
+
+
 
         val responseMenu = objectMapper.convertValue<List<DTOMenuView>>(resultMenu)
         return DTOResponseSuccess(responseMenu).response()

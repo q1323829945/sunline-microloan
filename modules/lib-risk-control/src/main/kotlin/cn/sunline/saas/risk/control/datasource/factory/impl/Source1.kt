@@ -4,7 +4,7 @@ import cn.sunline.saas.risk.control.datasource.factory.DataSourceCalculationInte
 import java.math.BigDecimal
 
 class Source1:DataSourceCalculationInterface {
-    override fun calculation(): BigDecimal {
+    override fun calculation(customerId:Long): BigDecimal {
         return BigDecimal(5)
     }
 }

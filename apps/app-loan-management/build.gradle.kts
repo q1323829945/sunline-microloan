@@ -35,10 +35,10 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-loan-configure"))
     implementation(project(":lib-interest-util"))
-    implementation(project(":lib-huaweicloud-apig"))
+//    implementation(project(":lib-huaweicloud-apig"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-partner-integrated"))
-    implementation(project(":lib-risk-control"))
+    implementation(project(":lib-risk-control-rule"))
     implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

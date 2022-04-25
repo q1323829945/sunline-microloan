@@ -70,6 +70,7 @@ enum class PermissionConfig (
     RISK_CONTROL_RULE_SORT("RiskControlRule", "RiskControlRule/sort\$", RequestMethod.PUT, "change RiskControlRule sort"),
     RISK_CONTROL_RULE_MODIFY("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.PUT, "Modify RiskControlRule"),
     RISK_CONTROL_RULE_DELETE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.DELETE, "Delete RiskControlRule"),
+    RISK_CONTROL_RULE_GET_ONE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.GET, "Get One RiskControlRule"),
 
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -81,4 +82,6 @@ enum class PermissionConfig (
     DOCUMENT_TEMPLATE_MENU("menu","documentTemplateConfig", RequestMethod.GET,"View formal documentTemplateConfig menu"),
     LOAN_PRODUCT_MENU("menu","loanProductConfig", RequestMethod.GET,"View formal loanProductConfig menu"),
     LOAN_UPLOAD_CONFIGURE_MENU("menu","loanFileUploadConfig", RequestMethod.GET,"View formal loanUploadConfig menu"),
+    RISK_CONTROL_RULE_MENU("menu","riskControlRuleConfig", RequestMethod.GET,"View formal RiskControlRuleConfig menu"),
+
 }

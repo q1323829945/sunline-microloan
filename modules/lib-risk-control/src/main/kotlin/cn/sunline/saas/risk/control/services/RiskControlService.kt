@@ -1,9 +1,8 @@
 package cn.sunline.saas.risk.control.services
 
 import cn.sunline.saas.risk.control.datasource.factory.DataSourceFactory
-import cn.sunline.saas.risk.control.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 import cn.sunline.saas.rule.engine.api.RuleApi
-import cn.sunline.saas.rule.engine.api.RuleResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -18,31 +17,27 @@ class RiskControlService {
     )
 
 
-    fun execute(rules:List<RiskControlRule>): ExecuteResult{
+    fun execute(customerId:Long,rules:List<RiskControlRule>): ExecuteResult{
         //TODO:
 
-        val result = run outside@{
-            rules.forEach {  riskControlRule ->
-                val map = mutableMapOf<String,Any>()
-                val conditions = mutableListOf<String>()
-                conditions.add(riskControlRule.description!!)
-                riskControlRule.params.forEach {
-                    map[it.dataSourceType.name] = DataSourceFactory.instance(it.dataSourceType).calculation()
-                }
-                val result = ruleApi.execute(map,conditions)
-                if(result.result == false){
-                    return@outside ExecuteResult(
-                        false,
-                        "${riskControlRule.name} fail ,because ${riskControlRule.description} -> ${result.reason}"
-                    )
-                }
+        rules.forEach {  riskControlRule ->
+            val map = mutableMapOf<String,Number>()
+            val conditions = mutableListOf<String>()
+            conditions.add(riskControlRule.description!!)
+            riskControlRule.params.forEach {
+                map[it.dataSourceType.name] = DataSourceFactory.instance(it.dataSourceType).calculation(customerId)
             }
-        }
-
-        if(result is ExecuteResult){
-            return result
+            val result = ruleApi.execute(map,conditions)
+            if(result.result == false){
+                return ExecuteResult(
+                    false,
+                    "${riskControlRule.name} fail ,because ${riskControlRule.description} -> ${result.reason}"
+                )
+            }
         }
 
         return ExecuteResult(true)
     }
+
+
 }

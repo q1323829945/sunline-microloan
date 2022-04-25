@@ -1,7 +1,8 @@
-package cn.sunline.saas.risk.control.modules.db
+package cn.sunline.saas.risk.control.rule.modules.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.risk.control.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -23,26 +24,26 @@ class RiskControlRule (
     val id: Long,
 
     @NotNull
-    @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @Column( length = 128, columnDefinition = "varchar(128) not null")
     var name: String,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "rule_type", nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(name = "rule_type",length = 128, updatable = false, columnDefinition = "varchar(128) not null")
     var ruleType: RuleType,
 
     @NotNull
-    @Column(nullable = false, columnDefinition = "bigint not null")
+    @Column(columnDefinition = "bigint not null")
     var sort: Long,
 
-    @Column(nullable = false,length = 512, columnDefinition = "varchar(512)  null")
+    @Column(length = 512, columnDefinition = "varchar(512)  null")
     var remark: String? = null,
 
     @Column(nullable = false,length = 512, columnDefinition = "varchar(512)  null")
     var description: String? = null,
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH,CascadeType.MERGE])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH])
     @JoinColumn(name = "rule_id")
     var params:MutableList<RiskControlRuleParam> = mutableListOf(),
 
@@ -59,7 +60,7 @@ class RiskControlRule (
 
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id", columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {

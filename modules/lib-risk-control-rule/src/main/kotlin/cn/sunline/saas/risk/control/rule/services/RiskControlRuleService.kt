@@ -1,16 +1,16 @@
-package cn.sunline.saas.risk.control.services
+package cn.sunline.saas.risk.control.rule.services
 
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.risk.control.exception.RiskControlRuleNotFoundException
-import cn.sunline.saas.risk.control.modules.RuleType
-import cn.sunline.saas.risk.control.modules.db.RiskControlRule
-import cn.sunline.saas.risk.control.modules.db.RiskControlRuleParam
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleChange
-import cn.sunline.saas.risk.control.modules.dto.DTORiskControlRuleView
-import cn.sunline.saas.risk.control.repositories.RiskControlRuleRepository
+import cn.sunline.saas.risk.control.rule.exception.RiskControlRuleNotFoundException
+import cn.sunline.saas.risk.control.rule.modules.RuleType
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleChange
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleView
+import cn.sunline.saas.risk.control.rule.repositories.RiskControlRuleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
@@ -28,6 +28,10 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
     @Autowired
     private lateinit var sequence: Sequence
+
+
+    @Autowired
+    private lateinit var riskControlRuleParamService: RiskControlRuleParamService
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -47,6 +51,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         return save(riskControlRule)
     }
 
+
     fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
 
         for(i in dtoRiskControlRuleViewList.indices){
@@ -59,9 +64,14 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     }
 
 
+    fun getDetail(id:Long): RiskControlRule {
+        return this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+    }
+
+
     @Transactional
     fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): RiskControlRule {
-        val oldOne = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val oldOne = getDetail(id)
 
         dtoRiskControlRuleChange.params?.forEach {
             it.id ?: run {
@@ -77,12 +87,16 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         oldOne.params = newOne.params
         oldOne.description = setDescription(newOne.params)
 
-        return save(oldOne)
+        val save = this.save(oldOne)
+
+        riskControlRuleParamService.deleteByRuleId(null)
+
+        return save
     }
 
     @Transactional
     fun deleteRiskControlRule(id:Long){
-        val riskControlRule = this.getOne(id)?:throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val riskControlRule = getDetail(id)
         riskControlRuleRepository.delete(riskControlRule)
     }
 
