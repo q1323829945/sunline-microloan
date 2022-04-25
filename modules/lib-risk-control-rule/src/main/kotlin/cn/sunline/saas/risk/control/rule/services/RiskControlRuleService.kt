@@ -51,6 +51,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         return save(riskControlRule)
     }
 
+
     fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
 
         for(i in dtoRiskControlRuleViewList.indices){
@@ -63,9 +64,14 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     }
 
 
+    fun getDetail(id:Long): RiskControlRule {
+        return this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+    }
+
+
     @Transactional
     fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): RiskControlRule {
-        val oldOne = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val oldOne = getDetail(id)
 
         dtoRiskControlRuleChange.params?.forEach {
             it.id ?: run {
@@ -90,7 +96,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
     @Transactional
     fun deleteRiskControlRule(id:Long){
-        val riskControlRule = this.getOne(id)?:throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val riskControlRule = getDetail(id)
         riskControlRuleRepository.delete(riskControlRule)
     }
 
