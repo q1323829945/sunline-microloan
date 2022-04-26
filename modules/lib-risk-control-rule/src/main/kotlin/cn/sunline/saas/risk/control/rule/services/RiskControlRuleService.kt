@@ -94,7 +94,6 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         return save
     }
 
-    @Transactional
     fun deleteRiskControlRule(id:Long){
         val riskControlRule = getDetail(id)
         riskControlRuleRepository.delete(riskControlRule)
