@@ -2,7 +2,8 @@ package cn.sunline.saas.risk.control.rule
 
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.risk.control.rule.modules.DataSourceType
+import cn.sunline.saas.risk.control.rule.modules.DataItem
+import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
@@ -29,11 +30,12 @@ class RiskControlRuleServiceTest {
         val dtoRiskControlRuleAdd = DTORiskControlRuleAdd(
             null,
             "testRule1",
-            RuleType.TYPE2,
+            RuleType.BUSINESS,
             null,
             "测试",
             null,
-            listOf(DTORiskControlRuleParam(null,null, DataSourceType.SOURCE1, RelationalOperatorType.EQ,"123"))
+            LogicalOperationType.AND,
+            listOf(DTORiskControlRuleParam(null,null, DataItem.CREDIT_RISK, RelationalOperatorType.EQ,"123",LogicalOperationType.AND))
         )
         val result = riskControlRuleService.addRiskControlRule(dtoRiskControlRuleAdd)
 

@@ -8,6 +8,9 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-exceptions"))
+    implementation(project(":lib-exceptions"))
+    implementation("com.google.code.gson:gson:2.9.0")
+
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

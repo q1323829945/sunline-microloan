@@ -1,8 +1,9 @@
 package cn.sunline.saas.risk.control.rule.modules.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
+import com.google.gson.Gson
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -36,10 +37,14 @@ class RiskControlRule (
     @Column(columnDefinition = "bigint not null")
     var sort: Long,
 
+    @NotNull
+    @Column(name = "logical_operation",length = 128, updatable = false, columnDefinition = "varchar(128) not null")
+    var logicalOperationType: LogicalOperationType,
+
     @Column(length = 512, columnDefinition = "varchar(512)  null")
     var remark: String? = null,
 
-    @Column(nullable = false,length = 512, columnDefinition = "varchar(512)  null")
+    @Column(length = 512, columnDefinition = "varchar(512)  null")
     var description: String? = null,
 
 
@@ -71,3 +76,5 @@ class RiskControlRule (
         tenantId = o
     }
 }
+
+

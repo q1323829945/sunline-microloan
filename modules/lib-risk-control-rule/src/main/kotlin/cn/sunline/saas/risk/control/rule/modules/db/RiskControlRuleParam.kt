@@ -1,6 +1,7 @@
 package cn.sunline.saas.risk.control.rule.modules.db
 
-import cn.sunline.saas.risk.control.rule.modules.DataSourceType
+import cn.sunline.saas.risk.control.rule.modules.DataItem
+import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
@@ -22,8 +23,8 @@ class RiskControlRuleParam (
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "data_source",  length = 128, columnDefinition = "varchar(128) not null")
-    var dataSourceType: DataSourceType,
+    @Column(name = "data_item",  length = 128, columnDefinition = "varchar(128) not null")
+    var dataItem: DataItem,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -33,4 +34,8 @@ class RiskControlRuleParam (
     @NotNull
     @Column( nullable = false, length = 128, columnDefinition = "varchar(128) not null")
     var threshold:String,
+
+    @NotNull
+    @Column(name = "logical_operation",length = 128, updatable = false, columnDefinition = "varchar(128) not null")
+    var logicalOperationType: LogicalOperationType,
 )

@@ -4,12 +4,13 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.risk.control.rule.exception.RiskControlRuleNotFoundException
+import cn.sunline.saas.risk.control.rule.modules.DataItem
+import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
+import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
-import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleChange
-import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleView
+import cn.sunline.saas.risk.control.rule.modules.dto.*
 import cn.sunline.saas.risk.control.rule.repositories.RiskControlRuleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
@@ -20,6 +21,7 @@ import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.google.gson.Gson
 import javax.transaction.Transactional
 
 @Service
@@ -35,7 +37,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):RiskControlRule{
+    fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):DTORiskControlRuleView{
         dtoRiskControlRuleAdd.id = sequence.nextId().toString()
         dtoRiskControlRuleAdd.sort = getMaxSort(dtoRiskControlRuleAdd.ruleType) + 1
 
@@ -48,33 +50,38 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
         riskControlRule.description = setDescription(riskControlRule.params)
 
-        return save(riskControlRule)
+        val save = save(riskControlRule)
+        val result = objectMapper.convertValue<DTORiskControlRuleView>(save)
+        result.group = getDTORiskControlRuleGroup(save.params)
+
+        return result
     }
 
-
     fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
-
         for(i in dtoRiskControlRuleViewList.indices){
             dtoRiskControlRuleViewList[i].sort = (i+1).toLong()
         }
-
         val iterable = objectMapper.convertValue<List<RiskControlRule>>(dtoRiskControlRuleViewList)
-
         this.save(iterable)
     }
 
 
-    fun getDetail(id:Long): RiskControlRule {
-        return this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+    fun getDetail(id:Long): DTORiskControlRuleView {
+        val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+
+        val result = objectMapper.convertValue<DTORiskControlRuleView>(riskControlRule)
+        result.group = getDTORiskControlRuleGroup(riskControlRule.params)
+
+        return result
     }
 
 
     @Transactional
-    fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): RiskControlRule {
-        val oldOne = getDetail(id)
+    fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): DTORiskControlRuleView {
+        val oldOne = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
 
         dtoRiskControlRuleChange.params?.forEach {
-            it.id ?: run {
+            it.id ?:run {
                 it.id = sequence.nextId().toString()
                 it.ruleId = oldOne.id.toString()
             }
@@ -84,26 +91,100 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
         oldOne.name = newOne.name
         oldOne.remark = newOne.remark
+        oldOne.logicalOperationType = newOne.logicalOperationType
         oldOne.params = newOne.params
         oldOne.description = setDescription(newOne.params)
-
         val save = this.save(oldOne)
 
         riskControlRuleParamService.deleteByRuleId(null)
 
-        return save
+        val result = objectMapper.convertValue<DTORiskControlRuleView>(save)
+        result.group = getDTORiskControlRuleGroup(save.params)
+
+        return result
     }
 
     fun deleteRiskControlRule(id:Long){
-        val riskControlRule = getDetail(id)
+        val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
         riskControlRuleRepository.delete(riskControlRule)
     }
 
-    fun getAllControlRuleSort(ruleType: RuleType):List<RiskControlRule>{
+    fun getAllControlRuleSort(ruleType: RuleType):List<DTORiskControlRuleGroup>{
         val spec = getSpec(ruleType)
         val sortOrder = Sort.by(Sort.Order.asc("sort"))
-        return riskControlRuleRepository.findAll(spec,sortOrder)
+        val riskControlRuleList = riskControlRuleRepository.findAll(spec,sortOrder)
+
+        println(Gson().toJson(riskControlRuleList))
+
+        if(riskControlRuleList.size == 0){
+            return listOf()
+        }
+
+        val outputList = mutableListOf<DTORiskControlRuleGroup>()
+        var lastLogicalOperationType:LogicalOperationType? = null
+
+        val data = mutableListOf<RiskControlRule>()
+        riskControlRuleList.forEach {
+            if(lastLogicalOperationType != it.logicalOperationType){
+                if(data.size != 0){
+                    val lastLogicalOperationParams = mutableListOf<RiskControlRule>()
+                    lastLogicalOperationParams.addAll(data)
+                    outputList.add(
+                        DTORiskControlRuleGroup(
+                            lastLogicalOperationType!!,
+                            objectMapper.convertValue(lastLogicalOperationParams)
+                        )
+                    )
+                    data.clear()
+                }
+                lastLogicalOperationType = it.logicalOperationType
+            }
+            data.add(objectMapper.convertValue(it))
+        }
+
+        outputList.add(
+            DTORiskControlRuleGroup(
+                lastLogicalOperationType!!,
+                objectMapper.convertValue(data)
+            )
+        )
+
+        return outputList
     }
+
+    private fun getDTORiskControlRuleGroup(inputList: List<RiskControlRuleParam>):List<DTORiskControlRuleParamGroup>{
+        val outputList = mutableListOf<DTORiskControlRuleParamGroup>()
+        var lastLogicalOperationType:LogicalOperationType? = null
+
+        val data = mutableListOf<DTORiskControlRuleParam>()
+
+        inputList.forEach {
+            if(lastLogicalOperationType != it.logicalOperationType){
+                if(data.size != 0){
+                    val lastLogicalOperationParams = mutableListOf<DTORiskControlRuleParam>()
+                    lastLogicalOperationParams.addAll(data)
+                    outputList.add(
+                        DTORiskControlRuleParamGroup(
+                            lastLogicalOperationType,
+                            lastLogicalOperationParams
+                        )
+                    )
+                    data.clear()
+                }
+                lastLogicalOperationType = it.logicalOperationType
+            }
+            data.add(objectMapper.convertValue(it))
+        }
+
+        outputList.add(
+            DTORiskControlRuleParamGroup(
+                lastLogicalOperationType,
+                data
+            )
+        )
+        return outputList
+    }
+
 
     private fun getMaxSort(ruleType: RuleType):Long{
         val spec = getSpec(ruleType)
@@ -125,18 +206,34 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     private fun setDescription(params:List<RiskControlRuleParam>?):String{
         val description = StringBuffer()
 
+        var lastLogicalOperationType:LogicalOperationType = LogicalOperationType.AND
         params?.run {
             for(i in this.indices){
                 val param = this[i]
-                description.append("${param.dataSourceType} ${param.relationalOperatorType.symbol} ${param.threshold}")
-                if(i < this.size-1){
-                    description.append(" && ")
+                if(param.logicalOperationType != lastLogicalOperationType){
+                    lastLogicalOperationType = param.logicalOperationType
+                    if(param.logicalOperationType == LogicalOperationType.OR){
+                        description.append("(")
+                    }
+                }
+                description.append("${param.dataItem.key} ${param.relationalOperatorType.symbol} ${param.threshold}")
+                if(i < this.size-1 ){
+                    if(param.logicalOperationType == LogicalOperationType.OR && params[i+1].logicalOperationType == LogicalOperationType.AND){
+                        description.append(") ${LogicalOperationType.AND.symbol} ")
+                    }else {
+                        description.append(" ${param.logicalOperationType.symbol} ")
+                    }
+                }
+
+                if(i == this.size -1 && param.logicalOperationType == LogicalOperationType.OR){
+                    description.append(")")
                 }
             }
         }
-
         return description.toString()
-
     }
 
 }
+
+
+
