@@ -47,10 +47,6 @@ class RiskControlRule (
     var description: String? = null,
 
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH])
-    @JoinColumn(name = "rule_id")
-    var params:MutableList<RiskControlRuleParam> = mutableListOf(),
-
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
@@ -62,6 +58,13 @@ class RiskControlRule (
 
 ) : MultiTenant {
 
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH], orphanRemoval = true, mappedBy = "ruleId")
+    var params:MutableList<RiskControlRuleParam> = mutableListOf()
+    set(value) {
+        this.params.clear()
+        field.addAll(value)
+    }
 
     @NotNull
     @Column(name = "tenant_id", columnDefinition = "bigint not null")

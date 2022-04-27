@@ -19,8 +19,8 @@ class RiskControlRuleParam (
     @Id
     val id: Long,
 
-    @Column(name = "rule_id", columnDefinition = "bigint null")
-    var ruleId: Long?,
+    @Column(name = "rule_id", columnDefinition = "bigint not null")
+    var ruleId: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

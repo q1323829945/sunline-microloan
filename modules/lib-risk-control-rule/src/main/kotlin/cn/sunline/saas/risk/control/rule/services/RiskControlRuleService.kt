@@ -85,8 +85,6 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         oldOne.description = setDescription(newOne.params)
         val save = this.save(oldOne)
 
-        riskControlRuleParamService.deleteByRuleId(null)
-
         return objectMapper.convertValue(save)
     }
 
