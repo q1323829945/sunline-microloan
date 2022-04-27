@@ -109,82 +109,106 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         riskControlRuleRepository.delete(riskControlRule)
     }
 
-    fun getAllControlRuleSort(ruleType: RuleType):List<DTORiskControlRuleGroup>{
+
+    fun getAllRiskControlRuleDetailSort(ruleType: RuleType):List<DTORiskControlRuleDetailGroup>{
         val spec = getSpec(ruleType)
         val sortOrder = Sort.by(Sort.Order.asc("sort"))
         val riskControlRuleList = riskControlRuleRepository.findAll(spec,sortOrder)
 
-        println(Gson().toJson(riskControlRuleList))
-
-        if(riskControlRuleList.size == 0){
-            return listOf()
-        }
-
-        val outputList = mutableListOf<DTORiskControlRuleGroup>()
-        var lastLogicalOperationType:LogicalOperationType? = null
-
-        val data = mutableListOf<RiskControlRule>()
-        riskControlRuleList.forEach {
-            if(lastLogicalOperationType != it.logicalOperationType){
-                if(data.size != 0){
-                    val lastLogicalOperationParams = mutableListOf<RiskControlRule>()
-                    lastLogicalOperationParams.addAll(data)
-                    outputList.add(
-                        DTORiskControlRuleGroup(
-                            lastLogicalOperationType!!,
-                            objectMapper.convertValue(lastLogicalOperationParams)
-                        )
-                    )
-                    data.clear()
-                }
-                lastLogicalOperationType = it.logicalOperationType
-            }
-            data.add(objectMapper.convertValue(it))
-        }
-
-        outputList.add(
-            DTORiskControlRuleGroup(
-                lastLogicalOperationType!!,
-                objectMapper.convertValue(data)
+        val inputDataList = riskControlRuleList.map {
+            InputData(
+                it.logicalOperationType,
+                it
             )
-        )
+        }
+        return objectMapper.convertValue(getParamsGroup<RiskControlRule>(inputDataList))
 
-        return outputList
+
     }
 
-    private fun getDTORiskControlRuleGroup(inputList: List<RiskControlRuleParam>):List<DTORiskControlRuleParamGroup>{
-        val outputList = mutableListOf<DTORiskControlRuleParamGroup>()
-        var lastLogicalOperationType:LogicalOperationType? = null
+    private fun getDTORiskControlRuleGroup(riskControlRuleParamList: List<RiskControlRuleParam>):List<DTORiskControlRuleParamGroup>{
+        val inputDataList = riskControlRuleParamList.map {
+            InputData(
+                it.logicalOperationType,
+                it
+            )
+        }
 
-        val data = mutableListOf<DTORiskControlRuleParam>()
+        val outputDataList = getParamsGroup<DTORiskControlRuleParam>(inputDataList)
+
+        return objectMapper.convertValue(outputDataList)
+    }
+
+    private data class OutputData<T>(
+        var logicalOperationType: LogicalOperationType?,
+        val params:List<T>,
+    )
+
+    private data class InputData(
+        var logicalOperationType: LogicalOperationType,
+        var data:Any
+    )
+
+    /**
+     *  inputList
+     *  [
+     *    {"logicalOperationType":"AND","data":{"id":1,"logicalOperationType":"AND",....}},
+     *    {"logicalOperationType":"AND","data":{"id":2,"logicalOperationType":"AND",....}},
+     *    {"logicalOperationType":"OR","data":{"id":3,"logicalOperationType":"OR",....}},
+     *    {"logicalOperationType":"OR","data":{"id":4,"logicalOperationType":"OR",....}},
+     *    {"logicalOperationType":"OR","data":{"id":5,"logicalOperationType":"AND",....}},
+     *    {"logicalOperationType":"OR","data":{"id":6,"logicalOperationType":"AND",....}},
+     *  ]
+     *
+     *  outputData
+     *  [
+     *      {"logicalOperationType":"AND",
+     *       "params":[{"id":1,"logicalOperationType":"AND",...},
+     *                 {"id":2,"logicalOperationType":"AND",...}]
+     *      },
+     *      {"logicalOperationType":"OR",
+     *       "params":[{"id":3,"logicalOperationType":"OR",...}]
+     *       "params":[{"id":4,"logicalOperationType":"OR",...}]
+     *      },
+     *      {"logicalOperationType":"AND",
+     *       "params":[{"id":5,"logicalOperationType":"AND",...},
+     *                 {"id":6,"logicalOperationType":"AND",...}]
+     *      }
+     *  ]
+     */
+    private inline fun <reified T> getParamsGroup(inputList: List<InputData>):List<OutputData<T>>{
+        val outputList = mutableListOf<OutputData<T>>()
+        var lastLogicalOperationType:LogicalOperationType? = null
+        val params = mutableListOf<T>()
 
         inputList.forEach {
             if(lastLogicalOperationType != it.logicalOperationType){
-                if(data.size != 0){
-                    val lastLogicalOperationParams = mutableListOf<DTORiskControlRuleParam>()
-                    lastLogicalOperationParams.addAll(data)
+                if(params.size != 0){
+                    val lastLogicalOperationParams = mutableListOf<T>()
+                    lastLogicalOperationParams.addAll(params)
                     outputList.add(
-                        DTORiskControlRuleParamGroup(
+                        OutputData(
                             lastLogicalOperationType,
                             lastLogicalOperationParams
                         )
                     )
-                    data.clear()
+                    params.clear()
                 }
                 lastLogicalOperationType = it.logicalOperationType
             }
-            data.add(objectMapper.convertValue(it))
+            params.add(objectMapper.convertValue(it.data))
         }
 
-        outputList.add(
-            DTORiskControlRuleParamGroup(
-                lastLogicalOperationType,
-                data
+        if(params.size != 0){
+            outputList.add(
+                OutputData(
+                    lastLogicalOperationType,
+                    params
+                )
             )
-        )
+        }
         return outputList
     }
-
 
     private fun getMaxSort(ruleType: RuleType):Long{
         val spec = getSpec(ruleType)
@@ -235,5 +259,54 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
 }
 
-
-
+//fun main() {
+//    val l= mutableListOf<RiskControlRuleParam>(
+//        RiskControlRuleParam(
+//            1,
+//            1,
+//            DataItem.FRAUD_EVALUATION,
+//            RelationalOperatorType.LE,
+//            "123",
+//            LogicalOperationType.AND
+//        ),
+//        RiskControlRuleParam(
+//            1,
+//            1,
+//            DataItem.FRAUD_EVALUATION,
+//            RelationalOperatorType.LE,
+//            "123",
+//            LogicalOperationType.OR
+//        ),
+//        RiskControlRuleParam(
+//            1,
+//            1,
+//            DataItem.FRAUD_EVALUATION,
+//            RelationalOperatorType.LE,
+//            "123",
+//            LogicalOperationType.OR
+//        ),
+//        RiskControlRuleParam(
+//            1,
+//            1,
+//            DataItem.FRAUD_EVALUATION,
+//            RelationalOperatorType.LE,
+//            "123",
+//            LogicalOperationType.AND
+//        )
+//    )
+//
+//    val input = l.map {
+//        InputData(
+//            it.logicalOperationType,
+//            it
+//        )
+//    }
+//
+//    println(Gson().toJson(getParamsGroup(input,mutableListOf<DTORiskControlRuleParam>())))
+//
+//}
+//
+//
+//
+//
+//private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

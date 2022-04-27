@@ -2,7 +2,9 @@ package cn.sunline.saas.risk.control.services
 
 import cn.sunline.saas.risk.control.datasource.factory.DataSourceFactory
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
+import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
 import cn.sunline.saas.rule.engine.api.RuleApi
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Service
 class RiskControlService {
     @Autowired
     private lateinit var ruleApi:RuleApi
+
+    @Autowired
+    private lateinit var riskControlRuleService: RiskControlRuleService
 
     data class ExecuteResult(
         val result:Boolean,
@@ -25,64 +30,53 @@ class RiskControlService {
         val executeEquation:String
     )
 
-
-    fun execute(customerId:Long,rules:List<RiskControlRule>): ExecuteResult{
-        //TODO:
+    fun execute(customerId:Long,ruleType: RuleType): ExecuteResult{
+        val groups = riskControlRuleService.getAllRiskControlRuleDetailSort(ruleType)
         val reports = mutableListOf<Report>()
-
-        rules.forEach {  riskControlRule ->
-            val map = mutableMapOf<String,Number>()
-            val conditions = mutableListOf<String>()
-            conditions.add(riskControlRule.description!!)
-            riskControlRule.params.forEach {
-                map[it.dataItem.key] = DataSourceFactory.instance(it.dataItem).calculation(customerId)
-            }
-            val result = ruleApi.execute(map,conditions)
-
-            reports.add(
-                Report(
-                    riskControlRule.name,
-                    riskControlRule.logicalOperationType,
-                    result.result as Boolean,
-                    "${riskControlRule.description!!} -> ${result.reason}"
-                )
-            )
-        }
-
-        val conditions = mutableListOf<String>()
         val condition = StringBuffer()
 
-        var lastLogicalOperationType:LogicalOperationType = LogicalOperationType.AND
-        for(i in reports.indices){
-            val report = reports[i]
-            if(report.logicalOperationType != lastLogicalOperationType){
-                lastLogicalOperationType = report.logicalOperationType
-                if(report.logicalOperationType == LogicalOperationType.OR){
-                    condition.append("(")
+        for(i in groups.indices){
+            val group = groups[i]
+
+            if(group.logicalOperationType == LogicalOperationType.OR){
+                condition.append(" (")
+            }
+
+            for(j in group.params.indices){
+                val rule = group.params[j]
+                val map = mutableMapOf<String,Number>()
+                val conditions = mutableListOf<String>()
+                conditions.add(rule.description!!)
+                rule.params.forEach { param ->
+                    map[param.dataItem.key] = DataSourceFactory.instance(param.dataItem).calculation(customerId)
+                }
+                val result = ruleApi.execute(map,conditions)
+
+                reports.add(
+                    Report(
+                        rule.name,
+                        rule.logicalOperationType,
+                        result.result as Boolean,
+                        "${rule.description!!} -> ${result.reason}"
+                    )
+                )
+                condition.append(" ${result.result} ")
+                if (j < group.params.size -1){
+                    condition.append(rule.logicalOperationType.symbol)
                 }
             }
-            condition.append(" ${report.result} ")
-            if(i < reports.size-1 ){
-                if(report.logicalOperationType == LogicalOperationType.OR && reports[i+1].logicalOperationType == LogicalOperationType.AND){
-                    condition.append(") ${LogicalOperationType.AND.symbol} ")
-                }else {
-                    condition.append(" ${report.logicalOperationType.symbol} ")
-                }
+
+            if(group.logicalOperationType == LogicalOperationType.OR){
+                condition.append(") ")
             }
-            if(i == reports.size -1 && report.logicalOperationType == LogicalOperationType.OR){
-                condition.append(")")
+
+            if(i < groups.size -1){
+                condition.append(LogicalOperationType.AND.symbol)
             }
+
         }
-
-        conditions.add(condition.toString())
-
-        val result = ruleApi.execute(mapOf(),conditions)
-
-
-
+        val result = ruleApi.execute(mapOf(), mutableListOf(condition.toString()))
         return ExecuteResult(result.result as Boolean,result.reason,reports)
     }
-
-
 }
 

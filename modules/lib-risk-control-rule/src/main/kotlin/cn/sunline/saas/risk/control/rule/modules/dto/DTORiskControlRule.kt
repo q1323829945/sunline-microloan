@@ -52,6 +52,11 @@ data class DTORiskControlRuleListView(
     val description:String
 )
 
+data class DTORiskControlRuleDetailGroup(
+    val logicalOperationType: LogicalOperationType,
+    val params:List<RiskControlRule>,
+)
+
 
 data class DTORiskControlRuleParamGroup(
     var logicalOperationType: LogicalOperationType?,

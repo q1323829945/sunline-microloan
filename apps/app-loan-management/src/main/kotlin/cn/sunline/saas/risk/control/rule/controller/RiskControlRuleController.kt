@@ -24,8 +24,8 @@ class RiskControlRuleController {
 
     @GetMapping
     fun getAll(@RequestParam(required = false)ruleType: RuleType): ResponseEntity<DTOResponseSuccess<List<DTORiskControlRuleGroup>>> {
-        val riskControlRuleList = riskControlRuleService.getAllControlRuleSort(ruleType)
-        return DTOResponseSuccess(riskControlRuleList).response()
+        val riskControlRuleList = riskControlRuleService.getAllRiskControlRuleDetailSort(ruleType)
+        return DTOResponseSuccess(objectMapper.convertValue<List<DTORiskControlRuleGroup>>(riskControlRuleList)).response()
     }
 
     @GetMapping("{id}")
