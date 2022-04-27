@@ -25,7 +25,7 @@ data class DTORiskControlRuleView (
     val remark: String? = null,
     val description:String? = null,
     val logicalOperationType:LogicalOperationType,
-    var group:List<DTORiskControlRuleParamGroup>? = null,
+    val params:List<DTORiskControlRuleParam>? = null,
     val tenantId:String,
 )
 
@@ -54,7 +54,7 @@ data class DTORiskControlRuleListView(
 
 data class DTORiskControlRuleDetailGroup(
     val logicalOperationType: LogicalOperationType,
-    val params:List<RiskControlRule>,
+    val params:List<DTORiskControlRuleView>,
 )
 
 

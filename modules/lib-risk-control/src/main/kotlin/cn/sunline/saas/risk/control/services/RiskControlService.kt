@@ -3,7 +3,6 @@ package cn.sunline.saas.risk.control.services
 import cn.sunline.saas.risk.control.datasource.factory.DataSourceFactory
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
 import cn.sunline.saas.rule.engine.api.RuleApi
 import org.springframework.beans.factory.annotation.Autowired
@@ -47,7 +46,7 @@ class RiskControlService {
                 val map = mutableMapOf<String,Number>()
                 val conditions = mutableListOf<String>()
                 conditions.add(rule.description!!)
-                rule.params.forEach { param ->
+                rule.params?.forEach { param ->
                     map[param.dataItem.key] = DataSourceFactory.instance(param.dataItem).calculation(customerId)
                 }
                 val result = ruleApi.execute(map,conditions)

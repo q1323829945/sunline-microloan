@@ -4,9 +4,7 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.risk.control.rule.exception.RiskControlRuleNotFoundException
-import cn.sunline.saas.risk.control.rule.modules.DataItem
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
-import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
@@ -21,7 +19,6 @@ import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.google.gson.Gson
 import javax.transaction.Transactional
 
 @Service
@@ -47,14 +44,9 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         }
 
         val riskControlRule = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleAdd)
-
         riskControlRule.description = setDescription(riskControlRule.params)
 
-        val save = save(riskControlRule)
-        val result = objectMapper.convertValue<DTORiskControlRuleView>(save)
-        result.group = getDTORiskControlRuleGroup(save.params)
-
-        return result
+        return objectMapper.convertValue(save(riskControlRule))
     }
 
     fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
@@ -69,10 +61,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     fun getDetail(id:Long): DTORiskControlRuleView {
         val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
 
-        val result = objectMapper.convertValue<DTORiskControlRuleView>(riskControlRule)
-        result.group = getDTORiskControlRuleGroup(riskControlRule.params)
-
-        return result
+        return objectMapper.convertValue(riskControlRule)
     }
 
 
@@ -98,17 +87,14 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
         riskControlRuleParamService.deleteByRuleId(null)
 
-        val result = objectMapper.convertValue<DTORiskControlRuleView>(save)
-        result.group = getDTORiskControlRuleGroup(save.params)
-
-        return result
+        return objectMapper.convertValue(save)
     }
+
 
     fun deleteRiskControlRule(id:Long){
         val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
         riskControlRuleRepository.delete(riskControlRule)
     }
-
 
     fun getAllRiskControlRuleDetailSort(ruleType: RuleType):List<DTORiskControlRuleDetailGroup>{
         val spec = getSpec(ruleType)
@@ -121,9 +107,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
                 it
             )
         }
-        return objectMapper.convertValue(getParamsGroup<RiskControlRule>(inputDataList))
-
-
+        return objectMapper.convertValue(getParamsGroup(inputDataList))
     }
 
     private fun getDTORiskControlRuleGroup(riskControlRuleParamList: List<RiskControlRuleParam>):List<DTORiskControlRuleParamGroup>{
@@ -134,7 +118,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
             )
         }
 
-        val outputDataList = getParamsGroup<DTORiskControlRuleParam>(inputDataList)
+        val outputDataList = getParamsGroup(inputDataList)
 
         return objectMapper.convertValue(outputDataList)
     }
@@ -144,39 +128,12 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         val params:List<T>,
     )
 
-    private data class InputData(
+    private data class InputData<T>(
         var logicalOperationType: LogicalOperationType,
-        var data:Any
+        var param:T
     )
 
-    /**
-     *  inputList
-     *  [
-     *    {"logicalOperationType":"AND","data":{"id":1,"logicalOperationType":"AND",....}},
-     *    {"logicalOperationType":"AND","data":{"id":2,"logicalOperationType":"AND",....}},
-     *    {"logicalOperationType":"OR","data":{"id":3,"logicalOperationType":"OR",....}},
-     *    {"logicalOperationType":"OR","data":{"id":4,"logicalOperationType":"OR",....}},
-     *    {"logicalOperationType":"OR","data":{"id":5,"logicalOperationType":"AND",....}},
-     *    {"logicalOperationType":"OR","data":{"id":6,"logicalOperationType":"AND",....}},
-     *  ]
-     *
-     *  outputData
-     *  [
-     *      {"logicalOperationType":"AND",
-     *       "params":[{"id":1,"logicalOperationType":"AND",...},
-     *                 {"id":2,"logicalOperationType":"AND",...}]
-     *      },
-     *      {"logicalOperationType":"OR",
-     *       "params":[{"id":3,"logicalOperationType":"OR",...}]
-     *       "params":[{"id":4,"logicalOperationType":"OR",...}]
-     *      },
-     *      {"logicalOperationType":"AND",
-     *       "params":[{"id":5,"logicalOperationType":"AND",...},
-     *                 {"id":6,"logicalOperationType":"AND",...}]
-     *      }
-     *  ]
-     */
-    private inline fun <reified T> getParamsGroup(inputList: List<InputData>):List<OutputData<T>>{
+    private fun <T> getParamsGroup(inputList: List<InputData<T>>):List<OutputData<T>>{
         val outputList = mutableListOf<OutputData<T>>()
         var lastLogicalOperationType:LogicalOperationType? = null
         val params = mutableListOf<T>()
@@ -196,7 +153,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
                 }
                 lastLogicalOperationType = it.logicalOperationType
             }
-            params.add(objectMapper.convertValue(it.data))
+            params.add(it.param)
         }
 
         if(params.size != 0){
@@ -230,7 +187,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     private fun setDescription(params:List<RiskControlRuleParam>?):String{
         val description = StringBuffer()
 
-        var lastLogicalOperationType:LogicalOperationType = LogicalOperationType.AND
+        var lastLogicalOperationType:LogicalOperationType? = null
         params?.run {
             for(i in this.indices){
                 val param = this[i]
@@ -258,55 +215,3 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     }
 
 }
-
-//fun main() {
-//    val l= mutableListOf<RiskControlRuleParam>(
-//        RiskControlRuleParam(
-//            1,
-//            1,
-//            DataItem.FRAUD_EVALUATION,
-//            RelationalOperatorType.LE,
-//            "123",
-//            LogicalOperationType.AND
-//        ),
-//        RiskControlRuleParam(
-//            1,
-//            1,
-//            DataItem.FRAUD_EVALUATION,
-//            RelationalOperatorType.LE,
-//            "123",
-//            LogicalOperationType.OR
-//        ),
-//        RiskControlRuleParam(
-//            1,
-//            1,
-//            DataItem.FRAUD_EVALUATION,
-//            RelationalOperatorType.LE,
-//            "123",
-//            LogicalOperationType.OR
-//        ),
-//        RiskControlRuleParam(
-//            1,
-//            1,
-//            DataItem.FRAUD_EVALUATION,
-//            RelationalOperatorType.LE,
-//            "123",
-//            LogicalOperationType.AND
-//        )
-//    )
-//
-//    val input = l.map {
-//        InputData(
-//            it.logicalOperationType,
-//            it
-//        )
-//    }
-//
-//    println(Gson().toJson(getParamsGroup(input,mutableListOf<DTORiskControlRuleParam>())))
-//
-//}
-//
-//
-//
-//
-//private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

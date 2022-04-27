@@ -6,7 +6,6 @@ dependencies {
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-rule-aviator"))
-    implementation("com.google.code.gson:gson:2.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
