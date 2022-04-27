@@ -32,10 +32,10 @@ class RiskControlRuleParam (
     var relationalOperatorType: RelationalOperatorType,
 
     @NotNull
-    @Column( nullable = false, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(length = 128, columnDefinition = "varchar(128) not null")
     var threshold:String,
 
     @NotNull
-    @Column(name = "logical_operation",length = 128, updatable = false, columnDefinition = "varchar(128) not null")
+    @Column(name = "logical_operation",length = 128, columnDefinition = "varchar(128) not null")
     var logicalOperationType: LogicalOperationType,
 )
