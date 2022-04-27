@@ -3,7 +3,6 @@ package cn.sunline.saas.risk.control.rule.modules.db
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import com.google.gson.Gson
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
