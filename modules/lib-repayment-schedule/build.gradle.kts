@@ -1,16 +1,7 @@
-
-
-
-
-
-
-
-
-
-
 val jjwtVersion: String by rootProject.extra
 val mysqlConnectorVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
+val jacksonVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
