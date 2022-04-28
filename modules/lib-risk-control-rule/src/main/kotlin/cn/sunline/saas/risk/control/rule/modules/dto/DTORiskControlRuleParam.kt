@@ -12,4 +12,5 @@ data class DTORiskControlRuleParam(
     val relationalOperatorType: RelationalOperatorType,
     val threshold:String,
     var logicalOperationType: LogicalOperationType?,
+    var tenantId:Long? = null,
 )

@@ -2,7 +2,6 @@ package cn.sunline.saas.risk.control.rule.modules.dto
 
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 
 
 data class DTORiskControlRuleAdd (
@@ -14,7 +13,7 @@ data class DTORiskControlRuleAdd (
     val description:String? = null,
     val logicalOperationType:LogicalOperationType,
     val params:List<DTORiskControlRuleParam>? = null,
-    val tenantId:String? = null,
+    var tenantId:Long? = null,
 )
 
 data class DTORiskControlRuleView (

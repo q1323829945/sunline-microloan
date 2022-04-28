@@ -37,10 +37,12 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):DTORiskControlRuleView{
         dtoRiskControlRuleAdd.id = sequence.nextId().toString()
         dtoRiskControlRuleAdd.sort = getMaxSort(dtoRiskControlRuleAdd.ruleType) + 1
+        dtoRiskControlRuleAdd.tenantId = ContextUtil.getTenant()
 
         dtoRiskControlRuleAdd.params?.forEach {
             it.id = sequence.nextId().toString()
             it.ruleId = dtoRiskControlRuleAdd.id
+            it.tenantId = ContextUtil.getTenant()
         }
 
         val riskControlRule = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleAdd)
@@ -73,6 +75,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
             it.id ?:run {
                 it.id = sequence.nextId().toString()
                 it.ruleId = oldOne.id.toString()
+                it.tenantId = ContextUtil.getTenant()
             }
         }
 
