@@ -96,51 +96,51 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
     }
 
     override fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
-        val savedRepaymentSchedule = repaymentScheduleService.register(dtoRepaymentSchedule)
-        val dtoRepaymentScheduleView = changeMapper(savedRepaymentSchedule)
+        val savedRepaymentSchedule :RepaymentSchedule //= repaymentScheduleService.register(dtoRepaymentSchedule)
+        val dtoRepaymentScheduleView = changeMapper(null)
         return DTOResponseSuccess(dtoRepaymentScheduleView).response()
     }
 
-    override fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
+    override fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal){
 
-        val loanDateInstant = Instant.now()
-
-        val oldRepaymentSchedule = repaymentScheduleService.getOne(id)!!
-
-        val interestProduct = interestProductFeatureService.findByProductId(productId)
-
-        val repaymentFeature = repaymentFeatureService.getPaged({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), productId))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.ofSize(1)).firstOrNull()
-
-        val repaymentDayType = repaymentFeature?.payment?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
-        var repaymentDay = 21;
-        if (RepaymentDayType.BASE_LOAN_DAY == repaymentDayType) {
-            repaymentDay = loanDateInstant.toDateTime().dayOfMonth().get()
-        }
-
-        val newRepaymentSchedule = repaymentScheduleCalcGeneration.calculatorReset(
-            DTORepaymentScheduleResetCalculate(
-                remainLoanAmount = remainLoanAmount,
-                repaymentDate = CalcDateComponent.parseViewToInstant(repaymentDate),
-                repaymentDay = repaymentDay,
-                baseYearDays = interestProduct?.interest?.baseYearDays!!,
-                paymentMethod = repaymentFeature?.payment?.paymentMethod!!,
-                repaymentFrequency = repaymentFeature.payment.frequency,
-                oldRepaymentSchedule = oldRepaymentSchedule
-            )
-        )
-        val savedRepaymentSchedule = repaymentScheduleService.updateOne(oldRepaymentSchedule, newRepaymentSchedule)
-        val dtoRepaymentScheduleView = changeMapper(savedRepaymentSchedule)
-        return DTOResponseSuccess(dtoRepaymentScheduleView).response()
+//        val loanDateInstant = Instant.now()
+//
+//        val oldRepaymentSchedule :RepaymentSchedule?//= repaymentScheduleService.getOne(id)!!
+//
+//        val interestProduct = interestProductFeatureService.findByProductId(productId)
+//
+//        val repaymentFeature = repaymentFeatureService.getPaged({ root, _, criteriaBuilder ->
+//            val predicates = mutableListOf<Predicate>()
+//            predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), productId))
+//            criteriaBuilder.and(*(predicates.toTypedArray()))
+//        }, Pageable.ofSize(1)).firstOrNull()
+//
+//        val repaymentDayType = repaymentFeature?.payment?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
+//        var repaymentDay = 21;
+//        if (RepaymentDayType.BASE_LOAN_DAY == repaymentDayType) {
+//            repaymentDay = loanDateInstant.toDateTime().dayOfMonth().get()
+//        }
+//
+//        val newRepaymentSchedule = repaymentScheduleCalcGeneration.calculatorReset(
+//            DTORepaymentScheduleResetCalculate(
+//                remainLoanAmount = remainLoanAmount,
+//                repaymentDate = CalcDateComponent.parseViewToInstant(repaymentDate),
+//                repaymentDay = repaymentDay,
+//                baseYearDays = interestProduct?.interest?.baseYearDays!!,
+//                paymentMethod = repaymentFeature?.payment?.paymentMethod!!,
+//                repaymentFrequency = repaymentFeature.payment.frequency,
+//                oldRepaymentSchedule = oldRepaymentSchedule!!
+//            )
+//        )
+//        val savedRepaymentSchedule = repaymentScheduleService.updateOne(oldRepaymentSchedule, newRepaymentSchedule)
+//        val dtoRepaymentScheduleView = changeMapper(savedRepaymentSchedule)
+//        return DTOResponseSuccess(dtoRepaymentScheduleView).response()
     }
 
 
-    private fun changeMapper(repaymentSchedule: RepaymentSchedule): DTORepaymentScheduleView{
+    private fun changeMapper(repaymentSchedule: RepaymentSchedule?): DTORepaymentScheduleView{
         val dtoRepaymentScheduleDetailView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
-        for (schedule in repaymentSchedule.schedule) {
+        for (schedule in repaymentSchedule?.schedule!!) {
             dtoRepaymentScheduleDetailView += DTORepaymentScheduleDetailView(
                 id = schedule.id,
                 repaymentScheduleId = repaymentSchedule.id,

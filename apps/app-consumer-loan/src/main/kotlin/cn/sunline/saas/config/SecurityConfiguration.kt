@@ -12,7 +12,7 @@ class SecurityConfiguration () : WebSecurityConfigurerAdapter() {
 
 
     override fun configure(web: WebSecurity?) {
-        web!!.ignoring().antMatchers("/auth/login","/users","/**","/snowflake")
+        web!!.ignoring().antMatchers("/auth/login","/users","/**","/snowflake","ConsumerLoan/**")
     }
 
     override fun configure(http: HttpSecurity?) {

@@ -79,4 +79,9 @@ class UnderwritingService(
         underwriting.fraudEvaluation = fraudEvaluation
         save(underwriting)
     }
+
+
+    fun getId(){
+        val underwriting = underwritingInvoke.getPartnerIntegrated()
+    }
 }

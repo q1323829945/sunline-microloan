@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service
 @Service
 class ConsumerLoanService {
 
-    @Autowired
-    private lateinit var consumerLoanPublish: ConsumerLoanPublish
+//    @Autowired
+//    private lateinit var consumerLoanPublish: ConsumerLoanPublish
 
     @Autowired
     private lateinit var loanAgreementService: LoanAgreementService
@@ -34,7 +34,7 @@ class ConsumerLoanService {
     private lateinit var bankingTransactionService: BankingTransactionService
 
     fun underwriting() {
-        consumerLoanPublish.underwriting()
+//        consumerLoanPublish.underwriting()
     }
 
     fun createLoanAgreement() {
@@ -59,8 +59,8 @@ class ConsumerLoanService {
         bankingTransactionService.registered()
 
         //TODO financial accounting
-        consumerLoanPublish.financialAccounting()
-
-        consumerLoanPublish.disbursement()
+//        consumerLoanPublish.financialAccounting()
+//
+//        consumerLoanPublish.disbursement()
     }
 }

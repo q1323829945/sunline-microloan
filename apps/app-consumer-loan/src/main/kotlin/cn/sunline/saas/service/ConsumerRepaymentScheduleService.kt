@@ -16,5 +16,5 @@ interface ConsumerRepaymentScheduleService {
 
     fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
 
-    fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>>
+    fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal)
 }

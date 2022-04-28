@@ -6,6 +6,7 @@ import cn.sunline.saas.underwriting.service.UnderwritingService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -72,6 +73,14 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
                 dtoFraudEvaluation.applId,
                 dtoFraudEvaluation.fraudEvaluation
             )
+        }
+    }
+
+
+    @GetMapping
+    fun getId(): Mono<Unit> {
+        return Mono.fromRunnable {
+            integratedConfigurationService.getId()
         }
     }
 }

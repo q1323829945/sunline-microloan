@@ -4,33 +4,45 @@ import cn.sunline.saas.consumer.loan.dto.DTOLoanApplication
 import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.interest.service.InterestRateService
 import cn.sunline.saas.interest.service.RatePlanService
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
+import cn.sunline.saas.repayment.schedule.invoke.LoanProductDirectoryService
+import cn.sunline.saas.response.DTOResponseSuccess
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 
 
 @Service
-class RepaymentScheduleService{
-
-    @Autowired
-    private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
-
-    @Autowired
-    private lateinit var ratePlanService: RatePlanService
-
-    @Autowired
-    private lateinit var interestRateService: InterestRateService
-
-    @Autowired
-    private lateinit var repaymentScheduleService: RepaymentScheduleService
-
-    @Autowired
-    private lateinit var repaymentScheduleDetailService: RepaymentScheduleDetailService
+class RepaymentScheduleService(private val loanProductDirectoryService: LoanProductDirectoryService){
+//
+//    @Autowired
+//    private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
+//
+//    @Autowired
+//    private lateinit var ratePlanService: RatePlanService
+//
+//    @Autowired
+//    private lateinit var interestRateService: InterestRateService
+//
+////    @Autowired
+////    private lateinit var repaymentScheduleService: RepaymentScheduleService
+//
+//    @Autowired
+//    private lateinit var repaymentScheduleDetailService: RepaymentScheduleDetailService
 
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+
+    fun getInfo(productId:Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        return loanProductDirectoryService.getProductDirectory(productId)
+    }
+
 
     private fun initiateUnderwriting(dtoLoanApplication: DTOLoanApplication) {
         DaprHelper.binding(

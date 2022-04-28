@@ -29,7 +29,8 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-configure"))
-    implementation(project(":lib-huaweicloud-apig"))
+//    implementation(project(":lib-huaweicloud-apig"))
+    implementation(project(":lib-huaweicloud-obs"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
