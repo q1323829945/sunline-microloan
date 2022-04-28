@@ -40,7 +40,7 @@ class AppliedInterest(
 
     @NotNull
     @Column(
-        name = "applied_rate",
+        name = "applied_interest",
         nullable = false,
         scale = 19,
         precision = 2,

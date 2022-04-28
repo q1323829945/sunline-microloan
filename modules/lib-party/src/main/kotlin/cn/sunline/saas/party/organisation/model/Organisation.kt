@@ -24,7 +24,7 @@ class Organisation(
     val legalEntityIndicator: String,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "organisation_id")
     val organisationIdentifications: MutableList<OrganisationIdentification>,
 
@@ -41,17 +41,17 @@ class Organisation(
     val placeOfRegistration: String,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "organisation_id")
     val organizationInvolvements: MutableList<OrganizationInvolvement>,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "organisation_id")
     val businessUnits: MutableList<BusinessUnit>,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_organisation_id")
     val childOrganisation: MutableList<Organisation>
 
