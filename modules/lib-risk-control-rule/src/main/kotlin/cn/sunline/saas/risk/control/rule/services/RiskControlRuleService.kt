@@ -99,51 +99,22 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         val sortOrder = Sort.by(Sort.Order.asc("sort"))
         val riskControlRuleList = riskControlRuleRepository.findAll(spec,sortOrder)
 
-        val inputDataList = riskControlRuleList.map {
-            InputData(
-                it.logicalOperationType,
-                it
-            )
-        }
-        return objectMapper.convertValue(getParamsGroup(inputDataList))
+        return getParamsGroup(riskControlRuleList)
     }
 
-    private fun getDTORiskControlRuleGroup(riskControlRuleParamList: List<RiskControlRuleParam>):List<DTORiskControlRuleParamGroup>{
-        val inputDataList = riskControlRuleParamList.map {
-            InputData(
-                it.logicalOperationType,
-                it
-            )
-        }
-
-        val outputDataList = getParamsGroup(inputDataList)
-
-        return objectMapper.convertValue(outputDataList)
-    }
-
-    private data class OutputData<T>(
-        var logicalOperationType: LogicalOperationType?,
-        val params:List<T>,
-    )
-
-    private data class InputData<T>(
-        var logicalOperationType: LogicalOperationType,
-        var param:T
-    )
-
-    private fun <T> getParamsGroup(inputList: List<InputData<T>>):List<OutputData<T>>{
-        val outputList = mutableListOf<OutputData<T>>()
+    private fun getParamsGroup(inputList: List<RiskControlRule>):List<DTORiskControlRuleDetailGroup>{
+        val outputList = mutableListOf<DTORiskControlRuleDetailGroup>()
         var lastLogicalOperationType:LogicalOperationType? = null
-        val params = mutableListOf<T>()
+        val params = mutableListOf<DTORiskControlRuleView>()
 
         inputList.forEach {
             if(lastLogicalOperationType != it.logicalOperationType){
                 if(params.size != 0){
-                    val lastLogicalOperationParams = mutableListOf<T>()
+                    val lastLogicalOperationParams = mutableListOf<DTORiskControlRuleView>()
                     lastLogicalOperationParams.addAll(params)
                     outputList.add(
-                        OutputData(
-                            lastLogicalOperationType,
+                        DTORiskControlRuleDetailGroup(
+                            lastLogicalOperationType!!,
                             lastLogicalOperationParams
                         )
                     )
@@ -151,13 +122,13 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
                 }
                 lastLogicalOperationType = it.logicalOperationType
             }
-            params.add(it.param)
+            params.add(objectMapper.convertValue(it))
         }
 
         if(params.size != 0){
             outputList.add(
-                OutputData(
-                    lastLogicalOperationType,
+                DTORiskControlRuleDetailGroup(
+                    lastLogicalOperationType!!,
                     params
                 )
             )

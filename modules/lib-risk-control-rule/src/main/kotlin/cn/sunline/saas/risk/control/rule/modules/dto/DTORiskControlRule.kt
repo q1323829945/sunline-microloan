@@ -58,10 +58,6 @@ data class DTORiskControlRuleDetailGroup(
 )
 
 
-data class DTORiskControlRuleParamGroup(
-    var logicalOperationType: LogicalOperationType?,
-    val params:List<DTORiskControlRuleParam>,
-)
 
 data class DTORiskControlRuleSort(
     val sortList:List<DTORiskControlRuleView>
