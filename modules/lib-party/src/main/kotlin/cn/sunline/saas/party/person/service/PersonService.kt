@@ -71,6 +71,7 @@ class PersonService(private val personRepository: PersonRepository) :
         oldOne.personRoles = objectMapper.convertValue(dtoPersonChange.personRoles)
         oldOne.ethnicity = dtoPersonChange.ethnicity
         oldOne.nationality = dtoPersonChange.nationality
+        oldOne.residentialStatus = dtoPersonChange.residentialStatus
 
         return getDTOPersonView(save(oldOne))
     }

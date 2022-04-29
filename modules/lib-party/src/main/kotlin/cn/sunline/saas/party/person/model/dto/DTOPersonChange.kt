@@ -8,7 +8,6 @@ import cn.sunline.saas.party.person.model.RoleType
 data class DTOPersonChange(
     val personName:DTOPersonNameChange,
     val residentialStatus: ResidentialStatus,
-    val birthDate:String,
     val nationality: CountryType,
     val ethnicity:String,
     val personIdentifications:List<DTOPersonIdentificationChange>,

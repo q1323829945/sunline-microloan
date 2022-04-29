@@ -72,6 +72,15 @@ enum class PermissionConfig (
     RISK_CONTROL_RULE_DELETE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.DELETE, "Delete RiskControlRule"),
     RISK_CONTROL_RULE_GET_ONE("RiskControlRule", "RiskControlRule/[0-9]+\$", RequestMethod.GET, "Get One RiskControlRule"),
 
+    ORGANISATION_ADD("Organisation", "Organisation\$", RequestMethod.POST, "Add Organisation"),
+    ORGANISATION_LIST("Organisation", "Organisation(\\?.*|\$)", RequestMethod.GET, "View Organisation list"),
+    ORGANISATION_MODIFY("Organisation", "Organisation/[0-9]+\$", RequestMethod.PUT, "Modify Organisation"),
+    ORGANISATION_GET_ONE("Organisation", "Organisation/[0-9]+\$", RequestMethod.GET, "Get One Organisation"),
+
+    PERSON_ADD("Person", "Person\$", RequestMethod.POST, "Add Person"),
+    PERSON_LIST("Person", "Person(\\?.*|\$)", RequestMethod.GET, "View Person list"),
+    PERSON_MODIFY("Person", "Person/[0-9]+\$", RequestMethod.PUT, "Modify Person"),
+
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
@@ -83,5 +92,7 @@ enum class PermissionConfig (
     LOAN_PRODUCT_MENU("menu","loanProductConfig", RequestMethod.GET,"View formal loanProductConfig menu"),
     LOAN_UPLOAD_CONFIGURE_MENU("menu","loanFileUploadConfig", RequestMethod.GET,"View formal loanUploadConfig menu"),
     RISK_CONTROL_RULE_MENU("menu","riskControlRuleConfig", RequestMethod.GET,"View formal RiskControlRuleConfig menu"),
+    ORGANISATION_MENU("menu","organisationConfig", RequestMethod.GET,"View formal OrganisationConfig menu"),
+    PERSON_MENU("menu","personConfig", RequestMethod.GET,"View formal PersonConfig menu"),
 
 }
