@@ -4,7 +4,10 @@ import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.global.util.setUserId
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.apache.commons.io.IOUtils
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
@@ -18,6 +21,10 @@ import java.nio.charset.Charset
 
 @ControllerAdvice
 class RequestBodyAdviceFilter : RequestBodyAdvice {
+
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+
     override fun supports(
         methodParameter: MethodParameter,
         targetType: Type,
@@ -38,7 +45,8 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
 
         val body = IOUtils.toString(inputMessage.body, Charset.forName("utf-8"))
 
-        val bodyMap = Gson().fromJson(body,Map::class.java)
+        val bodyMap = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))
+
 
         return object : HttpInputMessage{
             override fun getHeaders(): HttpHeaders {
@@ -66,7 +74,7 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
                 val data = bodyMap["data"]
                 return if(data != null){
                     data as Map<*,*>
-                    val dataJson = Gson().toJson(data)
+                    val dataJson = objectMapper.valueToTree<JsonNode>(data).toPrettyString()
                     IOUtils.toInputStream(dataJson,Charset.forName("utf-8"))
                 } else {
                     IOUtils.toInputStream(body,Charset.forName("utf-8"))

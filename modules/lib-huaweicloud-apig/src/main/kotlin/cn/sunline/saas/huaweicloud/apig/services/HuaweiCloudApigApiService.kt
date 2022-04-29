@@ -5,7 +5,7 @@ import cn.sunline.saas.gateway.api.constant.*
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
-import com.google.gson.Gson
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.stereotype.Service
 
 @Service
@@ -28,9 +28,9 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
             )
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.POST,apiParams)
+        val responseBody = execute(uri,HttpRequestMethod.POST,apiParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return ApiResponseParams(
             id = map["id"].toString()
@@ -55,9 +55,9 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         )
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.PUT,apiParams)
+        val responseBody = execute(uri,HttpRequestMethod.PUT,apiParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return ApiResponseParams(
             id = map["id"].toString()
@@ -71,7 +71,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/$id")
 
-        sendClient(uri,HttpRequestMethod.DELETE)
+        execute(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -81,7 +81,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/publish/${onlineParams.api_id}")
 
-        sendClient(uri,HttpRequestMethod.POST,onlineParams)
+        execute(uri,HttpRequestMethod.POST,onlineParams)
 
     }
 
@@ -92,7 +92,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/apis/publish/${offlineParams.api_id}?env_id=${offlineParams.env_id}")
 
-        sendClient(uri,HttpRequestMethod.DELETE)
+        execute(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -103,7 +103,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         val uri = getUri("/v1.0/apigw/apis/publish?action=${batchPublishParams.action}")
 
 
-        sendClient(uri,HttpRequestMethod.POST,batchPublishParams)
+        execute(uri,HttpRequestMethod.POST,batchPublishParams)
     }
 
     /**
@@ -114,9 +114,9 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         val uri = getUri(getPagePath(pageParams))
 
 
-        val responseBody = sendClient(uri,HttpRequestMethod.GET)
+        val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         val list = map["apis"] as List<*>
 
@@ -133,8 +133,8 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
 
 
         return ApiPageResponseParams(
-            total = (map["total"] as Double).toInt(),
-            size = (map["size"] as Double).toInt(),
+            total = (map["total"] as Int),
+            size = (map["size"] as Int),
             apis = apis
         )
     }

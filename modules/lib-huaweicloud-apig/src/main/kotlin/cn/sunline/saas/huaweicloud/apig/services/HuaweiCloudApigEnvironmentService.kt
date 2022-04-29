@@ -3,7 +3,7 @@ package cn.sunline.saas.huaweicloud.apig.services
 import cn.sunline.saas.gateway.api.GatewayEnvironment
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
-import com.google.gson.Gson
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 
@@ -17,9 +17,9 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         val uri = getUri("/v1.0/apigw/envs")
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.POST,environmentCreateParams)
+        val responseBody = execute(uri,HttpRequestMethod.POST,environmentCreateParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return EnvironmentResponseParams(
             id = map["id"].toString()
@@ -34,9 +34,9 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         val uri = getUri("/v1.0/apigw/envs/${environmentUpdateParams.id}")
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.PUT,environmentUpdateParams)
+        val responseBody = execute(uri,HttpRequestMethod.PUT,environmentUpdateParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return EnvironmentResponseParams(
             id = map["id"].toString()
@@ -47,7 +47,7 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         //uri
         val uri = getUri("/v1.0/apigw/envs/$id")
 
-        sendClient(uri,HttpRequestMethod.DELETE)
+        execute(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -58,9 +58,9 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         val uri = getUri("/v1.0/apigw/envs?name=${URLEncoder.encode(environmentPagedParams.name, "utf-8")}")
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.GET)
+        val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         val list = map["envs"] as List<*>
 
@@ -72,8 +72,8 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         }
 
         return EnvironmentPagedResponseParams(
-            total = (map["total"] as Double).toInt(),
-            size = (map["size"] as Double).toInt(),
+            total = (map["total"] as Int),
+            size = (map["size"] as Int),
             envs = envs
         )
     }

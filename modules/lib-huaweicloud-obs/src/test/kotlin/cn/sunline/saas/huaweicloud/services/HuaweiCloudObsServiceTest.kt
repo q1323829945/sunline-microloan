@@ -1,6 +1,7 @@
 package cn.sunline.saas.huaweicloud.services
 
 import cn.sunline.saas.huaweicloud.obs.exception.ObsBodyTypeException
+import cn.sunline.saas.huaweicloud.obs.services.HuaweiCloudObsService
 import cn.sunline.saas.obs.api.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -17,18 +18,18 @@ class HuaweiCloudObsServiceTest {
     @Autowired
     private lateinit var huaweiCloudObsService: ObsApi
 
-    /* 桶的名称不能重复
+    /*
     @Test
     fun `create bucket`(){
-        val bucket = BucketParams("lizheng-test10", CreateBucketConfiguration("cn-east-3"))
-        huaweiCloudService.createBucket(bucket)
+        val bucket = BucketParams("lizheng-test11", CreateBucketConfiguration("cn-east-3"))
+        huaweiCloudObsService.createBucket(bucket)
     }
 
 
-     这个案例需要有一个空桶才能使用，测试案例是并行的，
+    // 这个案例需要有一个空桶才能使用，测试案例是并行的，
     @Test
     fun `delete bucket`(){
-        huaweiCloudService.deleteBucket("lizheng-test10")
+        huaweiCloudObsService.deleteBucket("lizheng-test11")
     }
     */
 
@@ -44,6 +45,7 @@ class HuaweiCloudObsServiceTest {
 
         val put = PutParams("stream1234.JPG",file)
         huaweiCloudObsService.putObject(put)
+
     }
 
 

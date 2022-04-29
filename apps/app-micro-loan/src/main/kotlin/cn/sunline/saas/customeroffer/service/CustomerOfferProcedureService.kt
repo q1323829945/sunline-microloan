@@ -9,7 +9,7 @@ import cn.sunline.saas.product.service.ProductService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.google.gson.Gson
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -52,7 +52,9 @@ class CustomerOfferProcedureService {
         val customerOffer = customerOfferService.getOneById(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
-            val dtoCustomerOffer = Gson().fromJson(customerOffer.data,DTOCustomerOfferAdd::class.java)
+            val dtoCustomerOffer = objectMapper.treeToValue<DTOCustomerOfferAdd>(objectMapper.readTree(customerOffer.data))
+
+
             val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
             dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
             dTOCustomerOfferProcedureView.status = customerOffer.status

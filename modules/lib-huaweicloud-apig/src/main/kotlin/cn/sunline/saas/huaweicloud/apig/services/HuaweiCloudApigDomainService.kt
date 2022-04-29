@@ -6,7 +6,7 @@ import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
 import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
-import com.google.gson.Gson
+import com.fasterxml.jackson.module.kotlin.treeToValue
 
 const val DOMAIN_HASH_MAP = "domain_hash_map"
 const val CERTIFICATE_HASH_MAP = "certificate_hash_map"
@@ -25,9 +25,9 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             url_domain = domainParams.urlDomain
         )
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.POST,request)
+        val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         val status = map["status"].toString()
 
@@ -55,7 +55,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             //uri
             val uri = getUri("/v1.0/apigw/api-groups/${domainParams.groupId}/domains/$this")
 
-            sendClient(uri,HttpRequestMethod.DELETE)
+            execute(uri,HttpRequestMethod.DELETE)
         }
     }
 
@@ -76,9 +76,9 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             )
 
             //get responseBody
-            val responseBody = sendClient(uri,HttpRequestMethod.POST,request)
+            val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-            val map = Gson().fromJson(responseBody, Map::class.java)
+            val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
             val status = map["status"].toString()
 
@@ -104,7 +104,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             //uri
             val uri = getUri("/v1.0/apigw/api-groups/${certificateDeleteParams.groupId}/domains/$domainId/certificate/$this")
 
-            sendClient(uri,HttpRequestMethod.DELETE)
+            execute(uri,HttpRequestMethod.DELETE)
         }
     }
 }

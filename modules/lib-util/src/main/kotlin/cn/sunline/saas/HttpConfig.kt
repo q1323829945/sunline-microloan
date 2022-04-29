@@ -5,128 +5,92 @@ import cn.sunline.saas.exceptions.SystemException
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
 import okhttp3.*
-import org.apache.commons.httpclient.HttpClient
-import org.apache.commons.httpclient.HttpMethod
-import org.apache.commons.httpclient.methods.*
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity
-import org.apache.commons.httpclient.methods.multipart.PartBase
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.io.File
+import java.io.InputStream
 import java.nio.charset.Charset
 
 @Component
 class HttpConfig {
     protected val logger: Logger = LoggerFactory.getLogger(HttpConfig::class.java)
-//
-//    fun test(httpMethod: HttpRequestMethod, uri:String,requestBody: RequestBody?){
-//        val client = OkHttpClient.Builder().build()
-//        val request = when(httpMethod){
-//            GET -> Request.Builder().url(uri).get().build()
-//            POST -> Request.Builder().url(uri).post(requestBody!!).build()
-//            PUT -> Request.Builder().url(uri).put(requestBody!!).build()
-//            DELETE -> Request.Builder().url(uri).delete(requestBody).build()
-//        }
-//        val response = client.newCall(request).execute()
-//
-//        response.close()
-//
-//    }
-//
-//    fun test(httpMethod: HttpRequestMethod, uri:String,parts:List<MultipartBody.Part>){
-//        val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-//        val requestBody = RequestBody.create(org.springframework.http.MediaType.MULTIPART_FORM_DATA,)
-//        val client = OkHttpClient.Builder().build()
-//        val request = when(httpMethod){
-//            GET -> Request.Builder().url(uri).get().build()
-//            POST -> Request.Builder().url(uri).post(requestBody!!).build()
-//            PUT -> Request.Builder().url(uri).put(requestBody!!).build()
-//            DELETE -> Request.Builder().url(uri).delete(requestBody).build()
-//        }
-//
-//        val response = client.newCall(request).execute()
-//
-//        response.close()
-//
-//    }
 
-    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String, headerMap:Map<String,String>? = null, parts:Array<PartBase>?): HttpMethod {
 
-        val httpRequest = getHttpMethod(httpMethod,uri,headerMap)
 
-        when(httpRequest){
-            is PutMethod -> httpRequest.requestEntity = MultipartRequestEntity(parts,httpRequest.params)
-            is PostMethod -> httpRequest.requestEntity = MultipartRequestEntity(parts,httpRequest.params)
+    fun execute(httpMethod: HttpRequestMethod, uri:String, parts:List<MultipartBody.Part>, headers:Map<String,String>? = null): Response {
+        val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+        parts.forEach {
+            multipartBody.addPart(it)
         }
 
-
-        return httpRequest
+        return execute(httpMethod,uri,multipartBody.build(),headers)
     }
 
-    fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String, headerMap:Map<String,String>? = null, entity: RequestEntity? = null): HttpMethod {
 
-        val httpRequest = getHttpMethod(httpMethod,uri,headerMap)
 
-        when(httpRequest){
-            is PutMethod -> httpRequest.requestEntity = entity
-            is PostMethod -> httpRequest.requestEntity = entity
+    fun execute(httpMethod: HttpRequestMethod, uri:String, requestBody: RequestBody? = null,headers:Map<String,String>? = null):Response{
+        val client = OkHttpClient.Builder().build()
+        val request = when(httpMethod){
+            GET -> Request.Builder().url(uri).get()
+            POST -> Request.Builder().url(uri).post(requestBody!!)
+            PUT -> Request.Builder().url(uri).put(requestBody!!)
+            DELETE -> Request.Builder().url(uri).delete(requestBody)
         }
 
-
-
-        return httpRequest
-    }
-
-    private fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String, headerMap:Map<String,String>? = null):HttpMethod{
-        val httpRequest = when(httpMethod){
-            GET -> GetMethod(uri)
-            POST -> PostMethod(uri)
-            PUT -> PutMethod(uri)
-            DELETE -> DeleteMethod(uri)
+        headers?.forEach {
+            request.header(it.key,it.value)
         }
 
-        headerMap?.forEach{
-            httpRequest.addRequestHeader(it.key,it.value)
-        }
+        val response = client.newCall(request.build()).execute()
 
-
-        return httpRequest
-    }
-
-    fun sendClient(httpMethod: HttpMethod) {
-        val httpClient = HttpClient()
-        val status = httpClient.executeMethod(httpMethod)
-
-        logger.debug("uri:${httpMethod.uri}")
-        logger.debug("status:$status")
-        if(!Regex("2[0-9]+").containsMatchIn(status.toString())){
-            val body = getBody(httpMethod)
+        logger.debug("uri:${response.request.url}")
+        logger.debug("code:${response.code}")
+        if(!response.isSuccessful){
+            val body = getBody(response)
             logger.error("body:$body")
             throw SystemException("http error",ManagementExceptionCode.HTTP_ERROR)
         }
+
+        return response
     }
 
-    fun getHeader(httpMethod: HttpMethod):Map<String,String>{
+    fun setRequestBody(bytes:ByteArray,mediaType: String? = null):RequestBody{
+        return bytes.toRequestBody(mediaType?.toMediaType())
+    }
+
+    fun setRequestBody(str:String,mediaType: String? = null):RequestBody{
+        return str.toRequestBody(mediaType?.toMediaType())
+    }
+
+    fun setRequestBody(file: File,mediaType: String? = null):RequestBody{
+        return file.asRequestBody(mediaType?.toMediaType())
+    }
+
+
+    fun getHeader(response: Response):Map<String,String>{
         val map = HashMap<String,String>()
-        httpMethod.responseHeaders.forEach {
-            map[it.name] = it.value
+        response.headers.forEach {
+            map[it.first] = it.second
         }
         return map
     }
 
-    private fun getBody(httpMethod: HttpMethod):String{
-        val inputStream = httpMethod.responseBodyAsStream
-
-        inputStream?: run {
-            return ""
-        }
-
-        return IOUtils.toString(inputStream, Charset.forName("utf-8"))
+    private fun getBody(response: Response): String {
+        val stream = response.body?.byteStream()
+        return IOUtils.toString(stream, Charset.defaultCharset())
     }
 
-    fun getResponseBody(httpMethod:HttpMethod):String{
-        return getBody(httpMethod)
+    fun getResponseBody(response: Response):String{
+        return getBody(response)
+    }
+
+    fun getResponseStream(response: Response): InputStream {
+        return response.body!!.byteStream()
     }
 
 }

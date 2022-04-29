@@ -20,9 +20,6 @@ dependencies {
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
-    implementation("commons-httpclient:commons-httpclient:${commonsHttpclientVersion}")
-    implementation("com.google.code.gson:gson:${gsonVersion}")
-    implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))

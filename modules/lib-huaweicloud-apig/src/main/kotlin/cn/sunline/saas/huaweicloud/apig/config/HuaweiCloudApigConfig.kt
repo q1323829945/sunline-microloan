@@ -4,14 +4,12 @@ import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import cn.sunline.saas.redis.services.RedisClient
 import cn.sunline.saas.HttpConfig
-import com.google.gson.Gson
-import org.apache.commons.httpclient.methods.StringRequestEntity
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
-import java.util.*
 
 /**
  *
@@ -32,6 +30,9 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
     @Value("\${huawei.cloud.iam.projectId}")
     lateinit var projectId:String
 
+
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
     fun getToken(): String {
         val token = redisClient.getMapItem<String>(HUAWEI_CLOUD_IAM_TOKEN_HASH, HUAWEI_CLOUD_IAM_TOKEN_KEY)
 
@@ -50,23 +51,18 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
         val uri = "https://iam.myhuaweicloud.com/v3/auth/tokens"
 
         //header
-        val headerMap = mutableMapOf<String, String>()
-        headerMap["Content-Type"] = "application/json;charset=utf8"
+        val headers = mutableMapOf<String, String>()
+        headers["Content-Type"] = "application/json;charset=utf8"
 
-        //body
-        val body = StringRequestEntity(Gson().toJson(getBody()), MediaType.APPLICATION_JSON_VALUE, "utf-8")
+        val body = objectMapper.valueToTree<JsonNode>(getBody()).toPrettyString()
 
-        //get httpMethod
-        val httpPost = httpConfig.getHttpMethod(HttpRequestMethod.POST, uri, headerMap, body)
-
-        //sendClint
-        httpConfig.sendClient(httpPost)
+        val response = httpConfig.execute(HttpRequestMethod.PUT,uri,httpConfig.setRequestBody(body,MediaType.APPLICATION_JSON_VALUE),headers)
 
         //get headers
-        val headers = httpConfig.getHeader(httpPost)
+        val responseHeaders = httpConfig.getHeader(response)
 
         //get token
-        val responseToken = headers["X-Subject-Token"]
+        val responseToken = responseHeaders["X-Subject-Token"]
 
         redisClient.addToMap(HUAWEI_CLOUD_IAM_TOKEN_HASH, HUAWEI_CLOUD_IAM_TOKEN_KEY,responseToken,24 * 60 -5)
 

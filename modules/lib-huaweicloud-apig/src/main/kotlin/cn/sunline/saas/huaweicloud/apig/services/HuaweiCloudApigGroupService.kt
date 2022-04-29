@@ -3,9 +3,7 @@ package cn.sunline.saas.huaweicloud.apig.services
 import cn.sunline.saas.gateway.api.GatewayGroup
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
-import com.google.gson.Gson
-import org.apache.commons.httpclient.methods.StringRequestEntity
-import org.springframework.http.MediaType
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 
@@ -19,9 +17,9 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //uri
         val uri = getUri("/v1.0/apigw/api-groups")
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.POST,createParams)
+        val responseBody = execute(uri,HttpRequestMethod.POST,createParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return GroupResponseParams(
             id = map["id"].toString()
@@ -37,9 +35,9 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         val uri = getUri("/v1.0/apigw/api-groups/${updateParams.id}")
 
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.PUT,updateParams)
+        val responseBody = execute(uri,HttpRequestMethod.PUT,updateParams)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         return GroupResponseParams(
             id = map["id"].toString()
@@ -53,7 +51,7 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //uri
         val uri = getUri("/v1.0/apigw/api-groups/$id")
 
-        sendClient(uri,HttpRequestMethod.DELETE)
+        execute(uri,HttpRequestMethod.DELETE)
     }
 
     /**
@@ -63,9 +61,9 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //uri
         val uri = getUri("/v1.0/apigw/api-groups?name=${URLEncoder.encode(groupPagedParams.name, "utf-8")}")
         //get responseBody
-        val responseBody = sendClient(uri,HttpRequestMethod.GET)
+        val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = Gson().fromJson(responseBody, Map::class.java)
+        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
 
         val list = map["groups"] as List<*>
 
@@ -78,8 +76,8 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
 
 
         return GroupPagedResponseParams(
-            total = (map["total"] as Double).toInt(),
-            size = (map["size"] as Double).toInt(),
+            total = (map["total"] as Int),
+            size = (map["size"] as Int),
             groups = groups
         )
     }

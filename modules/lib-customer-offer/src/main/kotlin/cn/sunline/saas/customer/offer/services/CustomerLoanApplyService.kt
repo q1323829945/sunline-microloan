@@ -9,7 +9,10 @@ import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
-import com.google.gson.Gson
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -18,6 +21,8 @@ import java.math.BigDecimal
 @Service
 class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanApplyRepository) :
         BaseMultiTenantRepoService<CustomerLoanApply, Long>(customerLoanApplyRepo){
+
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     data class DTOFile(
             val originalFilename:String,
@@ -34,7 +39,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
         setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanAdd.uploadDocument)
 
-        val data = Gson().toJson(dtoCustomerOfferLoanAdd)
+        val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOfferLoanAdd).toPrettyString()
 
         val amount = dtoCustomerOfferLoanAdd.loan?.run {
             BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
@@ -49,7 +54,8 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
      fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
         val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply",ManagementExceptionCode.DATA_NOT_FOUND)
-        val originalData = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
+
+         val originalData = objectMapper.treeToValue<DTOCustomerOfferLoanAdd>(objectMapper.readTree(customerLoanApply.data))
 
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
@@ -64,7 +70,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
 
         setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanAdd.uploadDocument)
 
-        val data = Gson().toJson(dtoCustomerOfferLoanAdd)
+         val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOfferLoanAdd).toPrettyString()
 
         dtoCustomerOfferLoanAdd.loan?.run {
             customerLoanApply.amount = BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
@@ -96,7 +102,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
     fun retrieve(customerOfferId:Long): DTOCustomerOfferLoanView{
         val customerLoanApply = this.getOne(customerOfferId)?:return DTOCustomerOfferLoanView()
 
-        val dtoCustomerOfferLoanAdd = Gson().fromJson(customerLoanApply.data,DTOCustomerOfferLoanAdd::class.java)
+        val dtoCustomerOfferLoanAdd = objectMapper.treeToValue<DTOCustomerOfferLoanAdd>(objectMapper.readTree(customerLoanApply.data))
 
         return DTOCustomerOfferLoanView(
                 null,

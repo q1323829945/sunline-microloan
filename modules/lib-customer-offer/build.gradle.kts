@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-huaweicloud-obs"))
-    implementation("com.google.code.gson:gson:2.9.0")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

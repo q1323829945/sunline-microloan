@@ -8,9 +8,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
-    implementation("commons-httpclient:commons-httpclient:3.1")
     implementation("joda-time:joda-time:${jodaVersion}")
-    implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
 
     implementation(project(":lib-exceptions"))
