@@ -9,13 +9,11 @@ import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
 import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleParam
 import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import javax.annotation.PostConstruct
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RiskControlServiceTest {
@@ -26,7 +24,7 @@ class RiskControlServiceTest {
     @Autowired
     private lateinit var riskControlService: RiskControlService
 
-    @PostConstruct
+    @BeforeEach
     fun setTenantId(){
         ContextUtil.setTenant("0")
     }

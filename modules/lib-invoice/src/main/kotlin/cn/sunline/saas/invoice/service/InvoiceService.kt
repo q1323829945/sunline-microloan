@@ -27,8 +27,6 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
     private lateinit var seq: Sequence
 
     fun initiateLoanInvoice(dtoLoanInvoice: DTOLoanInvoice): Invoice {
-        val invoiceId = seq.nextId()
-
         val invoiceLine = mutableListOf<InvoiceLine>()
 
         invoiceLine.add(
@@ -68,7 +66,7 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
                 invoiceAssignedDocument = document,
                 invoiceAddress = dtoLoanInvoice.invoiceAddress,
                 invoiceAmount = invoiceAmount,
-                invoiceStatus = InvoiceStatus.PREPARE,
+                invoiceStatus = InvoiceStatus.INITIATE,
                 invoicee = dtoLoanInvoice.invoicee,
                 invoiceLines = invoiceLine,
                 agreementId = dtoLoanInvoice.agreementId

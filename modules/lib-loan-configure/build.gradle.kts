@@ -7,9 +7,9 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
-    api(project(":lib-base-jpa"))
-    api(project(":lib-multi-tenant"))
-    implementation(project(":lib-snowflake"))
+    implementation(project(":lib-base-jpa"))
+    implementation(project(":lib-multi-tenant"))
+    implementation(project(":lib-seq-api"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

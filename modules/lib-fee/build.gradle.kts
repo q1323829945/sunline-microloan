@@ -16,5 +16,4 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake-simple"))
-    testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
 }
