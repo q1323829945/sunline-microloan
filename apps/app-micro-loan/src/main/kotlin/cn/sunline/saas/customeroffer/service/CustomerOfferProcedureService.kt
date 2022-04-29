@@ -81,6 +81,6 @@ class CustomerOfferProcedureService {
     }
 
     private fun getPDPA(countryCode:String): PDPAInformation {
-        return pdpaService.retrieve(countryCode)
+        return pdpaService.retrieve(countryCode)!!
     }
 }

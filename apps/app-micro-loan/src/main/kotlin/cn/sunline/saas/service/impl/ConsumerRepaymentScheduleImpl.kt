@@ -96,7 +96,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
     }
 
     override fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
-        val savedRepaymentSchedule :RepaymentSchedule //= repaymentScheduleService.register(dtoRepaymentSchedule)
+        //val savedRepaymentSchedule :RepaymentSchedule //= repaymentScheduleService.register(dtoRepaymentSchedule)
         val dtoRepaymentScheduleView = changeMapper(null)
         return DTOResponseSuccess(dtoRepaymentScheduleView).response()
     }

@@ -4,7 +4,7 @@ import cn.sunline.saas.config.AppHttpConfiguration
 import cn.sunline.saas.config.IpConfig
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.pdpa.dto.PDPAInformation
-import com.google.gson.Gson
+import cn.sunline.saas.pdpa.invoke.PdpaInvoke
 import org.apache.commons.httpclient.methods.multipart.FilePart
 import org.apache.commons.httpclient.methods.multipart.StringPart
 import org.springframework.http.MediaType
@@ -17,7 +17,8 @@ import java.io.InputStream
 class PDPAService(
     private var ipConfig:IpConfig,
     private var appHttpConfiguration: AppHttpConfiguration,
-    ) {
+    private val pdpaInvoke: PdpaInvoke
+) {
 
     fun sign(
         customerId: Long,
@@ -61,16 +62,8 @@ class PDPAService(
     }
 
 
-    fun retrieve(countryCode: String): PDPAInformation {
-
-        val uri = "http://${ipConfig.pdpaIp}/pdpa/$countryCode/retrieve"
-
-        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri,appHttpConfiguration.getPublicHeaders())
-
-        appHttpConfiguration.sendClient(postMethod)
-
-        val data = appHttpConfiguration.getResponse(postMethod)
-
-        return Gson().fromJson(data, PDPAInformation::class.java)
+    fun retrieve(countryCode: String): PDPAInformation? {
+        return pdpaInvoke.getPDPAInformation(countryCode)
     }
+
 }

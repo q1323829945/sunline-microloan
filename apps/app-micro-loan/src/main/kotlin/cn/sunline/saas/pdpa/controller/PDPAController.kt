@@ -2,8 +2,8 @@ package cn.sunline.saas.pdpa.controller
 
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.response.DTOResponseSuccess
-import cn.sunline.saas.response.response
 import cn.sunline.saas.pdpa.service.PDPAService
+import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,8 +20,7 @@ class PDPAController {
 
     @GetMapping("{countryCode}/retrieve")
     fun getPDPAInformation(@PathVariable countryCode: String): ResponseEntity<DTOResponseSuccess<PDPAInformation>> {
-        val pdpa = pdpaService.retrieve(countryCode)
-        return DTOResponseSuccess(pdpa).response()
+        return DTOResponseSuccess(pdpaService.retrieve(countryCode)).response()
     }
 
 }

@@ -19,7 +19,7 @@ class AppHttpConfiguration: HttpConfig() {
 
         map["ExternalTune"] = "customer-offer"
         map["X-Tenant-Domain"] = ContextUtil.getTenant().toString()
-
+        map["X-Authorization-Tenant"] = ContextUtil.getTenant().toString()
         return map
     }
 
