@@ -56,7 +56,7 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
 
         val body = objectMapper.valueToTree<JsonNode>(getBody()).toPrettyString()
 
-        val response = httpConfig.execute(HttpRequestMethod.PUT,uri,httpConfig.setRequestBody(body,MediaType.APPLICATION_JSON_VALUE),headers)
+        val response = httpConfig.execute(HttpRequestMethod.POST,uri,httpConfig.setRequestBody(body,MediaType.APPLICATION_JSON_VALUE),headers)
 
         //get headers
         val responseHeaders = httpConfig.getHeader(response)
