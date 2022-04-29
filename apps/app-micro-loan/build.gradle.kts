@@ -3,6 +3,9 @@ val mysqlConnectorVersion: String by rootProject.extra
 val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
+val commonsHttpclientVersion:String by rootProject.extra
+val gsonVersion:String by rootProject.extra
+val okhttpVersion:String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -17,33 +20,28 @@ dependencies {
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
-    implementation("commons-httpclient:commons-httpclient:3.1")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("commons-httpclient:commons-httpclient:${commonsHttpclientVersion}")
+    implementation("com.google.code.gson:gson:${gsonVersion}")
+    implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-redis"))
     implementation(project(":lib-dapr-wrapper"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-global"))
-
-    api(project(":lib-seq-api"))
+    implementation(project(":lib-seq-api"))
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-agreement"))
     implementation(project(":lib-banking-transaction"))
-    implementation(project(":lib-organisation"))
-    implementation(project(":lib-person"))
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-product"))
-
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-configure"))
     implementation(project(":lib-huaweicloud-obs"))
-
     implementation(project(":lib-document-generation"))
     implementation(project(":lib-document-template"))
     implementation(project(":lib-document"))
-
     implementation(project(":lib-snowflake"))
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

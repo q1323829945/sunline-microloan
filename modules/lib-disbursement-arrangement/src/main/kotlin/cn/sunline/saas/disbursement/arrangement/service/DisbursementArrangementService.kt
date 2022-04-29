@@ -29,7 +29,8 @@ class DisbursementArrangementService(private val disbursementArrangementReposito
             id = seq.nextId(),
             agreementId = agreementId,
             disbursementAccount = disbursementArrangementAdd.disbursementAccount,
-            disbursementAccountBank = disbursementArrangementAdd.disbursementAccountBank
+            disbursementAccountBank = disbursementArrangementAdd.disbursementAccountBank,
+            disbursementLendType = disbursementArrangementAdd.disbursementLendType
         )
 
         return save(disbursementArrangement)
