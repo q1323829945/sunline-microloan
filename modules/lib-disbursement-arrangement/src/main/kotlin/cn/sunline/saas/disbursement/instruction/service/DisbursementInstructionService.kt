@@ -1,6 +1,6 @@
 package cn.sunline.saas.disbursement.instruction.service
 
-import cn.sunline.saas.disbursement.instruction.dto.DTODisbursementInstruction
+import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruction
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType

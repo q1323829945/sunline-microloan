@@ -1,5 +1,7 @@
 package cn.sunline.saas.disbursement.arrangement.model.dto
 
+import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementLendType
+
 /**
  * @title: DTODisbursementArrangementAdd
  * @description: TODO
@@ -8,5 +10,6 @@ package cn.sunline.saas.disbursement.arrangement.model.dto
  */
 data class DTODisbursementArrangementAdd(
     val disbursementAccount: String,
-    val disbursementAccountBank: String
+    val disbursementAccountBank: String,
+    val disbursementLendType: DisbursementLendType
 )

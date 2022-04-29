@@ -5,6 +5,8 @@ val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
 val daprVersion: String by rootProject.extra
 val hibernatetypeVersion: String by rootProject.extra
+val log4jdbcVersion: String by rootProject.extra
+val okhttpVersion:String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -21,9 +23,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("com.vladmihalcea:hibernate-types-55:${hibernatetypeVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
+    implementation("com.googlecode.log4jdbc:log4jdbc:${log4jdbcVersion}")
+    implementation("com.squareup.okhttp3:okhttp:${okhttpVersion}")
 
-
-    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-menu"))
@@ -42,12 +44,9 @@ dependencies {
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-partner-integrated"))
     implementation(project(":lib-risk-control"))
+    implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-pdpa"))
-    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
-
     implementation(project(":lib-dapr-wrapper"))
-
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

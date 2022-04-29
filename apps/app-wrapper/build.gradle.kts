@@ -17,11 +17,12 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql:${flywayVersion}")
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
     implementation(project(":lib-global"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-multi-tenant"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
 }
