@@ -1,7 +1,7 @@
-package cn.sunline.saas.customer.billing.repository
+package cn.sunline.saas.invoice.repository
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
-import cn.sunline.saas.customer.billing.model.db.Invoice
+import cn.sunline.saas.invoice.model.db.Invoice
 
 /**
  * @title: InvoiceRepository

@@ -1,11 +1,11 @@
-# 发起消费贷款
+# 发起贷款
 
 ## 请求
 
-| Path        | /consumerLoan/initiate |
-| ----------- | ---------------------- |
-| Method      | POST                   |
-| Description | 发起消费贷款           |
+| Path        | /loan/initiate |
+| ----------- | -------------- |
+| Method      | POST           |
+| Description | 发起贷款       |
 
 ### 请求头
 

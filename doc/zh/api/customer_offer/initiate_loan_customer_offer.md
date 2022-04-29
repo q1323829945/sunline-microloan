@@ -17,7 +17,7 @@
 
 ### 请求体
 
-| 参数                   | 类型    | 必须 | 说明               |
+| 参数                   | 类型    | M/O  | 说明               |
 | ---------------------- | ------- | ---- | ------------------ |
 | customerOfferProcedure | object  | 是   | 客户申请流程信息   |
 | ∟ customerId           | integer | 是   | 客户Id             |
@@ -66,8 +66,8 @@
 | ∟∟ maxValueRange               | string  | 最大金额                                                     |
 | ∟∟ minValueRange               | string  | 最小金额                                                     |
 | ∟ termConfiguration            | object  | 期限范围参数                                                 |
-| ∟∟ maxValueRange               | string  | 最大期限，期限 包括：ONE_MONTH、THREE_MONTHS、SIX_MONTHS、ONE_YEAR、TWO_YEAR、THREE_YEAR |
-| ∟∟ minValueRange               | string  | 最小期限，期限同上                                           |
+| ∟∟ maxValueRange               | string  | 最大期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
+| ∟∟ minValueRange               | string  | 最小期限<br />[参见附录字典代码—期限](../appendices/dictionary_code.md) |
 
 ### 响应体示例
 

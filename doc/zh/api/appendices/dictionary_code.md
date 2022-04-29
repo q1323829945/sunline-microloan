@@ -78,4 +78,16 @@
 |                              | CORPORATE_LOAN             | 公司贷款     |
 |                              | MERCHANDISING_LOAN         | 商品贷款     |
 |                              | MORTGAGE_LOAN              | 抵押贷款     |
-|                              | SYNDICATED_LOAN     | 组合贷款     |
+|                              | SYNDICATED_LOAN     | 银团贷款   |
+| 账单状态（InvoiceStatus） | PREPARE                                  | 未出账单 |
+|  | INITIATE                                 | 已出账单 |
+|  | FINISHED                                 | 结清账单 |
+|  | OVERDUE                                  | 逾期账单 |
+| 账单金额类型（InvoiceAmountType） | PRINCIPAL | 本金 |
+| | INTEREST | 利息 |
+| | FEE | 费用 |
+| | PENALTY_INTEREST | 罚息 |
+| 贷款金额类型（LoanAmountType） | PRINCIPAL | 本金 |
+| | INTEREST | 利息 |
+| | FEE | 费用 |
+
