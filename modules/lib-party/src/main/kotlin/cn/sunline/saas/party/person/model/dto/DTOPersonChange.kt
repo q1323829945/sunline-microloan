@@ -6,7 +6,6 @@ import cn.sunline.saas.party.person.model.ResidentialStatus
 import cn.sunline.saas.party.person.model.RoleType
 
 data class DTOPersonChange(
-    var id:String,
     val personName:DTOPersonNameChange,
     val residentialStatus: ResidentialStatus,
     val birthDate:String,

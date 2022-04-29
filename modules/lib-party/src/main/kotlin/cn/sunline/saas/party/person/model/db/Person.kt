@@ -20,7 +20,7 @@ class Person(
     val id: Long,
 
     @NotNull
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @MapsId
     var personName: PersonName,
 
