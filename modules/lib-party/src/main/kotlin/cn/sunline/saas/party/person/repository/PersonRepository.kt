@@ -1,7 +1,7 @@
 package cn.sunline.saas.party.person.repository
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
-import cn.sunline.saas.party.person.model.Person
+import cn.sunline.saas.party.person.model.db.Person
 
 /**
  * @title: PersonRepository

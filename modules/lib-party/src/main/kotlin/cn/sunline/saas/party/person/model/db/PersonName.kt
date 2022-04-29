@@ -1,4 +1,4 @@
-package cn.sunline.saas.party.person.model
+package cn.sunline.saas.party.person.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.Column
@@ -22,20 +22,19 @@ class PersonName(
     val id: Long,
 
     @NotNull
-    @Column(name = "first_name", nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    @Column(name = "first_name",  length = 64, columnDefinition = "varchar(64) not null")
     var firstName: String,
 
-    @NotNull
-    @Column(name = "family_name", nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    var familyName: String,
+    @Column(name = "family_name", length = 64, columnDefinition = "varchar(64)  null")
+    var familyName: String?,
 
     @NotNull
-    @Column(name = "given_name", nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    @Column(name = "given_name", length = 64, columnDefinition = "varchar(64) not null")
     var givenName: String
 ) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id", columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {

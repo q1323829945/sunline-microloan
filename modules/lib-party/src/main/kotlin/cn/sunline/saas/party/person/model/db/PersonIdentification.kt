@@ -1,6 +1,7 @@
-package cn.sunline.saas.party.person.model
+package cn.sunline.saas.party.person.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.party.person.model.PersonIdentificationType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -15,24 +16,28 @@ import javax.validation.constraints.NotNull
 class PersonIdentification(
     @Id val id: Long,
 
+
+    @NotNull
+    @Column(name="person_id", columnDefinition = "bigint not null")
+    val personId: Long,
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(
         name = "person_identification_type",
-        nullable = false,
         length = 32,
         columnDefinition = "varchar(32) not null"
     )
     val personIdentificationType: PersonIdentificationType,
 
     @NotNull
-    @Column(name = "person_identification", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "person_identification", length = 32, columnDefinition = "varchar(32) not null")
     val personIdentification: String
 
 ) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id",columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {

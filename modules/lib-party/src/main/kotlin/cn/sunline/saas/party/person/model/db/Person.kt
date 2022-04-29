@@ -1,8 +1,9 @@
-package cn.sunline.saas.party.person.model
+package cn.sunline.saas.party.person.model.db
 
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import java.time.Instant
+import cn.sunline.saas.party.person.model.ResidentialStatus
+import org.joda.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -19,13 +20,9 @@ class Person(
     val id: Long,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "person_id")
-    val personIdentifications: MutableList<PersonIdentification>,
-
-    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
-    val personName: PersonName,
+    @MapsId
+    var personName: PersonName,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -41,10 +38,24 @@ class Person(
     var nationality: CountryType,
 
     @Column(name = "ethnicity", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    var ethnicity: String
+    var ethnicity: String,
 
+    ) : MultiTenant {
 
-) : MultiTenant {
+    @NotNull
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true , mappedBy = "personId")
+    var personIdentifications: MutableList<PersonIdentification> = mutableListOf()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+        }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true , mappedBy = "personId")
+    var personRoles: MutableList<PersonRole> = mutableListOf()
+        set(value) {
+            field.clear()
+            field.addAll(value)
+        }
 
     @NotNull
     @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")

@@ -22,7 +22,8 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
             ,"/RatePlan/all"
             ,"/roles/all"
             ,"/permissions/all"
-            ,"/PartnerIntegrated/**")
+            ,"/PartnerIntegrated/**"
+            ,"/**")
     }
 
     override fun configure(http: HttpSecurity?) {

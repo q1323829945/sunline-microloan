@@ -1,33 +1,32 @@
-package cn.sunline.saas.party.organisation.model
+package cn.sunline.saas.party.person.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.party.person.model.RoleType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-/**
- * @title: BusinessUnit
- * @description: TODO
- * @author Kevin-Cui
- * @date 2022/4/14 15:43
- */
 @Entity
-@Table(name = "business_unit")
-class BusinessUnit(
+@Table(name = "person_role")
+class PersonRole(
     @Id
     val id: Long,
 
     @NotNull
+    @Column(name="person_id", columnDefinition = "bigint not null")
+    val personId: Long,
+
+    @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(
-        nullable = false,
         length = 32,
         columnDefinition = "varchar(32) not null"
     )
-    val type: BusinessUnitType
-): MultiTenant {
+    val type:RoleType
+
+) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id",columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {

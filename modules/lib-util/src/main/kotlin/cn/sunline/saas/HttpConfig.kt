@@ -4,6 +4,7 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.SystemException
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
+import okhttp3.*
 import org.apache.commons.httpclient.HttpClient
 import org.apache.commons.httpclient.HttpMethod
 import org.apache.commons.httpclient.methods.*
@@ -18,6 +19,37 @@ import java.nio.charset.Charset
 @Component
 class HttpConfig {
     protected val logger: Logger = LoggerFactory.getLogger(HttpConfig::class.java)
+//
+//    fun test(httpMethod: HttpRequestMethod, uri:String,requestBody: RequestBody?){
+//        val client = OkHttpClient.Builder().build()
+//        val request = when(httpMethod){
+//            GET -> Request.Builder().url(uri).get().build()
+//            POST -> Request.Builder().url(uri).post(requestBody!!).build()
+//            PUT -> Request.Builder().url(uri).put(requestBody!!).build()
+//            DELETE -> Request.Builder().url(uri).delete(requestBody).build()
+//        }
+//        val response = client.newCall(request).execute()
+//
+//        response.close()
+//
+//    }
+//
+//    fun test(httpMethod: HttpRequestMethod, uri:String,parts:List<MultipartBody.Part>){
+//        val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+//        val requestBody = RequestBody.create(org.springframework.http.MediaType.MULTIPART_FORM_DATA,)
+//        val client = OkHttpClient.Builder().build()
+//        val request = when(httpMethod){
+//            GET -> Request.Builder().url(uri).get().build()
+//            POST -> Request.Builder().url(uri).post(requestBody!!).build()
+//            PUT -> Request.Builder().url(uri).put(requestBody!!).build()
+//            DELETE -> Request.Builder().url(uri).delete(requestBody).build()
+//        }
+//
+//        val response = client.newCall(request).execute()
+//
+//        response.close()
+//
+//    }
 
     fun getHttpMethod(httpMethod: HttpRequestMethod, uri:String, headerMap:Map<String,String>? = null, parts:Array<PartBase>?): HttpMethod {
 

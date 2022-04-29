@@ -1,6 +1,7 @@
-package cn.sunline.saas.party.organisation.model
+package cn.sunline.saas.party.organisation.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.party.organisation.model.OrganizationInvolvementType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -19,18 +20,22 @@ class OrganizationInvolvement(
     val id: Long,
 
     @NotNull
+    @Column(name="organisation_id", columnDefinition = "bigint not null")
+    val organisationId: Long,
+
+    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name="organisation_involvement_type",nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name="organisation_involvement_type",length = 32, columnDefinition = "varchar(32) not null")
     val organizationInvolvementType: OrganizationInvolvementType,
 
     @NotNull
-    @Column(name="party_id",nullable = false, columnDefinition = "bigint not null")
+    @Column(name="party_id",columnDefinition = "bigint not null")
     val partyId: Long
 
 ): MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id", columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {

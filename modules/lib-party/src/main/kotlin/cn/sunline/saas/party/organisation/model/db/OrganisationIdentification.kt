@@ -1,6 +1,7 @@
-package cn.sunline.saas.party.organisation.model
+package cn.sunline.saas.party.organisation.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.party.organisation.model.OrganisationIdentificationType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -24,10 +25,13 @@ class OrganisationIdentification(
     val id: Long,
 
     @NotNull
+    @Column(name="organisation_id", columnDefinition = "bigint not null")
+    val organisationId: Long,
+
+    @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(
         name = "organisation_identification_type",
-        nullable = false,
         length = 32,
         columnDefinition = "varchar(32) not null"
     )
@@ -36,7 +40,6 @@ class OrganisationIdentification(
     @NotNull
     @Column(
         name = "organisation_identification",
-        nullable = false,
         length = 32,
         columnDefinition = "varchar(32) not null"
     )
@@ -45,7 +48,7 @@ class OrganisationIdentification(
 ) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id", columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long {
