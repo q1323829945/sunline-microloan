@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":lib-document-template"))
     implementation(project(":lib-document"))
     implementation(project(":lib-snowflake"))
+    implementation(project(":lib-party"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
