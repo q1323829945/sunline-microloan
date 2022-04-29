@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":lib-partner-integrated"))
     implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-pdpa"))
+    implementation(project(":lib-party"))
     implementation(project(":lib-dapr-wrapper"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
