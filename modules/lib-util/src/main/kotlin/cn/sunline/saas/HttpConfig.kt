@@ -60,7 +60,7 @@ class HttpConfig {
     }
 
     fun setRequestBody(bytes:ByteArray,mediaType: String? = null):RequestBody{
-        return bytes.toRequestBody(mediaType?.toMediaType())
+        return bytes.toRequestBody()
     }
 
     fun setRequestBody(str:String,mediaType: String? = null):RequestBody{

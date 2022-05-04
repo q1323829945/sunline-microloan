@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-huaweicloud-obs"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
 
 }

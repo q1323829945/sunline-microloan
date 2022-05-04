@@ -12,7 +12,8 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-redis"))
     implementation(project(":lib-global"))
-    api(project(":lib-util"))
+    implementation(project(":lib-util"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     api(project(":lib-obs-api"))
 
 

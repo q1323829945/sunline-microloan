@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-huaweicloud-obs"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -1,6 +1,5 @@
 package cn.sunline.saas.config
 
-import cn.sunline.saas.HttpConfig
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.util.ContextUtil
@@ -14,7 +13,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 @Component
-class AppHttpConfiguration: HttpConfig() {
+class AppHttpConfiguration {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 

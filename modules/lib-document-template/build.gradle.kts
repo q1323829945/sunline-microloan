@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-document"))
     implementation(project(":lib-huaweicloud-obs"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-loan-configure"))
 
@@ -20,5 +21,4 @@ dependencies {
     testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-snowflake-simple"))
-    testImplementation(project(":lib-huaweicloud-obs"))
 }

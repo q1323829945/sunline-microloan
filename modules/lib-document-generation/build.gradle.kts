@@ -21,6 +21,7 @@ dependencies {
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-document-template"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     api(project(":lib-base-jpa"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

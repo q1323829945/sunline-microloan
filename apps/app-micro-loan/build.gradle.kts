@@ -5,7 +5,6 @@ val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
 val commonsHttpclientVersion:String by rootProject.extra
 val gsonVersion:String by rootProject.extra
-val okhttpVersion:String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -40,6 +39,7 @@ dependencies {
     implementation(project(":lib-document"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-party"))
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
