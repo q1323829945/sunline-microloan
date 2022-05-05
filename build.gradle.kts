@@ -3,7 +3,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	id("org.springframework.boot") version "2.6.6" apply false
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"  apply false
+	id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.jpa") version "1.6.10" apply false
 	kotlin("plugin.spring") version "1.6.10" apply false
@@ -21,10 +21,10 @@ allprojects {
 val jjwtVersion by extra { "0.9.1" }
 val flywayVersion by extra { "8.5.2" }
 val mysqlConnectorVersion by extra { "8.0.28" }
-val jacksonVersion by extra { "2.13.1" }
+val jacksonVersion by extra { "2.13.2" }
 val jodaVersion by extra { "2.10.13" }
 val redissonVersion by extra { "3.16.8" }
-val nettyVersion by extra { "4.1.74.Final" }
+val nettyVersion by extra { "4.1.75.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }
 val logVersion by extra { "2.1.21" }
 val daprVersion by extra { "1.5.0"}
@@ -50,16 +50,16 @@ subprojects {
 		mavenCentral()
 	}
 
-	dependencies {
-		implementation(kotlin("reflect"))
-		implementation(kotlin("stdlib-jdk8"))
-
-	}
-
 	configurations {
 		all {
 			exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+			resolutionStrategy.setForcedModules("com.squareup.okhttp3:okhttp:4.9.0")
 		}
+	}
+
+	dependencies {
+		implementation(kotlin("reflect"))
+		implementation(kotlin("stdlib-jdk8"))
 	}
 
 	tasks.withType<KotlinCompile> {
@@ -87,14 +87,6 @@ subprojects {
 	tasks.getByName<Jar>("jar") {
 		enabled = project.name.startsWith("lib-")
 	}
-}
-dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-
-
-}
-repositories {
-	mavenCentral()
 }
 
 val compileKotlin: KotlinCompile by tasks

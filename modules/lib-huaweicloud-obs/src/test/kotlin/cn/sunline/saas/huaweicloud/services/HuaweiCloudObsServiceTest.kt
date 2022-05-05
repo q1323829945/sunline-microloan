@@ -1,8 +1,10 @@
 package cn.sunline.saas.huaweicloud.services
 
 import cn.sunline.saas.huaweicloud.obs.exception.ObsBodyTypeException
-import cn.sunline.saas.huaweicloud.obs.services.HuaweiCloudObsService
-import cn.sunline.saas.obs.api.*
+import cn.sunline.saas.obs.api.DeleteParams
+import cn.sunline.saas.obs.api.GetParams
+import cn.sunline.saas.obs.api.ObsApi
+import cn.sunline.saas.obs.api.PutParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired

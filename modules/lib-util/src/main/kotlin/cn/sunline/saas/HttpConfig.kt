@@ -5,9 +5,6 @@ import cn.sunline.saas.exceptions.SystemException
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -47,9 +44,8 @@ class HttpConfig {
         }
 
         val response = client.newCall(request.build()).execute()
-
-        logger.debug("uri:${response.request.url}")
-        logger.debug("code:${response.code}")
+        logger.debug("uri:${response.request().url()}")
+        logger.debug("code:${response.code()}")
         if(!response.isSuccessful){
             val body = getBody(response)
             logger.error("body:$body")
@@ -59,29 +55,43 @@ class HttpConfig {
         return response
     }
 
-    fun setRequestBody(bytes:ByteArray,mediaType: String? = null):RequestBody{
-        return bytes.toRequestBody()
+    fun setRequestBody(bytes:ByteArray):RequestBody{
+
+        //return bytes.toRequestBody(mediaType?.toMediaType())
+        return RequestBody.create(null,bytes)
     }
 
-    fun setRequestBody(str:String,mediaType: String? = null):RequestBody{
-        return str.toRequestBody(mediaType?.toMediaType())
+    fun setRequestBody(str:String,mediaType:String?):RequestBody{
+        //return str.toRequestBody(mediaType?.toMediaType())
+        if(mediaType == null){
+            return RequestBody.create(null,str)
+        }else{
+            return RequestBody.create(MediaType.get(mediaType),str)
+        }
     }
 
-    fun setRequestBody(file: File,mediaType: String? = null):RequestBody{
-        return file.asRequestBody(mediaType?.toMediaType())
+    fun setRequestBody(file: File):RequestBody{
+        //return file.asRequestBody(mediaType?.toMediaType())
+        return RequestBody.create(null,file)
     }
 
 
     fun getHeader(response: Response):Map<String,String>{
         val map = HashMap<String,String>()
-        response.headers.forEach {
+        for(it in response.headers().toMultimap()){
+            map[it.key] = it.value[0]
+        }
+        /*
+        response.headers().forEach {
             map[it.first] = it.second
         }
+         */
         return map
     }
 
     private fun getBody(response: Response): String {
-        val stream = response.body?.byteStream()
+        val stream = response.body()?.byteStream()
+        //val stream = response.body?.byteStream()
         return IOUtils.toString(stream, Charset.defaultCharset())
     }
 
@@ -90,7 +100,8 @@ class HttpConfig {
     }
 
     fun getResponseStream(response: Response): InputStream {
-        return response.body!!.byteStream()
+        //return response.body!!.byteStream()
+        return response.body()!!.byteStream()
     }
 
 }

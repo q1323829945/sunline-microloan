@@ -1,15 +1,16 @@
 package cn.sunline.saas.huaweicloud.obs.services
 
+import cn.sunline.saas.HttpConfig
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.obs.config.HuaweiCloudConfig
 import cn.sunline.saas.huaweicloud.obs.exception.ObsBodyTypeException
 import cn.sunline.saas.obs.api.*
-import cn.sunline.saas.HttpConfig
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.io.*
+import java.io.FileInputStream
+import java.io.InputStream
 import java.net.URLEncoder
 
 @Service
