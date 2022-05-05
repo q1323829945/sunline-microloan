@@ -28,7 +28,7 @@
 | ∟ amount          | string  | 申请金额                                                     |
 | ∟ datetime        | string  | 申请日期                                                     |
 | ∟ productName     | string  | 产品名称                                                     |
-| ∟ status          | string  | 申请状态<br />[详见附录申请状态](../appendices/dictionary_code.md) |
+| ∟ status          | string  | 申请状态<br />[参见附录字典代码—申请状态](../appendices/dictionary_code.md) |
 
 ### 响应体示例
 

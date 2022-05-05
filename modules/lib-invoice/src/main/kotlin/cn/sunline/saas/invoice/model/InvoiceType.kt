@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer.billing.model
+package cn.sunline.saas.invoice.model
 
 /**
  * @title: InvoiceType

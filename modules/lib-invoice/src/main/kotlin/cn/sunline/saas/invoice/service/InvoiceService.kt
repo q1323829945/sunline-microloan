@@ -1,12 +1,12 @@
-package cn.sunline.saas.customer.billing.service
+package cn.sunline.saas.invoice.service
 
-import cn.sunline.saas.customer.billing.model.InvoiceAmountType
-import cn.sunline.saas.customer.billing.model.InvoiceStatus
-import cn.sunline.saas.customer.billing.model.InvoiceType
-import cn.sunline.saas.customer.billing.model.db.Invoice
-import cn.sunline.saas.customer.billing.model.db.InvoiceLine
-import cn.sunline.saas.customer.billing.model.dto.DTOLoanInvoice
-import cn.sunline.saas.customer.billing.repository.InvoiceRepository
+import cn.sunline.saas.invoice.model.InvoiceAmountType
+import cn.sunline.saas.invoice.model.InvoiceStatus
+import cn.sunline.saas.invoice.model.InvoiceType
+import cn.sunline.saas.invoice.model.db.Invoice
+import cn.sunline.saas.invoice.model.db.InvoiceLine
+import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
+import cn.sunline.saas.invoice.repository.InvoiceRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -27,8 +27,6 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
     private lateinit var seq: Sequence
 
     fun initiateLoanInvoice(dtoLoanInvoice: DTOLoanInvoice): Invoice {
-        val invoiceId = seq.nextId()
-
         val invoiceLine = mutableListOf<InvoiceLine>()
 
         invoiceLine.add(
@@ -68,9 +66,10 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
                 invoiceAssignedDocument = document,
                 invoiceAddress = dtoLoanInvoice.invoiceAddress,
                 invoiceAmount = invoiceAmount,
-                invoiceStatus = InvoiceStatus.PREPARE,
+                invoiceStatus = InvoiceStatus.INITIATE,
                 invoicee = dtoLoanInvoice.invoicee,
-                invoiceLines = invoiceLine
+                invoiceLines = invoiceLine,
+                agreementId = dtoLoanInvoice.agreementId
             )
         )
     }

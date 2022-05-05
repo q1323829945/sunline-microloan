@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer.billing.model.dto
+package cn.sunline.saas.invoice.model.dto
 
 import java.math.BigDecimal
 
@@ -15,5 +15,6 @@ data class DTOLoanInvoice(
     val invoicee: Long,
     val principal: BigDecimal,
     val interest: BigDecimal,
-    val fee: BigDecimal
+    val fee: BigDecimal,
+    val agreementId:Long
 )

@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer.billing.model
+package cn.sunline.saas.invoice.model
 
 /**
  * @title: InvoiceAmountType
@@ -7,5 +7,5 @@ package cn.sunline.saas.customer.billing.model
  * @date 2022/4/25 16:53
  */
 enum class InvoiceAmountType {
-    PRINCIPAL, INTEREST, FEE
+    PRINCIPAL, INTEREST, FEE,PENALTY_INTEREST
 }

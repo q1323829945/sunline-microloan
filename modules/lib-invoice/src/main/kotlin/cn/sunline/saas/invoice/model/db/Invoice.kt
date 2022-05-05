@@ -1,7 +1,7 @@
-package cn.sunline.saas.customer.billing.model.db
+package cn.sunline.saas.invoice.model.db
 
-import cn.sunline.saas.customer.billing.model.InvoiceStatus
-import cn.sunline.saas.customer.billing.model.InvoiceType
+import cn.sunline.saas.invoice.model.InvoiceStatus
+import cn.sunline.saas.invoice.model.InvoiceType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.joda.time.Instant
 import java.math.BigDecimal
@@ -61,7 +61,11 @@ class Invoice(
     @NotNull
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_id")
-    val invoiceLines : MutableList<InvoiceLine>
+    val invoiceLines : MutableList<InvoiceLine>,
+
+    @NotNull
+    @Column(name = "agreement_id", nullable = false, columnDefinition = "bigint not null")
+    val agreementId:Long
 
 ) : MultiTenant {
 

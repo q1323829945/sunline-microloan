@@ -1,6 +1,6 @@
-package cn.sunline.saas.customer.billing.model.db
+package cn.sunline.saas.invoice.model.db
 
-import cn.sunline.saas.customer.billing.model.InvoiceAmountType
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*

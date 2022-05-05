@@ -1,16 +1,10 @@
 package cn.sunline.saas.repayment.schedule.service
 
 import cn.sunline.saas.global.constant.RepaymentFrequency
-import cn.sunline.saas.repayment.schedule.component.CalcInstallmentComponent
-import cn.sunline.saas.repayment.schedule.component.CalcInstallmentComponent.calcBaseRepaymentInstallment
 import cn.sunline.saas.repayment.schedule.component.CalcPeriodComponent
-import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleDetailTrialView
-import org.apache.logging.log4j.core.util.datetime.Format
 import org.assertj.core.api.Assertions
 import org.joda.time.DateTime
-import org.joda.time.Instant
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
@@ -45,7 +39,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 21
         val repaymentFrequency = RepaymentFrequency.ONE_MONTH
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(12)
     }
 
     @Test
@@ -55,7 +49,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 21
         val repaymentFrequency = RepaymentFrequency.THREE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(4)
     }
 
     @Test
@@ -65,7 +59,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 21
         val repaymentFrequency = RepaymentFrequency.SIX_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(2)
     }
 
     @Test
@@ -75,7 +69,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 21
         val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(1)
     }
 
 
@@ -86,7 +80,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 23
         val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(2)
     }
 
     @Test
@@ -96,7 +90,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 23
         val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(2)
     }
 
     @Test
@@ -106,7 +100,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 23
         val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(2)
     }
 
     @Test
@@ -116,7 +110,7 @@ class CalcPeriodComponentTest {
         val repaymentDay = 23
         val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(2)
     }
 
 
@@ -124,6 +118,6 @@ class CalcPeriodComponentTest {
     fun `calcRemainPeriods`(){
         val startDateInstant = DateTime(2022, 7, 21, 0, 0).toInstant()
         val result = CalcPeriodComponent.calcRemainPeriods(startDateInstant,detailsForOneMonth)
-        Assertions.assertThat(result).isEqualTo(BigDecimal(10500.00))
+        Assertions.assertThat(result).isEqualTo(arrayOf(0, 12, 0))
     }
 }

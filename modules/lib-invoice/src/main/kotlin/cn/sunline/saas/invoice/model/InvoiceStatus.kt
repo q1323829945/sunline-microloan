@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer.billing.model
+package cn.sunline.saas.invoice.model
 
 /**
  * @title: InvoiceStatus
@@ -7,5 +7,5 @@ package cn.sunline.saas.customer.billing.model
  * @date 2022/4/25 15:23
  */
 enum class InvoiceStatus {
-    PREPARE, INITIATE, FINISHED, OVERDUE
+    INITIATE, FINISHED, OVERDUE
 }
