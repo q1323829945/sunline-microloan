@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.person.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.person.model.RoleType
 import javax.persistence.*
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "person_role")
+@EntityListeners(TenantListener::class)
 class PersonRole(
     @Id
     val id: Long,

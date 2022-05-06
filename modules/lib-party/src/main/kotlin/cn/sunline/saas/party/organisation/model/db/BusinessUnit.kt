@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.organisation.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.organisation.model.BusinessUnitType
 import javax.persistence.*
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(name = "business_unit")
+@EntityListeners(TenantListener::class)
 class BusinessUnit(
     @Id
     val id: Long,

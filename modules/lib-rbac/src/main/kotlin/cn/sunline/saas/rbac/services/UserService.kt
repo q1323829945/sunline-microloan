@@ -23,6 +23,7 @@ class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(
     fun updateOne(oldUser: User, newUser: User): User {
         oldUser.roles = newUser.roles
         oldUser.email = newUser.email
+        oldUser.personId = newUser.personId
         return save(oldUser)
     }
 

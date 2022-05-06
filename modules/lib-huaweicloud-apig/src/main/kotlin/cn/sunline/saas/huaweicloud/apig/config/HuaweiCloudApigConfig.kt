@@ -52,7 +52,8 @@ class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redi
 
         //header
         val headers = mutableMapOf<String, String>()
-        headers["Content-Type"] = "application/json;charset=utf8"
+//        headers["Content-Type"] = "application/json;charset=utf8"
+        headers["Content-Type"] = MediaType.APPLICATION_JSON_UTF8_VALUE
 
         val body = objectMapper.valueToTree<JsonNode>(getBody()).toPrettyString()
 

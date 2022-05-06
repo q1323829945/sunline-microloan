@@ -68,6 +68,9 @@ class User (
         @NotNull
         var accountLocked: Boolean = false,
 
+        @Column(name="person_id", columnDefinition = "bigint null")
+        var personId: Long? = null,
+
         @CreationTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var created: Date? = null,

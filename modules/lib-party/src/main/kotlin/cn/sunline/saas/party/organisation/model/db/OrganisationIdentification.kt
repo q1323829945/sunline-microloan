@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.organisation.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.organisation.model.OrganisationIdentificationType
 import javax.persistence.*
@@ -16,10 +17,11 @@ import javax.validation.constraints.NotNull
     name = "organisation_identification",
     indexes = [Index(
         name = "idx_organisation_identification_id",
-        columnList = "organisation_identification,organisation_identification_type",
+        columnList = "organisation_identification,organisation_identification_type,tenant_id",
         unique = true
     )]
 )
+@EntityListeners(TenantListener::class)
 class OrganisationIdentification(
     @Id
     val id: Long,

@@ -2,7 +2,9 @@ package cn.sunline.saas.party.person.service
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.party.person.exception.PersonNotFoundException
+import cn.sunline.saas.party.person.model.PersonIdentificationType
 import cn.sunline.saas.party.person.model.db.Person
+import cn.sunline.saas.party.person.model.db.PersonIdentification
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonChange
 import cn.sunline.saas.party.person.model.dto.DTOPersonView
@@ -13,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.module.kotlin.convertValue
+import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import javax.persistence.criteria.Join
+import javax.persistence.criteria.JoinType
+import javax.persistence.criteria.Predicate
 
 @Service
 class PersonService(private val personRepository: PersonRepository) :
@@ -57,6 +63,17 @@ class PersonService(private val personRepository: PersonRepository) :
         return getDTOPersonView(save(person))
     }
 
+    fun getOne(id:Long?):DTOPersonView?{
+        id?:return null
+
+        getOne(id)?.run {
+            return getDTOPersonView(this)
+        }?: run {
+            return null
+        }
+
+    }
+
     fun updatePerson(id:Long,dtoPersonChange: DTOPersonChange):DTOPersonView{
         val oldOne = getOne(id)?: throw PersonNotFoundException("Invalid person")
         dtoPersonChange.personIdentifications.forEach {
@@ -82,22 +99,41 @@ class PersonService(private val personRepository: PersonRepository) :
         return getDTOPersonView(save(oldOne))
     }
 
-    fun getPersonPaged(pageable: Pageable):Page<DTOPersonView>{
-        return getPageWithTenant(null,pageable).map {
+    fun getPersonByPartyId(partyId:Long):Person?{
+        val person = getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Long>("partyId"),partyId))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        return person.content.firstOrNull()
+    }
+
+    fun getPersonPaged(personIdentification: String?,pageable: Pageable):Page<DTOPersonView>{
+        return getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            personIdentification?.run {
+                val connection = root.join<Person,PersonIdentification>("personIdentifications",JoinType.INNER)
+                predicates.add(criteriaBuilder.equal(connection.get<String>("personIdentification"),personIdentification))
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable).map {
             getDTOPersonView(it)
         }
     }
 
-    fun getDTOPersonView(person: Person):DTOPersonView{
+    private fun getDTOPersonView(person: Person):DTOPersonView{
         return DTOPersonView(
             id = person.id.toString(),
             personName = objectMapper.convertValue(person.personName),
             residentialStatus = person.residentialStatus,
-            birthDate = person.birthDate.toDateTime().toString("yyyy-MM-dd"),
+            birthDate = person.birthDate.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd"),
             nationality = person.nationality,
             ethnicity = person.ethnicity,
             personIdentifications = objectMapper.convertValue(person.personIdentifications),
             personRoles = objectMapper.convertValue(person.personRoles)
         )
     }
+
+
 }

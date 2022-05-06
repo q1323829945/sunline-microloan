@@ -1,6 +1,7 @@
 package cn.sunline.saas.party.person.model.db
 
 import cn.sunline.saas.global.model.CountryType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.person.model.ResidentialStatus
 import org.joda.time.Instant
@@ -15,12 +16,14 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(name = "person")
+@EntityListeners(TenantListener::class)
 class Person(
     @Id
     val id: Long,
 
     @NotNull
     @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name= " id")
     @MapsId
     var personName: PersonName,
 
@@ -43,7 +46,7 @@ class Person(
     ) : MultiTenant {
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true , mappedBy = "personId")
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true , mappedBy = "personId")
     var personIdentifications: MutableList<PersonIdentification> = mutableListOf()
         set(value) {
             field.clear()

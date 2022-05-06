@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.organisation.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.joda.time.Instant
 import javax.persistence.*
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "organisation"
 )
+@EntityListeners(TenantListener::class)
 class Organisation(
     @Id
     val id: Long,
@@ -38,9 +40,9 @@ class Organisation(
     @Column(name = "place_of_registration",length = 128, columnDefinition = "varchar(128) not null")
     val placeOfRegistration: String,
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "parent_organisation_id")
-    val childOrganisation: MutableList<Organisation>?
+    val childOrganisation: MutableList<Organisation>? = null
 
 ) : MultiTenant {
     @NotNull

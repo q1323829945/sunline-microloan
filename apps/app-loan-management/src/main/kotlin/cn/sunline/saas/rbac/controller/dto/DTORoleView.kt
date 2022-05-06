@@ -1,4 +1,4 @@
-package cn.sunline.saas.rbac.dto
+package cn.sunline.saas.rbac.controller.dto
 
 import cn.sunline.saas.rbac.controller.RoleController
 

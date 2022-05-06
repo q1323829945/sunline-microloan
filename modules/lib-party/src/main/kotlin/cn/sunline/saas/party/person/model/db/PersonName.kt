@@ -1,10 +1,8 @@
 package cn.sunline.saas.party.person.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
@@ -17,6 +15,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "person_name"
 )
+@EntityListeners(TenantListener::class)
 class PersonName(
     @Id
     val id: Long,

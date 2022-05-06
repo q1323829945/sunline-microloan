@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.websocket.server.PathParam
 
 @RestController
 @RequestMapping("Person")
@@ -25,8 +26,8 @@ class PersonController {
     private lateinit var personService: PersonService
 
     @GetMapping
-    fun getPaged(pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val paged = personService.getPersonPaged(pageable)
+    fun getPaged(@PathParam("personIdentification")personIdentification: String?,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
+        val paged = personService.getPersonPaged(personIdentification,pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 

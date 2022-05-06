@@ -15,6 +15,7 @@ import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -35,26 +36,32 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun registerOrganisation(dtoOrganisationAdd: DTOOrganisationAdd):DTOOrganisationView{
-        dtoOrganisationAdd.id = sequence.nextId()
-        dtoOrganisationAdd.tenantId = ContextUtil.getTenant()
+        val id = sequence.nextId()
+
         dtoOrganisationAdd.organisationIdentifications.forEach {
             it.id = sequence.nextId()
-            it.organisationId = dtoOrganisationAdd.id
-            it.tenantId = ContextUtil.getTenant()
+            it.organisationId = id
         }
         dtoOrganisationAdd.businessUnits.forEach {
             it.id = sequence.nextId()
-            it.organisationId = dtoOrganisationAdd.id
-            it.tenantId = ContextUtil.getTenant()
+            it.organisationId = id
         }
         dtoOrganisationAdd.organizationInvolvements.forEach {
             it.id = sequence.nextId()
-            it.organisationId = dtoOrganisationAdd.id
-            it.tenantId = ContextUtil.getTenant()
+            it.organisationId = id
         }
 
-        val organisation = objectMapper.convertValue<Organisation>(dtoOrganisationAdd)
-        organisation.organisationRegistrationDate = Instant.now()
+        val organisation = Organisation(
+            id = id,
+            parentOrganisationId = dtoOrganisationAdd.parentOrganisationId?.toLong(),
+            legalEntityIndicator = dtoOrganisationAdd.legalEntityIndicator,
+            organisationSector = dtoOrganisationAdd.organisationSector,
+            organisationRegistrationDate = Instant.parse(dtoOrganisationAdd.organisationRegistrationDate),
+            placeOfRegistration = dtoOrganisationAdd.placeOfRegistration
+        )
+        organisation.organisationIdentifications = objectMapper.convertValue(dtoOrganisationAdd.organisationIdentifications)
+        organisation.businessUnits = objectMapper.convertValue(dtoOrganisationAdd.businessUnits)
+        organisation.organizationInvolvements = objectMapper.convertValue(dtoOrganisationAdd.organizationInvolvements)
 
         val save = save(organisation)
 
@@ -67,7 +74,6 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
             it.id?: run {
                 it.id = sequence.nextId().toString()
                 it.organisationId = id.toString()
-                it.tenantId = ContextUtil.getTenant()
             }
         }
         organisation.organisationIdentifications = objectMapper.convertValue(dtoOrganisationChange.organisationIdentifications)
@@ -76,24 +82,19 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
             it.id?: run {
                 it.id = sequence.nextId().toString()
                 it.organisationId = id.toString()
-                it.tenantId = ContextUtil.getTenant()
             }
         }
         organisation.businessUnits = objectMapper.convertValue(dtoOrganisationChange.businessUnits)
-
 
         dtoOrganisationChange.organizationInvolvements.forEach {
             it.id?: run {
                 it.id = sequence.nextId().toString()
                 it.organisationId = id.toString()
-                it.tenantId = ContextUtil.getTenant()
             }
         }
         organisation.organizationInvolvements = objectMapper.convertValue(dtoOrganisationChange.organizationInvolvements)
 
-        val save = save(organisation)
-
-        return getDTOOrganisationView(save)
+        return getDTOOrganisationView(save(organisation))
     }
 
     fun getDetail(id:Long):DTOOrganisationView{
@@ -111,7 +112,7 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
             id = organisation.id.toString(),
             legalEntityIndicator = organisation.legalEntityIndicator,
             organisationSector = organisation.organisationSector,
-            organisationRegistrationDate = organisation.organisationRegistrationDate.toString(),
+            organisationRegistrationDate = organisation.organisationRegistrationDate?.toDateTime(DateTimeZone.getDefault())?.toString("yyyy-MM-dd"),
             parentOrganisationId = organisation.parentOrganisationId?.toString(),
             placeOfRegistration = organisation.placeOfRegistration,
             organisationIdentifications = objectMapper.convertValue(organisation.organisationIdentifications),

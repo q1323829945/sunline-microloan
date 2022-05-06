@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.organisation.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.organisation.model.OrganizationInvolvementType
 import javax.persistence.*
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "organisation_involvement"
 )
+@EntityListeners(TenantListener::class)
 class OrganizationInvolvement(
     @Id
     val id: Long,

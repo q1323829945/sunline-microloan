@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.person.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.person.model.PersonIdentificationType
 import javax.persistence.*
@@ -9,13 +10,13 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "person_identification", indexes = [Index(
         name = "idx_person_identification_id",
-        columnList = "person_identification,person_identification_type",
+        columnList = "person_identification,person_identification_type,tenant_id",
         unique = true
     )]
 )
+@EntityListeners(TenantListener::class)
 class PersonIdentification(
     @Id val id: Long,
-
 
     @NotNull
     @Column(name="person_id", columnDefinition = "bigint not null")
