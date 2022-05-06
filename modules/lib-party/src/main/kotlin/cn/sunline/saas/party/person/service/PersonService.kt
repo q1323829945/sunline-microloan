@@ -51,6 +51,12 @@ class PersonService(private val personRepository: PersonRepository) :
         return getDTOPersonView(save(person))
     }
 
+    fun getDetail(id:Long):DTOPersonView{
+        val person = getOne(id)?: throw PersonNotFoundException("Invalid person")
+
+        return getDTOPersonView(save(person))
+    }
+
     fun updatePerson(id:Long,dtoPersonChange: DTOPersonChange):DTOPersonView{
         val oldOne = getOne(id)?: throw PersonNotFoundException("Invalid person")
         dtoPersonChange.personIdentifications.forEach {

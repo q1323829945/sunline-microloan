@@ -80,6 +80,7 @@ enum class PermissionConfig (
     PERSON_ADD("Person", "Person\$", RequestMethod.POST, "Add Person"),
     PERSON_LIST("Person", "Person(\\?.*|\$)", RequestMethod.GET, "View Person list"),
     PERSON_MODIFY("Person", "Person/[0-9]+\$", RequestMethod.PUT, "Modify Person"),
+    PERSON_GET_ONE("Person", "Person/[0-9]+\$", RequestMethod.GET, "Get One Person"),
 
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),

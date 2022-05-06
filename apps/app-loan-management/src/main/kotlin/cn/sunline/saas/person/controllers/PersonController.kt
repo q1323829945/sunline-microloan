@@ -41,4 +41,10 @@ class PersonController {
         val person = personService.updatePerson(id.toLong(),dtoPersonChange)
         return DTOResponseSuccess(person).response()
     }
+
+    @GetMapping("{id}")
+    fun getDetail(@PathVariable id:String):ResponseEntity<DTOResponseSuccess<DTOPersonView>>{
+        val person = personService.getDetail(id.toLong())
+        return DTOResponseSuccess(person).response()
+    }
 }
