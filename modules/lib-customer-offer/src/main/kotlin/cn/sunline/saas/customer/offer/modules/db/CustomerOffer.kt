@@ -1,6 +1,8 @@
 package cn.sunline.saas.customer.offer.modules.db
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.joda.time.Instant
@@ -14,24 +16,29 @@ import javax.validation.constraints.NotNull
             Index(name = "idx_customer_id", columnList = "customer_id")
         ]
 )
+@EntityListeners(TenantListener::class)
 class CustomerOffer (
     @Id
     var id: Long? = null,
 
     @NotNull
-    @Column(name = "customer_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "customer_id", columnDefinition = "bigint not null")
     var customerId:Long,
 
     @NotNull
-    @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "product_id", columnDefinition = "bigint not null")
     var productId:Long,
 
     @NotNull
+    @Column(name = "product_name", columnDefinition = "varchar(256) not null")
+    var productName:String,
+
+    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 256, columnDefinition = "varchar(256) not null")
+    @Column(name = "status", length = 256, columnDefinition = "varchar(256) not null")
     var status:ApplyStatus = ApplyStatus.RECORD,
 
-    @Column(name = "data", nullable = false, columnDefinition = "text ")
+    @Column(name = "data", columnDefinition = "text ")
     var data:String?,
 
     @NotNull
@@ -44,4 +51,16 @@ class CustomerOffer (
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-)
+): MultiTenant {
+    @NotNull
+    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
+    }
+}

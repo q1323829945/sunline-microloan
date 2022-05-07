@@ -11,6 +11,8 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -71,6 +73,15 @@ class CustomerOfferProcedureService {
         }
 
         return dtoCustomerOfferLoanView
+    }
+
+    fun getCustomerOfferPaged(customerId:Long,pageable: Pageable):Page<DTOCustomerOfferPage>{
+        val page = customerOfferService.getCustomerOfferPaged(customerId, pageable)
+        page.forEach {
+            val apply = customerLoanApplyService.getOne(it.customerOfferId)
+            it.amount = apply?.amount.toString()
+        }
+        return page
     }
 
     private fun getProduct(productId:Long): DTOProductView{

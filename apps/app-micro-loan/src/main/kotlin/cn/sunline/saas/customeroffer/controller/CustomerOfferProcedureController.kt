@@ -66,7 +66,7 @@ class CustomerOfferProcedureController {
 
     @GetMapping("loan/{customerId}/list")
     fun getPaged(@PathVariable("customerId")customerId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val page = customerOfferService.getCustomerOfferPaged(customerId, pageable)
+        val page = customerOfferProductService.getCustomerOfferPaged(customerId, pageable)
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 

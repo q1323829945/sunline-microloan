@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Predicate
 
 @Service
 class CustomerOfferService (private val customerOfferRepo: CustomerOfferRepository) :
@@ -27,6 +28,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+
     fun initiate(dtoCustomerOffer: DTOCustomerOfferAdd): CustomerOfferProcedureView {
 
         val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOffer).toPrettyString()
@@ -35,6 +37,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
                 seq.nextId(),
                 dtoCustomerOffer.customerOfferProcedure.customerId,
                 dtoCustomerOffer.product.productId,
+                dtoCustomerOffer.product.productName,
                 ApplyStatus.RECORD,
                 data,
                 Instant.now()
@@ -53,19 +56,21 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
         return this.getOne(id)
     }
 
-
     fun getCustomerOfferPaged(customerId:Long,pageable: Pageable): Page<DTOCustomerOfferPage>{
-
-        val page = customerOfferRepo.getCustomerOfferPaged(customerId,pageable).map {
-            val customerOffer = this.getOne(it["customerOfferId"].toString().toLong())
+        val page = getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),customerId))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },pageable).map {
             DTOCustomerOfferPage(
-                it["customerOfferId"].toString().toLong(),
-                it["amount"]?.run { it["amount"].toString() },
-                customerOffer!!.datetime.millis,
-                it["productName"].toString(),
-                ApplyStatus.valueOf(it["status"].toString())
+                it.id!!,
+                null,
+                it.datetime.millis,
+                it.productName,
+                it.status
             )
         }
+
         return page
     }
 }
