@@ -45,7 +45,7 @@ class RiskControlService {
                 val rule = group.params[j]
                 val map = mutableMapOf<String,Number>()
                 val conditions = mutableListOf<String>()
-                conditions.add(rule.description!!)
+                conditions.add(rule.description)
                 rule.params?.forEach { param ->
                     map[param.dataItem.key] = DataSourceFactory.instance(param.dataItem).calculation(customerId)
                 }
@@ -56,7 +56,7 @@ class RiskControlService {
                         rule.name,
                         rule.logicalOperationType,
                         result.result as Boolean,
-                        "${rule.description!!} -> ${result.reason}"
+                        "${rule.description} -> ${result.reason}"
                     )
                 )
                 condition.append(" ${result.result} ")

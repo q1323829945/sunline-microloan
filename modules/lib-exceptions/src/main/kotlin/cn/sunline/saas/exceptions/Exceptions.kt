@@ -7,7 +7,7 @@ open class BaseException(
     val data: Any? = null
 ) : Exception(exceptionMessage)
 
-class ManagementException(
+open class ManagementException(
     statusCode: ManagementExceptionCode,
     exceptionMessage: String? = null,
     user: Long? = null,

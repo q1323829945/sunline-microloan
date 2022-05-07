@@ -1,5 +1,6 @@
 package cn.sunline.saas.organisation.controllers
 
+import cn.sunline.saas.party.organisation.model.db.Organisation
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationView
@@ -55,6 +56,4 @@ class OrganisationController {
         val responseEntity = objectMapper.convertValue<DTOOrganisationView>(organisation)
         return DTOResponseSuccess(responseEntity).response()
     }
-
-
 }

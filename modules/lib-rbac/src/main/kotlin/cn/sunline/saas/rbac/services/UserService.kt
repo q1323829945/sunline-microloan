@@ -1,6 +1,7 @@
 package cn.sunline.saas.rbac.services
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
+import cn.sunline.saas.rbac.exception.PersonAlreadyBindingException
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,13 +18,29 @@ class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(
 
     fun register(user: User): User {
         user.password = BCryptPasswordEncoder().encode(user.password)
+
+        user.personId?.run {
+            findByPersonId(this)?.run {
+                throw PersonAlreadyBindingException("person already binding")
+            }
+        }
+
         return save(user)
     }
 
     fun updateOne(oldUser: User, newUser: User): User {
+        newUser.personId?.run {
+            if(this != oldUser.personId){
+                findByPersonId(this)?.run {
+                    throw PersonAlreadyBindingException("person already binding")
+                }
+            }
+        }
+
         oldUser.roles = newUser.roles
         oldUser.email = newUser.email
         oldUser.personId = newUser.personId
+
         return save(oldUser)
     }
 
@@ -38,6 +55,10 @@ class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(
 
     fun getByUsername(username: String): User? {
         return userRepository.findByUsername(username)
+    }
+
+    private fun findByPersonId(personId:Long):User?{
+        return userRepository.findByPersonId(personId)
     }
 
     override fun loadUserByUsername(username: String): UserDetails? {

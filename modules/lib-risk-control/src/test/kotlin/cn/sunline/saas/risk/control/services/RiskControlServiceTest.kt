@@ -6,8 +6,8 @@ import cn.sunline.saas.risk.control.rule.modules.DataItem
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleParam
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
 import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -31,30 +31,33 @@ class RiskControlServiceTest {
 
     @BeforeEach
     fun setList(){
-        riskControlRuleService.addRiskControlRule(DTORiskControlRuleAdd(
+        val riskControlRule = RiskControlRule(
             null,
             "rule1",
             RuleType.PERSONAL,
             null,
-            null,
-            null,
             LogicalOperationType.OR,
-            listOf(DTORiskControlRuleParam(
-                null,
-                null,
-                DataItem.CREDIT_RISK,
-                RelationalOperatorType.LE,
-                "123",
-                LogicalOperationType.OR
-            ),DTORiskControlRuleParam(
-                null,
-                null,
-                DataItem.FRAUD_EVALUATION,
-                RelationalOperatorType.LT,
-                "456",
-                LogicalOperationType.OR
-            ))
-        ))
+            null,
+            null
+        )
+        riskControlRule.params = mutableListOf(
+                                        RiskControlRuleParam(
+                                        null,
+                                        null,
+                                        DataItem.CREDIT_RISK,
+                                        RelationalOperatorType.LE,
+                                        "123",
+                                        LogicalOperationType.OR
+                                    ),RiskControlRuleParam(
+                                        null,
+                                        null,
+                                        DataItem.FRAUD_EVALUATION,
+                                        RelationalOperatorType.LT,
+                                        "456",
+                                        LogicalOperationType.OR
+                                    ))
+
+        riskControlRuleService.addRiskControlRule(riskControlRule)
     }
 
     @Test

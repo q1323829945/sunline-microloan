@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(
-        BadRequestException::class, NotFoundException::class, BusinessException::class, SystemException::class
+        BadRequestException::class, NotFoundException::class, BusinessException::class, SystemException::class,ManagementException::class
     )
     fun handleCustomerException(ex: BaseException): ResponseEntity<Any> {
         val status = when (ex) {

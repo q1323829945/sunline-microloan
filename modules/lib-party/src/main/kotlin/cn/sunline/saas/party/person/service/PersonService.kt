@@ -109,6 +109,18 @@ class PersonService(private val personRepository: PersonRepository) :
         return person.content.firstOrNull()
     }
 
+    fun findByIdentification(personIdentification: String,personIdentificationType:PersonIdentificationType):Person?{
+        val page = getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            val connection = root.join<Person,PersonIdentification>("personIdentifications",JoinType.INNER)
+            predicates.add(criteriaBuilder.equal(connection.get<String>("personIdentification"),personIdentification))
+            predicates.add(criteriaBuilder.equal(connection.get<PersonIdentificationType>("personIdentificationType"),personIdentificationType))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        return page.content.firstOrNull()
+    }
+
     fun getPersonPaged(personIdentification: String?,pageable: Pageable):Page<DTOPersonView>{
         return getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

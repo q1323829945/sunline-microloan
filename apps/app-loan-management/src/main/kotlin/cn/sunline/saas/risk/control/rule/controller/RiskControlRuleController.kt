@@ -2,8 +2,11 @@ package cn.sunline.saas.risk.control.rule.controller
 
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.risk.control.rule.controller.dto.*
+import cn.sunline.saas.risk.control.rule.exception.RiskControlRuleNotFoundException
 import cn.sunline.saas.risk.control.rule.modules.RuleType
-import cn.sunline.saas.risk.control.rule.modules.dto.*
+import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleView
 import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -30,32 +33,34 @@ class RiskControlRuleController {
 
     @GetMapping("{id}")
     fun getDetail(@PathVariable id: String):ResponseEntity<DTOResponseSuccess<DTORiskControlRuleView>>{
-        val riskControlRule = riskControlRuleService.getDetail(id.toLong())
-        return DTOResponseSuccess(riskControlRule).response()
+        val riskControlRule = riskControlRuleService.getOne(id.toLong()) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val responseEntity = objectMapper.convertValue<DTORiskControlRuleView>(riskControlRule)
+        return DTOResponseSuccess(responseEntity).response()
     }
 
     @PostMapping
     fun addOne(@RequestBody dtoRiskControlRuleAdd: DTORiskControlRuleAdd):ResponseEntity<DTOResponseSuccess<DTORiskControlRuleView>>{
-        val riskControlRule = riskControlRuleService.addRiskControlRule(dtoRiskControlRuleAdd)
-        return DTOResponseSuccess(riskControlRule).response()
+        val riskControlRule = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleAdd)
+        val saveOne = riskControlRuleService.addRiskControlRule(riskControlRule)
+        val responseEntity = objectMapper.convertValue<DTORiskControlRuleView>(saveOne)
+        return DTOResponseSuccess(responseEntity).response()
     }
 
     @PutMapping("{id}")
     fun updateOne(@PathVariable id: String,@RequestBody dtoRiskControlRuleChange: DTORiskControlRuleChange):ResponseEntity<DTOResponseSuccess<DTORiskControlRuleView>>{
-        val riskControlRule = riskControlRuleService.updateRiskControlRule(id.toLong(),dtoRiskControlRuleChange)
-        return DTOResponseSuccess(riskControlRule).response()
+        val oldOne = riskControlRuleService.getOne(id.toLong()) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
+        val newOne = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleChange)
+
+        val riskControlRule = riskControlRuleService.updateRiskControlRule(oldOne,newOne)
+
+        val responseEntity = objectMapper.convertValue<DTORiskControlRuleView>(riskControlRule)
+
+        return DTOResponseSuccess(responseEntity).response()
     }
 
     @DeleteMapping("{id}")
     fun deleteOne(@PathVariable id: String):ResponseEntity<DTOResponseSuccess<Unit>>{
         riskControlRuleService.deleteRiskControlRule(id.toLong())
-        return DTOResponseSuccess(Unit).response()
-    }
-
-    @PutMapping("sort")
-    @Deprecated("no sort")
-    fun sort(@RequestBody sortList: DTORiskControlRuleSort):ResponseEntity<DTOResponseSuccess<Unit>>{
-        riskControlRuleService.riskControlRuleSort(sortList.sortList)
         return DTOResponseSuccess(Unit).response()
     }
 

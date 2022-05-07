@@ -1,5 +1,6 @@
 package cn.sunline.saas.risk.control.rule.modules.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
@@ -19,9 +20,10 @@ import javax.validation.constraints.NotNull
         Index(name = "idx_tenant_id", columnList = "tenant_id"),
     ]
 )
+@EntityListeners(TenantListener::class)
 class RiskControlRule (
     @Id
-    val id: Long,
+    var id: Long? = null,
 
     @NotNull
     @Column( length = 128, columnDefinition = "varchar(128) not null")
@@ -34,7 +36,7 @@ class RiskControlRule (
 
     @NotNull
     @Column(columnDefinition = "bigint not null")
-    var sort: Long,
+    var sort: Long?,
 
     @NotNull
     @Column(name = "logical_operation",length = 128, updatable = false, columnDefinition = "varchar(128) not null")

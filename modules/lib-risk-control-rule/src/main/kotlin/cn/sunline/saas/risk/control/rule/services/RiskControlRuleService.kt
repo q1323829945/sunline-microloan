@@ -8,7 +8,8 @@ import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRule
 import cn.sunline.saas.risk.control.rule.modules.db.RiskControlRuleParam
-import cn.sunline.saas.risk.control.rule.modules.dto.*
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleDetailGroup
+import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleView
 import cn.sunline.saas.risk.control.rule.repositories.RiskControlRuleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
@@ -19,7 +20,6 @@ import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import javax.transaction.Transactional
 
 @Service
 class RiskControlRuleService(private val riskControlRuleRepository: RiskControlRuleRepository):
@@ -28,69 +28,38 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
     @Autowired
     private lateinit var sequence: Sequence
 
-
-    @Autowired
-    private lateinit var riskControlRuleParamService: RiskControlRuleParamService
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun addRiskControlRule(dtoRiskControlRuleAdd: DTORiskControlRuleAdd):DTORiskControlRuleView{
-        dtoRiskControlRuleAdd.id = sequence.nextId().toString()
-        dtoRiskControlRuleAdd.sort = getMaxSort(dtoRiskControlRuleAdd.ruleType) + 1
-        dtoRiskControlRuleAdd.tenantId = ContextUtil.getTenant()
 
-        dtoRiskControlRuleAdd.params?.forEach {
-            it.id = sequence.nextId().toString()
-            it.ruleId = dtoRiskControlRuleAdd.id
-            it.tenantId = ContextUtil.getTenant()
+    fun addRiskControlRule(riskControlRule: RiskControlRule):RiskControlRule{
+        riskControlRule.id = sequence.nextId()
+        riskControlRule.sort = getMaxSort(riskControlRule.ruleType) + 1
+        riskControlRule.params.forEach {
+            it.id = sequence.nextId()
+            it.ruleId = riskControlRule.id
         }
-
-        val riskControlRule = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleAdd)
         riskControlRule.description = setDescription(riskControlRule.params)
 
-        return objectMapper.convertValue(save(riskControlRule))
+        return save(riskControlRule)
     }
 
-    fun riskControlRuleSort(dtoRiskControlRuleViewList:List<DTORiskControlRuleView>){
-        for(i in dtoRiskControlRuleViewList.indices){
-            dtoRiskControlRuleViewList[i].sort = (i+1).toLong()
-        }
-        val iterable = objectMapper.convertValue<List<RiskControlRule>>(dtoRiskControlRuleViewList)
-        this.save(iterable)
-    }
+    fun updateRiskControlRule(oldOne:RiskControlRule, newOne: RiskControlRule): RiskControlRule {
 
-
-    fun getDetail(id:Long): DTORiskControlRuleView {
-        val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
-
-        return objectMapper.convertValue(riskControlRule)
-    }
-
-
-    @Transactional
-    fun updateRiskControlRule(id: Long, dtoRiskControlRuleChange: DTORiskControlRuleChange): DTORiskControlRuleView {
-        val oldOne = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
-
-        dtoRiskControlRuleChange.params?.forEach {
+        newOne.params.forEach {
             it.id ?:run {
-                it.id = sequence.nextId().toString()
-                it.ruleId = oldOne.id.toString()
-                it.tenantId = ContextUtil.getTenant()
+                it.id = sequence.nextId()
+                it.ruleId = oldOne.id
             }
         }
-
-        val newOne = objectMapper.convertValue<RiskControlRule>(dtoRiskControlRuleChange)
 
         oldOne.name = newOne.name
         oldOne.remark = newOne.remark
         oldOne.logicalOperationType = newOne.logicalOperationType
         oldOne.params = newOne.params
         oldOne.description = setDescription(newOne.params)
-        val save = this.save(oldOne)
 
-        return objectMapper.convertValue(save)
+        return save(oldOne)
     }
-
 
     fun deleteRiskControlRule(id:Long){
         val riskControlRule = this.getOne(id) ?: throw RiskControlRuleNotFoundException("Invalid risk control rule")
@@ -107,7 +76,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
 
     private fun getParamsGroup(inputList: List<RiskControlRule>):List<DTORiskControlRuleDetailGroup>{
         val outputList = mutableListOf<DTORiskControlRuleDetailGroup>()
-        var lastLogicalOperationType:LogicalOperationType? = null
+        var lastLogicalOperationType:LogicalOperationType = LogicalOperationType.AND
         val params = mutableListOf<DTORiskControlRuleView>()
 
         inputList.forEach {
@@ -117,7 +86,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
                     lastLogicalOperationParams.addAll(params)
                     outputList.add(
                         DTORiskControlRuleDetailGroup(
-                            lastLogicalOperationType!!,
+                            lastLogicalOperationType,
                             lastLogicalOperationParams
                         )
                     )
@@ -131,7 +100,7 @@ class RiskControlRuleService(private val riskControlRuleRepository: RiskControlR
         if(params.size != 0){
             outputList.add(
                 DTORiskControlRuleDetailGroup(
-                    lastLogicalOperationType!!,
+                    lastLogicalOperationType,
                     params
                 )
             )
