@@ -1,4 +1,4 @@
-package cn.sunline.saas.product.dto
+package cn.sunline.saas.product.controller.dto
 
 import cn.sunline.saas.global.constant.BankingProductStatus
 

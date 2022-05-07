@@ -20,7 +20,7 @@ data class DTORepaymentArrangementAdd(
 data class DTOPrepaymentArrangementAdd(
     val term: LoanTermType,
     val type: PrepaymentType,
-    val penaltyRatio: BigDecimal
+    val penaltyRatio: String
 )
 
 data class DTORepaymentAccount(

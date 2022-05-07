@@ -3,6 +3,7 @@ package cn.sunline.saas.consumer.loan.controllers
 import cn.sunline.saas.consumer.loan.service.ConsumerLoanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -26,8 +27,8 @@ class ConsumerLoanController {
 
 
     @PostMapping("/LoanAgreement")
-    fun initiateLoanAgreement() {
-        consumerLoanService.createLoanAgreement()
+    fun initiateLoanAgreement(@RequestBody application:Long) {
+        consumerLoanService.createLoanAgreement(application)
     }
 
     @PostMapping("/Lending")

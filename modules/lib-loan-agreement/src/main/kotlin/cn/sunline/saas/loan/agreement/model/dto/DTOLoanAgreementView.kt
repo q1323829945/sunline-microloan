@@ -19,6 +19,6 @@ data class DTOLoanAgreementView(
     val loanAgreement: LoanAgreement,
     val interestArrangement: InterestArrangement,
     val repaymentArrangement: RepaymentArrangement,
-    val feeArrangement: MutableList<FeeArrangement>,
-    val disbursementArrangement: DisbursementArrangement
+    val feeArrangement: MutableList<FeeArrangement>?,
+    val disbursementArrangement: DisbursementArrangement?
 )
