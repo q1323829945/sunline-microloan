@@ -46,9 +46,14 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         )
         val repaymentArrangement =
             repaymentArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.repaymentArrangement)
-        val feeArrangement = feeArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.feeArrangement)
-        val disbursementArrangement =
-            disbursementArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.disbursementArrangement)
+
+        val feeArrangement = dtoLoanAgreementAdd.feeArrangement?.run {
+            feeArrangementService.registered(loanAgreement.id, this)
+        }
+
+        val disbursementArrangement = dtoLoanAgreementAdd.disbursementArrangement?.run {
+            disbursementArrangementService.registered(loanAgreement.id, this)
+        }
 
         return DTOLoanAgreementView(
             loanAgreement,

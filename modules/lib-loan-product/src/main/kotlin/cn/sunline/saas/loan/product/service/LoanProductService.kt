@@ -5,6 +5,8 @@ import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.service.InterestFeatureService
@@ -28,9 +30,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Root
 import javax.transaction.Transactional
 
 /**
@@ -152,6 +157,7 @@ class LoanProductService(private var loanProductRepos:LoanProductRepository) :
         loanPurpose: String?,
         pageable: Pageable
     ): Page<LoanProduct> {
+
         return loanProductRepos.getLoanProductPaged(name, loanProductType?.name, loanPurpose, pageable)
     }
 

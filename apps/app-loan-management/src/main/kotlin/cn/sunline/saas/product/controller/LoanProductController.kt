@@ -1,28 +1,17 @@
 package cn.sunline.saas.product.controller
 
-import cn.sunline.saas.exceptions.ManagementException
-import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
-import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.*
-import cn.sunline.saas.loan.product.service.LoanProductService
-import cn.sunline.saas.product.dto.DTOLoanProductStatus
+import cn.sunline.saas.product.controller.dto.DTOLoanProductStatus
 import cn.sunline.saas.product.service.LoanProductManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
-import cn.sunline.saas.response.response
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
-import javax.persistence.criteria.Predicate
 
 
 @RestController

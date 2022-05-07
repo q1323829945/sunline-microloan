@@ -3,6 +3,8 @@ package cn.sunline.saas.loan.agreement.model.db
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.AgreementType
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.joda.time.Instant
 import java.math.BigDecimal
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotNull
  * @date 2022/2/28 18:32
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(
     name = "loan_agreement"
 )
@@ -56,8 +59,9 @@ class LoanAgreement(
     val amount: BigDecimal,
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 3, columnDefinition = "varchar(3) not null")
-    val currency: String,
+    val currency: CurrencyType,
 
     @NotNull
     @Column(name = "product_id", nullable = false, columnDefinition = "bigint not null")
@@ -69,7 +73,15 @@ class LoanAgreement(
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "agreement_id")
-    val involvements: MutableList<LoanAgreementInvolvement>
+    val involvements: MutableList<LoanAgreementInvolvement>,
+
+    @NotNull
+    @Column(name = "application_id", nullable = false, columnDefinition = "bigint not null")
+    val applicationId:Long,
+
+    @NotNull
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint not null")
+    val userId:Long
 
 ) : MultiTenant {
 

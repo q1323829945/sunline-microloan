@@ -1,6 +1,7 @@
 package cn.sunline.saas.loan.agreement.model.db
 
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull
  * @date 2022/3/25 16:23
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(
     name = "loan_agreement_involvement"
 )

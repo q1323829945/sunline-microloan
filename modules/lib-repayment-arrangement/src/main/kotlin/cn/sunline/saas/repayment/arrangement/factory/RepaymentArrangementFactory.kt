@@ -7,6 +7,7 @@ import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.math.BigDecimal
 
 /**
  * @title: RepaymentArrangementFactory
@@ -28,7 +29,7 @@ class RepaymentArrangementFactory {
                     id = seq.nextId(),
                     term = it.term,
                     type = it.type,
-                    penaltyRatio = it.penaltyRatio
+                    penaltyRatio = BigDecimal(it.penaltyRatio)
                 )
             )
         }
