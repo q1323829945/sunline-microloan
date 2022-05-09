@@ -82,6 +82,9 @@ enum class PermissionConfig (
     PERSON_MODIFY("Person", "Person/[0-9]+\$", RequestMethod.PUT, "Modify Person"),
     PERSON_GET_ONE("Person", "Person/[0-9]+\$", RequestMethod.GET, "Get One Person"),
 
+    CUSTOMER_OFFER_LIST("CustomerOffer", "CustomerOffer(\\?.*|\$)", RequestMethod.GET, "View CustomerOffer list"),
+    CUSTOMER_OFFER_MODIFY("CustomerOffer", "CustomerOffer/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify CustomerOffer"),
+    CUSTOMER_OFFER_GET_ONE("CustomerOffer", "CustomerOffer/[0-9]+\$", RequestMethod.GET, "Get One CustomerOffer"),
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
@@ -95,5 +98,6 @@ enum class PermissionConfig (
     RISK_CONTROL_RULE_MENU("menu","riskControlRuleConfig", RequestMethod.GET,"View formal RiskControlRuleConfig menu"),
     ORGANISATION_MENU("menu","organisationConfig", RequestMethod.GET,"View formal OrganisationConfig menu"),
     PERSON_MENU("menu","personConfig", RequestMethod.GET,"View formal PersonConfig menu"),
+    CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
 
 }

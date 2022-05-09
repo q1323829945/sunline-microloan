@@ -24,8 +24,10 @@ class MenuService {
         val riskControlRuleConfig = Menu("riskControlRuleConfig","businessConfig","","/dashboard/riskControlRule")
         val organisationConfig = Menu("organisationConfig","businessConfig","","/dashboard/organisationConfig")
         val personConfig = Menu("personConfig","businessConfig","","/dashboard/personConfig")
+        val customerOfferConfig = Menu("customerOfferConfig","businessConfig","","/dashboard/customerOfferConfig")
 
-            menuList = listOf(businessConfig,sysConfig
+
+        menuList = listOf(businessConfig,sysConfig
             ,roleConfig
             ,permissionConfig
             ,userConfig
@@ -35,7 +37,8 @@ class MenuService {
             ,loanFileUploadConfig
             ,riskControlRuleConfig
             ,organisationConfig
-            ,personConfig)
+            ,personConfig
+            ,customerOfferConfig)
 
     }
 
