@@ -34,6 +34,10 @@ class RiskControlService {
         val reports = mutableListOf<Report>()
         val condition = StringBuffer()
 
+        if(groups.isEmpty()){
+            return ExecuteResult(true,"rule is empty",null)
+        }
+
         for(i in groups.indices){
             val group = groups[i]
 

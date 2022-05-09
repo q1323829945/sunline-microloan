@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":lib-party"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-customer-offer"))
+    implementation(project(":lib-risk-control"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -1,4 +1,4 @@
-package cn.sunline.saas.organisation.controllers
+package cn.sunline.saas.party.organisation.controllers
 
 import cn.sunline.saas.party.organisation.model.db.Organisation
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationAdd

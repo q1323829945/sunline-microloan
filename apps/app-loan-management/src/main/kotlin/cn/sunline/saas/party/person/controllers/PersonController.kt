@@ -1,4 +1,4 @@
-package cn.sunline.saas.person.controllers
+package cn.sunline.saas.party.person.controllers
 
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonChange

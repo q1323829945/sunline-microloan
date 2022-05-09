@@ -14,7 +14,9 @@ import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.util.function.Function
 
 @Service
 class AppCustomerOfferService {
@@ -35,8 +37,8 @@ class AppCustomerOfferService {
             DTOCustomerOfferPage(
                 it.id!!,
                 organisation?.legalEntityIndicator,
-                organisation?.legalEntityIndicator,
-                apply?.amount.toString(),
+                organisation?.organisationSector,
+                apply?.amount?.toString(),
                 it.datetime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd HH:mm:ss"),
                 it.productName,
                 it.status

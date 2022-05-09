@@ -6,7 +6,7 @@ data class DTOCustomerOfferPage(
     val customerOfferId:Long,
     val legalEntityIndicator: String?,
     val organisationSector:String?,
-    val amount:String,
+    val amount:String?,
     val datetime: String,
     val productName:String,
     val status: ApplyStatus,
