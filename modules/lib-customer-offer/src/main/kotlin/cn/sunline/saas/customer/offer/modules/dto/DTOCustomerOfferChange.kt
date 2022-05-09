@@ -1,26 +1,26 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
 
-data class DTOCustomerOfferAdd(
-        val customerOfferProcedure: DTOCustomerOfferProcedureAdd,
-        val product: DTOProductAdd,
-        val pdpa: DTOPDPAAdd
+data class DTOCustomerOfferChange(
+        val customerOfferProcedure: DTOCustomerOfferProcedureChange,
+        val product: DTOProductChange,
+        val pdpa: DTOPDPAChange
 )
-data class DTOCustomerOfferProcedureAdd(
+data class DTOCustomerOfferProcedureChange(
         val customerId: Long,
         val customerOfferProcess: String,
         val employee: Long,
 )
 
-data class DTOProductAdd(val productId: Long,val productName: String)
+data class DTOProductChange(val productId: Long,val productName: String)
 
-data class DTOPDPAAdd(
+data class DTOPDPAChange(
         val pdpaTemplateId: Long,
         var signature: String?,
 )
 
 
-data class DTOCustomerOfferLoanAdd (
+data class DTOCustomerOfferLoanChange (
         val loan:DTOLoan?,
         val company:DTOCompany?,
         val contact:DTOContact?,
@@ -30,3 +30,4 @@ data class DTOCustomerOfferLoanAdd (
         val uploadDocument:MutableList<DTOUploadDocument>?,
         val kyc:DTOKyc?,
 )
+

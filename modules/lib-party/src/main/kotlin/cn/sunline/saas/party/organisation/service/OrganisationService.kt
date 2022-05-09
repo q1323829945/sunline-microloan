@@ -5,6 +5,7 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.party.organisation.exception.OrganisationNotFoundException
 import cn.sunline.saas.party.organisation.model.db.Organisation
+import cn.sunline.saas.party.organisation.model.db.OrganizationInvolvement
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationView
@@ -19,6 +20,8 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import javax.persistence.criteria.JoinType
+import javax.persistence.criteria.Predicate
 
 /**
  * @title: OrganisationService
@@ -103,11 +106,28 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
         return getDTOOrganisationView(organisation)
     }
 
-    fun getOrganisationPaged(pageable: Pageable):Page<DTOOrganisationView>{
-        return getPageWithTenant(null,pageable).map { getDTOOrganisationView(it) }
+    fun getOrganisationPaged(legalEntityIndicator:String?,pageable: Pageable):Page<DTOOrganisationView>{
+        return getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            legalEntityIndicator?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("legalEntityIndicator"),legalEntityIndicator)) }
+
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },pageable).map { getDTOOrganisationView(it) }
     }
 
-    private fun getDTOOrganisationView(organisation: Organisation):DTOOrganisationView{
+
+    fun getOrganisationByPartyId(partyId:Long):Organisation?{
+        val organisation = getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            val connection = root.join<Organisation,OrganizationInvolvement>("organizationInvolvements",JoinType.INNER)
+            predicates.add(criteriaBuilder.equal(connection.get<Long>("partyId"),partyId))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        return organisation.content.firstOrNull()
+    }
+
+    fun getDTOOrganisationView(organisation: Organisation):DTOOrganisationView{
         return DTOOrganisationView(
             id = organisation.id.toString(),
             legalEntityIndicator = organisation.legalEntityIndicator,

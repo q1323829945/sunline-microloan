@@ -52,28 +52,28 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         this.save(customerLoanApply)
     }
 
-     fun update(customerOfferId:Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>){
+     fun update(customerOfferId:Long, dtoCustomerOfferLoanChange: DTOCustomerOfferLoanChange, dtoFile: List<DTOFile>){
         val customerLoanApply = this.getOne(customerOfferId)?:throw NotFoundException("Invalid loan apply",ManagementExceptionCode.DATA_NOT_FOUND)
 
-         val originalData = objectMapper.treeToValue<DTOCustomerOfferLoanAdd>(objectMapper.readTree(customerLoanApply.data))
+         val originalData = objectMapper.treeToValue<DTOCustomerOfferLoanChange>(objectMapper.readTree(customerLoanApply.data))
 
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 
-        dtoCustomerOfferLoanAdd.uploadDocument?.run {
-            val fileTemplateIdList = dtoCustomerOfferLoanAdd.uploadDocument.map { it.documentTemplateId }
+         dtoCustomerOfferLoanChange.uploadDocument?.run {
+            val fileTemplateIdList = dtoCustomerOfferLoanChange.uploadDocument.map { it.documentTemplateId }
             originalData.uploadDocument?.forEach {
                 if(!fileTemplateIdList.contains(it.documentTemplateId)){
-                    dtoCustomerOfferLoanAdd.uploadDocument.add(it)
+                    dtoCustomerOfferLoanChange.uploadDocument.add(it)
                 }
             }
         }
 
-        setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanAdd.uploadDocument)
+        setUploadDocument(customerOfferId,customerOffer!!.customerId,dtoFile,dtoCustomerOfferLoanChange.uploadDocument)
 
-         val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOfferLoanAdd).toPrettyString()
+         val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOfferLoanChange).toPrettyString()
 
-        dtoCustomerOfferLoanAdd.loan?.run {
-            customerLoanApply.amount = BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
+         dtoCustomerOfferLoanChange.loan?.run {
+            customerLoanApply.amount = BigDecimal(dtoCustomerOfferLoanChange.loan.amount)
         }
         customerLoanApply.data = data
 
@@ -84,10 +84,12 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
     private fun setUploadDocument(customerOfferId:Long, customerId:Long, dtoFile: List<DTOFile>, uploadDocumentList: List<DTOUploadDocument>?){
          dtoFile.forEach {  file ->
              val names = file.originalFilename.split("/")
-             val templateId = names[0].toLong()
-             val fileName = names[1]
+             val templateId = 23229161248407552L
+             val fileName = names[0]
+//             val templateId = names[0].toLong()
+//             val fileName = names[1]
              uploadDocumentList?.forEach{
-                 if(templateId == it.documentTemplateId){
+                 if(templateId == it.documentTemplateId.toLong()){
                      it.file?.run {
                          huaweiCloudService.deleteObject(DeleteParams(this))
                      }
@@ -99,24 +101,10 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         }
     }
 
-    fun retrieve(customerOfferId:Long): DTOCustomerOfferLoanView{
-        val customerLoanApply = this.getOne(customerOfferId)?:return DTOCustomerOfferLoanView()
+    fun retrieve(customerOfferId: Long): DTOCustomerOfferLoanView {
+        val customerLoanApply = this.getOne(customerOfferId) ?: return DTOCustomerOfferLoanView()
 
-        val dtoCustomerOfferLoanAdd = objectMapper.treeToValue<DTOCustomerOfferLoanAdd>(objectMapper.readTree(customerLoanApply.data))
-
-        return DTOCustomerOfferLoanView(
-                null,
-                null,
-                null,
-                dtoCustomerOfferLoanAdd.loan,
-                dtoCustomerOfferLoanAdd.company,
-                dtoCustomerOfferLoanAdd.contact,
-                dtoCustomerOfferLoanAdd.detail,
-                dtoCustomerOfferLoanAdd.guarantor,
-                dtoCustomerOfferLoanAdd.financial,
-                dtoCustomerOfferLoanAdd.uploadDocument,
-                dtoCustomerOfferLoanAdd.kyc,
-        )
+        return objectMapper.treeToValue(objectMapper.readTree(customerLoanApply.data))
     }
 
 }

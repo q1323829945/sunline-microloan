@@ -4,7 +4,6 @@ import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.CustomerOfferProcedureView
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferAdd
-import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer.offer.repositories.CustomerOfferRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
@@ -56,21 +55,14 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
         return this.getOne(id)
     }
 
-    fun getCustomerOfferPaged(customerId:Long,pageable: Pageable): Page<DTOCustomerOfferPage>{
+    fun getCustomerOfferPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable): Page<CustomerOffer>{
         val page = getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),customerId))
+            customerId?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),customerId)) }
+            productId?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("productId"),productId)) }
+            productName?.run { predicates.add(criteriaBuilder.like(root.get("productName"),"$productName%")) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        },pageable).map {
-            DTOCustomerOfferPage(
-                it.id!!,
-                null,
-                it.datetime.millis,
-                it.productName,
-                it.status
-            )
-        }
-
+        },pageable)
         return page
     }
 }

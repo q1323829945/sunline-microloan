@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.websocket.server.PathParam
 
 @RestController
 @RequestMapping("Organisation")
@@ -32,8 +33,8 @@ class OrganisationController {
 
 
     @GetMapping
-    fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        return DTOPagedResponseSuccess(organisationService.getOrganisationPaged(pageable).map { it }).response()
+    fun getPaged(@PathParam("legalEntityIndicator")legalEntityIndicator:String?,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        return DTOPagedResponseSuccess(organisationService.getOrganisationPaged(legalEntityIndicator,pageable).map { it }).response()
     }
 
     @PostMapping

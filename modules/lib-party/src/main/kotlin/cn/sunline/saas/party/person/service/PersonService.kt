@@ -99,16 +99,6 @@ class PersonService(private val personRepository: PersonRepository) :
         return getDTOPersonView(save(oldOne))
     }
 
-    fun getPersonByPartyId(partyId:Long):Person?{
-        val person = getPageWithTenant({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("partyId"),partyId))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-
-        return person.content.firstOrNull()
-    }
-
     fun findByIdentification(personIdentification: String,personIdentificationType:PersonIdentificationType):Person?{
         val page = getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

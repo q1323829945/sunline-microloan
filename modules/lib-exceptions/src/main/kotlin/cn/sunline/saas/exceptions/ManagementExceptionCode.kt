@@ -65,4 +65,9 @@ enum class ManagementExceptionCode(val code: Int) {
     ORGANISATION_NOT_FOUND(5450),
     PERSON_NOT_FOUND(5450),
 
+    //customer offer 5550-5559
+    CUSTOMER_OFFER_NOT_FOUND(5550),
+    CUSTOMER_OFFER_STATUS_ERROR(5551),
+
+
 }

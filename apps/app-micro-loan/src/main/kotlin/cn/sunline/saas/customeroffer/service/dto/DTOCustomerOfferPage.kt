@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer.offer.modules.dto
+package cn.sunline.saas.customeroffer.service.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 

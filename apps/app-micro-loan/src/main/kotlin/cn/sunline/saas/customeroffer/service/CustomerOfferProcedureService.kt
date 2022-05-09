@@ -3,6 +3,7 @@ package cn.sunline.saas.customeroffer.service
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customeroffer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAService
 import cn.sunline.saas.product.service.ProductService
@@ -75,11 +76,16 @@ class CustomerOfferProcedureService {
         return dtoCustomerOfferLoanView
     }
 
-    fun getCustomerOfferPaged(customerId:Long,pageable: Pageable):Page<DTOCustomerOfferPage>{
-        val page = customerOfferService.getCustomerOfferPaged(customerId, pageable)
-        page.forEach {
-            val apply = customerLoanApplyService.getOne(it.customerOfferId)
-            it.amount = apply?.amount.toString()
+    fun getCustomerOfferPaged(customerId:Long?,pageable: Pageable):Page<DTOCustomerOfferPage>{
+        val page = customerOfferService.getCustomerOfferPaged(customerId,null,null, pageable).map {
+            val apply = customerLoanApplyService.getOne(it.id!!)
+            DTOCustomerOfferPage(
+                it.id!!,
+                apply?.amount.toString(),
+                it.datetime.millis,
+                it.productName,
+                it.status
+            )
         }
         return page
     }
@@ -94,6 +100,6 @@ class CustomerOfferProcedureService {
     }
 
     private fun getPDPA(countryCode:String): PDPAInformation {
-        return pdpaService.retrieve(countryCode)!!
+        return pdpaService.retrieve(countryCode)
     }
 }
