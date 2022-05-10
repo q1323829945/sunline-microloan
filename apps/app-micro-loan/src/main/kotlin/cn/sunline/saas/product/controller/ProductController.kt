@@ -1,9 +1,11 @@
 package cn.sunline.saas.product.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.DTOProductView
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import com.fasterxml.jackson.module.kotlin.convertValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,9 +22,13 @@ class ProductController {
     private lateinit var productService: ProductService
 
     @GetMapping("{identificationCode}/retrieve")
-    fun getProduct(@PathVariable identificationCode:String): ResponseEntity<DTOResponseSuccess<DTOProductView>> {
+    fun getProduct(@PathVariable identificationCode:String): ResponseEntity<DTOResponseSuccess<MutableList<DTOLoanProduct>>> {
         val product = productService.retrieve(identificationCode)
-
         return DTOResponseSuccess(product).response()
+    }
+
+    @GetMapping("{productId}")
+    fun findById(@PathVariable productId: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>> {
+        return  DTOResponseSuccess(productService.findById(productId)).response()
     }
 }

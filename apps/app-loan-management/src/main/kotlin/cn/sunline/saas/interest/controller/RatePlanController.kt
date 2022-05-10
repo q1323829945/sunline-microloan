@@ -1,15 +1,8 @@
 package cn.sunline.saas.interest.controller
 
-import cn.sunline.saas.exceptions.ManagementException
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.interest.dto.DTORatePlanAdd
-import cn.sunline.saas.interest.dto.DTORatePlanChange
-import cn.sunline.saas.interest.dto.DTORatePlanView
-import cn.sunline.saas.interest.exception.RatePlanNotFoundException
-import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.controller.dto.*
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanManagerService
-import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -20,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.persistence.criteria.Predicate
 
 @RestController
 @RequestMapping("RatePlan")
@@ -29,25 +21,32 @@ class RatePlanController {
     @Autowired
     private lateinit var ratePlanManagerService: RatePlanManagerService
 
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        return ratePlanManagerService.getPaged(pageable = pageable)
+        val page = ratePlanManagerService.getPaged(pageable = pageable)
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
     @GetMapping("all")
     fun getAll(@RequestParam("type")type:RatePlanType,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        return ratePlanManagerService.getAll(type,pageable)
+        val page = ratePlanManagerService.getAll(type,pageable)
+        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
     @PostMapping
-    fun addOne(@RequestBody dtoRatePlan: DTORatePlanAdd): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
-        return ratePlanManagerService.addOne(dtoRatePlan)
+    fun addOne(@RequestBody dtoRatePlan: DTORatePlan): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
+        return DTOResponseSuccess(ratePlanManagerService.addOne(dtoRatePlan)).response()
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlanChange): ResponseEntity<DTOResponseSuccess<DTORatePlanView>> {
-        return ratePlanManagerService.updateOne(id,dtoRatePlan)
+    fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlan): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
+        return DTOResponseSuccess(ratePlanManagerService.updateOne(id,dtoRatePlan)).response()
     }
 
+    @GetMapping("{id}")
+    fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
+        return DTOResponseSuccess(ratePlanManagerService.getOne(id)).response()
+    }
 }

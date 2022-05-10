@@ -8,6 +8,7 @@ import io.dapr.client.DaprClient
 import io.dapr.client.DaprClientBuilder
 import io.dapr.client.domain.HttpExtension
 import io.dapr.client.domain.Metadata
+import mu.KotlinLogging
 
 /**
  * @title: DaprClient
@@ -16,6 +17,8 @@ import io.dapr.client.domain.Metadata
  * @date 2022/4/11 15:18
  */
 object DaprHelper {
+
+    private var logger = KotlinLogging.logger {}
 
     private var client: DaprClient
 
@@ -26,17 +29,22 @@ object DaprHelper {
 
     private val metadata =
         mutableMapOf<String, String>(
-            Header.TENANT_AUTHORIZATION.name to ContextUtil.getTenant().toString(),
-            Header.USER_AUTHORIZATION.name to ContextUtil.getUserId()
+            Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+            Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
         )
 
     fun <T> invoke(
         applId: String, methodName: String, request: Any?, httpExtension: HttpExtension, clazz: Class<T>
     ): T? {
+        logger.info("输入参数applId：$applId")
+        logger.info("methodName：$methodName")
+        logger.info("输入参数request：$request")
+        logger.info("输入参数httpExtension：$httpExtension")
+        logger.info("输入参数clazz：$clazz")
         val result = client.invokeMethod(
             applId, methodName, request, setHttpExtension(httpExtension), clazz
         )
-
+        logger.info("输出参数result：$result")
         return result.block()
     }
 

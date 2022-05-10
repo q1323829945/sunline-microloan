@@ -1,7 +1,7 @@
 package cn.sunline.saas.document.service
 
-import cn.sunline.saas.document.dto.DTODocumentTemplateView
-import cn.sunline.saas.document.dto.DTOTemplateDirectoryListView
+import cn.sunline.saas.document.controller.dto.DTODocumentTemplateView
+import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryListView
 import cn.sunline.saas.document.template.modules.DirectoryType
 import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
 import cn.sunline.saas.document.template.services.DocumentTemplateDirectoryService

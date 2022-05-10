@@ -2,10 +2,9 @@ package cn.sunline.saas.loanuploadconfigure.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
-import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureAdd
-import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.loanuploadconfigure.controller.dto.DTOUploadConfigure
 import cn.sunline.saas.loanuploadconfigure.exception.ConfigureNotFoundException
 import cn.sunline.saas.loanuploadconfigure.exception.LoanUploadConfigureBusinessException
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -27,33 +26,33 @@ class UploadConfigureService {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun getPaged(pageable: Pageable): Page<DTOUploadConfigureView>{
+    fun getPaged(pageable: Pageable): Page<DTOUploadConfigure>{
         val paged = loanUploadConfigureService.getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"),false))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         },pageable)
-        return paged.map { objectMapper.convertValue<DTOUploadConfigureView>(it) }
+        return paged.map { objectMapper.convertValue<DTOUploadConfigure>(it) }
     }
 
-    fun getAll(): Page<DTOUploadConfigureView>{
+    fun getAll(): Page<DTOUploadConfigure>{
         val paged = loanUploadConfigureService.getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Boolean>("deleted"),false))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         },pageable = Pageable.unpaged())
-        return paged.map { objectMapper.convertValue<DTOUploadConfigureView>(it) }
+        return paged.map { objectMapper.convertValue<DTOUploadConfigure>(it) }
     }
 
 
-    fun addUploadConfigure(dtoUploadConfigureAdd: DTOUploadConfigureAdd): DTOUploadConfigureView {
+    fun addUploadConfigure(dtoUploadConfigureAdd: DTOUploadConfigure): DTOUploadConfigure {
         val uploadConfigure = objectMapper.convertValue<LoanUploadConfigure>(dtoUploadConfigureAdd)
         val save = loanUploadConfigureService.addOne(uploadConfigure)
         return objectMapper.convertValue(save)
     }
 
 
-    fun deleteUploadConfigure(id: Long): DTOUploadConfigureView {
+    fun deleteUploadConfigure(id: Long): DTOUploadConfigure {
         val mapping = loanProductService.getLoanProductLoanUploadConfigureMapping(id)
         if(mapping>0){
             throw LoanUploadConfigureBusinessException("The config is using,no-supported deleted",ManagementExceptionCode.LOAN_UPLOAD_CONFIGURE_NOT_FOUND)

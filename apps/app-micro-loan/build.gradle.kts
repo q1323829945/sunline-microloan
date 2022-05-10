@@ -4,7 +4,8 @@ val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
 val commonsHttpclientVersion:String by rootProject.extra
-val gsonVersion:String by rootProject.extra
+val gsonVersion: String by rootProject.extra
+val okhttpVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -19,6 +20,7 @@ dependencies {
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
+    implementation("com.google.code.gson:gson:${gsonVersion}")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
@@ -31,15 +33,17 @@ dependencies {
     implementation(project(":lib-banking-transaction"))
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-product"))
-    implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-configure"))
     implementation(project(":lib-huaweicloud-obs"))
     implementation(project(":lib-document-generation"))
     implementation(project(":lib-document-template"))
     implementation(project(":lib-document"))
-    implementation(project(":lib-snowflake"))
     implementation(project(":lib-party"))
+    implementation(project(":lib-snowflake"))
+    implementation(project(":lib-customer-offer"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation(project(":lib-util"))
+    implementation(project(":lib-pdpa"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

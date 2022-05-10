@@ -20,7 +20,7 @@ class PDPAController {
 
     @GetMapping("{countryCode}/retrieve")
     fun getPDPAInformation(@PathVariable countryCode: String): ResponseEntity<DTOResponseSuccess<PDPAInformation>> {
-        return DTOResponseSuccess(pdpaService.retrieve(countryCode)).response()
+        return pdpaService.retrieve(countryCode)!!.response()
     }
 
 }

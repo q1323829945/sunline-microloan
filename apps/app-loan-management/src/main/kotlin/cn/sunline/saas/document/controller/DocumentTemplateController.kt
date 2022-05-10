@@ -1,6 +1,8 @@
 package cn.sunline.saas.document.controller
 
-import cn.sunline.saas.document.dto.*
+import cn.sunline.saas.document.controller.dto.DTODocumentTemplateAdd
+import cn.sunline.saas.document.controller.dto.DTODocumentTemplateChange
+import cn.sunline.saas.document.controller.dto.DTODocumentTemplateView
 import cn.sunline.saas.document.exception.DocumentTemplateNotFoundException
 import cn.sunline.saas.document.service.AppDocumentTemplateService
 import cn.sunline.saas.document.template.modules.DocumentTemplate
@@ -39,7 +41,6 @@ class DocumentTemplateController {
     @GetMapping
     fun getPaged(pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = documentTemplateService.getPaged(pageable = pageable)
-
         return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTODocumentTemplateView>(it)}).response()
     }
 

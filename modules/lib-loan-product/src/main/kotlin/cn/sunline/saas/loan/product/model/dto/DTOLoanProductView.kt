@@ -42,3 +42,33 @@ data class DTOTermLoanProductConfigurationView(
         var maxValueRange: LoanTermType?,
         var minValueRange: LoanTermType?,
 )
+
+
+//data class DTOLoanProductView(
+//        val id:String? = null,
+//        val identificationCode: String? = null,
+//        val name: String? = null,
+//        val version: String? = null,
+//        val description: String? = null,
+//        val loanProductType: LoanProductType? = null,
+//        val loanPurpose: String? = null,
+//        val status: BankingProductStatus? = null,
+//        var amountConfiguration: DTOAmountLoanProductConfigurationView? = null,
+//        var termConfiguration: DTOTermLoanProductConfigurationView? = null,
+//        var interestFeature: InterestFeature? = null,
+//        var repaymentFeature: RepaymentFeature? = null,
+//        var feeFeatures:MutableList<FeeFeature>? = null,
+//        var loanUploadConfigureFeatures:MutableList<LoanUploadConfigure>? = null
+//)
+//
+//data class DTOAmountLoanProductConfigurationView(
+//        val id: String? = null,
+//        var maxValueRange: String? = null,
+//        var minValueRange: String? = null,
+//)
+//
+//data class DTOTermLoanProductConfigurationView(
+//        val id: String? = null,
+//        var maxValueRange: LoanTermType? = null,
+//        var minValueRange: LoanTermType? = null,
+//)

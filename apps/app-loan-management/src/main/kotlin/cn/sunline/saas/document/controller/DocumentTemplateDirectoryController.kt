@@ -1,6 +1,9 @@
 package cn.sunline.saas.document.controller
 
-import cn.sunline.saas.document.dto.*
+import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryAdd
+import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryChange
+import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryListView
+import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryView
 import cn.sunline.saas.document.exception.DocumentDirectoryNotFoundException
 import cn.sunline.saas.document.service.AppDocumentTemplateDirectoryService
 import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
@@ -32,7 +35,6 @@ class DocumentTemplateDirectoryController {
     @GetMapping
     fun getAll():  ResponseEntity<DTOResponseSuccess<List<DTOTemplateDirectoryListView>>> {
         val list = appDocumentTemplateDirectoryService.getAll()
-
         return DTOResponseSuccess(list).response()
     }
 

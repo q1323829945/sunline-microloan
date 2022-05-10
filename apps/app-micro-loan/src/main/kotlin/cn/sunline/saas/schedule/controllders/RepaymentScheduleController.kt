@@ -1,7 +1,6 @@
 package cn.sunline.saas.repayment.schedule.controllders
 
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
-import cn.sunline.saas.repayment.schedule.invoke.LoanProductDirectoryService
 import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleService
 import cn.sunline.saas.response.DTOResponseSuccess
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,8 +32,4 @@ class RepaymentScheduleController {
         return repaymentScheduleService.calculate(productId, amount.toBigDecimal(),term)
     }
     */
-    @GetMapping("product/{productId}")
-    fun getInfo(@PathVariable productId:Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        return repaymentScheduleService.getInfo(productId)
-    }
 }

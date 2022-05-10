@@ -58,7 +58,7 @@ class LoanProduct(
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "reference_id")
-    var configurationOptions: MutableList<Condition>? = mutableListOf()
+    var configurationOptions: MutableList<Condition> = mutableListOf()
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

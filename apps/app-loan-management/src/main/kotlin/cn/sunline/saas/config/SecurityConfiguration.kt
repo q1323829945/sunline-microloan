@@ -23,6 +23,7 @@ class SecurityConfiguration (private val tokenService: TokenService, private val
             ,"/roles/all"
             ,"/permissions/all"
             ,"/PartnerIntegrated/**"
+            ,"/PartnerIntegrated/**"
             ,"/**")
     }
 

@@ -42,12 +42,14 @@ dependencies {
     implementation(project(":lib-partner-integrated"))
     implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-pdpa"))
+    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
+    implementation(project(":lib-risk-control"))
+    implementation("commons-io:commons-io:2.11.0")
+
     implementation(project(":lib-party"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-customer-offer"))
-    implementation(project(":lib-risk-control"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
-    implementation("commons-io:commons-io:2.11.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

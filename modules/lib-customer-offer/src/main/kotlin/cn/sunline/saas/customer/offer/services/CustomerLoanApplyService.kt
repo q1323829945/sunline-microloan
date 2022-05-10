@@ -85,8 +85,10 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
     private fun setUploadDocument(customerOfferId:Long, customerId:Long, dtoFile: List<DTOFile>, uploadDocumentList: List<DTOUploadDocument>?){
          dtoFile.forEach {  file ->
              val names = file.originalFilename.split("/")
-             val templateId = names[0].toLong()
-             val fileName = names[1]
+             val templateId = 23229161248407552L
+             val fileName = names[0]
+//             val templateId = names[0].toLong()
+//             val fileName = names[1]
              uploadDocumentList?.forEach{
                  if(templateId == it.documentTemplateId.toLong()){
                      it.file?.run {

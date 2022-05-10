@@ -8,11 +8,12 @@ import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.loan.product.model.LoanProductType
-import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
-import cn.sunline.saas.loan.product.model.dto.DTOTermLoanProductConfiguration
+import cn.sunline.saas.loan.product.model.dto.*
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,18 +29,21 @@ import java.math.BigDecimal
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LoanProductServiceTest(@Autowired val loanProductService: LoanProductService) {
 
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @Test
     fun `entity save`() {
 
         val amountConfiguration = DTOAmountLoanProductConfiguration(
+            id = null,
             maxValueRange = "10",
             minValueRange = "0"
         )
 
         val termConfiguration = DTOTermLoanProductConfiguration(
+            id = null,
             maxValueRange = LoanTermType.ONE_YEAR,
-            minValueRange = null
+            minValueRange = LoanTermType.ONE_MONTH
         )
 
         val interestFeature = DTOInterestFeatureAdd(
@@ -100,20 +104,22 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
         feeFeatures.add(feeFeature2)
 
 
-        val loanProduct = DTOLoanProductAdd(
+        val loanProduct = DTOLoanProduct(
+            id = null,
             identificationCode = "SN0001",
             name = "Micro Loan",
             version = "1.0.0",
             description = "test",
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
+            status = BankingProductStatus.INITIATED,
             amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
-            interestFeature = interestFeature,
-            repaymentFeature = repaymentFeature,
-            feeFeatures = feeFeatures
+            interestFeature =  objectMapper.convertValue<DTOInterestFeature>(interestFeature),
+            repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeature>(it) },
+            feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) },
+            loanUploadConfigureFeatures = listOf()
         )
-
         val actual = loanProductService.register(loanProduct)
 
 

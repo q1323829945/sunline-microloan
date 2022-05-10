@@ -1,7 +1,6 @@
-package cn.sunline.saas.document.dto
+package cn.sunline.saas.document.controller.dto
 
 import cn.sunline.saas.document.model.DocumentType
-import cn.sunline.saas.document.template.modules.DirectoryType
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.modules.LanguageType
 

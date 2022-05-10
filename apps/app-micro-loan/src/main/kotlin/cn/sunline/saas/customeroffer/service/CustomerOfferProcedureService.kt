@@ -3,17 +3,15 @@ package cn.sunline.saas.customeroffer.service
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customeroffer.service.dto.DTOCustomerOfferPage
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAService
 import cn.sunline.saas.product.service.ProductService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.google.gson.Gson
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -55,16 +53,14 @@ class CustomerOfferProcedureService {
         val customerOffer = customerOfferService.getOneById(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
-            val dtoCustomerOffer = objectMapper.treeToValue<DTOCustomerOfferView>(objectMapper.readTree(customerOffer.data))
-
-
+            val dtoCustomerOffer = Gson().fromJson(customerOffer.data,DTOCustomerOfferAdd::class.java)
             val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
             dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
             dTOCustomerOfferProcedureView.status = customerOffer.status
             dtoCustomerOfferLoanView.customerOfferProcedure = dTOCustomerOfferProcedureView
 
             //add product info
-            val loanProduct = getProduct(this.productId)
+            val loanProduct = getProduct(dtoCustomerOffer.product.productId)
             val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
             dtoCustomerOfferLoanView.product = dtoLoanProduct
 
@@ -76,21 +72,7 @@ class CustomerOfferProcedureService {
         return dtoCustomerOfferLoanView
     }
 
-    fun getCustomerOfferPaged(customerId:Long?,pageable: Pageable):Page<DTOCustomerOfferPage>{
-        val page = customerOfferService.getCustomerOfferPaged(customerId,null,null, pageable).map {
-            val apply = customerLoanApplyService.getOne(it.id!!)
-            DTOCustomerOfferPage(
-                it.id!!,
-                apply?.amount.toString(),
-                it.datetime.millis,
-                it.productName,
-                it.status
-            )
-        }
-        return page
-    }
-
-    private fun getProduct(productId:Long): DTOProductView{
+    private fun getProduct(productId:Long): DTOLoanProduct {
         return productService.findById(productId)
     }
 
@@ -100,6 +82,6 @@ class CustomerOfferProcedureService {
     }
 
     private fun getPDPA(countryCode:String): PDPAInformation {
-        return pdpaService.retrieve(countryCode)
+        return pdpaService.retrieve(countryCode)!!.data!!
     }
 }

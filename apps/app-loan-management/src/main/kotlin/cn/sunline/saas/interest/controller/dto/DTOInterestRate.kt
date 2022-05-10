@@ -1,10 +1,9 @@
-package cn.sunline.saas.interest.dto
+package cn.sunline.saas.interest.controller.dto
 
 import cn.sunline.saas.global.constant.LoanTermType
 
-
-data class DTOInterestRateChange(
-    val id: Long,
+data class DTOInterestRate(
+    val id: Long? = null,
     val period: LoanTermType,
     val rate: String,
     val ratePlanId:Long

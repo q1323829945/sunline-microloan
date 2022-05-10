@@ -1,10 +1,7 @@
-package cn.sunline.saas.document.dto
+package cn.sunline.saas.document.controller.dto
 
 import cn.sunline.saas.document.template.modules.DirectoryType
 import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
-import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.document.template.modules.LanguageType
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 
 data class DTOTemplateDirectoryAdd(
     val name:String,
@@ -23,7 +20,6 @@ data class DTOTemplateDirectoryListView(
     val templates:List<DTODocumentTemplateView>?,
     val directoryPath:String?,
     val directoryType: DirectoryType
-//    val loanUploadConfigure: List<DTODocumentTemplateView>?
 )
 
 data class DTOTemplateDirectoryView(
@@ -34,7 +30,6 @@ data class DTOTemplateDirectoryView(
     val parent: DTOTemplateDirectoryView?,
     val templates:List<DTODocumentTemplateView>?,
     val directoryType: DirectoryType
-//    val loanUploadConfigure: List<DTODocumentTemplateView>?,
 )
 
 data class DTOTemplateDirectoryChange(

@@ -18,7 +18,7 @@ import java.nio.charset.Charset
 
 @Component
 class HttpConfig {
-    private val logger: Logger = LoggerFactory.getLogger(HttpConfig::class.java)
+    val logger: Logger = LoggerFactory.getLogger(HttpConfig::class.java)
 
     fun execute(httpMethod: HttpRequestMethod, uri:String, parts:List<MultipartBody.Part>, headers:Map<String,String>? = null): Response {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)

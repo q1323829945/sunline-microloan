@@ -2,22 +2,20 @@ package cn.sunline.saas.customeroffer.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
+import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customeroffer.service.CustomerOfferProcedureService
+import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
+import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customeroffer.service.CustomerOfferProcedureService
-import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
-import cn.sunline.saas.response.DTOPagedResponseSuccess
-import cn.sunline.saas.response.response
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.springframework.data.domain.Pageable
 
 /**
  * @title: CustomerOfferProcedureController
@@ -64,11 +62,11 @@ class CustomerOfferProcedureController {
         return DTOResponseSuccess(dtoCustomerOfferLoanView).response()
     }
 
-    @GetMapping("loan/{customerId}/list")
-    fun getPaged(@PathVariable("customerId")customerId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val page = customerOfferProductService.getCustomerOfferPaged(customerId, pageable)
-        return DTOPagedResponseSuccess(page.map { it }).response()
-    }
+//    @GetMapping("loan/{customerId}/list")
+//    fun getPaged(@PathVariable("customerId")customerId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
+//        val page = customerOfferProductService.getCustomerOfferPaged(customerId, pageable)
+//        return DTOPagedResponseSuccess(page.map { it }).response()
+//    }
 
     private fun getDTOFileList(files: List<MultipartFile>?):List<CustomerLoanApplyService.DTOFile>{
         val fileList = ArrayList<CustomerLoanApplyService.DTOFile>()

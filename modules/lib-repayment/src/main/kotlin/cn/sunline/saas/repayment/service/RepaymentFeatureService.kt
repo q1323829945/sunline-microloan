@@ -20,8 +20,8 @@ class RepaymentFeatureService(private val repaymentFeatureRepo: RepaymentFeature
     @Autowired
     private lateinit var repaymentFeatureFactory: RepaymentFeatureFactory
 
-    fun register(productId: Long, interestFeatureData: DTORepaymentFeatureAdd): RepaymentFeature {
-        return save(repaymentFeatureFactory.instance(productId, interestFeatureData))
+    fun register(productId: Long, repaymentFeatureData: DTORepaymentFeatureAdd): RepaymentFeature {
+        return save(repaymentFeatureFactory.instance(productId, repaymentFeatureData))
     }
 
     fun findByProductId(productId:Long):RepaymentFeature?{

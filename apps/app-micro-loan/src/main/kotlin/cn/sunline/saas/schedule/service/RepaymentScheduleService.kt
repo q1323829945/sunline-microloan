@@ -2,137 +2,119 @@ package cn.sunline.saas.repayment.schedule.service
 
 import cn.sunline.saas.consumer.loan.dto.DTOLoanApplication
 import cn.sunline.saas.dapr_wrapper.DaprHelper
-import cn.sunline.saas.interest.service.InterestRateService
-import cn.sunline.saas.interest.service.RatePlanService
+import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.interest.util.InterestRateUtil
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.product.invoke.ProductInvoke
+import cn.sunline.saas.product.service.ProductService
+import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
-import cn.sunline.saas.repayment.schedule.invoke.LoanProductDirectoryService
+import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
+import cn.sunline.saas.repayment.schedule.model.dto.*
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.invoke.ScheduleInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.joda.time.Instant
+import org.joda.time.Period
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import java.math.BigDecimal
+import javax.persistence.criteria.Predicate
 
 
 @Service
-class RepaymentScheduleService(private val loanProductDirectoryService: LoanProductDirectoryService){
-//
-//    @Autowired
-//    private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
-//
-//    @Autowired
-//    private lateinit var ratePlanService: RatePlanService
-//
-//    @Autowired
-//    private lateinit var interestRateService: InterestRateService
-//
-////    @Autowired
-////    private lateinit var repaymentScheduleService: RepaymentScheduleService
-//
-//    @Autowired
-//    private lateinit var repaymentScheduleDetailService: RepaymentScheduleDetailService
+class RepaymentScheduleService(
+    private val productService: ProductService,
+    private val scheduleInvoke: ScheduleInvoke
+){
 
+    @Autowired
+    private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+    fun calculate(productId: Long, amount: BigDecimal, term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
+        val loanDateInstant = Instant.now()
 
-    fun getInfo(productId:Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        return loanProductDirectoryService.getProductDirectory(productId)
+        val product = productService.findById(productId)
+
+        var interestRate: BigDecimal = BigDecimal.ZERO
+        if(product.interestFeature?.interestType == InterestType.FIXED) {
+            val ratePlanId = product.interestFeature?.ratePlanId
+            val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
+            val rates = objectMapper.convertValue<MutableList<InterestRate>>(ratePlan?.rates!!)
+            interestRate = InterestRateUtil.getRate(term, rates)
+        }else if(product.interestFeature?.interestType == InterestType.FLOATING_RATE_NOTE) {
+            val ratePlanId = product.interestFeature?.ratePlanId
+            val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
+            val rates = objectMapper.convertValue<MutableList<InterestRate>>(ratePlan?.rates!!)
+            val baseRatePlan = scheduleInvoke.getRatePlanByRatePlanType(RatePlanType.STANDARD)?.data
+            val baseRates = objectMapper.convertValue<MutableList<InterestRate>>(baseRatePlan?.rates!!)
+
+            val floatInterestRate = InterestRateUtil.getRate(term, rates)
+            val baseInterestRate = InterestRateUtil.getRate(term, baseRates)
+            interestRate = InterestRateUtil.calRate(baseInterestRate,floatInterestRate)
+        }else{
+            interestRate = BigDecimal.ZERO
+        }
+
+        val repaymentDayType = product.repaymentFeature?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
+        var repaymentDay = 21;
+        if (RepaymentDayType.BASE_LOAN_DAY == repaymentDayType) {
+            repaymentDay = loanDateInstant.toDateTime().dayOfMonth().get()
+        }
+
+        val dtoRepaymentScheduleTrialView = repaymentScheduleCalcGeneration.calculator(
+            DTORepaymentScheduleCalculateTrial(
+                amount = amount,
+                term = term,
+                interestRate = interestRate,
+                paymentMethod = product.repaymentFeature?.paymentMethod!!,
+                startDate = loanDateInstant,
+                endDate = term.calDays(loanDateInstant),
+                repaymentFrequency = product.repaymentFeature?.frequency!!,
+                baseYearDays = product.interestFeature?.baseYearDays!!,
+                repaymentDay = repaymentDay,
+                repaymentDayType = repaymentDayType
+            )
+        )
+        return DTOResponseSuccess(dtoRepaymentScheduleTrialView).response()
+    }
+
+    fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
+        //val savedRepaymentSchedule :RepaymentSchedule //= repaymentScheduleService.register(dtoRepaymentSchedule)
+        val dtoRepaymentScheduleView = changeMapper(null)
+        return DTOResponseSuccess(dtoRepaymentScheduleView).response()
     }
 
 
-    private fun initiateUnderwriting(dtoLoanApplication: DTOLoanApplication) {
-        DaprHelper.binding(
-            "INITIATE_UNDERWRITING",
-            "create",
-            dtoLoanApplication
+    private fun changeMapper(repaymentSchedule: RepaymentSchedule?): DTORepaymentScheduleView {
+        val dtoRepaymentScheduleDetailView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
+        for (schedule in repaymentSchedule?.schedule!!) {
+            dtoRepaymentScheduleDetailView += DTORepaymentScheduleDetailView(
+                id = schedule.id,
+                repaymentScheduleId = repaymentSchedule.id,
+                period = schedule.period,
+                installment = schedule.installment,
+                principal = schedule.principal,
+                interest = schedule.interest,
+                repaymentDate = CalcDateComponent.formatInstantToView(schedule.repaymentDate)
+            )
+        }
+        return DTORepaymentScheduleView(
+            repaymentScheduleId = repaymentSchedule.id,
+            installment = repaymentSchedule.installment,
+            interestRate = repaymentSchedule.interestRate,
+            schedule = dtoRepaymentScheduleDetailView
         )
     }
-
-    //TODO 通过接口远程调用获取
-    /*
-fun calculate(productId: Long,amount: BigDecimal,term: Int): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
-    val loanDateTime = Instant.now().toDateTime()
-
-    val interestProduct = interestProductFeatureService.getPaged({ root, _, criteriaBuilder ->
-        val predicates = mutableListOf<Predicate>()
-        predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), productId))
-        criteriaBuilder.and(*(predicates.toTypedArray()))
-    }, Pageable.ofSize(1))
-    val first = interestProduct.firstOrNull()
-    val ratePlanId = (first?.ratePlanId)!!
-
-    val page = interestRateService.getPaged({ root, _, criteriaBuilder ->
-        val predicates = mutableListOf<Predicate>()
-        predicates.add(criteriaBuilder.equal(root.get<Long>("ratePlanId"), ratePlanId))
-        criteriaBuilder.and(*(predicates.toTypedArray()))
-    }, Pageable.ofSize(1))
-
-    val interestRate = page.firstOrNull()
-
-    val repaymentProductFeature = repaymentProductFeatureService.getPaged({ root, _, criteriaBuilder ->
-        val predicates = mutableListOf<Predicate>()
-        predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), productId))
-        criteriaBuilder.and(*(predicates.toTypedArray()))
-    }, Pageable.ofSize(1))
-
-    val repaymentProduct = repaymentProductFeature.firstOrNull()
-    val repaymentDayType = repaymentProduct?.payment?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
-    var repaymentDay = 21;
-    if (RepaymentDayType.BASE_LOAN_DAY == repaymentDayType) {
-        repaymentDay = loanDateTime.dayOfMonth().get()
-    }
-
-    val repaymentSchedule = repaymentScheduleCalcGeneration.calculator(
-        DTORepaymentScheduleCalculate(
-            amount = amount,
-            term = term,
-            interestRate = interestRate?.rate!!,
-            paymentMethod = repaymentProduct?.payment?.paymentMethod!!,
-            startDate = loanDateTime,
-            endDate = loanDateTime.plusMonths(term),
-            repaymentFrequency = repaymentProduct.payment.frequency,
-            baseYearDays = first.interest.baseYearDays,
-            repaymentDay = repaymentDay,
-            repaymentDayType = repaymentDayType
-        )
-    )
-    val format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    val dtoRepaymentScheduleDetailView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
-    for(schedule in repaymentSchedule.repaymentScheduleDetail){
-        dtoRepaymentScheduleDetailView += DTORepaymentScheduleDetailView(
-            id = schedule.id,
-            installment = schedule.repaymentInstallment,
-            period =  schedule.period,
-            principal = schedule.principal,
-            interest = schedule.interest,
-            repaymentDate = schedule.repaymentDate.toString(format)
-        )
-    }
-
-    val dtoRepaymentScheduleView = DTORepaymentScheduleView(
-        repaymentScheduleId = repaymentSchedule.repaymentScheduleId,
-        installment = repaymentSchedule.totalRepayment,
-        interestRate = repaymentSchedule.interestRate,
-        schedule = dtoRepaymentScheduleDetailView
-    )
-
-
-    return DTOResponseSuccess(dtoRepaymentScheduleView).response()
-
-    }
-
-
-    fun save(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
-        val repaymentSchedule = objectMapper.convertValue<RepaymentSchedule>(dtoRepaymentSchedule)
-        val schedule = repaymentScheduleService.save(repaymentSchedule)
-        val scheduleDetail = repaymentScheduleDetailService.save(repaymentSchedule.repaymentScheduleDetail)
-        schedule.repaymentScheduleDetail += scheduleDetail;
-        val responseInterestRate = objectMapper.convertValue<DTORepaymentScheduleView>(schedule)
-        return DTOResponseSuccess(responseInterestRate).response()
-    }
-*/
 }

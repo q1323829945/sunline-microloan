@@ -1,10 +1,7 @@
 package cn.sunline.saas.loanuploadconfigure.controller
 
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
-import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureAdd
-import cn.sunline.saas.loan.configure.modules.dto.DTOUploadConfigureView
 import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
-import cn.sunline.saas.loanuploadconfigure.exception.ConfigureNotFoundException
+import cn.sunline.saas.loanuploadconfigure.controller.dto.DTOUploadConfigure
 import cn.sunline.saas.loanuploadconfigure.service.UploadConfigureService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -15,24 +12,17 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import javax.persistence.criteria.Predicate
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/LoanUploadConfigure")
 class UploadConfigureController {
+
     @Autowired
     private lateinit var loanUploadConfigureService: LoanUploadConfigureService
 
     @Autowired
     private lateinit var appLoanUploadConfigureService: UploadConfigureService
-
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -49,15 +39,15 @@ class UploadConfigureController {
     }
 
     @PostMapping
-    fun addUploadConfigure(@RequestBody dtoUploadConfigureAdd: DTOUploadConfigureAdd): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
+    fun addUploadConfigure(@RequestBody dtoUploadConfigureAdd: DTOUploadConfigure): ResponseEntity<DTOResponseSuccess<DTOUploadConfigure>>{
         val result = appLoanUploadConfigureService.addUploadConfigure(dtoUploadConfigureAdd)
         return DTOResponseSuccess(result).response()
     }
 
     @DeleteMapping("{id}")
-    fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigureView>>{
+    fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigure>>{
         val result = appLoanUploadConfigureService.deleteUploadConfigure(id)
-        val responseEntity = objectMapper.convertValue<DTOUploadConfigureView>(result)
+        val responseEntity = objectMapper.convertValue<DTOUploadConfigure>(result)
         return DTOResponseSuccess(responseEntity).response()
     }
 }

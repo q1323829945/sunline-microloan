@@ -1,3 +1,70 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.interest.util.InterestRateUtil
@@ -7,9 +74,12 @@ import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculato
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.*
+import cn.sunline.saas.repayment.schedule.model.enum.LoanRateType
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
+import kotlin.collections.ArrayList
 
 
 /**
@@ -21,6 +91,7 @@ import java.math.BigDecimal
 class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
 
     override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
+        val term = dtoRepaymentScheduleCalculateTrial.term
 
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
         val amount = dtoRepaymentScheduleCalculateTrial.amount
@@ -30,6 +101,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
         val startDate = dtoRepaymentScheduleCalculateTrial.startDate
         val endDate = dtoRepaymentScheduleCalculateTrial.endDate
         val baseYearDays = dtoRepaymentScheduleCalculateTrial.baseYearDays
+        val repaymentDayType = dtoRepaymentScheduleCalculateTrial.repaymentDayType
 
         // 每期利率
         val loanRateMonth = InterestRateUtil.toMonthRate(interestRate)
@@ -69,7 +141,9 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
         var remainPrincipal = amount
 
         // 每期还款详情
+        var firstInstallment = BigDecimal.ZERO
         var nextInstallment = BigDecimal.ZERO
+        var isEquals = true
 
         // 还款明细
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
@@ -120,6 +194,8 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
             nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.months)
         }
 
+        // 还款总额
+        val totalRepayment = amount.add(totalInterest)
         // 还款计划概述
         return DTORepaymentScheduleTrialView(
             interestRate = interestRate,

@@ -103,7 +103,7 @@ data class DTOGuarantorsView(
     val occupation:String, //TODO
     val industryExpYear:Long,
     val manageExpYear:Long,
-    val residenceType:String,//TODO ä½å®…ç±»å‹
+    val residenceType:String,//TODO ×¡Õ¬ÀàĞÍ
     val residenceOwnership: OwnershipType,
 )
 

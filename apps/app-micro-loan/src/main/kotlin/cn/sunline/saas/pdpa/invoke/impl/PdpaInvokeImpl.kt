@@ -3,6 +3,7 @@ package cn.sunline.saas.pdpa.invoke.impl
 import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.invoke.PdpaInvoke
+import cn.sunline.saas.response.DTOResponseSuccess
 import io.dapr.client.domain.HttpExtension
 import org.springframework.stereotype.Service
 
@@ -11,13 +12,13 @@ class PdpaInvokeImpl: PdpaInvoke {
 
     private val applId = "app-loan-management"
 
-    override fun getPDPAInformation(countryCode: String): PDPAInformation? {
+    override fun getPDPAInformation(countryCode: String): DTOResponseSuccess<PDPAInformation>? {
         return DaprHelper.invoke(
             applId,
-            "pdpa/{countryCode}/retrieve",
-            "{\"countryCode\":\"$countryCode\"}",
+            "pdpa/$countryCode/retrieve",
+            null,
             HttpExtension.GET,
-            PDPAInformation::class.java
+            DTOResponseSuccess<PDPAInformation>()::class.java
         )
     }
 }

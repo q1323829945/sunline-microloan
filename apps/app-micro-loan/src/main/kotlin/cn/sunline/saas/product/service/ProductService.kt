@@ -1,18 +1,21 @@
 package cn.sunline.saas.product.service
 
-import cn.sunline.saas.config.AppHttpConfiguration
-import cn.sunline.saas.config.IpConfig
 import cn.sunline.saas.customer.offer.modules.dto.DTOProductView
+import cn.sunline.saas.product.invoke.ProductInvoke
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import mu.KotlinLogging
 import cn.sunline.saas.global.constant.HttpRequestMethod
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import org.springframework.stereotype.Service
 
 @Service
-class ProductService(
-    private var ipConfig: IpConfig,
-    private var appHttpConfiguration: AppHttpConfiguration
-)  {
+class ProductService(private val productInvoke: ProductInvoke)  {
 
-    fun findById(productId: Long): DTOProductView {
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+    fun findById(productId: Long): DTOLoanProduct {
 //        val uri = "http://${ipConfig.productIp}/LoanProduct/$productId"
 //
 //        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri,appHttpConfiguration.getPublicHeaders())
@@ -25,22 +28,13 @@ class ProductService(
 //        dtoProductView.productId = productId
 //
 //        return dtoProductView
-
-        return DTOProductView(1,"","","","")
+        val dtoLoanProductViewResponse = productInvoke.getProductInfoByProductId(productId)
+        return objectMapper.convertValue(dtoLoanProductViewResponse!!.data!!)
     }
 
-    fun retrieve(identificationCode:String):DTOProductView{
-//        val uri = "http://${ipConfig.productIp}/LoanProduct/$identificationCode/retrieve"
-//
-//        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri,appHttpConfiguration.getPublicHeaders())
-//
-//        appHttpConfiguration.sendClient(postMethod)
-//
-//        val data = appHttpConfiguration.getResponse(postMethod)
-//
-//        return Gson().fromJson(data, DTOProductView::class.java)
-
-        return DTOProductView(1,"","","","")
+    fun retrieve(identificationCode: String): MutableList<DTOLoanProduct> {
+        val dtoLoanProductViewResponse = productInvoke.getProductListByIdentificationCode(identificationCode)
+        return objectMapper.convertValue(dtoLoanProductViewResponse!!.data!!)
     }
 
 }
