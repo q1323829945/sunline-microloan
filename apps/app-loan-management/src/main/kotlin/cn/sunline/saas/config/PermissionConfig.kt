@@ -85,6 +85,7 @@ enum class PermissionConfig (
     CUSTOMER_OFFER_LIST("CustomerOffer", "CustomerOffer(\\?.*|\$)", RequestMethod.GET, "View CustomerOffer list"),
     CUSTOMER_OFFER_MODIFY("CustomerOffer", "CustomerOffer/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify CustomerOffer"),
     CUSTOMER_OFFER_GET_ONE("CustomerOffer", "CustomerOffer/[0-9]+\$", RequestMethod.GET, "Get One CustomerOffer"),
+    CUSTOMER_OFFER_DOWNLOAD("CustomerOffer", "CustomerOffer/download(\\?.*|\$)", RequestMethod.GET, "download"),
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),

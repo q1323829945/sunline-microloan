@@ -55,7 +55,7 @@ class CustomerOfferProcedureService {
         val customerOffer = customerOfferService.getOneById(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
-            val dtoCustomerOffer = objectMapper.treeToValue<DTOCustomerOfferAdd>(objectMapper.readTree(customerOffer.data))
+            val dtoCustomerOffer = objectMapper.treeToValue<DTOCustomerOfferView>(objectMapper.readTree(customerOffer.data))
 
 
             val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
@@ -64,7 +64,7 @@ class CustomerOfferProcedureService {
             dtoCustomerOfferLoanView.customerOfferProcedure = dTOCustomerOfferProcedureView
 
             //add product info
-            val loanProduct = getProduct(dtoCustomerOffer.product.productId)
+            val loanProduct = getProduct(this.productId)
             val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
             dtoCustomerOfferLoanView.product = dtoLoanProduct
 

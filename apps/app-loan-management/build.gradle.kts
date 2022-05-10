@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-loan-configure"))
     implementation(project(":lib-interest-util"))
+    implementation(project(":lib-huaweicloud-obs"))
 //    implementation(project(":lib-huaweicloud-apig"))
     implementation(project(":lib-snowflake"))
     implementation(project(":lib-partner-integrated"))

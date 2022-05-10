@@ -5,6 +5,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.model.CurrencyType
+import com.fasterxml.jackson.annotation.JsonAutoDetect
 
 
 data class DTOLoan(
@@ -62,7 +63,7 @@ data class DTOFinancial(
 )
 
 data class DTOUploadDocument(
-    val documentTemplateId:String,
+    val documentTemplateId:Long,
     var file:String?,
 )
 

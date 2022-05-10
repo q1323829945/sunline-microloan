@@ -31,21 +31,8 @@ class AppDocumentTemplateService {
         response.reset();
         response.contentType = "application/octet-stream";
         response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
-//        val outputStream = response.outputStream
 
-
-        IOUtils.write(inputStream.readAllBytes(),response.outputStream)
-
-//        val bytes = ByteArray(1024)
-//        while (true){
-//            val len = inputStream.read(bytes)
-//
-//            if(len == -1){
-//                break
-//            }
-//            outputStream.write(bytes,0,len)
-//        }
-
+        IOUtils.write(inputStream.readBytes(),response.outputStream)
         inputStream.close()
     }
 }

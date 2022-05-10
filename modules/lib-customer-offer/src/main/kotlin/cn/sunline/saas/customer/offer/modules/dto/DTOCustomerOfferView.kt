@@ -2,6 +2,7 @@ package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import com.fasterxml.jackson.annotation.JsonProperty
 
 data class DTOCustomerOfferView(
         val customerOfferProcedure: CustomerOfferProcedureView,
@@ -20,7 +21,6 @@ data class ProductView(
         val amountConfiguration: DTOAmountConfigurationView?,
         val termConfiguration: DTOTermConfigurationView?,
 )
-
 
 data class DTOCustomerOfferLoanView (
         var customerOfferProcedure:DTOCustomerOfferProcedureView? = null,

@@ -36,6 +36,24 @@ data class PDPAInformationView (
     val pdpaTemplateId:String
 )
 
+data class DTOCustomerOfferView(
+    val customerOfferProcedure: CustomerOfferProcedureView,
+    var product: ProductView?
+)
+data class CustomerOfferProcedureView(
+    val customerId: Long,
+    val customerOfferProcess: String,
+    val employee: Long,
+    var customerOfferId:Long,
+    var customerOfferProcessNextTask:String?,
+)
+
+data class ProductView(
+    var productId: Long?,
+    val amountConfiguration: DTOAmountConfigurationView?,
+    val termConfiguration: DTOTermConfigurationView?,
+)
+
 
 data class PersonalInformationView(
     val key:String,
@@ -106,7 +124,7 @@ data class DTOGuarantor(
 
 data class DTOGuarantors(
     val name:String,
-    val NRIC:String,
+    val nric:String,
     val nationality: CountryType,
     val mobileArea:String,
     val mobileNumber:String,
@@ -126,9 +144,9 @@ data class DTOFinancial(
 
 data class DTOUploadDocument(
     val documentTemplateId:String,
-    val documentTemplateName:String,
+    var documentTemplateName:String?,
     var fileName:String?,
-    var file:String?,
+    val file:String,
 )
 
 data class DTOKyc(
