@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-risk-control"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("commons-io:commons-io:2.11.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

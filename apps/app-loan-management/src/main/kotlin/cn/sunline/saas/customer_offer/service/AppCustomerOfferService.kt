@@ -9,14 +9,14 @@ import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
-import cn.sunline.saas.party.organisation.service.OrganisationService
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import java.util.function.Function
 
 @Service
 class AppCustomerOfferService {
@@ -27,17 +27,15 @@ class AppCustomerOfferService {
     @Autowired
     private lateinit var customerLoanApplyService: CustomerLoanApplyService
 
-    @Autowired
-    private lateinit var organisationService: OrganisationService
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
 
     fun getPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable):Page<DTOCustomerOfferPage> {
         val page = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).map {
             val apply = customerLoanApplyService.getOne(it.id!!)
-            val organisation = organisationService.getOrganisationByPartyId(it.customerId)
             DTOCustomerOfferPage(
                 it.id!!,
-                organisation?.legalEntityIndicator,
-                organisation?.organisationSector,
+                "TODO",//TODO:
                 apply?.amount?.toString(),
                 it.datetime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd HH:mm:ss"),
                 it.productName,
@@ -69,16 +67,15 @@ class AppCustomerOfferService {
     }
 
     fun getDetail(id: Long): DTOManagementCustomerOfferView {
-        val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
-        val organisation = organisationService.getOrganisationByPartyId(customerOffer.customerId)
         val customerOfferLoan = customerLoanApplyService.retrieve(id)
 
+        val managementCustomerOffer = objectMapper.convertValue<DTOManagementCustomerOfferView>(customerOfferLoan)
 
-        return DTOManagementCustomerOfferView(
-            organisation = organisation?.run { organisationService.getDTOOrganisationView(organisation) },
-            customerOfferLoan = customerOfferLoan
-        )
+        managementCustomerOffer.uploadDocument?.forEach {
+
+        }
+
+        return managementCustomerOffer
     }
-
 
 }

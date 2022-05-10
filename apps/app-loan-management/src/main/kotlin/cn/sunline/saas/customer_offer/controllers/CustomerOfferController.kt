@@ -24,9 +24,9 @@ class CustomerOfferController {
     private lateinit var appCustomerOfferService: AppCustomerOfferService
 
     @GetMapping
-    fun getPaged(@PathParam("customerId") customerId:String?,
-                 @PathVariable("productId") productId:String?,
-                 @PathVariable("productName") productName:String?,
+    fun getPaged(@PathParam("userName") customerId:String?,
+                 @PathParam("productId") productId:String?,
+                 @PathParam("productName") productName:String?,
                  pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = appCustomerOfferService.getPaged(customerId?.toLong(),productId?.toLong(),productName,pageable)
 
@@ -44,6 +44,7 @@ class CustomerOfferController {
     @GetMapping("{id}")
     fun getDetail(@PathVariable(name = "id")id:String):ResponseEntity<DTOResponseSuccess<DTOManagementCustomerOfferView>>{
         val response = appCustomerOfferService.getDetail(id.toLong())
+
         return DTOResponseSuccess(response).response()
     }
 }

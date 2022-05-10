@@ -5,6 +5,7 @@ import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.apache.commons.io.IOUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PathVariable
@@ -30,17 +31,20 @@ class AppDocumentTemplateService {
         response.reset();
         response.contentType = "application/octet-stream";
         response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
-        val outputStream = response.outputStream
+//        val outputStream = response.outputStream
 
-        val bytes = ByteArray(1024)
-        while (true){
-            val len = inputStream.read(bytes)
 
-            if(len == -1){
-                break
-            }
-            outputStream.write(bytes,0,len)
-        }
+        IOUtils.write(inputStream.readAllBytes(),response.outputStream)
+
+//        val bytes = ByteArray(1024)
+//        while (true){
+//            val len = inputStream.read(bytes)
+//
+//            if(len == -1){
+//                break
+//            }
+//            outputStream.write(bytes,0,len)
+//        }
 
         inputStream.close()
     }
