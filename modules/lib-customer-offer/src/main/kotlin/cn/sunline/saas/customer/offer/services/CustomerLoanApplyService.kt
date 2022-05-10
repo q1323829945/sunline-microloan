@@ -7,6 +7,7 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.obs.api.DeleteParams
+import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -105,4 +106,7 @@ class CustomerLoanApplyService (private val customerLoanApplyRepo: CustomerLoanA
         return objectMapper.treeToValue(objectMapper.readTree(customerLoanApply.data))
     }
 
+    fun download(path:String):InputStream{
+        return huaweiCloudService.getObject(GetParams(path)) as InputStream
+    }
 }

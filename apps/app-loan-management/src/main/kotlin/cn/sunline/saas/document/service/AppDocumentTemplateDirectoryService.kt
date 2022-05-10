@@ -38,17 +38,19 @@ class AppDocumentTemplateDirectoryService {
                     "$directoryPath/${directory.name}"
                 }
 
-                val addAll = dtoDirectoryList.addAll(getDirectoryTree(directoryList, directory.id, path))
+                dtoDirectoryList.addAll(getDirectoryTree(directoryList, directory.id, path))
 
                 val dtoTemplateList = if (directory.templates.size > 0)
                     objectMapper.convertValue<List<DTODocumentTemplateView>>(directory.templates)
                 else if(directory.loanUploadConfigures.size > 0)
-                    objectMapper.convertValue<List<DTODocumentTemplateView>>(directory.loanUploadConfigures.filter { !it.deleted })
+                    objectMapper.convertValue(directory.loanUploadConfigures.filter { !it.deleted })
                 else listOf()
 
                 val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!.toString(),directory.name,parentId,
                     directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList,path,directory.directoryType)
+
                 responseList.add(dtoDirectory)
+
             }
 
         }

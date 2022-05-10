@@ -1,6 +1,5 @@
 package cn.sunline.saas.customer_offer.service.dto
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.OwnershipType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
@@ -8,52 +7,24 @@ import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.model.CurrencyType
 
 data class DTOManagementCustomerOfferView(
-    var customerOfferProcedure: DTOCustomerOfferProcedureView? = null,
     var pdpa: PDPAInformationView? = null,
     var product: DTOProductView? = null,
-    val loan: DTOLoan? = null,
-    val company: DTOCompany? = null,
-    val contact: DTOContact? = null,
-    val detail: DTODetail? = null,
-    val guarantor: DTOGuarantor? = null,
-    val financial: DTOFinancial? = null,
-    val uploadDocument:List<DTOUploadDocument>? = null,
-    val kyc: DTOKyc? = null,
+    val loan: DTOLoanView? = null,
+    val company: DTOCompanyView? = null,
+    val contact: DTOContactView? = null,
+    val detail: DTODetailView? = null,
+    val guarantor: DTOGuarantorView? = null,
+    val financial: DTOFinancialView? = null,
+    val uploadDocument:List<DTOUploadDocumentView>? = null,
+    val kyc: DTOKycView? = null,
 )
 
-data class DTOCustomerOfferProcedureView(
-    val customerId: Long,
-    val customerOfferProcess: String,  //TODO
-    val employee: Long,
-    var customerOfferId:Long?,
-    val customerOfferProcessNextTask:String?,  //TODO
-    var status: ApplyStatus?
-)
 
 data class PDPAInformationView (
     val personalInformation:List<PersonalInformationView>,
     val corporateInformation:List<CorporateInformationView>,
     val pdpaTemplateId:String
 )
-
-data class DTOCustomerOfferView(
-    val customerOfferProcedure: CustomerOfferProcedureView,
-    var product: ProductView?
-)
-data class CustomerOfferProcedureView(
-    val customerId: Long,
-    val customerOfferProcess: String,
-    val employee: Long,
-    var customerOfferId:Long,
-    var customerOfferProcessNextTask:String?,
-)
-
-data class ProductView(
-    var productId: Long?,
-    val amountConfiguration: DTOAmountConfigurationView?,
-    val termConfiguration: DTOTermConfigurationView?,
-)
-
 
 data class PersonalInformationView(
     val key:String,
@@ -88,7 +59,7 @@ data class DTOTermConfigurationView(
 
 
 
-data class DTOLoan(
+data class DTOLoanView(
     val amount:String,
     val currency: CurrencyType,
     val term: LoanTermType,
@@ -96,18 +67,18 @@ data class DTOLoan(
     val employ:String,
 )
 
-data class DTOCompany(
+data class DTOCompanyView(
     val registrationNo:String
 )
 
-data class DTOContact(
+data class DTOContactView(
     val contactNRIC:String,
     val mobileArea:String,
     val mobileNumber:String,
     val email:String,
 )
 
-data class DTODetail(
+data class DTODetailView(
     val name:String,
     val registrationNo:String,
     val address:String,
@@ -117,12 +88,12 @@ data class DTODetail(
     val businessFocused:Long,
 )
 
-data class DTOGuarantor(
+data class DTOGuarantorView(
     val primaryGuarantor:String,
-    val guarantors:List<DTOGuarantors>
+    val guarantors:List<DTOGuarantorsView>
 )
 
-data class DTOGuarantors(
+data class DTOGuarantorsView(
     val name:String,
     val nric:String,
     val nationality: CountryType,
@@ -136,20 +107,20 @@ data class DTOGuarantors(
     val residenceOwnership: OwnershipType,
 )
 
-data class DTOFinancial(
+data class DTOFinancialView(
     val lastestYearRevenus:String,
     val mainAccountWithOurBank: YesOrNo,
     val outLoanNotWithOutBank: YesOrNo,
 )
 
-data class DTOUploadDocument(
+data class DTOUploadDocumentView(
     val documentTemplateId:String,
     var documentTemplateName:String?,
     var fileName:String?,
     val file:String,
 )
 
-data class DTOKyc(
+data class DTOKycView(
     val businessInBlackListArea: YesOrNo,
     val businessPlanInBlackListArea: YesOrNo,
     val businessOrPartnerSanctioned: YesOrNo,
