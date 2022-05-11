@@ -115,18 +115,6 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
         },pageable).map { getDTOOrganisationView(it) }
     }
 
-
-    fun getOrganisationByPartyId(partyId:Long):Organisation?{
-        val organisation = getPageWithTenant({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            val connection = root.join<Organisation,OrganizationInvolvement>("organizationInvolvements",JoinType.INNER)
-            predicates.add(criteriaBuilder.equal(connection.get<Long>("partyId"),partyId))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-
-        return organisation.content.firstOrNull()
-    }
-
     fun getDTOOrganisationView(organisation: Organisation):DTOOrganisationView{
         return DTOOrganisationView(
             id = organisation.id.toString(),
