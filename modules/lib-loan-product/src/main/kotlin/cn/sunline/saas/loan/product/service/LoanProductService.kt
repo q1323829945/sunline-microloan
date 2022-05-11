@@ -30,13 +30,11 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.Specification
-import org.springframework.data.jpa.repository.query.JpaQueryMethodFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import javax.persistence.criteria.Expression
-import javax.persistence.criteria.Root
+import javax.persistence.criteria.Predicate
 import javax.transaction.Transactional
 
 /**
@@ -174,8 +172,53 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         pageable: Pageable
     ): Page<LoanProduct> {
 
-        return loanProductRepos.getLoanProductPaged(name, loanProductType?.name, loanPurpose, pageable)
+        val page = getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(
+                criteriaBuilder.notEqual(
+                    root.get<BankingProductStatus>("status"),
+                    BankingProductStatus.OBSOLETE
+                )
+            )
+            name?.run { predicates.add(criteriaBuilder.like(root.get("name"), "$name%")) }
+            loanProductType?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<LoanProductType>("loanProductType"),
+                        "loanProductType"
+                    )
+                )
+            }
+            loanPurpose?.run { predicates.add(criteriaBuilder.like(root.get("loanPurpose"), "$loanPurpose%")) }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        val map = mutableMapOf<String, String>()
+        page.forEach {
+            val key = map[it.identificationCode]
+            key?.run {
+                if (it.version > key) {
+                    map[it.identificationCode] = it.version
+                }
+            } ?: run {
+                map[it.identificationCode] = it.version
+            }
+        }
+
+        val newProduct = mutableListOf<LoanProduct>()
+
+        map.forEach { (t, u) ->
+            page.content.forEach {
+                if (it.identificationCode == t && it.version == u) {
+                    newProduct.add(it)
+                }
+            }
+        }
+
+        return rePaged(newProduct,pageable)
     }
+
+
 
     @Transactional
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {

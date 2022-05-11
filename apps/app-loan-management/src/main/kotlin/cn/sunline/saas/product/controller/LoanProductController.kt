@@ -33,7 +33,7 @@ class LoanProductController {
                  pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
 
         val paged = loanProductManagerService.getPaged(name,loanProductType,loanPurpose,pageable)
-        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOLoanProduct>(it)}).response()
+        return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
     @PostMapping

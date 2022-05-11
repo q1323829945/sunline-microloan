@@ -5,6 +5,7 @@ import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import java.io.Serializable
@@ -31,6 +32,24 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
         }.and(specification)
 
         return getPaged(tenantSpecification, pageable)
+    }
+
+    fun <T> rePaged(content:MutableList<T>,pageable: Pageable):Page<T>{
+        val totalSize = content.size
+        val start = if(pageable.pageSize * pageable.pageNumber > totalSize){
+            totalSize
+        } else {
+            pageable.pageSize * pageable.pageNumber
+        }
+        val end = if(pageable.pageSize * (pageable.pageNumber + 1) > totalSize){
+            totalSize
+        } else {
+            pageable.pageSize * (pageable.pageNumber + 1)
+        }
+
+
+        val newContent = content.subList(start,end)
+        return PageImpl(newContent,pageable,totalSize.toLong())
     }
 
 }
