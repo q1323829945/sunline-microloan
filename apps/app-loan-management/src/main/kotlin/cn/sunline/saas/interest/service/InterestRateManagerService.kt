@@ -36,7 +36,7 @@ class InterestRateManagerService {
 
     fun addOne(dtoInterestRate: DTOInterestRate): DTOInterestRate {
         val interestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
-        checkRatePlanUseStatus(dtoInterestRate.ratePlanId)
+        checkRatePlanUseStatus(dtoInterestRate.ratePlanId.toLong())
         val typeInterestRate =
             interestRateService.findByRatePlanIdAndPeriod(interestRate.ratePlanId, interestRate.period)
         if (typeInterestRate != null) {
