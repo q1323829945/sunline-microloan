@@ -1,4 +1,4 @@
-package cn.sunline.saas.loan.configure.modules.db
+package cn.sunline.saas.document.template.modules.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp

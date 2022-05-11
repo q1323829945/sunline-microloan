@@ -1,19 +1,17 @@
 package cn.sunline.saas.loan.product.service
 
+import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
+import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.interest.service.InterestFeatureService
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.component.LoanProductConditionComponent
 import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.loan.product.model.ConditionType

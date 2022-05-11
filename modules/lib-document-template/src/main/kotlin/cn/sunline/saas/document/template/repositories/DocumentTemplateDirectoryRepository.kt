@@ -1,8 +1,7 @@
 package cn.sunline.saas.document.template.repositories
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
-import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
-import org.springframework.data.jpa.repository.Query
+import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 
 /**
  * @title: DocumentDirectory

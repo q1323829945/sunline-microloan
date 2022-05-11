@@ -4,20 +4,17 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductAdd
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductChange
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
-import cn.sunline.saas.product.controller.dto.DTOBaseLoanProductView
-import cn.sunline.saas.product.controller.dto.DTOLoanProductStatus
 import cn.sunline.saas.product.exception.LoanProductBusinessException
-import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -37,19 +34,19 @@ class LoanProductManagerService {
         loanProductType: LoanProductType?,
         loanPurpose: String?,
         pageable: Pageable
-    ): ResponseEntity<DTOPagedResponseSuccess> {
+    ): Page<DTOLoanProductView> {
         val paged = loanProductService.getLoanProductPaged(name, loanProductType, loanPurpose, pageable)
-        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOLoanProductView>(it) }).response()
+        return paged.map { objectMapper.convertValue<DTOLoanProductView>(it) }
     }
 
-    fun addOne(loanProductData: DTOLoanProductAdd): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+    fun addOne(loanProductData: DTOLoanProduct): DTOLoanProduct {
         checkTermConditions(
-            loanProductData.termConfiguration?.maxValueRange?.days!!,
-            loanProductData.termConfiguration?.minValueRange?.days!!
+            loanProductData.termConfiguration.maxValueRange.days,
+            loanProductData.termConfiguration.minValueRange.days
         )
         checkAmountConditions(
-            BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!),
-            BigDecimal(loanProductData.amountConfiguration?.maxValueRange!!)
+            BigDecimal(loanProductData.amountConfiguration.maxValueRange),
+            BigDecimal(loanProductData.amountConfiguration.maxValueRange)
         )
         val oldLoanProduct =
             loanProductService.findByIdentificationCode(loanProductData.identificationCode).maxByOrNull {
@@ -84,27 +81,25 @@ class LoanProductManagerService {
         }
 
         loanProductData.version = if (oldLoanProduct == null) "1" else (oldLoanProduct.version.toInt() + 1).toString()
-        val view = loanProductService.register(loanProductData)
-        return DTOResponseSuccess(view).response()
+        return loanProductService.register(loanProductData)
     }
 
-    fun getOne(id: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val view = loanProductService.getLoanProduct(id)
-        return DTOResponseSuccess(view).response()
+    fun getOne(id: Long): DTOLoanProduct {
+        return loanProductService.getLoanProduct(id)
     }
 
     fun updateOne(
         id: Long,
-        dtoLoanProduct: DTOLoanProductChange
-    ): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        dtoLoanProduct: DTOLoanProduct
+    ): DTOLoanProduct {
         checkProductStatus(id, false)
         checkTermConditions(
-            dtoLoanProduct.termConfiguration?.maxValueRange?.days!!,
-            dtoLoanProduct.termConfiguration?.minValueRange?.days!!
+            dtoLoanProduct.termConfiguration.maxValueRange.days,
+            dtoLoanProduct.termConfiguration.minValueRange.days
         )
         checkAmountConditions(
-            BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!),
-            BigDecimal(dtoLoanProduct.amountConfiguration?.maxValueRange!!)
+            BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange),
+            BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange)
         )
 
         dtoLoanProduct.repaymentFeature?.prepaymentFeatureModality?.groupBy { it.term }?.map { it ->
@@ -127,37 +122,32 @@ class LoanProductManagerService {
             }
         }
 
-        val view = loanProductService.updateLoanProduct(id, dtoLoanProduct)
-        return DTOResponseSuccess(view).response()
+        return loanProductService.updateLoanProduct(id, dtoLoanProduct)
     }
 
     fun updateStatus(
         id: Long,
-        dtoLoanProductStatus: DTOLoanProductStatus
+        dtoLoanProductStatus: BankingProductStatus
     ): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
         checkProductStatus(id, true)
-        val view = loanProductService.updateLoanProductStatus(id, dtoLoanProductStatus.status)
+        val view = loanProductService.updateLoanProductStatus(id, dtoLoanProductStatus)
         return DTOResponseSuccess(view).response()
     }
 
-    fun getProductInfo(identificationCode: String): ResponseEntity<DTOPagedResponseSuccess> {
-        val productList = loanProductService.findByIdentificationCode(identificationCode)
-        return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProductView>(it) }).response()
+    fun getProductInfo(identificationCode: String): List<DTOLoanProduct> {
+        return loanProductService.findByIdentificationCode(identificationCode)
     }
 
-    fun getLoanProductHistoryList(identificationCode: String): ResponseEntity<DTOPagedResponseSuccess> {
-        val productList =
-            loanProductService.findByIdentificationCodeAndStatus(identificationCode, BankingProductStatus.OBSOLETE)
-        return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProductView>(it) }).response()
+    fun getLoanProductHistoryList(identificationCode: String): List<DTOLoanProduct> {
+        return loanProductService.findByIdentificationCodeAndStatus(identificationCode, BankingProductStatus.OBSOLETE)
     }
 
     fun getLoanProductListByStatus(
         bankingProductStatus: BankingProductStatus?,
         pageable: Pageable
-    ): ResponseEntity<DTOPagedResponseSuccess> {
+    ): Page<LoanProduct> {
         val status = bankingProductStatus?.name ?: BankingProductStatus.SOLD.name
-        val paged = loanProductService.getLoanProductListByStatus(status, pageable)
-        return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTOBaseLoanProductView>(it) }).response()
+        return loanProductService.getLoanProductListByStatus(status, pageable)
     }
 
     private fun checkTermConditions(termMaxValueRange: Int, termMinValueRange: Int) {

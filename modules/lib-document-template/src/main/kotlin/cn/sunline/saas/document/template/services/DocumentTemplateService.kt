@@ -1,7 +1,7 @@
 package cn.sunline.saas.document.template.services
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
-import cn.sunline.saas.document.template.modules.DocumentTemplate
+import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.repositories.DocumentTemplateRepository
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode

@@ -6,7 +6,7 @@ import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryListView
 import cn.sunline.saas.document.controller.dto.DTOTemplateDirectoryView
 import cn.sunline.saas.document.exception.DocumentDirectoryNotFoundException
 import cn.sunline.saas.document.service.AppDocumentTemplateDirectoryService
-import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
+import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 import cn.sunline.saas.document.template.services.DocumentTemplateDirectoryService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.response.DTOResponseSuccess

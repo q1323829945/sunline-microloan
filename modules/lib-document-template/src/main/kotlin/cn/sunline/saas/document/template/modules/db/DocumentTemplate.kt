@@ -1,6 +1,8 @@
-package cn.sunline.saas.document.template.modules
+package cn.sunline.saas.document.template.modules.db
 
 import cn.sunline.saas.document.model.DocumentType
+import cn.sunline.saas.document.template.modules.FileType
+import cn.sunline.saas.document.template.modules.LanguageType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 

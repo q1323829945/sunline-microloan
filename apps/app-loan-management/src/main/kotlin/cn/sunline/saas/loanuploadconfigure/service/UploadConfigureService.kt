@@ -1,8 +1,8 @@
 package cn.sunline.saas.loanuploadconfigure.service
 
+import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
+import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.loanuploadconfigure.controller.dto.DTOUploadConfigure
 import cn.sunline.saas.loanuploadconfigure.exception.ConfigureNotFoundException

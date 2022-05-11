@@ -1,10 +1,10 @@
 package cn.sunline.saas.loan.product.model.dto
 
+import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.db.InterestFeature
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.repayment.model.db.RepaymentFeature
 

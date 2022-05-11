@@ -1,7 +1,7 @@
-package cn.sunline.saas.loan.configure.repositories
+package cn.sunline.saas.document.template.repositories
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
+import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 
 interface LoanUploadConfigureRepository : BaseRepository<LoanUploadConfigure, Long>{
 

@@ -1,7 +1,7 @@
 package cn.sunline.saas.loan.product.model.db
 
+import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 import cn.sunline.saas.global.constant.BankingProductStatus
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.rule.engine.model.Condition

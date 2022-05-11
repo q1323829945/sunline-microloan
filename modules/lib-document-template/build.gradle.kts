@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":lib-huaweicloud-obs"))
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-snowflake"))
-    implementation(project(":lib-loan-configure"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

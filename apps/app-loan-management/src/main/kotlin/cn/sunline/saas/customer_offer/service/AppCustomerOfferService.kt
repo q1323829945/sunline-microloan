@@ -9,7 +9,7 @@ import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
+import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

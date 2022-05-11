@@ -1,6 +1,6 @@
-package cn.sunline.saas.document.template.modules
+package cn.sunline.saas.document.template.modules.db
 
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
+import cn.sunline.saas.document.template.modules.DirectoryType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp

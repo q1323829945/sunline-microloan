@@ -1,6 +1,6 @@
 package cn.sunline.saas.document.template.services
 
-import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
+import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 import cn.sunline.saas.document.template.repositories.DocumentTemplateDirectoryRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
@@ -24,7 +24,7 @@ class DocumentTemplateDirectoryService(private val documentTemplateDirectoryRepo
 
     }
 
-    fun addOne(documentTemplateDirectory: DocumentTemplateDirectory):DocumentTemplateDirectory{
+    fun addOne(documentTemplateDirectory: DocumentTemplateDirectory): DocumentTemplateDirectory {
         val id = sequence.nextId()
         documentTemplateDirectory.id = id
         return this.save(documentTemplateDirectory)
@@ -36,7 +36,7 @@ class DocumentTemplateDirectoryService(private val documentTemplateDirectoryRepo
         return this.save(oldOne)
     }
 
-    fun delete(directory: DocumentTemplateDirectory):DocumentTemplateDirectory{
+    fun delete(directory: DocumentTemplateDirectory): DocumentTemplateDirectory {
         directory.deleted = true
         return this.save(directory)
     }

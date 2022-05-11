@@ -7,6 +7,10 @@ import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.*import cn.sunline.saas.product.service.LoanProductManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -53,7 +57,7 @@ class LoanProductController {
     }
 
     @PutMapping("status/{id}")
-    fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProductStatus: DTOLoanProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
+    fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProductStatus: BankingProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
         return loanProductManagerService.updateStatus(id,dtoLoanProductStatus)
     }
 

@@ -1,6 +1,6 @@
 package cn.sunline.saas.loanuploadconfigure.controller
 
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
+import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.loanuploadconfigure.controller.dto.DTOUploadConfigure
 import cn.sunline.saas.loanuploadconfigure.service.UploadConfigureService
 import cn.sunline.saas.response.DTOPagedResponseSuccess

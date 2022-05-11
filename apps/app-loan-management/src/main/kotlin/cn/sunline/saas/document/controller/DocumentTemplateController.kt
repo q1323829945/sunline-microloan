@@ -5,7 +5,7 @@ import cn.sunline.saas.document.controller.dto.DTODocumentTemplateChange
 import cn.sunline.saas.document.controller.dto.DTODocumentTemplateView
 import cn.sunline.saas.document.exception.DocumentTemplateNotFoundException
 import cn.sunline.saas.document.service.AppDocumentTemplateService
-import cn.sunline.saas.document.template.modules.DocumentTemplate
+import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.document.template.services.DocumentTemplateService
 import cn.sunline.saas.exceptions.ManagementException

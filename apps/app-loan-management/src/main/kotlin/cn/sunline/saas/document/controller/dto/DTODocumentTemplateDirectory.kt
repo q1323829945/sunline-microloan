@@ -1,7 +1,7 @@
 package cn.sunline.saas.document.controller.dto
 
 import cn.sunline.saas.document.template.modules.DirectoryType
-import cn.sunline.saas.document.template.modules.DocumentTemplateDirectory
+import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 
 data class DTOTemplateDirectoryAdd(
     val name:String,

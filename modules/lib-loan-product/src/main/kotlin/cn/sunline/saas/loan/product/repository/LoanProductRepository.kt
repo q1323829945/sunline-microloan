@@ -2,14 +2,11 @@ package cn.sunline.saas.loan.product.repository
 
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
 import cn.sunline.saas.global.constant.BankingProductStatus
-import cn.sunline.saas.loan.configure.modules.db.LoanUploadConfigure
-import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.util.*
 
 /**
  * @title: LoanProductRepository

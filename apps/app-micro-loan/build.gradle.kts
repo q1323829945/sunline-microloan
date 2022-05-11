@@ -33,7 +33,6 @@ dependencies {
     implementation(project(":lib-banking-transaction"))
     implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-product"))
-    implementation(project(":lib-loan-configure"))
     implementation(project(":lib-huaweicloud-obs"))
     implementation(project(":lib-document-generation"))
     implementation(project(":lib-document-template"))
