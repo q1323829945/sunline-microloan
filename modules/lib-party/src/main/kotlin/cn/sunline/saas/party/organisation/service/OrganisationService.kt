@@ -1,11 +1,9 @@
 package cn.sunline.saas.party.organisation.service
 
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.party.organisation.exception.OrganisationNotFoundException
 import cn.sunline.saas.party.organisation.model.db.Organisation
-import cn.sunline.saas.party.organisation.model.db.OrganizationInvolvement
+import cn.sunline.saas.party.organisation.model.db.OrganisationIdentification
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationView
@@ -106,11 +104,14 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
         return getDTOOrganisationView(organisation)
     }
 
-    fun getOrganisationPaged(legalEntityIndicator:String?,pageable: Pageable):Page<DTOOrganisationView>{
+    fun getOrganisationPaged(legalEntityIndicator:String?,organisationIdentification: String?,pageable: Pageable):Page<DTOOrganisationView>{
         return getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             legalEntityIndicator?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("legalEntityIndicator"),legalEntityIndicator)) }
-
+            organisationIdentification?.run {
+                val connection = root.join<Organisation, OrganisationIdentification>("organisationIdentifications",JoinType.INNER)
+                predicates.add(criteriaBuilder.equal(connection.get<String>("organisationIdentification"),organisationIdentification))
+            }
             criteriaBuilder.and(*(predicates.toTypedArray()))
         },pageable).map { getDTOOrganisationView(it) }
     }

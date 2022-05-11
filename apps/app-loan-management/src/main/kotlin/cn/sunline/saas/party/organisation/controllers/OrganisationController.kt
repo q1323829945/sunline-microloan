@@ -33,8 +33,10 @@ class OrganisationController {
 
 
     @GetMapping
-    fun getPaged(@PathParam("legalEntityIndicator")legalEntityIndicator:String?,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        return DTOPagedResponseSuccess(organisationService.getOrganisationPaged(legalEntityIndicator,pageable).map { it }).response()
+    fun getPaged(@PathParam("legalEntityIndicator")legalEntityIndicator:String?,
+                 @PathParam("organisationIdentification")organisationIdentification: String?,
+                 pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        return DTOPagedResponseSuccess(organisationService.getOrganisationPaged(legalEntityIndicator,organisationIdentification,pageable).map { it }).response()
     }
 
     @PostMapping
