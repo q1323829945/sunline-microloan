@@ -30,7 +30,6 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -69,7 +68,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     private lateinit var loanUploadConfigureService: LoanUploadConfigureService
 
     @Transactional
-    fun register(loanProductData: DTOLoanProduct): DTOLoanProduct {
+    fun register(loanProductData: DTOLoanProduct): DTOLoanProductView {
         val newProductId = seq.nextId()
 
         val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
@@ -137,32 +136,32 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
 
         val loanProduct = loanProductRepos.save(loanProductAdd)
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProduct>(loanProduct)
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
         setConfigurationOptions(loanProduct, dtoLoanProduct)
 
-        dtoLoanProduct.interestFeature = objectMapper.convertValue<DTOInterestFeature>(interestFeature)
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeature>(it) }
-        dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) }
+        dtoLoanProduct.interestFeature = objectMapper.convertValue(interestFeature)
+
+        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
+        dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
 
         return dtoLoanProduct
     }
 
-    fun getLoanProduct(id: Long): DTOLoanProduct {
+    fun getLoanProduct(id: Long): DTOLoanProductView {
         val loanProduct = this.getOne(id) ?: throw LoanProductNotFoundException(
             "Invalid loan product",
             ManagementExceptionCode.PRODUCT_NOT_FOUND
         )
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProduct>(loanProduct)
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(loanProduct)
         setConfigurationOptions(loanProduct, dtoLoanProduct)
 
         val interestFeature = interestProductFeatureService.findByProductId(id)
-        if (interestFeature != null) {
-            dtoLoanProduct.interestFeature = objectMapper.convertValue<DTOInterestFeature>(interestFeature)
-        }
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
         val feeFeatures = feeProductFeatureService.findByProductId(id)
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeature>(it) }
-        dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) }
+
+        dtoLoanProduct.interestFeature = interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }
+        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
+        dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
         return dtoLoanProduct
     }
 
@@ -221,12 +220,12 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         return save(nowProduct)
     }
 
-    fun findByIdentificationCode(identificationCode: String): MutableList<DTOLoanProduct> {
+    fun findByIdentificationCode(identificationCode: String): MutableList<DTOLoanProductView> {
         val productList = loanProductRepos.findByIdentificationCode(identificationCode)
             ?: throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
-        val list = ArrayList<DTOLoanProduct>()
+        val list = ArrayList<DTOLoanProductView>()
         for (product in productList) {
-            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProduct>(product)
+            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
             setConfigurationOptions(product, dtoLoanProduct)
             list.add(dtoLoanProduct)
         }
@@ -236,12 +235,12 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     fun findByIdentificationCodeAndStatus(
         identificationCode: String,
         bankingProductStatus: BankingProductStatus
-    ): MutableList<DTOLoanProduct> {
+    ): MutableList<DTOLoanProductView> {
         val productList = loanProductRepos.findByIdentificationCodeAndStatus(identificationCode, bankingProductStatus)
             ?: throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
-        val list = ArrayList<DTOLoanProduct>()
+        val list = ArrayList<DTOLoanProductView>()
         for (product in productList) {
-            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProduct>(product)
+            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
             setConfigurationOptions(product, dtoLoanProduct)
             list.add(dtoLoanProduct)
         }
@@ -267,7 +266,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     @Transactional
-    fun updateLoanProduct(id: Long, loanProductData: DTOLoanProduct): DTOLoanProduct {
+    fun updateLoanProduct(id: Long, loanProductData: DTOLoanProduct): DTOLoanProductView {
         val oldLoanProduct = this.getOne(id) ?: throw Exception("Invalid loan product")
 
         val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
@@ -300,20 +299,20 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         val updateLoanProduct = this.save(oldLoanProduct)
 
-        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProduct>(updateLoanProduct)
+        val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(updateLoanProduct)
 
         updateLoanProduct.configurationOptions.forEach {
             when (ConditionType.valueOf(it.type)) {
                 ConditionType.AMOUNT -> {
                     dtoLoanProduct.amountConfiguration =
-                        objectMapper.convertValue<DTOAmountLoanProductConfiguration>(it)
+                        objectMapper.convertValue(it)
                     dtoLoanProduct.amountConfiguration.run {
-                        this.maxValueRange = it.getMaxValueRange().toString()
-                        this.minValueRange = it.getMinValueRange().toString()
+                        this?.maxValueRange = it.getMaxValueRange().toString()
+                        this?.minValueRange = it.getMinValueRange().toString()
                     }
                 }
                 ConditionType.TERM -> {
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfiguration(
+                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(
                         it.id.toString(),
                         getValueRange(it.getMaxValueRange()),
                         getValueRange(it.getMinValueRange())
@@ -332,7 +331,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                     interestFeatureData
                 )
             }
-            dtoLoanProduct.interestFeature = objectMapper.convertValue<DTOInterestFeature>(interestFeature)
+            dtoLoanProduct.interestFeature = objectMapper.convertValue(interestFeature)
         } else {
             loanProductData.interestFeature.run {
                 interestFeature.ratePlanId = this.ratePlanId.toLong()
@@ -342,7 +341,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                     OverdueInterestFeatureModality(interestFeature.id, this.overdueInterestRatePercentage.toLong())
                 interestFeature.interestType = this.interestType
                 val updateInterestFeature = interestProductFeatureService.save(interestFeature)
-                dtoLoanProduct.interestFeature = objectMapper.convertValue<DTOInterestFeature>(updateInterestFeature)
+                dtoLoanProduct.interestFeature = objectMapper.convertValue(updateInterestFeature)
             }
         }
 
@@ -373,15 +372,15 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                 this.prepaymentFeatureModality.forEach {
                     repaymentFeature.prepayment.add(
                         PrepaymentFeatureModality(
-                            (it.id ?: seq.nextId()) as Long,
+                            it.id?.toLong() ?: seq.nextId(),
                             it.term,
                             it.type,
-                            it.penaltyRatio ?: BigDecimal.ZERO
+                            it.penaltyRatio
                         )
                     )
                 }
                 val updateRepaymentFeature = repaymentProductFeatureService.save(repaymentFeature)
-                dtoLoanProduct.repaymentFeature = objectMapper.convertValue<DTORepaymentFeature>(updateRepaymentFeature)
+                dtoLoanProduct.repaymentFeature = objectMapper.convertValue<DTORepaymentFeatureView>(updateRepaymentFeature)
             }
         }
 
@@ -391,7 +390,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             this.forEach {
                 feeFeatures.add(
                     FeeFeature(
-                        (it.id ?: seq.nextId()) as Long,
+                        it.id?.toLong() ?: seq.nextId(),
                         id,
                         it.feeType,
                         it.feeMethodType,
@@ -402,7 +401,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                 )
             }
             val updateFeeFeatures = feeProductFeatureService.save(feeFeatures).toMutableList()
-            dtoLoanProduct.feeFeatures = objectMapper.convertValue<MutableList<DTOFeeFeature>>(updateFeeFeatures)
+            dtoLoanProduct.feeFeatures = objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(updateFeeFeatures)
         }
 
         return dtoLoanProduct
@@ -421,19 +420,19 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
 
-    private fun setConfigurationOptions(product: LoanProduct, dtoLoanProduct: DTOLoanProduct) {
+    private fun setConfigurationOptions(product: LoanProduct, dtoLoanProduct: DTOLoanProductView) {
         product.configurationOptions.forEach {
             when (ConditionType.valueOf(it.type)) {
                 ConditionType.AMOUNT -> {
                     dtoLoanProduct.amountConfiguration =
-                        objectMapper.convertValue<DTOAmountLoanProductConfiguration>(it)
+                        objectMapper.convertValue(it)
                     dtoLoanProduct.amountConfiguration.run {
-                        this.maxValueRange = it.getMaxValueRange().toPlainString()
-                        this.minValueRange = it.getMinValueRange().toPlainString()
+                        this?.maxValueRange = it.getMaxValueRange().toPlainString()
+                        this?.minValueRange = it.getMinValueRange().toPlainString()
                     }
                 }
                 ConditionType.TERM -> {
-                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfiguration(
+                    dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(
                         it.id.toString(),
                         getValueRange(it.getMaxValueRange()),
                         getValueRange(it.getMinValueRange())

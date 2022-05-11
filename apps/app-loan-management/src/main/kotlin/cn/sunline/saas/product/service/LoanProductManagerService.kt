@@ -39,7 +39,7 @@ class LoanProductManagerService {
         return paged.map { objectMapper.convertValue<DTOLoanProductView>(it) }
     }
 
-    fun addOne(loanProductData: DTOLoanProduct): DTOLoanProduct {
+    fun addOne(loanProductData: DTOLoanProduct): DTOLoanProductView {
         checkTermConditions(
             loanProductData.termConfiguration.maxValueRange.days,
             loanProductData.termConfiguration.minValueRange.days
@@ -84,14 +84,14 @@ class LoanProductManagerService {
         return loanProductService.register(loanProductData)
     }
 
-    fun getOne(id: Long): DTOLoanProduct {
+    fun getOne(id: Long): DTOLoanProductView {
         return loanProductService.getLoanProduct(id)
     }
 
     fun updateOne(
         id: Long,
         dtoLoanProduct: DTOLoanProduct
-    ): DTOLoanProduct {
+    ): DTOLoanProductView {
         checkProductStatus(id, false)
         checkTermConditions(
             dtoLoanProduct.termConfiguration.maxValueRange.days,
@@ -134,11 +134,11 @@ class LoanProductManagerService {
         return DTOResponseSuccess(view).response()
     }
 
-    fun getProductInfo(identificationCode: String): List<DTOLoanProduct> {
+    fun getProductInfo(identificationCode: String): List<DTOLoanProductView> {
         return loanProductService.findByIdentificationCode(identificationCode)
     }
 
-    fun getLoanProductHistoryList(identificationCode: String): List<DTOLoanProduct> {
+    fun getLoanProductHistoryList(identificationCode: String): List<DTOLoanProductView> {
         return loanProductService.findByIdentificationCodeAndStatus(identificationCode, BankingProductStatus.OBSOLETE)
     }
 

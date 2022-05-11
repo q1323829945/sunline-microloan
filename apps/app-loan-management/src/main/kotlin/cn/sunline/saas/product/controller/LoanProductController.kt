@@ -37,20 +37,20 @@ class LoanProductController {
     }
 
     @PostMapping
-    fun addOne(@RequestBody loanProductData: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>> {
+    fun addOne(@RequestBody loanProductData: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         val result = loanProductManagerService.addOne(loanProductData)
         return DTOResponseSuccess(result).response()
     }
 
     @GetMapping("{id}")
-    fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>> {
+    fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         val result = loanProductManagerService.getOne(id)
         return DTOResponseSuccess(result).response()
 
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>> {
+    fun updateOne(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         val result = loanProductManagerService.updateOne(id,dtoLoanProduct)
         return DTOResponseSuccess(result).response()
 
