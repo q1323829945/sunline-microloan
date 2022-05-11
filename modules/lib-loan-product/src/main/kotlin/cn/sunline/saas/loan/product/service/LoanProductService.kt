@@ -34,6 +34,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
 import javax.transaction.Transactional
 
@@ -185,7 +186,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                 predicates.add(
                     criteriaBuilder.equal(
                         root.get<LoanProductType>("loanProductType"),
-                        "loanProductType"
+                        loanProductType
                     )
                 )
             }
@@ -193,27 +194,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
 
-        val map = mutableMapOf<String, String>()
-        page.forEach {
-            val key = map[it.identificationCode]
-            key?.run {
-                if (it.version > key) {
-                    map[it.identificationCode] = it.version
-                }
-            } ?: run {
-                map[it.identificationCode] = it.version
-            }
-        }
-
-        val newProduct = mutableListOf<LoanProduct>()
-
-        map.forEach { (t, u) ->
-            page.content.forEach {
-                if (it.identificationCode == t && it.version == u) {
-                    newProduct.add(it)
-                }
-            }
-        }
+        val newProduct = getMaxVersionProductList(page)
 
         return rePaged(newProduct,pageable)
     }
@@ -268,7 +249,21 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     fun getLoanProductListByStatus(bankingProductStatus: String, pageable: Pageable): Page<LoanProduct> {
-        return loanProductRepos.getLoanProductListByStatus(bankingProductStatus, pageable)
+
+        val page = getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(
+                criteriaBuilder.notEqual(
+                    root.get<BankingProductStatus>("status"),
+                    bankingProductStatus
+                )
+            )
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        val newProduct = getMaxVersionProductList(page)
+
+        return rePaged(newProduct,pageable)
     }
 
     @Transactional
@@ -414,7 +409,15 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     fun getLoanProductLoanUploadConfigureMapping(loanUploadConfigureId: Long): Long {
-        return loanProductRepos.getLoanProductLoanUploadConfigureMapping(loanUploadConfigureId)
+
+        val page = getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            val connection = root.join<LoanProduct,LoanUploadConfigure>("loanUploadConfigureFeatures",JoinType.INNER)
+            predicates.add(criteriaBuilder.equal(connection.get<String>("id"),loanUploadConfigureId))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        return page.totalElements
     }
 
 
@@ -443,4 +446,33 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     private fun getValueRange(value: BigDecimal): LoanTermType {
         return LoanTermType.values().single { it.days == value.toInt() }
     }
+
+
+    private fun getMaxVersionProductList(page:Page<LoanProduct>):List<LoanProduct>{
+        val map = mutableMapOf<String, String>()
+        page.forEach {
+            val key = map[it.identificationCode]
+            key?.run {
+                if (it.version > key) {
+                    map[it.identificationCode] = it.version
+                }
+            } ?: run {
+                map[it.identificationCode] = it.version
+            }
+        }
+
+        val newProduct = mutableListOf<LoanProduct>()
+
+        map.forEach { (t, u) ->
+            page.content.forEach {
+                if (it.identificationCode == t && it.version == u) {
+                    newProduct.add(it)
+                }
+            }
+        }
+
+        return newProduct
+    }
+
+
 }

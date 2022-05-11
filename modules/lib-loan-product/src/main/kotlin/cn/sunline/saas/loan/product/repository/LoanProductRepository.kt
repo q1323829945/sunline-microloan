@@ -20,26 +20,4 @@ interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
     fun findByIdentificationCode(identificationCode:String):MutableList<LoanProduct>?
 
     fun findByIdentificationCodeAndStatus(identificationCode:String,bankingProductStatus: BankingProductStatus):MutableList<LoanProduct>?
-
-    @Query(value ="select lp2.id," +
-            "lp2.description," +
-            "lp2.identification_code," +
-            "lp2.loan_product_type," +
-            "lp2.loan_purpose," +
-            "lp2.name," +
-            "lp2.status," +
-            "lp2.tenant_id," +
-            "lp2.`version` " +
-            "from loan_product lp2 " +
-            "inner join " +
-            "(select identification_code,max(version) max_version,status from loan_product lp group by identification_code,status having status = :bankingProductStatus) lp3 " +
-            "on lp2.identification_code = lp3.identification_code and lp2 .version =lp3.max_version "
-        , nativeQuery = true
-    )
-    fun getLoanProductListByStatus(@Param("bankingProductStatus")bankingProductStatus: String,pageable: Pageable): Page<LoanProduct>
-
-
-    @Query(value = "select count(product_id) product_count from loan_product_upload_configure_mapping " +
-            "where loan_upload_configure_id = :loanUploadConfigureId", nativeQuery = true)
-    fun getLoanProductLoanUploadConfigureMapping(loanUploadConfigureId: Long): Long
 }

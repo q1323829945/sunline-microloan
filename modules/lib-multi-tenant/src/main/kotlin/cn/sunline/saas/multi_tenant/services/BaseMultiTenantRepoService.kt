@@ -34,7 +34,7 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
         return getPaged(tenantSpecification, pageable)
     }
 
-    fun <T> rePaged(content:MutableList<T>,pageable: Pageable):Page<T>{
+    fun <T> rePaged(content:List<T>,pageable: Pageable):Page<T>{
         val totalSize = content.size
         val start = if(pageable.pageSize * pageable.pageNumber > totalSize){
             totalSize
