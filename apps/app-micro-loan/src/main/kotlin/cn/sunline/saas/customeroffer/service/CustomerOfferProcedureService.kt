@@ -5,7 +5,7 @@ import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.pdpa.dto.PDPAInformation
-import cn.sunline.saas.pdpa.service.PDPAService
+import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -19,14 +19,13 @@ import java.io.InputStream
 @Service
 class CustomerOfferProcedureService {
     @Autowired
-    private lateinit var pdpaService: PDPAService
+    private lateinit var pdpaMicroService: PDPAMicroService
 
     @Autowired
     private lateinit var productService: ProductService
 
     @Autowired
     private lateinit var customerLoanApplyService: CustomerLoanApplyService
-
 
     @Autowired
     private lateinit var customerOfferService: CustomerOfferService
@@ -78,10 +77,10 @@ class CustomerOfferProcedureService {
 
 
     private fun pdpaSign(customerId:Long,pdpaTemplateId:Long,originalFilename:String,inputStream: InputStream):String{
-        return pdpaService.sign(customerId,pdpaTemplateId,originalFilename,inputStream)
+        return pdpaMicroService.sign(customerId,pdpaTemplateId,originalFilename,inputStream)
     }
 
     private fun getPDPA(countryCode:String): PDPAInformation {
-        return pdpaService.retrieve(countryCode)!!.data!!
+        return pdpaMicroService.retrieve(countryCode)
     }
 }
