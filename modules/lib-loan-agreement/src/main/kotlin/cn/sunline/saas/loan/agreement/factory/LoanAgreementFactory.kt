@@ -58,7 +58,8 @@ class LoanAgreementFactory {
             agreementDocument = null,
             involvements = involvements,
             applicationId = dtoLoanAgreementAdd.applicationId,
-            userId = dtoLoanAgreementAdd.userId
+            userId = dtoLoanAgreementAdd.userId,
+            purpose = dtoLoanAgreementAdd.purpose
         )
     }
 }

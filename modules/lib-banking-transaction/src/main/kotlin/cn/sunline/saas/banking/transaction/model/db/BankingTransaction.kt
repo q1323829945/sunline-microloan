@@ -80,7 +80,11 @@ class BankingTransaction(
 
     @NotNull
     @Column(name = "business_unit", nullable = false, columnDefinition = "bigint not null")
-    val businessUnit: Long
+    val businessUnit: Long,
+
+    @NotNull
+    @Column(name = "customer_id", nullable = false, columnDefinition = "bigint not null")
+    val customerId: Long,
 
 ) : MultiTenant {
 

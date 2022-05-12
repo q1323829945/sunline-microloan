@@ -27,19 +27,19 @@ class RepaymentProductFeatureServiceTest(
         val prepayment1  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.ONE_MONTH,
             PrepaymentType.NOT_ALLOWED,
-            null
+            "0"
         )
 
         val prepayment2  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.THREE_MONTHS,
             PrepaymentType.PARTIAL_PREPAYMENT,
-            BigDecimal(1.5)
+            "1.5"
         )
 
         val prepayment3  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.SIX_MONTHS,
             PrepaymentType.FULL_REDEMPTION,
-            null
+            "0"
         )
 
         prepayments.add(prepayment1)
@@ -60,6 +60,7 @@ class RepaymentProductFeatureServiceTest(
         assertThat(actual.prepayment.size).isEqualTo(3)
         assertThat(actual.prepayment[0].penaltyRatio).isEqualTo(BigDecimal.ZERO)
         assertThat(actual.prepayment[1].penaltyRatio).isEqualTo(BigDecimal(1.5))
+        assertThat(actual.id).isNotNull
     }
 
 }

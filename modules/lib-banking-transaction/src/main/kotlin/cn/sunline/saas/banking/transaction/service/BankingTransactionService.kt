@@ -5,10 +5,10 @@ import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.banking.transaction.repository.BankingTransactionRepository
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import org.joda.time.Instant
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
 /**
  * @title: BankingTransactionService
@@ -37,7 +37,8 @@ class BankingTransactionService(private val bankingTransactionRepo: BankingTrans
             amount = dtoBankingTransaction.amount,
             appliedFee = dtoBankingTransaction.appliedFee,
             appliedRate = dtoBankingTransaction.appliedRate,
-            businessUnit = dtoBankingTransaction.businessUnit
+            businessUnit = dtoBankingTransaction.businessUnit,
+            customerId = dtoBankingTransaction.customerId
         )
         return save(bankingTransaction)
     }

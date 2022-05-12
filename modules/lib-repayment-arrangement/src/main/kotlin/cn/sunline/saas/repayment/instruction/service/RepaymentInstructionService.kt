@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service
  * @date 2022/4/22 14:36
  */
 @Service
-class RepaymentInstructionService (private val moneyTransferInstructionRepo: MoneyTransferInstructionRepository) :
-BaseMultiTenantRepoService<MoneyTransferInstruction, Long>(moneyTransferInstructionRepo) {
+class RepaymentInstructionService(private val moneyTransferInstructionRepo: MoneyTransferInstructionRepository) :
+    BaseMultiTenantRepoService<MoneyTransferInstruction, Long>(moneyTransferInstructionRepo) {
 
     @Autowired
     private lateinit var seq: Sequence
@@ -33,7 +33,8 @@ BaseMultiTenantRepoService<MoneyTransferInstruction, Long>(moneyTransferInstruct
             moneyTransferInstructionStatus = InstructionLifecycleStatus.PREPARED,
             payeeAccount = dtoRepaymentInstruction.payeeAccount,
             payerAccount = dtoRepaymentInstruction.payerAccount,
-            agreementId = dtoRepaymentInstruction.agreementId
+            agreementId = dtoRepaymentInstruction.agreementId,
+            businessUnit = dtoRepaymentInstruction.businessUnit
         )
 
         return moneyTransferInstructionRepo.save(moneyTransferInstruction)

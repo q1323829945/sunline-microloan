@@ -3,7 +3,6 @@ package cn.sunline.saas.disbursement.arrangement.service
 import cn.sunline.saas.disbursement.arrangement.exception.DisbursementLendTypeNotSupported
 import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementArrangement
-import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.disbursement.arrangement.repository.DisbursementArrangementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService

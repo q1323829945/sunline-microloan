@@ -43,7 +43,8 @@ class PositionKeepingService {
                     currency = currency,
                     amount = amount.toPlainString(),
                     date = executedDate!!,
-                    businessUnit = businessUnit
+                    businessUnit = businessUnit,
+                    customerId = customerId
                 )
             }
 

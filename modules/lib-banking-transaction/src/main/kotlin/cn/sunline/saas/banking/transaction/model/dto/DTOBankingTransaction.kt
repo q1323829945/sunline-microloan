@@ -16,7 +16,8 @@ data class DTOBankingTransaction(
     val transactionDescription: String?,
     val currency: CurrencyType,
     val amount: BigDecimal,
-    val businessUnit:Long,
+    val businessUnit: Long,
     val appliedFee: BigDecimal?,
-    val appliedRate: BigDecimal?
+    val appliedRate: BigDecimal?,
+    val customerId: Long
 )

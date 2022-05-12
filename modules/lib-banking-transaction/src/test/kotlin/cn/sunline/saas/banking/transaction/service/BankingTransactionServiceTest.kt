@@ -36,7 +36,9 @@ class BankingTransactionServiceTest(@Autowired val bankingTransactionService: Ba
             currency = CurrencyType.USD,
             amount = BigDecimal("123"),
             appliedFee = null,
-            appliedRate = null
+            appliedRate = null,
+            businessUnit = 50000,
+            customerId = 1234567788
         )
 
         val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)
@@ -55,7 +57,9 @@ class BankingTransactionServiceTest(@Autowired val bankingTransactionService: Ba
             currency = CurrencyType.USD,
             amount = BigDecimal("123"),
             appliedFee = null,
-            appliedRate = null
+            appliedRate = null,
+            businessUnit = 50000,
+            customerId = 1234567788
         )
 
         val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)

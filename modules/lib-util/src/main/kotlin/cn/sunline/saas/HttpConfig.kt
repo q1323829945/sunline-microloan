@@ -6,13 +6,11 @@ import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
 
@@ -29,7 +27,7 @@ class HttpConfig {
         return execute(httpMethod,uri,multipartBody.build(),headers)
     }
 
-    fun execute(httpMethod: HttpRequestMethod, uri:String, requestBody: RequestBody? = null,headers:Map<String,String>? = null):Response{
+    fun execute(httpMethod: HttpRequestMethod, uri:String, requestBody: RequestBody? = null, headers:Map<String,String>? = null):Response{
         val client = OkHttpClient.Builder().build()
         val request = when(httpMethod){
             GET -> Request.Builder().url(uri).get()
@@ -54,17 +52,17 @@ class HttpConfig {
         return response
     }
 
-    fun setPart(bytes:ByteArray,mediaType: String? = null):MultipartBody.Part{
-        return MultipartBody.Part.Companion.create(setRequestBody(bytes, mediaType))
-    }
-
-    fun setPart(str:String,mediaType: String? = null):MultipartBody.Part{
-        return MultipartBody.Part.Companion.create(setRequestBody(str, mediaType))
-    }
-
-    fun setPart(file: File,mediaType: String? = null):MultipartBody.Part{
-        return MultipartBody.Part.Companion.create(setRequestBody(file, mediaType))
-    }
+//    fun setPart(bytes:ByteArray,mediaType: String? = null):MultipartBody.Part{
+//        return MultipartBody.Part.Companion.create(setRequestBody(bytes, mediaType))
+//    }
+//
+//    fun setPart(str:String,mediaType: String? = null):MultipartBody.Part{
+//        return MultipartBody.Part.Companion.create(setRequestBody(str, mediaType))
+//    }
+//
+//    fun setPart(file: File,mediaType: String? = null):MultipartBody.Part{
+//        return MultipartBody.Part.Companion.create(setRequestBody(file, mediaType))
+//    }
 
     fun setRequestBody(bytes:ByteArray,mediaType: String? = null):RequestBody{
         return bytes.toRequestBody(mediaType?.toMediaType())
@@ -74,9 +72,9 @@ class HttpConfig {
         return str.toRequestBody(mediaType?.toMediaType())
     }
 
-    fun setRequestBody(file: File,mediaType: String? = null):RequestBody{
-        return file.asRequestBody(mediaType?.toMediaType())
-    }
+//    fun setRequestBody(file: File,mediaType: String? = null):RequestBody{
+//        return file.asRequestBody(mediaType?.toMediaType())
+//    }
 
     fun getHeader(response: Response):Map<String,String>{
         val map = HashMap<String,String>()

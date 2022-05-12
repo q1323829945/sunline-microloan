@@ -10,9 +10,8 @@ dependencies {
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-snowflake"))
-    implementation(project(":lib-huaweicloud-obs"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation(project(":lib-seq-api"))
+    implementation(project(":lib-obs-api"))
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

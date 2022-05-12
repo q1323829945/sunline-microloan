@@ -90,7 +90,8 @@ class LoanAgreementServiceTest {
                 lender = lender,
                 disbursementArrangement = disbursementArrangement,
                 applicationId = 1,
-                userId = 1
+                userId = 1,
+                purpose = null
             )
         val actual = loanAgreementService.registered(dtoLoanAgreementAdd)
 

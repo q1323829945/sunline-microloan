@@ -8,8 +8,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-huaweicloud-obs"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-
+    implementation(project(":lib-obs-api"))
+    testImplementation(project(":lib-obs-test"))
 
 }

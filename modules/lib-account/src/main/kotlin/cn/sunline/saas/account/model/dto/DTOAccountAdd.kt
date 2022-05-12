@@ -10,10 +10,11 @@ import org.joda.time.Instant
  * @date 2022/5/10 10:54
  */
 data class DTOAccountAdd(
-    val id:Long,
+    val id: Long,
     val purpose: String?,
     val currency: CurrencyType,
     val amount: String,
     val date: Instant,
-    val businessUnit: Long
+    val businessUnit: Long,
+    val customerId: Long
 )

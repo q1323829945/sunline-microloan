@@ -58,19 +58,19 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
         val prepayment1  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.ONE_MONTH,
             PrepaymentType.NOT_ALLOWED,
-            null
+            "0"
         )
 
         val prepayment2  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.THREE_MONTHS,
             PrepaymentType.PARTIAL_PREPAYMENT,
-            BigDecimal("1.5")
+            "1.5"
         )
 
         val prepayment3  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.SIX_MONTHS,
             PrepaymentType.FULL_REDEMPTION,
-            null
+            "0"
         )
 
         prepayments.add(prepayment1)
@@ -116,8 +116,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
             interestFeature =  objectMapper.convertValue<DTOInterestFeature>(interestFeature),
-            repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeature>(it) },
-            feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) },
+            repaymentFeature = repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeature>(it) },
+            feeFeatures = feeFeatures.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) },
             loanUploadConfigureFeatures = listOf()
         )
         val actual = loanProductService.register(loanProduct)

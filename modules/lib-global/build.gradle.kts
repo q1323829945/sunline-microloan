@@ -8,10 +8,9 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
 
-
-
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-seq-api"))
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation(project(":lib-snowflake-simple"))
+    testImplementation(project(":lib-seq-test"))
 }
