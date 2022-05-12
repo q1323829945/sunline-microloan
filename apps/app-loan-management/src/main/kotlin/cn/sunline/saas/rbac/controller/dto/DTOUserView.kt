@@ -1,6 +1,6 @@
 package cn.sunline.saas.rbac.controller.dto
 
-import cn.sunline.saas.party.person.model.dto.DTOPersonView
+import cn.sunline.saas.rbac.service.dto.DTOPerson
 
 
 data class DTOUserView(
@@ -8,5 +8,5 @@ data class DTOUserView(
     val username: String,
     val email: String,
     val roles: List<DTOUserRoleView>,
-    val person: DTOPersonView?
+    val person: DTOPerson?
 )

@@ -28,11 +28,11 @@ import java.util.*
 class DocumentLibraryController {
 
     data class DTODocumentDirectoryEntry(
-        val documentId: Long,
+        val documentId: String,
         val documentName: String,
         val documentVersion: String,
         val documentType: DocumentType,
-        val directoryId: Long,
+        val directoryId: String,
         val documentFormat: DocumentFormat,
         val creationDate: Date,
         val documentLocation: String,
@@ -40,14 +40,14 @@ class DocumentLibraryController {
         var documentStoreReference:String?
     )
 
-    data class DTODocumentInvolvement(val partyId: Long, val involvementType: DocumentInvolvementType)
+    data class DTODocumentInvolvement(val partyId: String, val involvementType: DocumentInvolvementType)
 
     data class DTOResponseDocumentDirectoryEntry(
-        val documentId: Long,
+        val documentId: String,
         val documentName: String,
         val documentVersion: String,
         val documentType: DocumentType,
-        val directoryId: Long,
+        val directoryId: String,
         val documentFormat: DocumentFormat,
         val creationDate: Date,
         val documentLocation: String,

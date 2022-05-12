@@ -43,22 +43,22 @@ class LoanProductController {
     }
 
     @GetMapping("{id}")
-    fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val result = loanProductManagerService.getOne(id)
+    fun getOne(@PathVariable id: String): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        val result = loanProductManagerService.getOne(id.toLong())
         return DTOResponseSuccess(result).response()
 
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoLoanProduct: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
-        val result = loanProductManagerService.updateOne(id,dtoLoanProduct)
+    fun updateOne(@PathVariable id: String, @RequestBody dtoLoanProduct: DTOLoanProduct): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
+        val result = loanProductManagerService.updateOne(id.toLong(),dtoLoanProduct)
         return DTOResponseSuccess(result).response()
 
     }
 
     @PutMapping("status/{id}")
-    fun updateStatus(@PathVariable id: Long, @RequestBody dtoLoanProductStatus: BankingProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-        return loanProductManagerService.updateStatus(id,dtoLoanProductStatus)
+    fun updateStatus(@PathVariable id: String, @RequestBody dtoLoanProductStatus: BankingProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
+        return loanProductManagerService.updateStatus(id.toLong(),dtoLoanProductStatus)
     }
 
     @GetMapping("{identificationCode}/retrieve")

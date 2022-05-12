@@ -1,12 +1,12 @@
 package cn.sunline.saas.rbac.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.party.person.service.PersonService
 import cn.sunline.saas.rbac.controller.dto.DTOUserAdd
 import cn.sunline.saas.rbac.controller.dto.DTOUserChange
 import cn.sunline.saas.rbac.controller.dto.DTOUserView
 import cn.sunline.saas.rbac.exception.UserBusinessException
 import cn.sunline.saas.rbac.exception.UserNotFoundException
+import cn.sunline.saas.rbac.invoke.RbacInvoke
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.services.RoleService
 import cn.sunline.saas.rbac.services.UserService
@@ -30,7 +30,7 @@ class UserManagerService  {
     private lateinit var roleService: RoleService
 
     @Autowired
-    private lateinit var personService: PersonService
+    private lateinit var rbacInvoke: RbacInvoke
 
     fun getPaged(pageable: Pageable): Page<DTOUserView> {
         val page = userService.getPaged(pageable = pageable).map {
@@ -39,7 +39,7 @@ class UserManagerService  {
                 username = it.username,
                 email = it.email,
                 roles = objectMapper.convertValue(it.roles),
-                person = personService.getOne(it.personId)
+                person = rbacInvoke.getPerson(it.id!!)
             )
         }
         return page

@@ -4,20 +4,20 @@ import cn.sunline.saas.interest.model.RatePlanType
 
 
 data class DTORatePlan(
-    val id: Long,
+    val id: String,
     val name: String,
     val type: RatePlanType
 )
 
 data class DTORatePlanWithInterestRates(
-    val id: Long,
+    val id: String,
     val name: String,
     val type: RatePlanType,
     val rates: List<DTORatesView>
 )
 
 data class DTORatesView(
-    val id:Long,
+    val id:String,
     val period: String,
     val rate: String
 )

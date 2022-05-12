@@ -39,8 +39,8 @@ class PDPAController {
     }
 
     @PostMapping(value = ["sign"], produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun sign(@RequestPart("customerId") customerId: Long,@RequestPart("pdpaTemplateId") pdpaTemplateId: Long, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<String>> {
-        val key = pdpaService.sign(customerId,pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
+    fun sign(@RequestPart("customerId") customerId: String,@RequestPart("pdpaTemplateId") pdpaTemplateId: String, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<String>> {
+        val key = pdpaService.sign(customerId.toLong(),pdpaTemplateId.toLong(),signature.originalFilename!!,signature.inputStream)
         return DTOResponseSuccess(key).response()
     }
 }

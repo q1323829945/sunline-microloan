@@ -1,6 +1,5 @@
 package cn.sunline.saas.loanuploadconfigure.controller
 
-import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.loanuploadconfigure.controller.dto.DTOUploadConfigure
 import cn.sunline.saas.loanuploadconfigure.service.UploadConfigureService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
@@ -17,9 +16,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/LoanUploadConfigure")
 class UploadConfigureController {
-
-    @Autowired
-    private lateinit var loanUploadConfigureService: LoanUploadConfigureService
 
     @Autowired
     private lateinit var appLoanUploadConfigureService: UploadConfigureService
@@ -45,8 +41,8 @@ class UploadConfigureController {
     }
 
     @DeleteMapping("{id}")
-    fun deleteUploadConfigure(@PathVariable id:Long): ResponseEntity<DTOResponseSuccess<DTOUploadConfigure>>{
-        val result = appLoanUploadConfigureService.deleteUploadConfigure(id)
+    fun deleteUploadConfigure(@PathVariable id:String): ResponseEntity<DTOResponseSuccess<DTOUploadConfigure>>{
+        val result = appLoanUploadConfigureService.deleteUploadConfigure(id.toLong())
         val responseEntity = objectMapper.convertValue<DTOUploadConfigure>(result)
         return DTOResponseSuccess(responseEntity).response()
     }

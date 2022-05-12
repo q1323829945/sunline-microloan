@@ -32,8 +32,8 @@ class UserController {
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoUser: DTOUserChange): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
-        val user = userManagerService.updateOne(id,dtoUser)
+    fun updateOne(@PathVariable id: String, @RequestBody dtoUser: DTOUserChange): ResponseEntity<DTOResponseSuccess<DTOUserView>> {
+        val user = userManagerService.updateOne(id.toLong(),dtoUser)
         return DTOResponseSuccess(user).response()
     }
 }

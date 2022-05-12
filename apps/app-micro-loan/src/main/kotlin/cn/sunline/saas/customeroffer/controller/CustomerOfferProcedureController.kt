@@ -2,16 +2,10 @@ package cn.sunline.saas.customeroffer.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
-import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.customeroffer.service.CustomerOfferProcedureService
-import cn.sunline.saas.loan.configure.services.LoanUploadConfigureService
-import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -30,15 +24,7 @@ class CustomerOfferProcedureController {
     private lateinit var customerLoanApplyService: CustomerLoanApplyService
 
     @Autowired
-    private lateinit var loanUploadConfigureService: LoanUploadConfigureService
-
-    @Autowired
-    private lateinit var customerOfferService: CustomerOfferService
-
-    @Autowired
     private lateinit var customerOfferProductService: CustomerOfferProcedureService
-
-    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping(value = ["loan/initiate"], produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun recordLoanApply(@RequestPart("customerOffer") dtoCustomerOffer: DTOCustomerOfferAdd, @RequestPart("signature") signature: MultipartFile):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferView>> {

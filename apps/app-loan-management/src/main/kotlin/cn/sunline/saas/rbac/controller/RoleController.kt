@@ -37,8 +37,8 @@ class RoleController {
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
-        val role = roleManagerService.updateOne(id,dtoRole)
+    fun updateOne(@PathVariable id: String, @RequestBody dtoRole: DTORoleChange): ResponseEntity<DTOResponseSuccess<DTORoleView>> {
+        val role = roleManagerService.updateOne(id.toLong(),dtoRole)
         return DTOResponseSuccess(role).response()
     }
 }
