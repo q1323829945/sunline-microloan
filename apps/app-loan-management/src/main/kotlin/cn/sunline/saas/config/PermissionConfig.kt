@@ -106,6 +106,7 @@ enum class PermissionConfig (
     ORGANISATION_MENU("menu","organisationConfig", RequestMethod.GET,"View formal OrganisationConfig menu"),
     PERSON_MENU("menu","personConfig", RequestMethod.GET,"View formal PersonConfig menu"),
     CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
+    UNDERWRITING_MANAGEMENT_MENU("menu","underwritingManagementConfig", RequestMethod.GET,"View formal underwritingManagementConfig menu"),
 
 
     PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),
