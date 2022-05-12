@@ -86,7 +86,13 @@ enum class PermissionConfig (
     CUSTOMER_OFFER_MODIFY("CustomerOffer", "CustomerOffer/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify CustomerOffer"),
     CUSTOMER_OFFER_GET_ONE("CustomerOffer", "CustomerOffer/[0-9]+\$", RequestMethod.GET, "Get One CustomerOffer"),
     CUSTOMER_OFFER_DOWNLOAD("CustomerOffer", "CustomerOffer/download(\\?.*|\$)", RequestMethod.GET, "download"),
-    
+
+    UNDERWRITING_MANAGEMENT_LIST("UnderwritingManagement", "UnderwritingManagement(\\?.*|\$)", RequestMethod.GET, "View UnderwritingManagement list"),
+    UNDERWRITING_MANAGEMENT_MODIFY("UnderwritingManagement", "UnderwritingManagement/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify UnderwritingManagement"),
+    UNDERWRITING_MANAGEMENT_GET_ONE("UnderwritingManagement", "UnderwritingManagement/[0-9]+\$", RequestMethod.GET, "Get One UnderwritingManagement"),
+    UNDERWRITING_MANAGEMENT_UPDATE_STATUS("UnderwritingManagement", "UnderwritingManagement/status", RequestMethod.GET, "Update UnderwritingManagement status"),
+
+
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
     ROLE_MENU("menu","roleConfig", RequestMethod.GET,"View role menu"),

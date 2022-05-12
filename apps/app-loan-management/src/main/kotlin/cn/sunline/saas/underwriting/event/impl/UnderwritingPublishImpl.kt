@@ -2,11 +2,9 @@ package cn.sunline.saas.underwriting.event.impl
 
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
-import cn.sunline.saas.underwriting.event.dto.DTOExecCreditRisk
-import cn.sunline.saas.underwriting.event.dto.DTOExecFraudEvaluation
-import cn.sunline.saas.underwriting.event.dto.DTOExecRegulatoryCompliance
-import cn.sunline.saas.underwriting.event.dto.DTORetrieveCustomerCreditRating
 import cn.sunline.saas.underwriting.db.Underwriting
+import cn.sunline.saas.underwriting.event.dto.*
+import cn.sunline.saas.underwriting.db.OperationType
 import org.springframework.stereotype.Component
 
 /**
@@ -64,6 +62,18 @@ class UnderwritingPublishImpl : UnderwritingPublish {
             PUBSUB_NAME,
             UnderwritingPublishTopic.FRAUD_EVALUATION.toString(),
             dtoExecFraudEvaluation
+        )
+    }
+
+    override fun updateCustomerOfferStatus(applicationId: Long, operationType: OperationType) {
+        val dtoCustomerOffer = DTOCustomerOffer(
+            applicationId,
+            operationType
+        )
+        DaprHelper.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.CUSTOMER_OFFER_STATUS.toString(),
+            dtoCustomerOffer
         )
     }
 }

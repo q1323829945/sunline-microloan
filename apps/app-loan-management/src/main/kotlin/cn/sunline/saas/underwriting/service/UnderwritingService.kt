@@ -6,6 +6,7 @@ import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.db.UnderwritingApplicationData
+import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.repository.UnderwritingRepository
 import org.springframework.stereotype.Service
 
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Service
 class UnderwritingService(
     private val underwritingRepository: UnderwritingRepository,
     private val underwritingInvoke: UnderwritingInvoke,
-    private val underwritingBinding: UnderwritingBinding
+    private val underwritingBinding: UnderwritingBinding,
+    private val underwritingPublish: UnderwritingPublish,
 ) :
     BaseRepoService<Underwriting, Long>(underwritingRepository) {
 
@@ -33,7 +35,7 @@ class UnderwritingService(
             )
         )
 
-        this.underwritingBinding.retrieveCustomerCreditRating(
+        this.underwritingPublish.retrieveCustomerCreditRating(
             underwritingApplicationData.applId,
             underwritingInvoke.getPartnerIntegrated()?.customerCreditRatingPartner.toString(),
             underwritingApplicationData.detail.customerId
@@ -45,7 +47,7 @@ class UnderwritingService(
         underwriting.customerCreditRate = customerCreditRating
         save(underwriting)
 
-        this.underwritingBinding.execCreditRisk(
+        this.underwritingPublish.execCreditRisk(
             underwritingInvoke.getPartnerIntegrated()?.creditRiskPartner.toString(),
             underwriting
         )
@@ -56,7 +58,7 @@ class UnderwritingService(
         underwriting.creditRisk = creditRisk
         save(underwriting)
 
-        this.underwritingBinding.execRegulatoryCompliance(
+        this.underwritingPublish.execRegulatoryCompliance(
             underwritingInvoke.getPartnerIntegrated()?.regulatoryCompliancePartner.toString(),
             underwriting
         )
@@ -67,7 +69,7 @@ class UnderwritingService(
         underwriting.regulatoryCompliance = regulatoryCompliance
         save(underwriting)
 
-        this.underwritingBinding.execFraudEvaluation(
+        this.underwritingPublish.execFraudEvaluation(
             underwritingInvoke.getPartnerIntegrated()?.fraudEvaluationPartner.toString(),
             underwriting
         )

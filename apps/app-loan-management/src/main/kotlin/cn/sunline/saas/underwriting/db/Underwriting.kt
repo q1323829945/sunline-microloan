@@ -8,10 +8,7 @@ import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
@@ -39,17 +36,21 @@ class Underwriting(
     @Column(columnDefinition = "json not null")
     val applicationData: UnderwritingApplicationData,
 
-    @Column(name = "customer_credit_rate", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "customer_credit_rate",  length = 32, columnDefinition = "varchar(32) null")
     var customerCreditRate: String? = null,
 
-    @Column(name = "credit_risk", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "credit_risk",  length = 32, columnDefinition = "varchar(32) null")
     var creditRisk: String? = null,
 
-    @Column(name = "fraud_evaluation", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "fraud_evaluation", length = 32, columnDefinition = "varchar(32) null")
     var fraudEvaluation: String? = null,
 
-    @Column(name = "regulatory_compliance", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "regulatory_compliance",  length = 32, columnDefinition = "varchar(32) null")
     var regulatoryCompliance: String? = null,
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status", length = 32, columnDefinition = "varchar(32) null")
+    var status:OperationType? = null,
 
     @CreationTimestamp
     var created: Instant? = null,
@@ -59,7 +60,7 @@ class Underwriting(
 ) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id", columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long? {

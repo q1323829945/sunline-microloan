@@ -39,7 +39,7 @@ class UserManagerService  {
                 username = it.username,
                 email = it.email,
                 roles = objectMapper.convertValue(it.roles),
-                person = rbacInvoke.getPerson(it.id!!)
+                person = rbacInvoke.getPerson(it.personId)
             )
         }
         return page

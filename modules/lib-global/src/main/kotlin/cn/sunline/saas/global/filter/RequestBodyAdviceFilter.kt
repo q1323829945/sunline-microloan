@@ -45,7 +45,7 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
 
         val body = IOUtils.toString(inputMessage.body, Charset.forName("utf-8"))
 
-        val bodyMap = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))
+        val bodyMap = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))["data"] as Map<*, *>
 
 
         return object : HttpInputMessage{

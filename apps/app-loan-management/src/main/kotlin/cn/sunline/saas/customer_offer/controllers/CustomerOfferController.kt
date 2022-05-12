@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletResponse
@@ -20,6 +22,11 @@ import javax.websocket.server.PathParam
 @RestController
 @RequestMapping("CustomerOffer")
 class CustomerOfferController {
+
+    data class DTOUpdateStatus(
+        val id:String,
+        val operationType: OperationType,
+    )
 
     @Autowired
     private lateinit var appCustomerOfferService: AppCustomerOfferService
@@ -34,10 +41,9 @@ class CustomerOfferController {
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
-    @PutMapping("{status}/{id}")
-    fun updateStatus(@PathVariable(name = "status")operationType: OperationType,
-                    @PathVariable(name = "id")id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
-        appCustomerOfferService.updateStatus(operationType,id.toLong())
+    @PostMapping("status")
+    fun updateStatus(@RequestBody dtoUpdateStatus: DTOUpdateStatus):ResponseEntity<DTOResponseSuccess<Unit>>{
+        appCustomerOfferService.updateStatus(dtoUpdateStatus.operationType,dtoUpdateStatus.id.toLong())
 
         return DTOResponseSuccess(Unit).response()
     }
