@@ -1,6 +1,6 @@
 package cn.sunline.saas.disbursement.arrangement.model.dto
 
-import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementLendType
+import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 
 /**
  * @title: DTODisbursementArrangementAdd

@@ -1,11 +1,18 @@
 package cn.sunline.saas.consumer.loan.service
 
-import cn.sunline.saas.banking.transaction.service.BankingTransactionService
+import cn.sunline.saas.consumer.loan.event.ConsumerLoanPublish
+import cn.sunline.saas.consumer.loan.exception.DisbursementArrangementNotFoundException
+import cn.sunline.saas.consumer.loan.exception.LoanAgreementNotFoundException
+import cn.sunline.saas.consumer.loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer.loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer.loan.service.assembly.ConsumerLoanAssembly
+import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
+import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
+import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
+import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
+import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -16,57 +23,85 @@ import org.springframework.stereotype.Service
  * @date 2022/4/21 14:12
  */
 @Service
-class ConsumerLoanService(private val consumerLoanInvoke: ConsumerLoanInvoke) {
-
-    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-//    @Autowired
-//    private lateinit var consumerLoanPublish: ConsumerLoanPublish
+class ConsumerLoanService(
+    private val consumerLoanInvoke: ConsumerLoanInvoke,
+    private val consumerLoanPublish: ConsumerLoanPublish
+) {
 
     @Autowired
     private lateinit var loanAgreementService: LoanAgreementService
 
     @Autowired
-    private lateinit var bankingTransactionService: BankingTransactionService
+    private lateinit var disbursementArrangementService: DisbursementArrangementService
 
-    fun underwriting() {
-//        consumerLoanPublish.underwriting()
-    }
+    @Autowired
+    private lateinit var disbursementInstructionService: DisbursementInstructionService
 
     fun createLoanAgreement(applicationId: Long) {
-
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
         val loanProduct = consumerLoanInvoke.retrieveLoanProduct(customerOffer.productId)
 
-        val loanAgreementAggregate = loanAgreementService.registered(ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(customerOffer,loanProduct))
+        val loanAgreementAggregate = loanAgreementService.registered(
+            ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
+                customerOffer, loanProduct
+            )
+        )
 
-        //TODO Create Document and update loan agreement's agreementDocument property with documentId
-        val referenceDocument :String = ""
-
-        val loanAgreement = loanAgreementAggregate.loanAgreement
-        loanAgreement.agreementDocument = referenceDocument
-        loanAgreementService.save(loanAgreement)
-
-        // strategy is either offline or online
-        // Offline Human participation
-        // TODO management desk
-
-        // Online Automatic
-        //TODO Sign
-
-        //TODO Communicate Customer
+        val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate)
+        signAndLending(loanAgreement)
 
     }
 
-    fun lending() {
-        //TODO create lending instruction
+    fun signLoanAgreementByOffline(agreementId: Long) {
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        signAndLending(loanAgreement)
+    }
 
-        //TODO position keeping
-        bankingTransactionService.registered()
+    private fun signAndLending(loanAgreement: LoanAgreement) {
+        val signLoanAgreement = loanAgreementService.signAgreement(loanAgreement)
+        lending(signLoanAgreement.id)
+    }
 
-        //TODO financial accounting
-//        consumerLoanPublish.financialAccounting()
-//
-//        consumerLoanPublish.disbursement()
+    private fun lending(agreementId: Long) {
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        if (loanAgreement.status != AgreementStatus.SIGNED) {
+            throw LoanAgreementStatusCheckException("loan agreement hasn't signed")
+        }
+        val disbursementArrangement = disbursementArrangementService.getOne(loanAgreement.id)
+            ?: throw DisbursementArrangementNotFoundException("disbursement arrangement not found")
+
+        val dtoDisbursementInstruction = DTODisbursementInstructionAdd(
+            moneyTransferInstructionAmount = disbursementArrangementService.calculateLendingAmount(
+                loanAgreement.amount,
+                disbursementArrangement
+            ),
+            moneyTransferInstructionCurrency = loanAgreement.currency,
+            moneyTransferInstructionPurpose = loanAgreement.purpose,
+            payeeAccount = disbursementArrangement.disbursementAccount,
+            payerAccount = null,
+            agreementId = agreementId,
+            businessUnit = loanAgreement.involvements.first { LoanAgreementInvolvementType.LOAN_LENDER == it.involvementType }.partyId
+        )
+
+        val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
+
+        consumerLoanPublish.initiatePositionKeeping(disbursementInstruction)
+        consumerLoanPublish.financialAccounting(disbursementInstruction)
+    }
+
+    fun callBackFinancialAccounting(instructionId: Long) {
+        val disbursementInstruction = disbursementInstructionService.retrieve(instructionId)
+        consumerLoanPublish.disbursement(disbursementInstruction)
+    }
+
+    fun callBackDisbursement(instructionId: Long) {
+        val disbursementInstruction = disbursementInstructionService.retrieve(instructionId)
+        val loanAgreement = loanAgreementService.getOne(disbursementInstruction.agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        loanAgreement.status = AgreementStatus.PAID
+        loanAgreementService.save(loanAgreement)
     }
 }

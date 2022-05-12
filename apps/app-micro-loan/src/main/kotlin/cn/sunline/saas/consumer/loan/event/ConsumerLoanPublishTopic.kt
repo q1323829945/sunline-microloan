@@ -7,5 +7,5 @@ package cn.sunline.saas.consumer.loan.event
  * @date 2022/4/21 14:07
  */
 enum class ConsumerLoanPublishTopic {
-    UNDERWRITING
+    INITIATE_POSITION_KEEPING,INITIATE_FINANCIAL_ACCOUNTING,INITIATE_DISBURSEMENT
 }

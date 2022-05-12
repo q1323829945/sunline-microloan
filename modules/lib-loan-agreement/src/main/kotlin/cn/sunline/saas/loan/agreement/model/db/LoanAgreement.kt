@@ -52,7 +52,7 @@ class LoanAgreement(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val status: AgreementStatus,
+    var status: AgreementStatus,
 
     @NotNull
     @Column(nullable = false, precision = 19, scale = 2, columnDefinition = "decimal(19,2) not null")
@@ -75,13 +75,16 @@ class LoanAgreement(
     @JoinColumn(name = "agreement_id")
     val involvements: MutableList<LoanAgreementInvolvement>,
 
+    @Column(name = "purpose", nullable = true, columnDefinition = "varchar(64) null")
+    val purpose: String?,
+
     @NotNull
     @Column(name = "application_id", nullable = false, columnDefinition = "bigint not null")
-    val applicationId:Long,
+    val applicationId: Long,
 
     @NotNull
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint not null")
-    val userId:Long
+    val userId: Long
 
 ) : MultiTenant {
 

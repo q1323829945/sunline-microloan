@@ -1,5 +1,7 @@
 package cn.sunline.saas.disbursement.arrangement.service
 
+import cn.sunline.saas.disbursement.arrangement.exception.DisbursementLendTypeNotSupported
+import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementArrangement
 import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
@@ -8,6 +10,7 @@ import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * @title: DisbursementArrangementService
@@ -27,13 +30,20 @@ class DisbursementArrangementService(private val disbursementArrangementReposito
         disbursementArrangementAdd: DTODisbursementArrangementAdd
     ): DisbursementArrangement {
         val disbursementArrangement = DisbursementArrangement(
-            id = seq.nextId(),
-            agreementId = agreementId,
+            id = agreementId,
             disbursementAccount = disbursementArrangementAdd.disbursementAccount,
             disbursementAccountBank = disbursementArrangementAdd.disbursementAccountBank,
             disbursementLendType = DisbursementLendType.ONCE
         )
 
         return save(disbursementArrangement)
+    }
+
+    fun calculateLendingAmount(agreementAmount: BigDecimal,disbursementArrangement:DisbursementArrangement):BigDecimal {
+        if (disbursementArrangement.disbursementLendType == DisbursementLendType.ONCE){
+            return agreementAmount
+        }else{
+            throw DisbursementLendTypeNotSupported("the lend type has not supported")
+        }
     }
 }

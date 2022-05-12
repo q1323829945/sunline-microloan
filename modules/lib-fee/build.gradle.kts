@@ -1,5 +1,4 @@
 val jodaVersion: String by rootProject.extra
-val embeddedRedisVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

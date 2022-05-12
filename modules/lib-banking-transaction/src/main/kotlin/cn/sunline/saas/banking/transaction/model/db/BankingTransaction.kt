@@ -1,10 +1,11 @@
-package cn.sunline.saas.banking.transaction.model
+package cn.sunline.saas.banking.transaction.model.db
 
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import org.joda.time.Instant
 import java.math.BigDecimal
-import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
  * @date 2022/4/12 17:18
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(
     name = "banking_transaction"
 )
@@ -39,15 +41,15 @@ class BankingTransaction(
     val initiatedDate: Instant,
 
     @Column(name = "executed_date", nullable = true)
-    val executedDate: Instant?,
+    var executedDate: Instant?,
 
-    @Column(name = "transaction_description", nullable = false, length = 128, columnDefinition = "varchar(128) null")
+    @Column(name = "transaction_description", nullable = true, length = 128, columnDefinition = "varchar(128) null")
     val transactionDescription: String?,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "transaction_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val transactionStatus: TransactionStatus,
+    var transactionStatus: TransactionStatus,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -74,7 +76,11 @@ class BankingTransaction(
         precision = 6,
         columnDefinition = "number(9,6) null"
     )
-    val appliedRate: BigDecimal?
+    val appliedRate: BigDecimal?,
+
+    @NotNull
+    @Column(name = "business_unit", nullable = false, columnDefinition = "bigint not null")
+    val businessUnit: Long
 
 ) : MultiTenant {
 

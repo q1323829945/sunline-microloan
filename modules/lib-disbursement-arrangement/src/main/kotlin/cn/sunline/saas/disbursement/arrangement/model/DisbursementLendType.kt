@@ -1,4 +1,4 @@
-package cn.sunline.saas.disbursement.arrangement.model.db
+package cn.sunline.saas.disbursement.arrangement.model
 
 /**
  * @title: DisbursementLendType

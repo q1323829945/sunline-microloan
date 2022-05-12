@@ -1,6 +1,6 @@
 package cn.sunline.saas.banking.transaction.repository
 
-import cn.sunline.saas.banking.transaction.model.BankingTransaction
+import cn.sunline.saas.banking.transaction.model.db.BankingTransaction
 import cn.sunline.saas.base_jpa.repositories.BaseRepository
 
 /**

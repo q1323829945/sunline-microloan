@@ -7,5 +7,5 @@ package cn.sunline.saas.global.constant
  * @date 2022/4/14 13:32
  */
 enum class TransactionStatus {
-    EXECUTED
+    INITIATE,EXECUTED
 }

@@ -1,5 +1,8 @@
 package cn.sunline.saas.consumer.loan.event
 
+import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
+import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruction
+
 /**
  * @title: ConsumerLoanPublish
  * @description: TODO
@@ -8,9 +11,9 @@ package cn.sunline.saas.consumer.loan.event
  */
 interface ConsumerLoanPublish {
 
-    fun underwriting()
+    fun initiatePositionKeeping(dtoBankingTransaction: DTODisbursementInstruction)
 
-    fun financialAccounting()
+    fun financialAccounting(dtoBankingTransaction: DTODisbursementInstruction)
 
-    fun disbursement()
+    fun disbursement(dtoBankingTransaction: DTODisbursementInstruction)
 }
