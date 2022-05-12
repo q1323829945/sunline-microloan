@@ -11,13 +11,14 @@ import cn.sunline.saas.global.model.CurrencyType
  */
 data class DTOCustomerOffer(
     val applicationId: Long,
-    val userId:Long,
+    val userId: Long,
     val customerId: Long,
     val productId: Long,
     val amount: String,
     val currency: CurrencyType,
     val term: LoanTermType,
-    val referenceAccount: DTOReferenceAccount?
+    val referenceAccount: DTOReferenceAccount?,
+    val purpose: String?
 )
 
 data class DTOReferenceAccount(

@@ -2,7 +2,7 @@ package cn.sunline.saas.consumer.loan.service.assembly
 
 import cn.sunline.saas.consumer.loan.invoke.dto.DTOCustomerOffer
 import cn.sunline.saas.consumer.loan.invoke.dto.DTOLoanProduct
-import cn.sunline.saas.disbursement.arrangement.model.db.DisbursementLendType
+import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
@@ -92,6 +92,7 @@ object ConsumerLoanAssembly {
             },
             borrower = customerOffer.customerId,
             lender = mutableListOf(loanProduct.businessUnit), disbursementArrangement = dtoDisbursementArrangementAdd,
+            purpose = customerOffer.purpose ?: loanProduct.loanPurpose,
             applicationId = customerOffer.applicationId,
             userId = customerOffer.userId
         )

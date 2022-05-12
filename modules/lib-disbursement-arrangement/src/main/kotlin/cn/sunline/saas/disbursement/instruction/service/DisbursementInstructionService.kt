@@ -1,6 +1,8 @@
 package cn.sunline.saas.disbursement.instruction.service
 
+import cn.sunline.saas.disbursement.instruction.exception.DisbursementInstructionNotFoundException
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruction
+import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
@@ -23,7 +25,7 @@ class DisbursementInstructionService(private val moneyTransferInstructionRepo: M
     @Autowired
     private lateinit var seq: Sequence
 
-    fun registered(dtoDisbursementInstruction: DTODisbursementInstruction): MoneyTransferInstruction {
+    fun registered(dtoDisbursementInstruction: DTODisbursementInstructionAdd): DTODisbursementInstruction {
         val moneyTransferInstruction = MoneyTransferInstruction(
             id = seq.nextId(),
             moneyTransferInstructionType = MoneyTransferInstructionType.DISBURSEMENT,
@@ -33,9 +35,37 @@ class DisbursementInstructionService(private val moneyTransferInstructionRepo: M
             moneyTransferInstructionStatus = InstructionLifecycleStatus.PREPARED,
             payeeAccount = dtoDisbursementInstruction.payeeAccount,
             payerAccount = dtoDisbursementInstruction.payerAccount,
-            agreementId = dtoDisbursementInstruction.agreementId
+            agreementId = dtoDisbursementInstruction.agreementId,
+            businessUnit = dtoDisbursementInstruction.businessUnit
         )
 
-        return moneyTransferInstructionRepo.save(moneyTransferInstruction)
+        val transferInstruction = moneyTransferInstructionRepo.save(moneyTransferInstruction)
+        return DTODisbursementInstruction(
+            id = transferInstruction.id,
+            instructionAmount = transferInstruction.moneyTransferInstructionAmount.toPlainString(),
+            instructionCurrency = transferInstruction.moneyTransferInstructionCurrency,
+            instructionPurpose = transferInstruction.moneyTransferInstructionPurpose,
+            payeeAccount = transferInstruction.payeeAccount,
+            payerAccount = transferInstruction.payerAccount,
+            agreementId = transferInstruction.agreementId,
+            businessUnit = transferInstruction.businessUnit
+        )
     }
+
+    fun retrieve(id: Long): DTODisbursementInstruction {
+        val transferInstruction =
+            getOne(id) ?: throw DisbursementInstructionNotFoundException("disbursement instruction not found")
+
+        return DTODisbursementInstruction(
+            id = transferInstruction.id,
+            instructionAmount = transferInstruction.moneyTransferInstructionAmount.toPlainString(),
+            instructionCurrency = transferInstruction.moneyTransferInstructionCurrency,
+            instructionPurpose = transferInstruction.moneyTransferInstructionPurpose,
+            payeeAccount = transferInstruction.payeeAccount,
+            payerAccount = transferInstruction.payerAccount,
+            agreementId = transferInstruction.agreementId,
+            businessUnit = transferInstruction.businessUnit
+        )
+    }
+
 }

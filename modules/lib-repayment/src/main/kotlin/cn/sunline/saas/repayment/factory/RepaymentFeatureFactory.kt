@@ -21,26 +21,24 @@ class RepaymentFeatureFactory {
     @Autowired
     private lateinit var seq: Sequence
 
-    fun instance(productId: Long, interestFeatureData: DTORepaymentFeatureAdd): RepaymentFeature {
+    fun instance(productId: Long, repaymentFeatureData: DTORepaymentFeatureAdd): RepaymentFeature {
         val repaymentFeatureId = seq.nextId()
 
         val repaymentFeatureModality = RepaymentFeatureModality(
             repaymentFeatureId,
-            interestFeatureData.paymentMethod,
-            interestFeatureData.frequency,
-            interestFeatureData.repaymentDayType
+            repaymentFeatureData.paymentMethod,
+            repaymentFeatureData.frequency,
+            repaymentFeatureData.repaymentDayType
         )
 
         val prepayments = mutableListOf<PrepaymentFeatureModality>()
-        for (temp in interestFeatureData.prepaymentFeatureModality) {
-            val penaltyRatio = temp.penaltyRatio ?: BigDecimal.ZERO
-
+        for (temp in repaymentFeatureData.prepaymentFeatureModality) {
             prepayments.add(
                 PrepaymentFeatureModality(
                     seq.nextId(),
                     temp.term,
                     temp.type,
-                    penaltyRatio
+                    BigDecimal(temp.penaltyRatio)
                 )
             )
         }

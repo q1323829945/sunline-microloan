@@ -4,7 +4,6 @@ import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.model.db.FeeFeature
-import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
@@ -106,32 +105,27 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
 
         val interestFeature = loanProductData.interestFeature.run {
-            val interestFeatureData = objectMapper.convertValue<DTOInterestFeatureAdd>(loanProductData.interestFeature)
             interestProductFeatureService.register(
                 newProductId,
-                interestFeatureData
+                objectMapper.convertValue(this)
             )
         }
 
         val repaymentFeature = loanProductData.repaymentFeature?.run {
-            val repaymentFeatureData =
-                loanProductData.repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureAdd>(it) }
-            if (repaymentFeatureData != null) {
-                repaymentProductFeatureService.register(
-                    newProductId,
-                    repaymentFeatureData
-                )
-            }
+            repaymentProductFeatureService.register(
+                newProductId,
+                objectMapper.convertValue(this)
+            )
         }
 
         val feeFeatures = loanProductData.feeFeatures?.run {
-            val feeFeatureDataList =
-                loanProductData.feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureAdd>>(it) }
-            if (feeFeatureDataList != null && feeFeatureDataList.size > 0) {
+            if(this.size > 0){
                 feeProductFeatureService.register(
                     newProductId,
-                    feeFeatureDataList
+                    objectMapper.convertValue(this)
                 )
+            }else{
+                mutableListOf()
             }
         }
 
@@ -141,8 +135,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         dtoLoanProduct.interestFeature = objectMapper.convertValue(interestFeature)
 
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
-        dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
+        dtoLoanProduct.repaymentFeature = repaymentFeature?.run { objectMapper.convertValue<DTORepaymentFeatureView>(this) }
+        dtoLoanProduct.feeFeatures = feeFeatures?.run { objectMapper.convertValue(this)}
 
         return dtoLoanProduct
     }

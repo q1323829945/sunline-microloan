@@ -22,10 +22,10 @@ dependencies {
     implementation(project(":lib-repayment"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
-    implementation(project(":lib-loan-product"))
+    //implementation(project(":lib-loan-product"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")
-    testImplementation(project(":lib-snowflake-simple"))
+    testImplementation(project(":lib-seq-test"))
 }

@@ -41,17 +41,19 @@ class MoneyTransferInstruction(
     @Column(name = "money_transfer_instruction_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var moneyTransferInstructionStatus: InstructionLifecycleStatus,
 
-    @NotNull
-    @Column(name="payee_account",nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    val payeeAccount: String,
+    @Column(name="payee_account",nullable = true, length = 64, columnDefinition = "varchar(64) null")
+    val payeeAccount: String?,
 
-    @NotNull
-    @Column(name="payer_account",nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    val payerAccount: String,
+    @Column(name="payer_account",nullable = true, length = 64, columnDefinition = "varchar(64) null")
+    val payerAccount: String?,
 
     @NotNull
     @Column(name = "agreement_id", nullable = false, columnDefinition = "bigint not null")
-    val agreementId: Long
+    val agreementId: Long,
+
+    @NotNull
+    @Column(name = "business_unit", nullable = false, columnDefinition = "bigint not null")
+    val businessUnit:Long
 
 ) : MultiTenant {
 

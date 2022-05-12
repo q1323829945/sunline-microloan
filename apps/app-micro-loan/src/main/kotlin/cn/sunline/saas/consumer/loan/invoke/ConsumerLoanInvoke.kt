@@ -14,4 +14,5 @@ interface ConsumerLoanInvoke {
     fun retrieveCustomerOffer(applicationId: Long): DTOCustomerOffer
 
     fun retrieveLoanProduct(productId: Long): DTOLoanProduct
+
 }

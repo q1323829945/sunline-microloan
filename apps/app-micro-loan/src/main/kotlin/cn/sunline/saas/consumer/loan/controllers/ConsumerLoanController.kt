@@ -20,21 +20,15 @@ class ConsumerLoanController {
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
 
-    @PostMapping("/Underwriting")
-    fun initiate() {
-        consumerLoanService.underwriting()
-    }
 
-
-    @PostMapping("/LoanAgreement")
+    @PostMapping("/LoanAgreement/Initiate")
     fun initiateLoanAgreement(@RequestBody application:Long) {
         consumerLoanService.createLoanAgreement(application)
     }
 
-    @PostMapping("/Lending")
-    fun disbursement() {
-        consumerLoanService.lending()
+    @PostMapping("/LoanAgreement/Sign")
+    fun signLoanAgreementByOffline(@RequestBody agreementId:Long) {
+        consumerLoanService.signLoanAgreementByOffline(agreementId)
     }
-
 
 }

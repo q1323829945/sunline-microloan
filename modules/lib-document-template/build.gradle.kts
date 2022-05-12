@@ -11,13 +11,13 @@ dependencies {
     api(project(":lib-base-jpa"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-document"))
-    implementation(project(":lib-huaweicloud-obs"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-    implementation(project(":lib-snowflake"))
+    implementation(project(":lib-obs-api"))
+    implementation(project(":lib-seq-api"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("it.ozimov:embedded-redis:${embeddedRedisVersion}")
     testImplementation("com.h2database:h2:1.4.200")
-    testImplementation(project(":lib-snowflake-simple"))
+    testImplementation(project(":lib-seq-test"))
+    testImplementation(project(":lib-obs-test"))
 }

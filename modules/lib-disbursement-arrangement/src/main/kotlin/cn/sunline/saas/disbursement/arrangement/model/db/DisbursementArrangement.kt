@@ -1,5 +1,7 @@
 package cn.sunline.saas.disbursement.arrangement.model.db
 
+import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -11,17 +13,13 @@ import javax.validation.constraints.NotNull
  * @date 2022/4/18 15:48
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(
     name = "disbursement_arrangement",
-    indexes = [Index(name = "idx_disbursement_arrangement_agreement_id", unique = true, columnList = "agreement_id")]
 )
 class DisbursementArrangement(
     @Id
     val id: Long,
-
-    @NotNull
-    @Column(name = "agreement_id", nullable = false, columnDefinition = "bigint not null")
-    val agreementId: Long,
 
     @NotNull
     @Column(name = "disbursement_account", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
@@ -34,7 +32,7 @@ class DisbursementArrangement(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "disbursement_lend_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val disbursementLendType:DisbursementLendType
+    val disbursementLendType: DisbursementLendType
 
 ) : MultiTenant {
 

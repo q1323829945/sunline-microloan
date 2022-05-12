@@ -2,6 +2,7 @@ package cn.sunline.saas.loan.agreement.service
 
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
+import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.interest.arrangement.service.InterestArrangementService
 import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
@@ -63,4 +64,29 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
             disbursementArrangement
         )
     }
+
+    fun archiveAgreement(loanAgreementAggregate: DTOLoanAgreementView): LoanAgreement {
+        //TODO Create Document and update loan agreement's agreementDocument property with documentId
+        val referenceDocument: String = ""
+
+        val loanAgreement = loanAgreementAggregate.loanAgreement
+        loanAgreement.agreementDocument = referenceDocument
+        return save(loanAgreement)
+    }
+
+    fun signAgreement(loanAgreement: LoanAgreement):LoanAgreement{
+        // TODO sign component,the strategy is either offline or online
+        // Offline Human participation
+        // TODO management desk
+
+        // Online Automatic
+        //TODO Sign
+
+        //TODO Communicate Customer
+
+        // TODO udpate loan agreement status to change to SIGN
+        loanAgreement.status = AgreementStatus.SIGNED
+        return save(loanAgreement)
+    }
+
 }

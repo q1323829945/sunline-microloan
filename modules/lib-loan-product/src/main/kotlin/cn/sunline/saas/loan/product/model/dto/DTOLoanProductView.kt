@@ -85,7 +85,7 @@ data class DTOPrepaymentFeatureModalityView(
         val id: String?,
         val term: LoanTermType,
         val type: PrepaymentType,
-        val penaltyRatio: BigDecimal
+        val penaltyRatio: String
 )
 
 data class DTOFeeFeatureView(

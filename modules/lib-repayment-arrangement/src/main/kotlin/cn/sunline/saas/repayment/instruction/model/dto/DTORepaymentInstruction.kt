@@ -15,5 +15,6 @@ data class DTORepaymentInstruction(
     val moneyTransferInstructionPurpose: String?,
     val payeeAccount: String,
     val payerAccount: String,
-    val agreementId: Long
+    val agreementId: Long,
+    val businessUnit: Long
 )

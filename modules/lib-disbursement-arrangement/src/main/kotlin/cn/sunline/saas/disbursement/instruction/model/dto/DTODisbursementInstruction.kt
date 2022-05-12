@@ -9,11 +9,23 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/4/21 10:45
  */
-data class DTODisbursementInstruction(
+data class DTODisbursementInstructionAdd(
     val moneyTransferInstructionAmount: BigDecimal,
     val moneyTransferInstructionCurrency: CurrencyType,
     val moneyTransferInstructionPurpose: String?,
-    val payeeAccount: String,
-    val payerAccount: String,
-    val agreementId: Long
+    val payeeAccount: String?,
+    val payerAccount: String?,
+    val agreementId: Long,
+    val businessUnit: Long
+)
+
+data class DTODisbursementInstruction(
+    val id: Long,
+    val instructionAmount: String,
+    val instructionCurrency: CurrencyType,
+    val instructionPurpose: String?,
+    val payeeAccount: String?,
+    val payerAccount: String?,
+    val agreementId: Long,
+    val businessUnit: Long,
 )
