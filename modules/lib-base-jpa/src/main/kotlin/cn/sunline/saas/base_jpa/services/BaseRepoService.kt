@@ -5,8 +5,10 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Component
 import java.io.Serializable
 
+@Component
 abstract class BaseRepoService<T, ID: Serializable>(private val baseRepository: BaseRepository<T, ID>) {
 
 

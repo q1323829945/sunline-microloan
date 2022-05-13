@@ -7,6 +7,7 @@ import cn.sunline.saas.customeroffer.event.CustomerOfferPublish
 import cn.sunline.saas.customeroffer.event.dto.DTODetail
 import cn.sunline.saas.customeroffer.event.dto.DTOLoanApplicationData
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
@@ -94,7 +95,7 @@ class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOf
 
     }
 
-    private fun getProduct(productId:Long): DTOLoanProduct {
+    private fun getProduct(productId:Long): DTOLoanProductView {
         return productService.findById(productId)
     }
 

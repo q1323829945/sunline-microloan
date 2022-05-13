@@ -3,6 +3,9 @@ package cn.sunline.saas.product.invoke.impl
 import cn.sunline.saas.product.invoke.ProductInvoke
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.response.DTOResponseSuccess
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.dapr.client.domain.HttpExtension
 import org.springframework.stereotype.Service
 
@@ -11,14 +14,24 @@ class ProductInvokeImpl: ProductInvoke {
 
     private val applId = "app-loan-management"
 
-    override fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProduct>? {
-        return DaprHelper.invoke(
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+
+    override fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProductView>? {
+
+        val product = DaprHelper.invoke(
             applId,
             "LoanProduct/$productId",
             null,
             HttpExtension.GET,
-            DTOResponseSuccess<DTOLoanProduct>()::class.java
+            DTOResponseSuccess<DTOLoanProductView>()::class.java
         )
+        println("---------------------------------------------------------------------------------")
+        println("1111111")
+        println(objectMapper.valueToTree<JsonNode>(product).toPrettyString())
+        println("---------------------------------------------------------------------------------")
+
+        return product
     }
 
     override fun getProductListByIdentificationCode(identificationCode: String): DTOResponseSuccess<MutableList<DTOLoanProduct>>? {

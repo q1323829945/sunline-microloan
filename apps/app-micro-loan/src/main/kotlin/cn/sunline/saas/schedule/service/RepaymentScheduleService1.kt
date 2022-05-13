@@ -25,7 +25,7 @@ import java.math.BigDecimal
 
 
 @Service
-class RepaymentScheduleService(
+class RepaymentScheduleService1(
     private val productService: ProductService,
     private val scheduleInvoke: ScheduleInvoke
 ){
@@ -60,7 +60,7 @@ class RepaymentScheduleService(
             interestRate = BigDecimal.ZERO
         }
 
-        val repaymentDayType = product.repaymentFeature?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
+        val repaymentDayType = product.repaymentFeature?.payment?.repaymentDayType ?: RepaymentDayType.BASE_LOAN_DAY
         var repaymentDay = 21;
         if (RepaymentDayType.BASE_LOAN_DAY == repaymentDayType) {
             repaymentDay = loanDateInstant.toDateTime().dayOfMonth().get()
@@ -71,11 +71,11 @@ class RepaymentScheduleService(
                 amount = amount,
                 term = term,
                 interestRate = interestRate,
-                paymentMethod = product.repaymentFeature?.paymentMethod!!,
+                paymentMethod = product.repaymentFeature?.payment?.paymentMethod!!,
                 startDate = loanDateInstant,
                 endDate = term.calDays(loanDateInstant),
-                repaymentFrequency = product.repaymentFeature?.frequency!!,
-                baseYearDays = product.interestFeature?.baseYearDays!!,
+                repaymentFrequency = product.repaymentFeature?.payment?.frequency!!,
+                baseYearDays = product.interestFeature?.interest?.baseYearDays!!,
                 repaymentDay = repaymentDay,
                 repaymentDayType = repaymentDayType
             )

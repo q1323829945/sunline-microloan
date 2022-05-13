@@ -71,7 +71,8 @@ class UnderwritingManagementController {
             underwriting.customerCreditRate,
             underwriting.creditRisk,
             underwriting.fraudEvaluation,
-            underwriting.regulatoryCompliance
+            underwriting.regulatoryCompliance,
+            underwriting.status
         )
     }
 

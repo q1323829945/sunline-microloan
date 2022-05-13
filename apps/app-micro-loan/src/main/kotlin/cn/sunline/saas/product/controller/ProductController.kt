@@ -2,6 +2,7 @@ package cn.sunline.saas.product.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.DTOProductView
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -28,7 +29,7 @@ class ProductController {
     }
 
     @GetMapping("{productId}")
-    fun findById(@PathVariable productId: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProduct>> {
+    fun findById(@PathVariable productId: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         return  DTOResponseSuccess(productService.findById(productId)).response()
     }
 }

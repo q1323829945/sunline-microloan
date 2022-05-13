@@ -7,6 +7,7 @@ import cn.sunline.saas.rbac.service.dto.DTOPerson
 import cn.sunline.saas.response.DTOResponseSuccess
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import io.dapr.client.domain.HttpExtension
@@ -34,8 +35,10 @@ class RbacInvokeImpl:RbacInvoke {
                 DTOResponseSuccess<DTOPerson>()::class.java
             )
 
-            val dtoMap = objectMapper.treeToValue<Map<*, *>>(objectMapper.valueToTree(person))
-            return objectMapper.treeToValue<DTOPerson>(objectMapper.valueToTree(dtoMap["data"]))
+//            val dtoMap = objectMapper.treeToValue<Map<*, *>>(objectMapper.valueToTree(person))
+//            return objectMapper.treeToValue<DTOPerson>(objectMapper.valueToTree(dtoMap["data"]))
+
+            return objectMapper.convertValue(person!!.data!!)
         }
 
         return null

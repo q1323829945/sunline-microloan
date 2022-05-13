@@ -12,7 +12,7 @@ data class DTOCustomerOfferProcedureAdd(
         val employee: Long,
 )
 
-data class DTOProductAdd(val productId: Long,val productName: String)
+        data class DTOProductAdd(val productId: Long,val productName: String)
 
 data class DTOPDPAAdd(
         val pdpaTemplateId: Long,

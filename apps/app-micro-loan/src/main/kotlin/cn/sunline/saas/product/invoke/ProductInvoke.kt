@@ -7,7 +7,7 @@ import cn.sunline.saas.response.DTOResponseSuccess
 
 interface ProductInvoke {
 
-    fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProduct>?
+    fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProductView>?
 
     fun getProductListByIdentificationCode(identificationCode:String): DTOResponseSuccess<MutableList<DTOLoanProduct>>?
 

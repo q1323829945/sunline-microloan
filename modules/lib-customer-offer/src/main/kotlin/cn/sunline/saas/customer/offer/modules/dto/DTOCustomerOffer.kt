@@ -43,7 +43,7 @@ data class DTOGuarantor(
 
 data class DTOGuarantors(
     val name:String,
-    val NRIC:String,
+    val nric:String,
     val nationality: CountryType,
     val mobileArea:String,
     val mobileNumber:String,

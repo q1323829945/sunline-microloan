@@ -110,6 +110,9 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
     ) {
         dtoFile.forEach { file ->
             val names = file.originalFilename.split("/")
+
+//            val templateId = 23229161248407552L
+//            val fileName = names[0]
              val templateId = names[0].toLong()
              val fileName = names[1]
             uploadDocumentList?.forEach {

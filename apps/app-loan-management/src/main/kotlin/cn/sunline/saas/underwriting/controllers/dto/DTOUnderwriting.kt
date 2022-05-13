@@ -1,5 +1,7 @@
 package cn.sunline.saas.underwriting.controllers.dto
 
+import cn.sunline.saas.underwriting.db.OperationType
+
 
 data class DTOUnderwriting (
     val id: String,
@@ -9,5 +11,6 @@ data class DTOUnderwriting (
     var creditRisk: String? = null,
     var fraudEvaluation: String? = null,
     var regulatoryCompliance: String? = null,
+    val status:OperationType?
 )
 

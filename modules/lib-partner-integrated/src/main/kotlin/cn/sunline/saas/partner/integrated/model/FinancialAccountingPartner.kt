@@ -7,4 +7,5 @@ package cn.sunline.saas.partner.integrated.model
  * @date 2022/4/22 11:10
  */
 enum class FinancialAccountingPartner {
+    TEST
 }
