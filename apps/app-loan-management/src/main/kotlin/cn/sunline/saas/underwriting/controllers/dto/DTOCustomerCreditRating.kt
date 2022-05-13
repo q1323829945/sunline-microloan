@@ -7,7 +7,7 @@ package cn.sunline.saas.underwriting.controllers.dto
  * @date 2022/4/8 16:31
  */
 data class DTOCustomerCreditRating (
-    val applId:Long,
+    val applId:String,
     val customerCreditRate:String,
 )
 

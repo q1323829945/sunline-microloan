@@ -82,9 +82,9 @@ class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOf
         val detail = result.detail
         if(kyc != null && customerOffer != null && detail != null){
             val dtoLoanApplicationData = DTOLoanApplicationData(
-                customerOfferId,
+                customerOfferId.toString(),
                 DTODetail(
-                    customerOffer.customerId,
+                    customerOffer.customerId.toString(),
                     detail.name,
                     detail.registrationNo
                 )

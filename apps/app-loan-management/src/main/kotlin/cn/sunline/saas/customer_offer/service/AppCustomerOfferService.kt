@@ -41,7 +41,7 @@ class AppCustomerOfferService {
         val page = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).map {
             val apply = customerLoanApplyService.getOne(it.id!!)
             DTOCustomerOfferPage(
-                it.id!!,
+                it.id.toString(),
                 "TODO",//TODO:
                 apply?.amount?.toString(),
                 it.datetime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd HH:mm:ss"),

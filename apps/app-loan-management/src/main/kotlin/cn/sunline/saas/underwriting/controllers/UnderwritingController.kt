@@ -40,7 +40,7 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackCustomerCreditRating(@RequestBody(required = false) dtoCustomerCreditRating: DTOCustomerCreditRating): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCustomerCreditRating(
-                dtoCustomerCreditRating.applId,
+                dtoCustomerCreditRating.applId.toLong(),
                 dtoCustomerCreditRating.customerCreditRate
             )
         }
@@ -50,7 +50,7 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackCreditRisk(@RequestBody(required = false) dtoCreditRisk: DTOCreditRisk): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateCreditRisk(
-                dtoCreditRisk.applId,
+                dtoCreditRisk.applId.toLong(),
                 dtoCreditRisk.creditRisk
             )
         }
@@ -70,7 +70,7 @@ class UnderwritingController(private val integratedConfigurationService: Underwr
     fun callBackFraudEvaluation(@RequestBody(required = false) dtoFraudEvaluation: DTOFraudEvaluation): Mono<Unit> {
         return Mono.fromRunnable {
             integratedConfigurationService.updateFraudEvaluation(
-                dtoFraudEvaluation.applId,
+                dtoFraudEvaluation.applId.toLong(),
                 dtoFraudEvaluation.fraudEvaluation
             )
         }

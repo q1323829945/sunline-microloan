@@ -1,6 +1,6 @@
 package cn.sunline.saas.underwriting.controllers.dto
 
 data class DTOFraudEvaluation(
-    val applId:Long,
+    val applId:String,
     val fraudEvaluation:String,
 )
