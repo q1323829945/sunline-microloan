@@ -7,5 +7,5 @@ spec:
   route: /Underwriting/Initiate
   pubsubname: underwriting-pub-sub
 scopes:
-  - app-underwriting
+  - app-loan-management
 

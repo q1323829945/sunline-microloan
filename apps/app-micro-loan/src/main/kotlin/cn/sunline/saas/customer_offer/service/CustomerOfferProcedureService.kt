@@ -3,6 +3,9 @@ package cn.sunline.saas.customer_offer.service
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customeroffer.event.CustomerOfferPublish
+import cn.sunline.saas.customeroffer.event.dto.DTODetail
+import cn.sunline.saas.customeroffer.event.dto.DTOLoanApplicationData
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService
@@ -16,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 
 @Service
-class CustomerOfferProcedureService {
+class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOfferPublish) {
     @Autowired
     private lateinit var pdpaMicroService: PDPAMicroService
 
@@ -68,6 +71,27 @@ class CustomerOfferProcedureService {
         }
 
         return dtoCustomerOfferLoanView
+    }
+
+    fun submit(customerOfferId: Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<CustomerLoanApplyService.DTOFile>){
+        val result = customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd, dtoFile)
+
+        val customerOffer = customerOfferService.getOne(customerOfferId)
+        val kyc = result.kyc
+        val detail = result.detail
+        if(kyc != null && customerOffer != null && detail != null){
+            val dtoLoanApplicationData = DTOLoanApplicationData(
+                customerOfferId,
+                DTODetail(
+                    customerOffer.customerId,
+                    detail.name,
+                    detail.registrationNo
+                )
+            )
+
+            customerOfferPublish.initiateUnderwriting(dtoLoanApplicationData)
+        }
+
     }
 
     private fun getProduct(productId:Long): DTOLoanProduct {

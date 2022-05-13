@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-pdpa"))
     implementation(project(":lib-risk-control"))
+    implementation(project(":lib-obs-huaweicloud"))
     implementation(project(":lib-party"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-customer-offer"))

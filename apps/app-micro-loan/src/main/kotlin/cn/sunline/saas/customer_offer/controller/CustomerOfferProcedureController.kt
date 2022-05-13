@@ -34,7 +34,7 @@ class CustomerOfferProcedureController {
 
     @PutMapping(value = ["loan/{customerOfferId}/submit"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun submitLoanApply(@PathVariable customerOfferId:Long, @RequestPart("customer")dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, @RequestParam("files")files: List<MultipartFile>?){
-        customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd,getDTOFileList(files))
+        customerOfferProductService.submit(customerOfferId, dtoCustomerOfferLoanAdd,getDTOFileList(files))
     }
 
     @PutMapping(value = ["loan/{customerOfferId}/update"],produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
