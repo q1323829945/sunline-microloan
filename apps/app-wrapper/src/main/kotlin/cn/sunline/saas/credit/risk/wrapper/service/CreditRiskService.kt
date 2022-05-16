@@ -1,6 +1,5 @@
 package cn.sunline.saas.credit.risk.wrapper.service
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.credit.risk.wrapper.dto.DTOCallBackCreditRisk
 import cn.sunline.saas.credit.risk.wrapper.dto.DTOCreditRisk
 import org.springframework.stereotype.Service

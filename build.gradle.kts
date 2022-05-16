@@ -27,12 +27,9 @@ val redissonVersion by extra { "3.16.8" }
 val nettyVersion by extra { "4.1.75.Final" }
 val embeddedRedisVersion by extra { "0.7.3" }
 val logVersion by extra { "2.1.21" }
-val daprVersion by extra { "1.5.0"}
 val hibernatetypeVersion by extra {"2.15.1"}
-val commonsHttpclientVersion by extra {"3.1"}
-val gsonVersion by extra {"2.9.0"}
-val okhttpVersion by extra {"4.9.0"}
 val log4jdbcVersion by extra {"1.2"}
+val ktorVersion by extra {"2.0.1"}
 
 subprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -53,7 +50,6 @@ subprojects {
 	configurations {
 		all {
 			exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
-			resolutionStrategy.setForcedModules("com.squareup.okhttp3:okhttp:4.9.0")
 		}
 	}
 

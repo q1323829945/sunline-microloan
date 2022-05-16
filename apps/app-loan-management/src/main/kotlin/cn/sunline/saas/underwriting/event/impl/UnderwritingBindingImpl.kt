@@ -1,13 +1,12 @@
 package cn.sunline.saas.underwriting.event.impl
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
+import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.event.UnderwritingBinding
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.event.dto.DTOExecCreditRisk
 import cn.sunline.saas.underwriting.event.dto.DTOExecFraudEvaluation
 import cn.sunline.saas.underwriting.event.dto.DTOExecRegulatoryCompliance
 import cn.sunline.saas.underwriting.event.dto.DTORetrieveCustomerCreditRating
-import cn.sunline.saas.underwriting.db.Underwriting
 import org.springframework.stereotype.Component
 
 @Component

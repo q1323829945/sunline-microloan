@@ -1,6 +1,5 @@
 package cn.sunline.saas.underwriting.event.impl
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.event.dto.DTOExecCreditRisk

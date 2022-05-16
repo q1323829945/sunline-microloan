@@ -1,6 +1,5 @@
 package cn.sunline.saas.customer.credit.rating.wrapper.service
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.customer.credit.rating.wrapper.dto.DTOCallBackCustomerCreditRating
 import cn.sunline.saas.customer.credit.rating.wrapper.dto.DTOCreditRating
 import org.springframework.stereotype.Service
