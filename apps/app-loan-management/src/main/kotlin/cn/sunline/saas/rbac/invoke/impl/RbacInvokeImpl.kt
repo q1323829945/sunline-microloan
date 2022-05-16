@@ -26,26 +26,27 @@ class RbacInvokeImpl:RbacInvoke {
 
     override fun getPerson(id: Long?): DTOPerson? {
 
-        id?.run {
-            val person = DaprHelper.invoke(
-                applId,
-                "Person/$id",
-                null,
-                HttpExtension.GET,
-                DTOResponseSuccess<DTOPerson>()::class.java
-            )
-
-//            val dtoMap = objectMapper.treeToValue<Map<*, *>>(objectMapper.valueToTree(person))
-//            return objectMapper.treeToValue<DTOPerson>(objectMapper.valueToTree(dtoMap["data"]))
-
-            return objectMapper.convertValue(person!!.data!!)
-        }
-
-        return null
+//        id?.run {
+//            val person = DaprHelper.invoke(
+//                applId,
+//                "Person/$id",
+//                null,
+//                HttpExtension.GET,
+//                DTOResponseSuccess<DTOPerson>()::class.java
+//            )
+//
+//            return if(person == null){
+//                null
+//            } else {
+//                objectMapper.convertValue(person.data!!)
+//            }
+//        }
+//
+//        return null
 
 //        //TODO: 暂时先直接调用，到时候通过dapr调用
-//        val peron = personService.getOne(id)
-//
-//        return peron?.run { objectMapper.convertValue(this) }
+        val peron = personService.getOne(id)
+
+        return peron?.run { objectMapper.convertValue(this) }
     }
 }
