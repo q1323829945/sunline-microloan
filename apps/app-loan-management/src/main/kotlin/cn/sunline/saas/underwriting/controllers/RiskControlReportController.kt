@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer_offer.controllers
+package cn.sunline.saas.underwriting.controllers
 
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response

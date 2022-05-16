@@ -1,6 +1,6 @@
 package cn.sunline.saas.risk.control.services
 
-import cn.sunline.saas.risk.control.datasource.factory.DataSourceFactory
+import cn.sunline.saas.risk.control.datasource.factory.DataItemFactory
 import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RuleType
 import cn.sunline.saas.risk.control.rule.services.RiskControlRuleService
@@ -29,7 +29,7 @@ class RiskControlService {
         val executeEquation:String
     )
 
-    fun execute(customerId:Long,ruleType: RuleType): ExecuteResult{
+    fun execute(applicationId:Long,ruleType: RuleType): ExecuteResult{
         val groups = riskControlRuleService.getAllRiskControlRuleDetailSort(ruleType)
         val reports = mutableListOf<Report>()
         val condition = StringBuffer()
@@ -51,7 +51,7 @@ class RiskControlService {
                 val conditions = mutableListOf<String>()
                 conditions.add(rule.description)
                 rule.params?.forEach { param ->
-                    map[param.dataItem.key] = DataSourceFactory.instance(param.dataItem).calculation(customerId)
+                    map[param.dataItem.key] = DataItemFactory.instance(param.dataItem).calculation(applicationId)
                 }
                 val result = ruleApi.execute(map,conditions)
 
