@@ -5,8 +5,6 @@ import cn.sunline.saas.exceptions.SystemException
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.global.constant.HttpRequestMethod.*
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.apache.commons.io.IOUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,35 +16,49 @@ import java.nio.charset.Charset
 class HttpConfig {
     val logger: Logger = LoggerFactory.getLogger(HttpConfig::class.java)
 
-    fun execute(httpMethod: HttpRequestMethod, uri:String, parts:List<MultipartBody.Part>, headers:Map<String,String>? = null): Response {
+    fun execute(
+        httpMethod: HttpRequestMethod,
+        uri: String,
+        parts: List<MultipartBody.Part>,
+        headers: Map<String, String>? = null
+    ): Response {
         val multipartBody = MultipartBody.Builder().setType(MultipartBody.FORM)
         parts.forEach {
             multipartBody.addPart(it)
         }
 
-        return execute(httpMethod,uri,multipartBody.build(),headers)
+        return execute(httpMethod, uri, multipartBody.build(), headers)
     }
 
-    fun execute(httpMethod: HttpRequestMethod, uri:String, requestBody: RequestBody? = null, headers:Map<String,String>? = null):Response{
+    fun execute(
+        httpMethod: HttpRequestMethod,
+        uri: String,
+        requestBody: RequestBody? = null,
+        headers: Map<String, String>? = null
+    ): Response {
         val client = OkHttpClient.Builder().build()
-        val request = when(httpMethod){
+        val request = when (httpMethod) {
             GET -> Request.Builder().url(uri).get()
             POST -> Request.Builder().url(uri).post(requestBody!!)
             PUT -> Request.Builder().url(uri).put(requestBody!!)
-            DELETE -> Request.Builder().url(uri).delete(requestBody)
+            DELETE -> if (requestBody != null) Request.Builder().url(uri).delete(requestBody) else Request.Builder()
+                .url(uri).delete()
         }
 
         headers?.forEach {
-            request.header(it.key,it.value)
+            request.header(it.key, it.value)
         }
 
         val response = client.newCall(request.build()).execute()
-        logger.debug("uri:${response.request.url}")
-        logger.debug("code:${response.code}")
-        if(!response.isSuccessful){
+        println("uri:${response.request().url()}")
+        println("code:${response.code()}")
+        logger.debug("uri:${response.request().url()}")
+        logger.debug("code:${response.code()}")
+        if (!response.isSuccessful) {
             val body = getBody(response)
+            println("body:$body")
             logger.error("body:$body")
-            throw SystemException("http error",ManagementExceptionCode.HTTP_ERROR)
+            throw SystemException("http error", ManagementExceptionCode.HTTP_ERROR)
         }
 
         return response
@@ -64,37 +76,39 @@ class HttpConfig {
 //        return MultipartBody.Part.Companion.create(setRequestBody(file, mediaType))
 //    }
 
-    fun setRequestBody(bytes:ByteArray,mediaType: String? = null):RequestBody{
-        return bytes.toRequestBody(mediaType?.toMediaType())
+    fun setRequestBody(bytes: ByteArray, mediaType: String = ""): RequestBody {
+        return RequestBody.create(MediaType.parse(mediaType), bytes)
     }
 
-    fun setRequestBody(str:String,mediaType:String? = null):RequestBody{
-        return str.toRequestBody(mediaType?.toMediaType())
+    fun setRequestBody(str: String, mediaType: String = ""): RequestBody {
+        return RequestBody.create(MediaType.parse(mediaType), str)
     }
 
 //    fun setRequestBody(file: File,mediaType: String? = null):RequestBody{
 //        return file.asRequestBody(mediaType?.toMediaType())
 //    }
 
-    fun getHeader(response: Response):Map<String,String>{
-        val map = HashMap<String,String>()
-        response.headers.forEach {
-            map[it.first] = it.second
+    fun getHeader(response: Response): Map<String, String> {
+        val map = HashMap<String, String>()
+
+        response.headers().toMultimap().forEach {
+            map[it.key] = it.value[0]
         }
+
         return map
     }
 
     private fun getBody(response: Response): String {
-        val stream = response.body?.byteStream()
+        val stream = response.body()!!.byteStream()
         return IOUtils.toString(stream, Charset.defaultCharset())
     }
 
-    fun getResponseBody(response: Response):String{
+    fun getResponseBody(response: Response): String {
         return getBody(response)
     }
 
     fun getResponseStream(response: Response): InputStream {
-        return response.body!!.byteStream()
+        return response.body()!!.byteStream()
     }
 
 }

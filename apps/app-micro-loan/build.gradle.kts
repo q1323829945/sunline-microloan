@@ -17,7 +17,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))

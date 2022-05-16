@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-util"))
     implementation(project(":lib-apig-api"))
-    api("com.squareup.okhttp3:okhttp:4.9.0")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

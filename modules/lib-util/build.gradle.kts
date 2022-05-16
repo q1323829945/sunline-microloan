@@ -8,8 +8,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation("commons-io:commons-io:2.11.0")
     implementation(project(":lib-global"))
-    api("com.squareup.okhttp3:okhttp:4.9.0")
-    //api("com.squareup.okhttp3:okhttp")
+    api("com.squareup.okhttp3:okhttp")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.200")

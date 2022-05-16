@@ -23,6 +23,5 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-multi-tenant"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
 }

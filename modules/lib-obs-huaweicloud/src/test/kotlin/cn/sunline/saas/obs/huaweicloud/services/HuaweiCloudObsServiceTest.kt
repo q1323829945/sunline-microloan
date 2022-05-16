@@ -86,6 +86,7 @@ class HuaweiCloudObsServiceTest {
     }
 
     @Test
+    @Disabled
     fun `delete object`(){
         val del = DeleteParams("mimimi3.JPG")
         huaweiCloudObsService.deleteObject(del)
