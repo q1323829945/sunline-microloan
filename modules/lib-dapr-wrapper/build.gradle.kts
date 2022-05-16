@@ -1,11 +1,15 @@
-val daprVersion: String by rootProject.extra
+val jacksonVersion: String by rootProject.extra
 val logVersion: String by rootProject.extra
+val ktorVersion:String by rootProject.extra
 
 dependencies {
-    implementation(project(":lib-global"))
-    api("io.dapr:dapr-sdk:${daprVersion}")
     implementation("io.github.microutils:kotlin-logging:${logVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-
+    implementation(project(":lib-global"))
+    implementation(project(":lib-exceptions"))
 }

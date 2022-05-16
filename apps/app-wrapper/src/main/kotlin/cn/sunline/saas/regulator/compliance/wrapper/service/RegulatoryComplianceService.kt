@@ -1,6 +1,5 @@
 package cn.sunline.saas.regulator.compliance.wrapper.service
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.regulator.compliance.wrapper.dto.DTOCallBackRegulatoryCompliance
 import cn.sunline.saas.regulator.compliance.wrapper.dto.DTORegulatoryCompliance
 import org.springframework.stereotype.Service

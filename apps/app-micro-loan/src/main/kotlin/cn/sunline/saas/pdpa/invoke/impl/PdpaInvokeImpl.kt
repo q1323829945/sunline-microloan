@@ -1,6 +1,5 @@
 package cn.sunline.saas.pdpa.invoke.impl
 
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.invoke.PdpaInvoke
 import cn.sunline.saas.response.DTOResponseSuccess

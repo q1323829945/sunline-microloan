@@ -1,9 +1,7 @@
 package cn.sunline.saas.product.invoke.impl
 
 import cn.sunline.saas.product.invoke.ProductInvoke
-import cn.sunline.saas.dapr_wrapper.DaprHelper
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.response.DTOResponseSuccess
 import io.dapr.client.domain.HttpExtension
 import org.springframework.stereotype.Service
