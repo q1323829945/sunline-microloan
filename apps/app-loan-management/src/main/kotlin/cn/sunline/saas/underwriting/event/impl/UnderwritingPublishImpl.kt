@@ -20,22 +20,12 @@ class UnderwritingPublishImpl : UnderwritingPublish {
 
     override fun retrieveCustomerCreditRating(applicationId: Long, partner: String, customerId: Long) {
         val dtoRetrieveCustomerCreditRating = DTORetrieveCustomerCreditRating(applicationId, partner, customerId)
-        DaprHelper.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.RETRIEVE_CUSTOMER_CREDIT_RATING.toString(),
-            dtoRetrieveCustomerCreditRating
-        )
     }
 
     override fun execCreditRisk(partner: String, underwriting: Underwriting) {
         val dtoExecCreditRisk = DTOExecCreditRisk(
             underwriting.id, partner,
             underwriting.customerCreditRate!!
-        )
-        DaprHelper.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.EXECUTE_CREDIT_RISK.toString(),
-            dtoExecCreditRisk
         )
     }
 
@@ -44,12 +34,6 @@ class UnderwritingPublishImpl : UnderwritingPublish {
             underwriting.id,partner,
             underwriting.creditRisk!!
         )
-
-        DaprHelper.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.EXECUTE_REGULATORY_COMPLIANCE.toString(),
-            dTOExecRegulatoryCompliance
-        )
     }
 
     override fun execFraudEvaluation(partner: String, underwriting: Underwriting) {
@@ -57,23 +41,12 @@ class UnderwritingPublishImpl : UnderwritingPublish {
             underwriting.id,partner,
             underwriting.fraudEvaluation!!
         )
-
-        DaprHelper.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.FRAUD_EVALUATION.toString(),
-            dtoExecFraudEvaluation
-        )
     }
 
     override fun updateCustomerOfferStatus(applicationId: Long, operationType: OperationType) {
         val dtoCustomerOffer = DTOCustomerOffer(
             applicationId,
             operationType
-        )
-        DaprHelper.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.CUSTOMER_OFFER_STATUS.toString(),
-            dtoCustomerOffer
         )
     }
 }

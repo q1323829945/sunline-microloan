@@ -1,6 +1,10 @@
 package cn.sunline.saas.underwriting.invoke.impl.dto
 
 import cn.sunline.saas.dapr_wrapper.invoke.request.RPCRequestWithTenant
+import cn.sunline.saas.global.constant.meta.Header
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.global.util.getUserId
 
 /**
  * @title: DTOPartnerIntegrated
@@ -10,22 +14,25 @@ import cn.sunline.saas.dapr_wrapper.invoke.request.RPCRequestWithTenant
  */
 class DTOPartnerIntegrated : RPCRequestWithTenant() {
     override fun getQueryParams(): Map<String, String> {
-        TODO("Not yet implemented")
+        return mapOf()
     }
 
     override fun getHeaderParams(): Map<String, String> {
-        TODO("Not yet implemented")
+        return mutableMapOf(
+            Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+            Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+        )
     }
 
     override fun getPayload(): Any? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun getModuleName(): String {
-        TODO("Not yet implemented")
+        return "app-loan-management"
     }
 
     override fun getMethodName(): String {
-        TODO("Not yet implemented")
+        return "/PartnerIntegrated/Retrieve"
     }
 }

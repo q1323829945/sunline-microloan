@@ -11,11 +11,11 @@ class RegulatoryComplianceService {
     fun getRegulatoryCompliance(creditRating: DTORegulatoryCompliance){
         //TODO:
         val regulatoryCompliance = "10"
-
-        DaprHelper.binding(
-            "CALL_BACK_REGULATORY_COMPLIANCE",
-            "create",
-            DTOCallBackRegulatoryCompliance(creditRating.applicationId,regulatoryCompliance)
-        )
+//
+//        DaprHelper.binding(
+//            "CALL_BACK_REGULATORY_COMPLIANCE",
+//            "create",
+//            DTOCallBackRegulatoryCompliance(creditRating.applicationId,regulatoryCompliance)
+//        )
     }
 }

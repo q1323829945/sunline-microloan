@@ -17,6 +17,8 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql:${flywayVersion}")
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
+
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))

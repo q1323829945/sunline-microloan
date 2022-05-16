@@ -23,6 +23,14 @@ import reactor.core.publisher.Mono
 @RequestMapping("Underwriting")
 class UnderwritingController(private val integratedConfigurationService: UnderwritingService) {
 
+    @GetMapping("t")
+    fun test():Unit{
+        val t = integratedConfigurationService.test()
+        println("------------------------------------------")
+        println(t)
+        println(t?.creditRiskPartner)
+    }
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @PostMapping("/Initiate")

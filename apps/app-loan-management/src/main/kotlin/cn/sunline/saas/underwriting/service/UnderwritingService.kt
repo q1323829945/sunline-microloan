@@ -1,7 +1,7 @@
 package cn.sunline.saas.underwriting.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
-import cn.sunline.saas.underwriting.event.UnderwritingBinding
+import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.db.Underwriting
@@ -21,10 +21,13 @@ import org.springframework.stereotype.Service
 class UnderwritingService(
     private val underwritingRepository: UnderwritingRepository,
     private val underwritingInvoke: UnderwritingInvoke,
-    private val underwritingBinding: UnderwritingBinding,
     private val underwritingPublish: UnderwritingPublish,
 ) :
     BaseRepoService<Underwriting, Long>(underwritingRepository) {
+
+    fun test():DTOPartnerIntegrated?{
+        return underwritingInvoke.getPartnerIntegrated()
+    }
 
     fun initiate(underwritingApplicationData: UnderwritingApplicationData) {
         save(

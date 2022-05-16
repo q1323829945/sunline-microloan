@@ -11,11 +11,11 @@ class CustomerCreditRatingService {
     fun getCreditRating(creditRating: DTOCreditRating){
         //TODO:
         val customerCreditRate = "10"
-
-        DaprHelper.binding(
-            "CALL_BACK_CUSTOMER_CREDIT_RATING",
-            "create",
-            DTOCallBackCustomerCreditRating(creditRating.applicationId,customerCreditRate)
-        )
+//
+//        DaprHelper.binding(
+//            "CALL_BACK_CUSTOMER_CREDIT_RATING",
+//            "create",
+//            DTOCallBackCustomerCreditRating(creditRating.applicationId,customerCreditRate)
+//        )
     }
 }

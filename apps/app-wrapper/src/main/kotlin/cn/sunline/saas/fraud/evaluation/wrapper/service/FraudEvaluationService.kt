@@ -11,10 +11,10 @@ class FraudEvaluationService {
     fun getFraudEvaluation(dtoFraudEvaluation: DTOFraudEvaluation){
         //TODO:
         val fraudEvaluation = "10"
-        DaprHelper.binding(
-            "CALL_BACK_CUSTOMER_FRAUD_EVALUATION",
-            "create",
-            DTOCallBackFraudEvaluation(dtoFraudEvaluation.applicationId,fraudEvaluation)
-        )
+//        DaprHelper.binding(
+//            "CALL_BACK_CUSTOMER_FRAUD_EVALUATION",
+//            "create",
+//            DTOCallBackFraudEvaluation(dtoFraudEvaluation.applicationId,fraudEvaluation)
+//        )
     }
 }

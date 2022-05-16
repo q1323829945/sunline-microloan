@@ -57,8 +57,7 @@ subprojects {
 		implementation(kotlin("reflect"))
 		implementation(kotlin("stdlib-jdk8"))
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1")
-	}
+		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1")	}
 
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {

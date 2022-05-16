@@ -2,11 +2,11 @@ package cn.sunline.saas.product.invoke.impl
 
 import cn.sunline.saas.product.invoke.ProductInvoke
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.response.DTOResponseSuccess
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.dapr.client.domain.HttpExtension
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,28 +19,27 @@ class ProductInvokeImpl: ProductInvoke {
 
     override fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProductView>? {
 
-        val product = DaprHelper.invoke(
-            applId,
-            "LoanProduct/$productId",
-            null,
-            HttpExtension.GET,
-            DTOResponseSuccess<DTOLoanProductView>()::class.java
-        )
-        println("---------------------------------------------------------------------------------")
-        println("1111111")
-        println(objectMapper.valueToTree<JsonNode>(product).toPrettyString())
-        println("---------------------------------------------------------------------------------")
+//        val product = DaprHelper.invoke(
+//            applId,
+//            "LoanProduct/$productId",
+//            null,
+//            HttpExtension.GET,
+//            DTOResponseSuccess<DTOLoanProductView>()::class.java
+//        )
+//        return product
 
-        return product
+        return null
     }
 
     override fun getProductListByIdentificationCode(identificationCode: String): DTOResponseSuccess<MutableList<DTOLoanProduct>>? {
-        return DaprHelper.invoke(
-            applId,
-            "LoanProduct/$identificationCode/retrieve",
-            null,
-            HttpExtension.GET,
-            DTOResponseSuccess<MutableList<DTOLoanProduct>>()::class.java
-        )
+//        return DaprHelper.invoke(
+//            applId,
+//            "LoanProduct/$identificationCode/retrieve",
+//            null,
+//            HttpExtension.GET,
+//            DTOResponseSuccess<MutableList<DTOLoanProduct>>()::class.java
+//        )
+
+        return null
     }
 }

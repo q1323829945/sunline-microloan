@@ -1,5 +1,6 @@
 package cn.sunline.saas.underwriting.invoke.impl
 
+import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import org.springframework.stereotype.Component
@@ -23,6 +24,6 @@ class UnderwritingInvokeImpl : UnderwritingInvoke {
 //            HttpExtension.GET,
 //            DTOPartnerIntegrated::class.java
 //        )
-        return null
+        return RPCService.get<DTOPartnerIntegrated>(cn.sunline.saas.underwriting.invoke.impl.dto.DTOPartnerIntegrated())
     }
 }

@@ -64,16 +64,16 @@ class HttpConfig {
         return response
     }
 
-//    fun setPart(bytes:ByteArray,mediaType: String? = null):MultipartBody.Part{
-//        return MultipartBody.Part.Companion.create(setRequestBody(bytes, mediaType))
+//    fun setPart(bytes:ByteArray,mediaType: String = ""):MultipartBody.Part{
+//        return MultipartBody.Part.create(setRequestBody(bytes,mediaType))
 //    }
 //
-//    fun setPart(str:String,mediaType: String? = null):MultipartBody.Part{
-//        return MultipartBody.Part.Companion.create(setRequestBody(str, mediaType))
+//    fun setPart(str:String,mediaType: String = ""):MultipartBody.Part{
+//        return MultipartBody.Part.create(setRequestBody(str, mediaType))
 //    }
 //
-//    fun setPart(file: File,mediaType: String? = null):MultipartBody.Part{
-//        return MultipartBody.Part.Companion.create(setRequestBody(file, mediaType))
+//    fun setPart(file: File,mediaType: String = ""):MultipartBody.Part{
+//        return MultipartBody.Part.create(setRequestBody(file, mediaType))
 //    }
 
     fun setRequestBody(bytes: ByteArray, mediaType: String = ""): RequestBody {
