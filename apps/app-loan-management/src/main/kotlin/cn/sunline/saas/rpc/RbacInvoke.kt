@@ -1,4 +1,4 @@
-package cn.sunline.saas.rbac.invoke
+package cn.sunline.saas.rpc
 
 import cn.sunline.saas.rbac.service.dto.DTOPerson
 

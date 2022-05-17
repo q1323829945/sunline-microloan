@@ -7,5 +7,5 @@ spec:
   route: /CreditRisk
   pubsubname: underwriting-pub-sub
 scopes:
-- app-credit-risk-wrapper
+- app-wrapper
 

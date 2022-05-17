@@ -1,14 +1,8 @@
-package cn.sunline.saas.rbac.invoke.impl
+package cn.sunline.saas.rpc.impl
 
-import cn.sunline.saas.dapr_wrapper.invoke.RPCService
-import cn.sunline.saas.global.constant.meta.Header
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
-import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.party.person.service.PersonService
-import cn.sunline.saas.rbac.invoke.RbacInvoke
 import cn.sunline.saas.rbac.service.dto.DTOPerson
-import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.rpc.RbacInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -16,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class RbacInvokeImpl:RbacInvoke {
+class RbacInvokeImpl: RbacInvoke {
 
     private val applId = "app-loan-management"
 

@@ -1,9 +1,7 @@
 package cn.sunline.saas.consumer_loan.service.assembly
 
-import cn.sunline.saas.consumer_loan.invoke.dto.DTOCustomerOffer
-import cn.sunline.saas.consumer_loan.invoke.dto.DTOGuarantor
-import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
-import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
+import cn.sunline.saas.rpc.consumerloan.dto.DTOCustomerOffer
+import cn.sunline.saas.rpc.consumerloan.dto.DTOLoanProductimport cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd

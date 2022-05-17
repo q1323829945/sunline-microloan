@@ -7,5 +7,5 @@ spec:
   route: /Underwriting/CreditRisk
   pubsubname: underwriting-pub-sub
 scopes:
-  - app-underwriting
+  - app-loan-management
 

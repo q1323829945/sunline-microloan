@@ -1,6 +1,6 @@
-package cn.sunline.saas.rpc
+package cn.sunline.saas.rpc.loanproduct
 
-import cn.sunline.saas.rpc.dto.DTOLoanProduct
+import cn.sunline.saas.rpc.loanproduct.dto.DTOLoanProduct
 
 /**
  * @title: LoanProductInvoke

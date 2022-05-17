@@ -13,7 +13,7 @@ import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.dto.*
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.schedule.invoke.ScheduleInvoke
+import cn.sunline.saas.rpc.schedule.ScheduleInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

@@ -1,4 +1,4 @@
-package cn.sunline.saas.product.invoke
+package cn.sunline.saas.rpc.product
 
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView

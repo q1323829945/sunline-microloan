@@ -7,5 +7,5 @@ spec:
   route: /RegulatoryCompliance
   pubsubname: underwriting-pub-sub
 scopes:
-- app-regulatory-compliance-wrapper
+- app-wrapper
 

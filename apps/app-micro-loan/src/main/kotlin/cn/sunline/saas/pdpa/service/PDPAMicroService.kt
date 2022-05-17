@@ -2,15 +2,9 @@ package cn.sunline.saas.pdpa.service
 
 import cn.sunline.saas.config.AppHttpConfiguration
 import cn.sunline.saas.config.IpConfig
-import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.pdpa.dto.PDPAInformation
-import cn.sunline.saas.pdpa.invoke.PdpaInvoke
-import cn.sunline.saas.response.DTOResponseSuccess
-import org.springframework.http.MediaType
-import org.springframework.http.codec.multipart.FilePart
+import cn.sunline.saas.rpc.pdpa.PdpaInvoke
 import org.springframework.stereotype.Service
-import java.io.File
-import java.io.FileOutputStream
 import java.io.InputStream
 
 @Service

@@ -1,5 +1,6 @@
 package cn.sunline.saas.fraud.evaluation.wrapper.service
 
+import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.fraud.evaluation.wrapper.dto.DTOCallBackFraudEvaluation
 import cn.sunline.saas.fraud.evaluation.wrapper.dto.DTOFraudEvaluation
 import org.springframework.stereotype.Service
@@ -11,10 +12,11 @@ class FraudEvaluationService {
     fun getFraudEvaluation(dtoFraudEvaluation: DTOFraudEvaluation){
         //TODO:
         val fraudEvaluation = "10"
-//        DaprHelper.binding(
-//            "CALL_BACK_CUSTOMER_FRAUD_EVALUATION",
-//            "create",
-//            DTOCallBackFraudEvaluation(dtoFraudEvaluation.applicationId,fraudEvaluation)
-//        )
+
+        PubSubService.publish(
+            "app-loan-management",
+            "CALL_BACK_CUSTOMER_FRAUD_EVALUATION",
+            DTOCallBackFraudEvaluation(dtoFraudEvaluation.applicationId,fraudEvaluation)
+        )
     }
 }

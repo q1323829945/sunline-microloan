@@ -1,12 +1,9 @@
 package cn.sunline.saas.product.service
 
-import cn.sunline.saas.customer.offer.modules.dto.DTOProductView
-import cn.sunline.saas.product.invoke.ProductInvoke
+import cn.sunline.saas.rpc.product.ProductInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import mu.KotlinLogging
-import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import com.fasterxml.jackson.databind.JsonNode

@@ -7,5 +7,5 @@ spec:
   route: /CreditRating
   pubsubname: underwriting-pub-sub
 scopes:
-- app-customer-credit-rating-wrapper
+- app-wrapper
 

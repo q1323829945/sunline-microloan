@@ -1,4 +1,4 @@
-package cn.sunline.saas.schedule.invoke
+package cn.sunline.saas.rpc.schedule
 
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.response.DTOResponseSuccess

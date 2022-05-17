@@ -1,4 +1,4 @@
-package cn.sunline.saas.pdpa.invoke.impl
+package cn.sunline.saas.rpc.pdpa.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.global.constant.meta.Header
@@ -6,7 +6,7 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.pdpa.dto.PDPAInformation
-import cn.sunline.saas.pdpa.invoke.PdpaInvoke
+import cn.sunline.saas.rpc.pdpa.PdpaInvoke
 import cn.sunline.saas.response.DTOResponseSuccess
 import org.springframework.stereotype.Service
 

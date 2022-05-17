@@ -1,4 +1,4 @@
-package cn.sunline.saas.schedule.invoke.impl
+package cn.sunline.saas.rpc.schedule.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.global.constant.meta.Header
@@ -8,7 +8,7 @@ import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.schedule.dto.DTORatePlanView
-import cn.sunline.saas.schedule.invoke.ScheduleInvoke
+import cn.sunline.saas.rpc.schedule.ScheduleInvoke
 import org.springframework.stereotype.Component
 
 @Component
