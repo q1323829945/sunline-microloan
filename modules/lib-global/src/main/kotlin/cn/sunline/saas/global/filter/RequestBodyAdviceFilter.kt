@@ -44,9 +44,10 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
         }
 
         val body = IOUtils.toString(inputMessage.body, Charset.forName("utf-8"))
-
-        val bodyMap = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))["data"] as Map<*, *>
-
+        val bodyMap = when(val bodyData = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))["data"]){
+            is String -> objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(bodyData))
+            else -> objectMapper.treeToValue<Map<*,*>>(objectMapper.valueToTree(bodyData))
+        }
 
         return object : HttpInputMessage{
             override fun getHeaders(): HttpHeaders {
@@ -66,6 +67,12 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
                         ContextUtil.setTenant(this)
                     }
                 }
+
+                println("-----------------------------------------")
+                httpHeaders.forEach {
+                    println("${it.key}:${it.value}")
+                }
+                println("-----------------------------------------")
 
                 return httpHeaders
             }

@@ -6,7 +6,7 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 
 data class PubsubRequest(
-   private val data: Any,
+    val data: Any,
 ) {
     val metadata: Map<String, String> = mapOf(
         Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),

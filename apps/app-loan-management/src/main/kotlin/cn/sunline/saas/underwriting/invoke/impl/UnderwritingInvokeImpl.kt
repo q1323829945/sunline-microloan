@@ -3,6 +3,7 @@ package cn.sunline.saas.underwriting.invoke.impl
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
+import cn.sunline.saas.underwriting.invoke.impl.dto.PartnerIntegratedRPCRequest
 import org.springframework.stereotype.Component
 
 /**
@@ -17,13 +18,6 @@ class UnderwritingInvokeImpl : UnderwritingInvoke {
     private val applId = "app-loan-management"
 
     override fun getPartnerIntegrated(): DTOPartnerIntegrated? {
-//        return DaprHelper.invoke(
-//            applId,
-//            "PartnerIntegrated/Retrieve",
-//            null,
-//            HttpExtension.GET,
-//            DTOPartnerIntegrated::class.java
-//        )
-        return RPCService.get<DTOPartnerIntegrated>(cn.sunline.saas.underwriting.invoke.impl.dto.DTOPartnerIntegrated())
+        return RPCService.get<DTOPartnerIntegrated>(PartnerIntegratedRPCRequest())
     }
 }

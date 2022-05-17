@@ -12,13 +12,13 @@ import cn.sunline.saas.global.util.getUserId
  * @author Kevin-Cui
  * @date 2022/5/13 16:50
  */
-class DTOPartnerIntegrated : RPCRequestWithTenant() {
+class PartnerIntegratedRPCRequest : RPCRequestWithTenant() {
     override fun getQueryParams(): Map<String, String> {
         return mapOf()
     }
 
     override fun getHeaderParams(): Map<String, String> {
-        return mutableMapOf(
+        return mapOf(
             Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
             Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
         )
@@ -33,6 +33,6 @@ class DTOPartnerIntegrated : RPCRequestWithTenant() {
     }
 
     override fun getMethodName(): String {
-        return "/PartnerIntegrated/Retrieve"
+        return "PartnerIntegrated/Retrieve"
     }
 }

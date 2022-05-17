@@ -1,7 +1,9 @@
 package cn.sunline.saas.dapr_wrapper.pubsub
 
+import cn.sunline.saas.dapr_wrapper.pubsub.request.PubsubRequest
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.meta.Header
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -11,6 +13,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -29,7 +32,6 @@ class PubSubService {
                 pipelining = true
             }
             expectSuccess = false
-
             HttpResponseValidator {
                 validateResponse {
                     when (it.status.value) {
@@ -54,6 +56,7 @@ class PubSubService {
          *                      error code and error message are extracted and placed in the `error` block. For other Dapr specific errors,
          *                      `ManagementExceptionCode.DAPR_INVOCATION_POST_ERROR` is thrown.
          */
+        @OptIn(InternalAPI::class)
         inline fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
@@ -65,11 +68,11 @@ class PubSubService {
                         method = HttpMethod.Post
                         headers {
                             append("X-Sequence", seq)
-                            tenant?.run { append("X-Tenant-Id", tenant) }
+                            tenant?.run { append(Header.TENANT_AUTHORIZATION.key, tenant) }
                         }
-                        contentType(ContentType.Application.Json)
+//                        contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
-                        payload?.run { objectMapper.writeValueAsString(payload) }
+                        payload?.run { body =  objectMapper.writeValueAsString(PubsubRequest(payload)) }
                     }
                 }
             } catch (ex: Exception) {
