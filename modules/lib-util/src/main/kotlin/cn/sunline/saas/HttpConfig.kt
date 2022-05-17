@@ -50,13 +50,10 @@ class HttpConfig {
         }
 
         val response = client.newCall(request.build()).execute()
-        println("uri:${response.request().url()}")
-        println("code:${response.code()}")
         logger.debug("uri:${response.request().url()}")
         logger.debug("code:${response.code()}")
         if (!response.isSuccessful) {
             val body = getBody(response)
-            println("body:$body")
             logger.error("body:$body")
             throw SystemException("http error", ManagementExceptionCode.HTTP_ERROR)
         }

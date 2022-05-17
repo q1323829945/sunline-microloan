@@ -67,13 +67,6 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
                         ContextUtil.setTenant(this)
                     }
                 }
-
-                println("-----------------------------------------")
-                httpHeaders.forEach {
-                    println("${it.key}:${it.value}")
-                }
-                println("-----------------------------------------")
-
                 return httpHeaders
             }
 
