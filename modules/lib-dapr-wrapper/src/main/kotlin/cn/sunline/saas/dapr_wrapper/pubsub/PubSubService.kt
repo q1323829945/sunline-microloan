@@ -24,6 +24,7 @@ import java.util.*
  */
 class PubSubService {
     companion object {
+
         var logger = KotlinLogging.logger {}
         val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         val pubSubClient: HttpClient = HttpClient(CIO) {
@@ -56,7 +57,6 @@ class PubSubService {
          *                      error code and error message are extracted and placed in the `error` block. For other Dapr specific errors,
          *                      `ManagementExceptionCode.DAPR_INVOCATION_POST_ERROR` is thrown.
          */
-        @OptIn(InternalAPI::class)
         inline fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
@@ -72,7 +72,7 @@ class PubSubService {
                         }
 //                        contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
-                        payload?.run { body =  objectMapper.writeValueAsString(PubsubRequest(payload)) }
+                        payload?.run { setBody(objectMapper.writeValueAsString(PubsubRequest(payload))) }
                     }
                 }
             } catch (ex: Exception) {

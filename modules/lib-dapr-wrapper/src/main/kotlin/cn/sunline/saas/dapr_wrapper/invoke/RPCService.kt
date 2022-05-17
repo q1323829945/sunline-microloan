@@ -13,6 +13,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.util.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -122,7 +123,7 @@ class RPCService {
 //                        }
                         accept(ContentType.Application.Json)
                         queryParams?.forEach { (t, u) -> parameter(t, u) }
-                        payload?.run { objectMapper.writeValueAsString(payload) }
+                        payload?.run { setBody(objectMapper.writeValueAsString(payload)) }
                     }.bodyAsText()
                 } catch (ex: Exception) {
                     exception = ex

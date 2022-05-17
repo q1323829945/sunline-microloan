@@ -80,7 +80,6 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
             override fun getBody(): InputStream {
                 val data = bodyMap["data"]
                 return if(data != null){
-                    data as Map<*,*>
                     val dataJson = objectMapper.valueToTree<JsonNode>(data).toPrettyString()
                     IOUtils.toInputStream(dataJson,Charset.forName("utf-8"))
                 } else {

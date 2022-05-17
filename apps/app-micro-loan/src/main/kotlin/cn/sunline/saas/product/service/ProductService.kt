@@ -15,25 +15,7 @@ class ProductService(private val productInvoke: ProductInvoke)  {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun findById(productId: Long): DTOLoanProductView {
-//        val uri = "http://${ipConfig.productIp}/LoanProduct/$productId"
-//
-//        val postMethod = appHttpConfiguration.getHttpMethod(HttpRequestMethod.GET, uri,appHttpConfiguration.getPublicHeaders())
-//
-//        appHttpConfiguration.sendClient(postMethod)
-//
-//        val data = appHttpConfiguration.getResponse(postMethod)
-//
-//        val dtoProductView = Gson().fromJson(data, DTOProductView::class.java)
-//        dtoProductView.productId = productId
-//
-//        return dtoProductView
         val dtoLoanProductViewResponse = productInvoke.getProductInfoByProductId(productId)
-
-
-        println("---------------------------------------------------------------------------------")
-        println("2222222")
-        println(objectMapper.valueToTree<JsonNode>(dtoLoanProductViewResponse).toPrettyString())
-        println("---------------------------------------------------------------------------------")
         return objectMapper.convertValue(dtoLoanProductViewResponse!!.data!!)
     }
 
