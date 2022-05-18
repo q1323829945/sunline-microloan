@@ -33,9 +33,9 @@ class PubSubService {
             HttpResponseValidator {
                 validateResponse {
                     when (it.status.value) {
-                        403 -> throw generateError(it, ManagementExceptionCode.DAPR_SUBPUB_FORBIDDEN_ERROR)
-                        404 -> throw generateError(it, ManagementExceptionCode.DAPR_SUBPUB_NO_ROUTE_ERROR)
-                        500 -> throw generateError(it, ManagementExceptionCode.DAPR_SUBPUB_DELIVERY_ERROR)
+                        403 -> throw generateError(it, ManagementExceptionCode.DAPR_PUBSUB_FORBIDDEN_ERROR)
+                        404 -> throw generateError(it, ManagementExceptionCode.DAPR_PUBSUB_NO_ROUTE_ERROR)
+                        500 -> throw generateError(it, ManagementExceptionCode.DAPR_PUBSUB_DELIVERY_ERROR)
                     }
                 }
             }
@@ -81,7 +81,7 @@ class PubSubService {
             } else {
                 if (exception !is ManagementException) {
                     exception = ManagementException(
-                        ManagementExceptionCode.DAPR_INVOCATION_NETWORK_ERROR,
+                        ManagementExceptionCode.DAPR_PUBSUB_NETWORK_ERROR,
                         exception?.localizedMessage,
                         data = mapOf("pubsub" to pubSubName, "topic" to topic)
                     )

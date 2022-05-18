@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":lib-account"))
     implementation(project(":lib-util"))
     implementation(project(":lib-pdpa"))
+    implementation(project(":lib-underwriting-arrangement"))
 
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-obs-huaweicloud"))

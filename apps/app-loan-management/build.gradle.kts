@@ -22,6 +22,8 @@ dependencies {
     implementation("com.vladmihalcea:hibernate-types-55:${hibernatetypeVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.googlecode.log4jdbc:log4jdbc:${log4jdbcVersion}")
+    implementation("commons-io:commons-io:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
@@ -36,19 +38,15 @@ dependencies {
     implementation(project(":lib-fee"))
     implementation(project(":lib-global"))
     implementation(project(":lib-interest-util"))
-//    implementation(project(":lib-huaweicloud-apig"))
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-partner-integrated"))
     implementation(project(":lib-risk-control-rule"))
     implementation(project(":lib-pdpa"))
-    implementation("com.googlecode.log4jdbc:log4jdbc:1.2")
     implementation(project(":lib-risk-control"))
-    implementation("commons-io:commons-io:2.11.0")
-
     implementation(project(":lib-party"))
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-customer-offer"))
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
