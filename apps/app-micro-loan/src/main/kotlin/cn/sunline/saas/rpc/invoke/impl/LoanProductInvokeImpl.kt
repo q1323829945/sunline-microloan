@@ -1,7 +1,7 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.rpc.invoke.LoanProductInvoke
-import cn.sunline.saas.rpc.loanproduct.dto.DTOLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOLoanProduct
 import org.springframework.stereotype.Component
 
 /**

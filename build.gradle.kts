@@ -57,7 +57,8 @@ subprojects {
 		implementation(kotlin("reflect"))
 		implementation(kotlin("stdlib-jdk8"))
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1")	
+		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1")
+	}
 
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
@@ -89,9 +90,9 @@ subprojects {
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+	jvmTarget = "1.8"
 }
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+	jvmTarget = "1.8"
 }
