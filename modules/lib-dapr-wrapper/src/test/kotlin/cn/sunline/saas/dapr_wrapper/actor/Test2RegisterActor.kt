@@ -11,8 +11,8 @@ import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
  * @date 2022/5/17 12:11
  */
 class Test2RegisterActor(
-    private val actorType: String = "Test2RegisteredActor",
-    private val entityConfig: EntityConfig? = null
+    actorType: String = "Test2RegisteredActor",
+    entityConfig: EntityConfig? = null
 ) :
     AbstractActor(actorType, entityConfig) {
 

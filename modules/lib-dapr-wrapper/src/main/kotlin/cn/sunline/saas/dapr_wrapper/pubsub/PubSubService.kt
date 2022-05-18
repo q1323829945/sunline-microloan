@@ -25,9 +25,9 @@ import java.util.*
 class PubSubService {
     companion object {
 
-        var logger = KotlinLogging.logger {}
+        private var logger = KotlinLogging.logger {}
         val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val pubSubClient: HttpClient = HttpClient(CIO) {
+        private val pubSubClient: HttpClient = HttpClient(CIO) {
             engine {
                 threadsCount = 8
                 pipelining = true
@@ -51,13 +51,14 @@ class PubSubService {
          * @param[data]         Data to be posted (optional, default to null)
          * @param[headerParams] Additional data to be used in header (optional, default to empty map)
          * @param[tenant]       Tenant identifier (optional, default to null)
+         *
          * @return              Return a mapped response data
          * @throws ManagementException
          *                      When an empty response is received, throws `ManagementExceptionCode.DAPR_INVOCATION_EMPTY_RESPONSE`. For downstream exceptions,
          *                      error code and error message are extracted and placed in the `error` block. For other Dapr specific errors,
          *                      `ManagementExceptionCode.DAPR_INVOCATION_POST_ERROR` is thrown.
          */
-        inline fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
+        fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
             val requestUrl = "http://localhost:3500/v1.0/publish/$pubSubName/$topic"
@@ -85,7 +86,7 @@ class PubSubService {
                 if (exception !is ManagementException) {
                     exception = ManagementException(
                         ManagementExceptionCode.DAPR_PUBSUB_NETWORK_ERROR,
-                        exception?.localizedMessage,
+                        exception.localizedMessage,
                         data = mapOf("pubsub" to pubSubName, "topic" to topic)
                     )
                 }

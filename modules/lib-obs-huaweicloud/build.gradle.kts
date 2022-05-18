@@ -10,7 +10,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
 
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-redis"))
     implementation(project(":lib-global"))
     implementation(project(":lib-util"))
     implementation(project(":lib-obs-api"))
