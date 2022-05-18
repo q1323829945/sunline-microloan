@@ -1,8 +1,8 @@
-package cn.sunline.saas.rpc.impl
+package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.party.person.service.PersonService
 import cn.sunline.saas.rbac.service.dto.DTOPerson
-import cn.sunline.saas.rpc.RbacInvoke
+import cn.sunline.saas.rpc.invoke.RbacInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

@@ -1,10 +1,10 @@
 package cn.sunline.saas.consumer_loan.service
 
-import cn.sunline.saas.consumer.loan.event.ConsumerLoanPublish
+import cn.sunline.saas.rpc.pubsub.ConsumerLoanPublish
 import cn.sunline.saas.consumer.loan.exception.DisbursementArrangementNotFoundException
 import cn.sunline.saas.consumer.loan.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer.loan.exception.LoanAgreementStatusCheckException
-import cn.sunline.saas.rpc.consumerloan.ConsumerLoanInvoke
+import cn.sunline.saas.rpc.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer.loan.service.assembly.ConsumerLoanAssemblyimport cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService

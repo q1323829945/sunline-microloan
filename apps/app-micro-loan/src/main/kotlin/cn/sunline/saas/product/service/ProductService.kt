@@ -1,12 +1,11 @@
 package cn.sunline.saas.product.service
 
-import cn.sunline.saas.rpc.product.ProductInvoke
+import cn.sunline.saas.rpc.invoke.ProductInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
-import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Service
 
 @Service

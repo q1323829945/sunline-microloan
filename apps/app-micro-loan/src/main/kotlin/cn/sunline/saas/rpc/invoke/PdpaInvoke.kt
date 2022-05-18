@@ -1,4 +1,4 @@
-package cn.sunline.saas.rpc.pdpa
+package cn.sunline.saas.rpc.invoke
 
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.response.DTOResponseSuccess

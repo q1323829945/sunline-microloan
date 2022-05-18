@@ -1,11 +1,11 @@
-package cn.sunline.saas.rpc.product.impl
+package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
-import cn.sunline.saas.rpc.product.ProductInvoke
+import cn.sunline.saas.rpc.invoke.ProductInvoke
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.response.DTOResponseSuccess

@@ -3,10 +3,9 @@ package cn.sunline.saas.customer_offer.service
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customeroffer.event.CustomerOfferPublish
-import cn.sunline.saas.customeroffer.event.dto.DTODetail
-import cn.sunline.saas.customeroffer.event.dto.DTOLoanApplicationData
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
+import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
+import cn.sunline.saas.rpc.pubsub.dto.DTODetail
+import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService

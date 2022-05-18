@@ -1,8 +1,8 @@
 package cn.sunline.saas.consumer_loan.service.assembly
 
-import cn.sunline.saas.rpc.consumerloan.dto.DTOCustomerOffer
-import cn.sunline.saas.rpc.consumerloan.dto.DTOLoanProductimport cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
-import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
+import cn.sunline.saas.rpc.invoke.dto.DTOCustomerOffer
+import cn.sunline.saas.rpc.invoke.dto.DTOLoanProduct
+import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendTypeimport cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
@@ -32,7 +32,7 @@ object ConsumerLoanAssembly {
         customerOffer: DTOCustomerOffer,
         loanProduct: DTOLoanProduct
     ): DTOLoanAgreementAdd {
-        val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
+        val dtoInterestArrangementAdd = loanProduct.interestFeature!!.run {
             DTOInterestArrangementAdd(
                 interestType = interestType,
                 baseYearDays = interestModality.baseYearDays,
@@ -43,7 +43,7 @@ object ConsumerLoanAssembly {
         }
 
         val dtoPrepayments = mutableListOf<DTOPrepaymentArrangementAdd>()
-        loanProduct.repaymentFeature.prepayment.forEach {
+        loanProduct.repaymentFeature!!.prepayment.forEach {
             dtoPrepayments.add(
                 DTOPrepaymentArrangementAdd(
                     term = it.term,

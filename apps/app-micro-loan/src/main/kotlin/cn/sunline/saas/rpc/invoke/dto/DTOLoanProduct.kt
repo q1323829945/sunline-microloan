@@ -1,4 +1,4 @@
-package cn.sunline.saas.rpc.loanproduct.dto
+package cn.sunline.saas.rpc.invoke.dto
 
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
@@ -11,7 +11,7 @@ import cn.sunline.saas.loan.product.model.LoanProductType
  * @title: DTOLoanProduct
  * @description: TODO
  * @author Kevin-Cui
- * @date 2022/5/5 15:59
+ * @date 2022/5/5 16:57
  */
 data class DTOLoanProduct(
     val id:String,
@@ -26,7 +26,7 @@ data class DTOLoanProduct(
     var amountConfiguration: DTOAmountLoanProductConfiguration?,
     var termConfiguration: DTOTermLoanProductConfiguration?,
     var interestFeature: DTOInterestFeature?,
-    var repaymentFeature: DTORepaymentFeature?,
+    var repaymentFeature: DTORepaymentFeature,
     var feeFeatures:MutableList<DTOFeeFeature>?,
     var loanUploadConfigureFeatures:MutableList<DTOLoanUploadConfigure>?
 )
@@ -82,7 +82,7 @@ data class DTORepaymentFeatureModality(
 data class DTOPrepaymentFeatureModality(
     val term: LoanTermType,
     val type: PrepaymentType,
-    val penaltyRatio: String?
+    val penaltyRatio: String
 )
 
 data class DTOFeeFeature(
