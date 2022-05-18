@@ -35,9 +35,6 @@ class UnderwritingArrangement(
     @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val status: ArrangementLifecycleStatus,
 
-    @Column(nullable = true, length = 128, columnDefinition = "varchar(128) null")
-    var agreementDocument: String?,
-
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "arrangement_id")

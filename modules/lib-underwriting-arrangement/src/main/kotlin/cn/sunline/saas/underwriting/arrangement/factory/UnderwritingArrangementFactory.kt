@@ -41,9 +41,8 @@ class UnderwritingArrangementFactory {
                 id = seq.nextId(),
                 agreementId = agreementId,
                 startDate = DateTime(it.startDate).toInstant(),
-                endDate = DateTime(it.startDate).toInstant(),
+                endDate = DateTime(it.endDate).toInstant(),
                 involvements = involvements,
-                agreementDocument = null,
                 status = ArrangementLifecycleStatus.PROPOSED
             )
 

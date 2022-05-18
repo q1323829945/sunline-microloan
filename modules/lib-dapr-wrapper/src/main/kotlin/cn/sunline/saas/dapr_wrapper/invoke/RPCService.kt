@@ -129,7 +129,6 @@ class RPCService {
                     ""
                 }
             }
-
             logger.info { "[$seq] Finished RPC request: $requestUrl" }
 
             if (exception is ManagementException) throw exception as ManagementException
