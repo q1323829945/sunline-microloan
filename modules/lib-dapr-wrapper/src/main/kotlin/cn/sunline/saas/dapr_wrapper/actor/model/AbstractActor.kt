@@ -12,9 +12,9 @@ data class EntityConfig(
     val reentrancyEnabled: Boolean? = null
 )
 
-abstract class AbstractActor(private val actorType: String, val entityConfig: EntityConfig?) {
+abstract class AbstractActor(private val actorType: String, val entityConfig: EntityConfig? = null) {
 
-    fun registerActor(){
+    fun registerActor() {
         ActorContext.registerActor(actorType, this)
     }
 
