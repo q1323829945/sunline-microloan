@@ -50,11 +50,6 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
 
     }
 
-
-    fun getOneById(id: Long): CustomerOffer? {
-        return this.getOne(id)
-    }
-
     fun getCustomerOfferPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable): Page<CustomerOffer>{
         val page = getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

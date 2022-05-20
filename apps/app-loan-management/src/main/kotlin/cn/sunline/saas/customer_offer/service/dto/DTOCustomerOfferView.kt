@@ -6,10 +6,6 @@ import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.model.CurrencyType
 
-data class DTOCustomerOfferView(
-    val customerId:String,
-)
-
 data class DTOManagementCustomerOfferView(
     var pdpa: PDPAInformationView? = null,
     var product: DTOProductView? = null,
@@ -21,14 +17,9 @@ data class DTOManagementCustomerOfferView(
     val financial: DTOFinancialView? = null,
     val uploadDocument:List<DTOUploadDocumentView>? = null,
     val kyc: DTOKycView? = null,
-    var referenceAccount: DTOReferenceAccountView? = null,
-
-    )
-
-data class DTOReferenceAccountView(
-    val account: String,
-    val accountBank: String
 )
+
+
 
 data class PDPAInformationView (
     val personalInformation:List<PersonalInformationView>,

@@ -84,12 +84,6 @@ class AppCustomerOfferService(
         val customerOfferLoan = customerLoanApplyService.retrieve(id)
         val managementCustomerOffer = objectMapper.convertValue<DTOManagementCustomerOfferView>(customerOfferLoan)
 
-
-        val customerOffer = customerOfferService.getOneById(id)
-
-        val product = customerOfferInvoke.getProduct(customerOffer!!.productId)
-
-
         managementCustomerOffer.uploadDocument?.forEach {
             val config = loanUploadConfigureService.getOne(it.documentTemplateId.toLong())
             config?.run {
@@ -98,10 +92,10 @@ class AppCustomerOfferService(
             it.fileName = it.file.substring(it.file.lastIndexOf("/")+1)
         }
 
+        val customerOffer = customerOfferService.getOne(id)
+        val product = customerOfferInvoke.getProduct(customerOffer!!.productId)
         managementCustomerOffer.product = objectMapper.convertValue(product)
         managementCustomerOffer.product!!.productId =product.id
-        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
-        managementCustomerOffer.referenceAccount = objectMapper.convertValue(data.referenceAccount)
 
         return managementCustomerOffer
     }
@@ -121,19 +115,22 @@ class AppCustomerOfferService(
     }
 
     fun getInvokeCustomerOffer(id:Long): DTOInvokeCustomerOfferView {
-        val response = getDetail(id)
+        val customerOfferLoan = customerLoanApplyService.retrieve(id)
+
         val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
+        val product = customerOfferInvoke.getProduct(customerOffer.productId)
+        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
 
         return DTOInvokeCustomerOfferView(
             id.toString(),
             "123", //TODO:
             customerOffer.customerId.toString(),
-            response.product!!.productId!!,
-            response.loan!!.amount,
-            response.loan.currency,
-            response.loan.term,
-            objectMapper.convertValue(response.referenceAccount!!),
-            response.product!!.loanPurpose
+            product.id,
+            customerOfferLoan.loan!!.amount,
+            customerOfferLoan.loan!!.currency,
+            customerOfferLoan.loan!!.term,
+            objectMapper.convertValue(data.referenceAccount),
+            product.loanPurpose
         )
     }
 }
