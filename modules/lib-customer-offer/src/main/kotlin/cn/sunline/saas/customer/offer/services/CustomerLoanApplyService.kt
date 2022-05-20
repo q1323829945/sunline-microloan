@@ -41,7 +41,7 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
 
     @Transactional
     fun submit(customerOfferId: Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>):DTOCustomerOfferLoanView {
-        val customerOffer = customerOfferService.getOneById(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)
 
         setUploadDocument(customerOfferId, customerOffer!!.customerId, dtoFile, dtoCustomerOfferLoanAdd.uploadDocument)
 
@@ -74,7 +74,7 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
         val originalData =
             objectMapper.readValue<DTOCustomerOfferLoanChange>(customerLoanApply.data)
 
-        val customerOffer = customerOfferService.getOneById(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)
 
         dtoCustomerOfferLoanChange.uploadDocument?.run {
             val fileTemplateIdList = dtoCustomerOfferLoanChange.uploadDocument.map { it.documentTemplateId }

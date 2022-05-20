@@ -9,6 +9,7 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.product.exception.LoanProductBusinessException
+import cn.sunline.saas.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.product.service.dto.DTOLoanProductResponse
 import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -210,15 +211,10 @@ class LoanProductManagerService(
 
 
     fun getUploadConfig(id:Long):List<DTOLoanUploadConfigure>{
-        val page = loanProductService.getPageWithTenant({root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("id"),id))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-
-        return  page.content.first().loanUploadConfigureFeatures!!.map {
+        val product = loanProductService.getOne(id)?: throw LoanProductNotFoundException("Invalid product")
+        return  product.loanUploadConfigureFeatures?.map {
             objectMapper.convertValue(it)
-        }
+        }?: listOf()
     }
 
     private fun addBusinessUnitType(product:DTOLoanProductView):DTOLoanProductView{

@@ -59,7 +59,7 @@ class CustomerOfferProcedureService(
     fun retrieve(customerOfferId:Long,countryCode:String):DTOCustomerOfferLoanView{
         val dtoCustomerOfferLoanView = customerLoanApplyService.retrieve(customerOfferId)
 
-        val customerOffer = customerOfferService.getOneById(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
             val dtoCustomerOffer = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
