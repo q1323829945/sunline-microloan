@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/ConsumerLoan")
 class ConsumerLoanController {
 
+
+
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
 

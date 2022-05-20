@@ -3,6 +3,7 @@ package cn.sunline.saas.huaweicloud.apig.services
 import cn.sunline.saas.gateway.api.GatewayGroup
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
@@ -19,7 +20,7 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,createParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return GroupResponseParams(
             id = map["id"].toString()
@@ -37,7 +38,7 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.PUT,updateParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return GroupResponseParams(
             id = map["id"].toString()
@@ -63,7 +64,7 @@ class HuaweiCloudApigGroupService: GatewayGroup,HuaweiCloudApig(){
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         val list = map["groups"] as List<*>
 

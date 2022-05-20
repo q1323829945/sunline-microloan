@@ -26,8 +26,8 @@ data class DTOLoanProduct(
 data class DTOInterestFeature(
     val id: Long,
     val interestType: InterestType,
-    val ratePlanId: MutableList<DTOInterestRate>,
-    val interestModality: DTOInterestModality,
+    val ratePlan: MutableList<DTOInterestRate>,
+    val interest: DTOInterestModality,
     val overdueInterest: DTOOverdueInterest
 )
 
@@ -78,5 +78,4 @@ data class DTOFeeFeature(
 data class DTOLoanUploadConfigure(
     val id: Long,
     val name: String,
-    val directoryId: Long,
 )

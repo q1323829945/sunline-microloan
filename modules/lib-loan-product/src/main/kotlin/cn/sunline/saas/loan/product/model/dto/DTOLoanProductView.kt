@@ -21,6 +21,9 @@ data class DTOLoanProductView(
         val description: String,
         val loanProductType: LoanProductType,
         val loanPurpose: String,
+        var businessUnit:String,
+        var business:BusinessUnitView?,
+        var graceDays:Long,
         val status: BankingProductStatus,
         var amountConfiguration: DTOAmountLoanProductConfigurationView?,
         var termConfiguration: DTOTermLoanProductConfigurationView?,
@@ -29,6 +32,12 @@ data class DTOLoanProductView(
         var feeFeatures:MutableList<DTOFeeFeatureView>?,
         var loanUploadConfigureFeatures:MutableList<LoanUploadConfigureView>?
 )
+data class BusinessUnitView(
+    val id:String,
+    val type:String
+)
+
+
 data class LoanUploadConfigureView(
         val id: String,
         val name: String,
@@ -50,9 +59,9 @@ data class DTOInterestFeatureView(
         val id: String,
         val productId: String,
         val interestType: InterestType,
-        val ratePlanId: Long,
+        val ratePlanId: String,
         val interest: DTOInterestFeatureModalityView,
-        val overdueInterest: DTOOverdueInterestFeatureModalityView
+        val overdueInterest: DTOOverdueInterestFeatureModalityView,
 )
 
 data class DTOInterestFeatureModalityView(

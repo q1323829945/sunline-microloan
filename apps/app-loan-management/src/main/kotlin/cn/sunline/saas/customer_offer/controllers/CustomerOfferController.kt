@@ -2,7 +2,12 @@ package cn.sunline.saas.customer_offer.controllers
 
 import cn.sunline.saas.customer_offer.controllers.model.OperationType
 import cn.sunline.saas.customer_offer.service.AppCustomerOfferService
+import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
+import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -27,6 +32,7 @@ class CustomerOfferController {
         val id:String,
         val operationType: OperationType,
     )
+
 
     @Autowired
     private lateinit var appCustomerOfferService: AppCustomerOfferService
@@ -54,9 +60,15 @@ class CustomerOfferController {
         return DTOResponseSuccess(response).response()
     }
 
-
     @GetMapping("download")
     fun download(@PathParam("path")path:String,response: HttpServletResponse){
         appCustomerOfferService.download(path, response)
+    }
+
+
+
+    @GetMapping("invoke/{id}")
+    fun getCustomerOffer(@PathVariable(name = "id")id:String): DTOInvokeCustomerOfferView {
+        return appCustomerOfferService.getInvokeCustomerOffer(id.toLong())
     }
 }

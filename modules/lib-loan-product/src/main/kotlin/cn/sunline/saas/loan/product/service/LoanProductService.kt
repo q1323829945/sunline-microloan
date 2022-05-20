@@ -86,6 +86,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.description,
             loanProductData.loanProductType,
             loanProductData.loanPurpose,
+            loanProductData.businessUnit.toLong(),
+            loanProductData.graceDays,
             loanUploadConfigureList
         )
 
@@ -272,6 +274,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanUploadConfigureList.add(loanUploadConfigure)
         }
         oldLoanProduct.loanUploadConfigureFeatures = loanUploadConfigureList
+        oldLoanProduct.businessUnit = loanProductData.businessUnit.toLong()
+        oldLoanProduct.graceDays = loanProductData.graceDays
 
         //update loan product
         loanProductData.amountConfiguration.apply {

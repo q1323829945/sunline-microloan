@@ -7,16 +7,18 @@ data class DTOCustomerOfferView(
         val customerOfferProcedure: CustomerOfferProcedureView,
         var product: ProductView?
 )
+
+
 data class CustomerOfferProcedureView(
-        val customerId: Long,
+        val customerId: String,
         val customerOfferProcess: String,
         val employee: Long,
-        var customerOfferId:Long,
+        var customerOfferId:String?,
         var customerOfferProcessNextTask:String?,
 )
 
 data class ProductView(
-        var productId: Long?,
+        var productId: String?,
         val amountConfiguration: DTOAmountConfigurationView?,
         val termConfiguration: DTOTermConfigurationView?,
 )

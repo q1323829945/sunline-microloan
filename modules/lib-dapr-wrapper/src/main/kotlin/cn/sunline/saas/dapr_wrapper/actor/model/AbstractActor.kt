@@ -13,7 +13,6 @@ data class EntityConfig(
 )
 
 abstract class AbstractActor(private val actorType: String, val entityConfig: EntityConfig? = null) {
-
     fun registerActor() {
         ActorContext.registerActor(actorType, this)
     }

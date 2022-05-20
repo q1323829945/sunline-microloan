@@ -20,22 +20,22 @@ class UnderwritingArrangementInvolvement(
     val id: Long,
 
     @NotNull
-    @Column(name = "party_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "party_id",  columnDefinition = "bigint not null")
     val partyId: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "involvement_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    @Column(name = "involvement_type", length = 16, columnDefinition = "varchar(16) not null")
     val involvementType: UnderwriterInvolvementType = UnderwriterInvolvementType.UNDERWRITER_PARTY,
 
     @NotNull
-    @Column(nullable = false, length = 1, columnDefinition = "tinyint(1) not null")
+    @Column(name = "`primary`",  length = 1, columnDefinition = "tinyint(1) not null")
     val primary: Boolean
 
 ) : MultiTenant {
 
     @NotNull
-    @Column(name = "tenant_id", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "tenant_id",  columnDefinition = "bigint not null")
     private var tenantId: Long = 0L
 
     override fun getTenantId(): Long? {

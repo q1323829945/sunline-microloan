@@ -80,4 +80,13 @@ class UnderwritingPublishImpl : UnderwritingPublish {
             dtoCustomerOffer,
         )
     }
+
+
+    override fun initiateLoanAgreement(applicationId: String) {
+        PubSubService.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.INITIATE_LOAN_AGREEMENT.toString(),
+            applicationId
+        )
+    }
 }

@@ -50,6 +50,10 @@ class UnderwritingManagementService (private val underwritingManagementRepositor
         underwriting.status = operationType
         save(underwriting)
         underwritingPublish.updateCustomerOfferStatus(id.toLong(),operationType)
+
+        if(OperationType.PASS == operationType){
+            underwritingPublish.initiateLoanAgreement(id)
+        }
     }
 
 }

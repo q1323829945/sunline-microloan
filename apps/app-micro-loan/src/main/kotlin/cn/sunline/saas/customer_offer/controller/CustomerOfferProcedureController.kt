@@ -3,6 +3,7 @@ package cn.sunline.saas.customer_offer.controller
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer_offer.service.CustomerOfferProcedureService
+import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
@@ -46,6 +47,12 @@ class CustomerOfferProcedureController {
     fun retrieveLoanApply(@PathVariable("customerOfferId")customerOfferId:Long,@PathVariable("countryCode")countryCode:String):ResponseEntity<DTOResponseSuccess<DTOCustomerOfferLoanView>>{
         val dtoCustomerOfferLoanView = customerOfferProductService.retrieve(customerOfferId, countryCode)
         return DTOResponseSuccess(dtoCustomerOfferLoanView).response()
+    }
+
+
+    @GetMapping("loanUploadTemplate/{productId}")
+    fun getLoanUploadTemplate(@PathVariable productId:String):ResponseEntity<DTOResponseSuccess<List<DTOProductUploadConfig>>>{
+        return DTOResponseSuccess(customerOfferProductService.getProductUploadConfig(productId)).response()
     }
 
 //    @GetMapping("loan/{customerId}/list")

@@ -4,6 +4,7 @@ import cn.sunline.saas.gateway.api.GatewayEnvironment
 import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 
@@ -19,7 +20,7 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,environmentCreateParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return EnvironmentResponseParams(
             id = map["id"].toString()
@@ -36,7 +37,7 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.PUT,environmentUpdateParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return EnvironmentResponseParams(
             id = map["id"].toString()
@@ -60,7 +61,7 @@ class HuaweiCloudApigEnvironmentService:GatewayEnvironment,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         val list = map["envs"] as List<*>
 

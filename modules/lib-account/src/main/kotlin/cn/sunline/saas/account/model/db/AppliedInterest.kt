@@ -24,7 +24,7 @@ class AppliedInterest(
     val agreementId:Long,
 
     @NotNull
-    @Column(nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
+    @Column(nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     val principal: BigDecimal,
 
     @NotNull
@@ -33,7 +33,7 @@ class AppliedInterest(
         nullable = false,
         scale = 9,
         precision = 6,
-        columnDefinition = "number(9,6) not null"
+        columnDefinition = "decimal(9,6) not null"
     )
     val appliedRate: BigDecimal,
 
@@ -43,7 +43,7 @@ class AppliedInterest(
         nullable = false,
         scale = 19,
         precision = 2,
-        columnDefinition = "number(19,2) not null"
+        columnDefinition = "decimal(19,2) not null"
     )
     val appliedInterest: BigDecimal
 

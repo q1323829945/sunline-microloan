@@ -6,6 +6,7 @@ import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
 import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 
 const val DOMAIN_HASH_MAP = "domain_hash_map"
@@ -27,7 +28,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         val status = map["status"].toString()
 
@@ -78,7 +79,7 @@ class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
             //get responseBody
             val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-            val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+            val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
             val status = map["status"].toString()
 

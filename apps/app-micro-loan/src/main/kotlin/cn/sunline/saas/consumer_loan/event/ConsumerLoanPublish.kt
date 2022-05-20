@@ -11,7 +11,7 @@ import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruc
  */
 interface ConsumerLoanPublish {
 
-    fun initiatePositionKeeping(dtoBankingTransaction: DTODisbursementInstruction)
+    fun initiatePositionKeeping(dtoBankingTransaction: DTOBankingTransaction)
 
     fun financialAccounting(dtoBankingTransaction: DTODisbursementInstruction)
 

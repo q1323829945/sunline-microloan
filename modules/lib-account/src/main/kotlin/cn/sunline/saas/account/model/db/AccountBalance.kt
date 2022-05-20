@@ -34,7 +34,7 @@ class AccountBalance(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "account_balance_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val accountBalanceType: AccountBalanceType
+    val accountBalanceType: AccountBalanceType,
 
 ) : MultiTenant {
 

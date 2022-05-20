@@ -9,8 +9,11 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.product.exception.LoanProductBusinessException
+import cn.sunline.saas.product.service.dto.DTOLoanProductResponse
+import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.rpc.invoke.ProductInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -20,10 +23,13 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import javax.persistence.criteria.Predicate
 
 
 @Service
-class LoanProductManagerService {
+class LoanProductManagerService(
+    val productInvoke: ProductInvoke
+) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -81,12 +87,13 @@ class LoanProductManagerService {
             }
         }
 
+
         loanProductData.version = if (oldLoanProduct == null) "1" else (oldLoanProduct.version.toInt() + 1).toString()
-        return loanProductService.register(loanProductData)
+        return addBusinessUnitType(loanProductService.register(loanProductData))
     }
 
     fun getOne(id: Long): DTOLoanProductView {
-        return loanProductService.getLoanProduct(id)
+        return addBusinessUnitType(loanProductService.getLoanProduct(id))
     }
 
     fun updateOne(
@@ -123,7 +130,7 @@ class LoanProductManagerService {
             }
         }
 
-        return loanProductService.updateLoanProduct(id, dtoLoanProduct)
+        return addBusinessUnitType(loanProductService.updateLoanProduct(id, dtoLoanProduct))
     }
 
     fun updateStatus(
@@ -190,5 +197,33 @@ class LoanProductManagerService {
                 ManagementExceptionCode.PRODUCT_STATUS_ERROR
             )
         }
+    }
+
+
+    fun getInvokeOne(productId:Long):DTOLoanProductResponse{
+        val product = loanProductService.getLoanProduct(productId)
+        val list = productInvoke.getInterestRate(product.interestFeature!!.ratePlanId.toLong())
+        val loanProduct = objectMapper.convertValue<DTOLoanProductResponse>(product)
+        loanProduct.interestFeature.ratePlan = objectMapper.convertValue(list)
+        return loanProduct
+    }
+
+
+    fun getUploadConfig(id:Long):List<DTOLoanUploadConfigure>{
+        val page = loanProductService.getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Long>("id"),id))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+
+        return  page.content.first().loanUploadConfigureFeatures!!.map {
+            objectMapper.convertValue(it)
+        }
+    }
+
+    private fun addBusinessUnitType(product:DTOLoanProductView):DTOLoanProductView{
+        val businessUnit = productInvoke.getBusinessUnit(product.businessUnit.toLong())
+        product.business = objectMapper.convertValue(businessUnit)
+        return product
     }
 }

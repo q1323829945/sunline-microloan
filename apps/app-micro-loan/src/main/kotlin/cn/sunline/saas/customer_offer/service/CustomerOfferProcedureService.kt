@@ -3,23 +3,31 @@ package cn.sunline.saas.customer_offer.service
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTODetail
 import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.obs.api.ObsApi
+import cn.sunline.saas.obs.api.PutParams
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
+import cn.sunline.saas.rpc.invoke.CustomerOfferProcedureInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 
 @Service
-class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOfferPublish) {
+class CustomerOfferProcedureService(
+    private val customerOfferPublish: CustomerOfferPublish,
+    private val customerOfferProcedureInvoke: CustomerOfferProcedureInvoke,
+    private val obsApi: ObsApi) {
     @Autowired
     private lateinit var pdpaMicroService: PDPAMicroService
 
@@ -54,7 +62,7 @@ class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOf
         val customerOffer = customerOfferService.getOneById(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
-            val dtoCustomerOffer = objectMapper.readValue(customerOffer.data,DTOCustomerOfferAdd::class.java)
+            val dtoCustomerOffer = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
             val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
             dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
             dTOCustomerOfferProcedureView.status = customerOffer.status
@@ -94,13 +102,20 @@ class CustomerOfferProcedureService(private val customerOfferPublish: CustomerOf
 
     }
 
+    fun getProductUploadConfig(id:String):List<DTOProductUploadConfig>{
+        val uploadConfigList =  customerOfferProcedureInvoke.getProductUploadConfig(id.toLong())
+        return objectMapper.convertValue(uploadConfigList)
+    }
+
     private fun getProduct(productId:Long): DTOLoanProductView {
         return productService.findById(productId)
     }
 
 
     private fun pdpaSign(customerId:Long,pdpaTemplateId:Long,originalFilename:String,inputStream: InputStream):String{
-        return pdpaMicroService.sign(customerId,pdpaTemplateId,originalFilename,inputStream)
+        val key = "$customerId/signature/$pdpaTemplateId/$originalFilename"
+        obsApi.putObject(PutParams(key,inputStream))
+        return key
     }
 
     private fun getPDPA(countryCode:String): PDPAInformation {

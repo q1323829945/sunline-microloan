@@ -20,4 +20,6 @@ interface UnderwritingPublish {
     fun execFraudEvaluation(partner: String, underwriting: Underwriting)
 
     fun updateCustomerOfferStatus(applicationId: Long,operationType: OperationType)
+
+    fun initiateLoanAgreement(applicationId:String)
 }

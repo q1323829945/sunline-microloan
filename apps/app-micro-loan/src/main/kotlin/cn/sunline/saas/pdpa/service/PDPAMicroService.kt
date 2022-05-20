@@ -2,6 +2,7 @@ package cn.sunline.saas.pdpa.service
 
 import cn.sunline.saas.config.AppHttpConfiguration
 import cn.sunline.saas.config.IpConfig
+import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.rpc.invoke.PdpaInvoke
 import org.springframework.stereotype.Service
@@ -20,6 +21,8 @@ class PDPAMicroService(
         fileName: String,
         inputStream: InputStream
     ): String {
+
+
         //uri
 //        val uri = "http://${ipConfig.pdpaIp}/pdpa/sign"
 //        //parts

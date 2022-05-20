@@ -5,6 +5,8 @@ import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 
 import cn.sunline.saas.loan.product.model.dto.*import cn.sunline.saas.product.service.LoanProductManagerService
+import cn.sunline.saas.product.service.dto.DTOLoanProductResponse
+import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -46,7 +48,6 @@ class LoanProductController {
     fun getOne(@PathVariable id: String): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         val result = loanProductManagerService.getOne(id.toLong())
         return DTOResponseSuccess(result).response()
-
     }
 
     @PutMapping("{id}")
@@ -77,6 +78,16 @@ class LoanProductController {
     fun getAllByStatus(): ResponseEntity<DTOPagedResponseSuccess> {
         val productList =   loanProductManagerService.getLoanProductListByStatus(BankingProductStatus.SOLD,Pageable.unpaged())
         return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProduct>(it) }).response()
+    }
+
+    @GetMapping("invoke/{id}")
+    fun getInvokeOne(@PathVariable id:String): DTOLoanProductResponse {
+        return loanProductManagerService.getInvokeOne(id.toLong())
+    }
+
+    @GetMapping("uploadConfig/{id}")
+    fun getUploadConfigById(@PathVariable id:String):List<DTOLoanUploadConfigure>{
+        return loanProductManagerService.getUploadConfig(id.toLong())
     }
 
 }
