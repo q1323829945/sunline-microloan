@@ -25,7 +25,7 @@ class MoneyTransferInstruction(
     val moneyTransferInstructionType: MoneyTransferInstructionType,
 
     @NotNull
-    @Column(name="money_transfer_instruction_amount",nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
+    @Column(name="money_transfer_instruction_amount",nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     val moneyTransferInstructionAmount: BigDecimal,
 
     @NotNull

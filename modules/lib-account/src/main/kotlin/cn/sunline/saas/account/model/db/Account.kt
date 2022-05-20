@@ -47,7 +47,7 @@ class Account(
     @Column(name = "account_currency", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val accountCurrency: CurrencyType,
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER ,cascade = [CascadeType.ALL])
     @JoinColumn(name = "account_id")
     val accountBalance: MutableList<AccountBalance>,
 

@@ -46,4 +46,11 @@ class InterestRateController {
     fun deleteOne(@PathVariable(name = "id") id: String,@PathVariable(name = "ratePlanId") ratePlanId: String): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
         return DTOResponseSuccess(interestRateManagerService.deleteOne(id.toLong(),ratePlanId.toLong())).response()
     }
+
+    @GetMapping("all")
+    fun getAll( @RequestParam(required = false) ratePlanId: String): List<DTOInterestRate> {
+        val page = interestRateManagerService.getPaged(ratePlanId.toLong(), Pageable.unpaged())
+        return page.content.map { objectMapper.convertValue(it) }
+    }
+
 }

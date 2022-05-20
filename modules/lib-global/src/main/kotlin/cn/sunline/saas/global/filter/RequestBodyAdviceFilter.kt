@@ -7,6 +7,7 @@ import cn.sunline.saas.global.util.setUserId
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.apache.commons.io.IOUtils
 import org.springframework.core.MethodParameter
@@ -44,8 +45,8 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
         }
 
         val body = IOUtils.toString(inputMessage.body, Charset.forName("utf-8"))
-        val bodyMap = when(val bodyData = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(body))["data"]){
-            is String -> objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(bodyData))
+        val bodyMap = when(val bodyData = objectMapper.readValue<Map<*,*>>(body)["data"]){
+            is String -> objectMapper.readValue<Map<*,*>>(bodyData)
             else -> objectMapper.treeToValue<Map<*,*>>(objectMapper.valueToTree(bodyData))
         }
 

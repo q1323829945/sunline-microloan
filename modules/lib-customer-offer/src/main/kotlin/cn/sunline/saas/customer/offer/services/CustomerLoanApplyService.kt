@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -61,7 +62,7 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
 
         this.save(customerLoanApply)
 
-        return objectMapper.treeToValue(objectMapper.readTree(customerLoanApply.data))
+        return objectMapper.readValue(customerLoanApply.data)
     }
 
     fun update(customerOfferId: Long, dtoCustomerOfferLoanChange: DTOCustomerOfferLoanChange, dtoFile: List<DTOFile>) {
@@ -71,7 +72,7 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
         )
 
         val originalData =
-            objectMapper.treeToValue<DTOCustomerOfferLoanChange>(objectMapper.readTree(customerLoanApply.data))
+            objectMapper.readValue<DTOCustomerOfferLoanChange>(customerLoanApply.data)
 
         val customerOffer = customerOfferService.getOneById(customerOfferId)
 

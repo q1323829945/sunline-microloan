@@ -57,7 +57,7 @@ class BankingTransaction(
     val currency: CurrencyType,
 
     @NotNull
-    @Column(nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
+    @Column(nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     val amount: BigDecimal,
 
     @Column(
@@ -65,7 +65,7 @@ class BankingTransaction(
         nullable = true,
         scale = 19,
         precision = 2,
-        columnDefinition = "number(19,2) null"
+        columnDefinition = "decimal(19,2) null"
     )
     val appliedFee: BigDecimal?,
 
@@ -74,7 +74,7 @@ class BankingTransaction(
         nullable = true,
         scale = 9,
         precision = 6,
-        columnDefinition = "number(9,6) null"
+        columnDefinition = "decimal(9,6) null"
     )
     val appliedRate: BigDecimal?,
 

@@ -41,7 +41,6 @@ object ConsumerLoanAssembly {
         val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
             DTOInterestArrangementAdd(
                 interestType = interestType,
-                baseYearDays = interestModality.baseYearDays,
                 adjustFrequency = interestModality.adjustFrequency,
                 overdueInterestRatePercentage = overdueInterest.overdueInterestRatePercentage,
                 planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlanId),
@@ -101,7 +100,8 @@ object ConsumerLoanAssembly {
                 )
             },
             borrower = customerOffer.customerId,
-            lender = mutableListOf(loanProduct.businessUnit), disbursementArrangement = dtoDisbursementArrangementAdd,
+            lender = mutableListOf(loanProduct.businessUnit),
+            disbursementArrangement = dtoDisbursementArrangementAdd,
             purpose = customerOffer.purpose ?: loanProduct.loanPurpose,
             applicationId = customerOffer.applicationId,
             userId = customerOffer.userId,

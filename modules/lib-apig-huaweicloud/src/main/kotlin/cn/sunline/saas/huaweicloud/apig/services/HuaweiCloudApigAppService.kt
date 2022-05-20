@@ -5,6 +5,7 @@ import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 
@@ -27,7 +28,7 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return AppResponseParams(
             id = map["id"].toString(),
@@ -54,7 +55,7 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
 
         val responseBody = execute(uri,HttpRequestMethod.PUT,request)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return AppResponseParams(
             id = map["id"].toString(),
@@ -89,7 +90,7 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,request)
 
-        val list = objectMapper.treeToValue<List<*>>(objectMapper.readTree(responseBody))
+        val list = objectMapper.readValue<List<*>>(responseBody)
 
         return list.map {
             it as Map<*,*>
@@ -122,7 +123,7 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         val list = map["apps"] as List<*>
 
@@ -144,3 +145,4 @@ class HuaweiCloudApigAppService:GatewayApp,HuaweiCloudApig() {
         )
     }
 }
+

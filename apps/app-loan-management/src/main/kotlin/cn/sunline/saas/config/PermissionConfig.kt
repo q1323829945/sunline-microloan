@@ -77,6 +77,9 @@ enum class PermissionConfig (
     ORGANISATION_MODIFY("Organisation", "Organisation/[0-9]+\$", RequestMethod.PUT, "Modify Organisation"),
     ORGANISATION_GET_ONE("Organisation", "Organisation/[0-9]+\$", RequestMethod.GET, "Get One Organisation"),
 
+    BUSINESS_UNIT_GET_ALL("BusinessUnit", "BusinessUnit\$", RequestMethod.GET, "Get All BusinessUnit"),
+
+
     PERSON_ADD("Person", "Person\$", RequestMethod.POST, "Add Person"),
     PERSON_LIST("Person", "Person(\\?.*|\$)", RequestMethod.GET, "View Person list"),
     PERSON_MODIFY("Person", "Person/[0-9]+\$", RequestMethod.PUT, "Modify Person"),
@@ -91,6 +94,9 @@ enum class PermissionConfig (
     UNDERWRITING_MANAGEMENT_MODIFY("UnderwritingManagement", "UnderwritingManagement/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify UnderwritingManagement"),
     UNDERWRITING_MANAGEMENT_GET_ONE("UnderwritingManagement", "UnderwritingManagement/[0-9]+\$", RequestMethod.GET, "Get One UnderwritingManagement"),
     UNDERWRITING_MANAGEMENT_UPDATE_STATUS("UnderwritingManagement", "UnderwritingManagement/status", RequestMethod.GET, "Update UnderwritingManagement status"),
+
+    LOAN_AGREEMENT_MANAGEMENT_LIST("LoanAgreement", "LoanAgreement(\\?.*|\$)", RequestMethod.GET, "View LoanAgreement list"),
+    LOAN_AGREEMENT_MANAGEMENT_PAID("LoanAgreement", "LoanAgreement/stauts/[0-9]+\$", RequestMethod.PUT, "LoanAgreement paid"),
 
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -107,6 +113,7 @@ enum class PermissionConfig (
     PERSON_MENU("menu","personConfig", RequestMethod.GET,"View formal PersonConfig menu"),
     CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
     UNDERWRITING_MANAGEMENT_MENU("menu","underwritingManagementConfig", RequestMethod.GET,"View formal underwritingManagementConfig menu"),
+    LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
 
 
     PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),

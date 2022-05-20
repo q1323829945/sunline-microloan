@@ -21,6 +21,8 @@ data class DTOLoanProduct(
     var description: String,
     var loanProductType: LoanProductType,
     var loanPurpose: String,
+    var businessUnit:String,
+    var graceDays:Long,
     var status: BankingProductStatus?,
     var amountConfiguration: DTOAmountLoanProductConfiguration,
     var termConfiguration: DTOTermLoanProductConfiguration,

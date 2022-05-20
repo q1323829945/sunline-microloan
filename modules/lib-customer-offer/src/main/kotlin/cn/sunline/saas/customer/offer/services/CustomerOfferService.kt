@@ -44,7 +44,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
 
         val customerOfferProcedureView = objectMapper.convertValue<CustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
 
-        customerOfferProcedureView.customerOfferId = save.id!!
+        customerOfferProcedureView.customerOfferId = save.id.toString()
 
         return customerOfferProcedureView
 

@@ -1,5 +1,6 @@
 package cn.sunline.saas.consumer_loan.service
 
+import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementNotFoundException
@@ -119,7 +120,26 @@ class ConsumerLoanService(
 
         val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
 
-        consumerLoanPublish.initiatePositionKeeping(disbursementInstruction)
+
+
+        var customerId:Long = 0
+        loanAgreement.involvements.forEach {
+            if(it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER){
+                customerId = it.partyId
+            }
+        }
+        consumerLoanPublish.initiatePositionKeeping(DTOBankingTransaction(
+            name = disbursementArrangement.disbursementAccountBank,
+            agreementId = disbursementInstruction.agreementId,
+            instructionId = 1,
+            transactionDescription = null,
+            currency = loanAgreement.currency,
+            amount = loanAgreement.amount,
+            businessUnit = disbursementInstruction.businessUnit,
+            appliedFee = null,
+            appliedRate = null,
+            customerId = customerId,
+        ))
         consumerLoanPublish.financialAccounting(disbursementInstruction)
     }
 

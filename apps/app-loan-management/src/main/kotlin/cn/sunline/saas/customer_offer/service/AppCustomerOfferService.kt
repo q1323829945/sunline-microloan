@@ -1,6 +1,8 @@
 package cn.sunline.saas.customer_offer.service
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus.*
+import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferAdd
+import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferData
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.customer_offer.controllers.model.OperationType
@@ -8,11 +10,14 @@ import cn.sunline.saas.customer_offer.controllers.model.OperationType.*
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
+import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
+import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.apache.commons.io.IOUtils
 import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +29,9 @@ import java.net.URLEncoder
 import javax.servlet.http.HttpServletResponse
 
 @Service
-class AppCustomerOfferService {
+class AppCustomerOfferService(
+    val customerOfferInvoke: CustomerOfferInvoke
+) {
 
     @Autowired
     private lateinit var customerOfferService: CustomerOfferService
@@ -77,6 +84,12 @@ class AppCustomerOfferService {
         val customerOfferLoan = customerLoanApplyService.retrieve(id)
         val managementCustomerOffer = objectMapper.convertValue<DTOManagementCustomerOfferView>(customerOfferLoan)
 
+
+        val customerOffer = customerOfferService.getOneById(id)
+
+        val product = customerOfferInvoke.getProduct(customerOffer!!.productId)
+
+
         managementCustomerOffer.uploadDocument?.forEach {
             val config = loanUploadConfigureService.getOne(it.documentTemplateId.toLong())
             config?.run {
@@ -84,6 +97,11 @@ class AppCustomerOfferService {
             }
             it.fileName = it.file.substring(it.file.lastIndexOf("/")+1)
         }
+
+        managementCustomerOffer.product = objectMapper.convertValue(product)
+        managementCustomerOffer.product!!.productId =product.id
+        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
+        managementCustomerOffer.referenceAccount = objectMapper.convertValue(data.referenceAccount)
 
         return managementCustomerOffer
     }
@@ -102,4 +120,20 @@ class AppCustomerOfferService {
         inputStream.close()
     }
 
+    fun getInvokeCustomerOffer(id:Long): DTOInvokeCustomerOfferView {
+        val response = getDetail(id)
+        val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
+
+        return DTOInvokeCustomerOfferView(
+            id.toString(),
+            "123", //TODO:
+            customerOffer.customerId.toString(),
+            response.product!!.productId!!,
+            response.loan!!.amount,
+            response.loan.currency,
+            response.loan.term,
+            objectMapper.convertValue(response.referenceAccount!!),
+            response.product!!.loanPurpose
+        )
+    }
 }

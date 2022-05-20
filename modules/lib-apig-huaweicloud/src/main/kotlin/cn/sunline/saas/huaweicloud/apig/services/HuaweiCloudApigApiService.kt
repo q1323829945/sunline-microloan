@@ -6,6 +6,7 @@ import cn.sunline.saas.gateway.api.dto.*
 import cn.sunline.saas.global.constant.HttpRequestMethod
 import cn.sunline.saas.huaweicloud.apig.constant.*
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,7 +31,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.POST,apiParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return ApiResponseParams(
             id = map["id"].toString()
@@ -57,7 +58,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
         //get responseBody
         val responseBody = execute(uri,HttpRequestMethod.PUT,apiParams)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         return ApiResponseParams(
             id = map["id"].toString()
@@ -116,7 +117,7 @@ class HuaweiCloudApigApiService:GatewayApi,HuaweiCloudApig() {
 
         val responseBody = execute(uri,HttpRequestMethod.GET)
 
-        val map = objectMapper.treeToValue<Map<*,*>>(objectMapper.readTree(responseBody))
+        val map = objectMapper.readValue<Map<*,*>>(responseBody)
 
         val list = map["apis"] as List<*>
 
