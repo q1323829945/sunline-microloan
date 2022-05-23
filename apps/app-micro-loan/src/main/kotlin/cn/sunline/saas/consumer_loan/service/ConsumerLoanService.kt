@@ -53,12 +53,14 @@ class ConsumerLoanService(
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
         val loanProduct = consumerLoanInvoke.retrieveLoanProduct(customerOffer.productId)
-
         val loanAgreementAggregate = loanAgreementService.registered(
             ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
-                customerOffer, loanProduct, InterestRateHelper.getRate(customerOffer.term, consumerLoanInvoke.retrieveBaseInterestRate())?.toPlainString()
+                customerOffer,
+                loanProduct,
+                InterestRateHelper.getRate(customerOffer.term, consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id))?.toPlainString()
             )
         )
+
         customerOffer.guarantors?.run {
             underwritingArrangementService.registered(
                 ConsumerLoanAssembly.convertToDTOUnderwritingArrangementAdd(
@@ -69,7 +71,7 @@ class ConsumerLoanService(
         }
         // Calculate Repayment Schedule and create invoices
         val interestRate = loanAgreementAggregate.interestArrangement.getExecutionRate()
-        val shedules = ScheduleService(
+        val schedules = ScheduleService(
             BigDecimal(customerOffer.amount),
             interestRate,
             customerOffer.term,
@@ -78,7 +80,7 @@ class ConsumerLoanService(
             loanAgreementAggregate.loanAgreement.toDateTime
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
 
-        invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(shedules,loanAgreementAggregate))
+        invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate)
         signAndLending(loanAgreement)

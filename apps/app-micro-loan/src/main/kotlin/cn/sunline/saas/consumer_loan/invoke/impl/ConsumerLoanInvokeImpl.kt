@@ -10,10 +10,7 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
-import cn.sunline.saas.response.DTOResponseSuccess
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Component
 
@@ -50,7 +47,16 @@ class ConsumerLoanInvokeImpl: ConsumerLoanInvoke {
         )!!
     }
 
-    override fun retrieveBaseInterestRate(): MutableList<InterestRate>? {
-        TODO("Not yet implemented")
+    override fun retrieveBaseInterestRate(ratePlanId: Long): MutableList<InterestRate>? {
+        return  RPCService.get<MutableList<InterestRate>>(
+            serviceName = applId,
+            methodName = "InterestRate/all",
+            queryParams = mapOf("ratePlanId" to ratePlanId.toString()),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant().toString()
+        )
     }
 }

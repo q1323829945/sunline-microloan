@@ -16,6 +16,6 @@ interface ConsumerLoanInvoke {
 
     fun retrieveLoanProduct(productId: Long): DTOLoanProduct
 
-    fun retrieveBaseInterestRate():MutableList<InterestRate>?
+    fun retrieveBaseInterestRate(ratePlanId:Long):MutableList<InterestRate>?
 
 }

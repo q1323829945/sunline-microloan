@@ -14,6 +14,6 @@ object InterestRateHelper {
 
     fun getRate(loanTerm: LoanTermType, rates: MutableList<InterestRate>?): BigDecimal? {
         rates?.sortBy { item -> item.period.term }
-        return rates?.first { it.period.term >= loanTerm.term }?.rate
+        return rates?.firstOrNull() { it.period.term >= loanTerm.term }?.rate
     }
 }
