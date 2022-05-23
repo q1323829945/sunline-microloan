@@ -47,9 +47,9 @@ class CustomerOfferProcedureService(
         val loanProduct = this.getProduct(dtoCustomerOffer.product.productId)
 
         val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
-
         val key = this.pdpaSign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
 
+        dtoCustomerOffer.product.productName = loanProduct.name
         dtoCustomerOffer.pdpa.signature = key
         val customerOfferProcedure = customerOfferService.initiate(dtoCustomerOffer)
 
