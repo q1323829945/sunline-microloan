@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/LoanProduct")
 class LoanProductController {
 
+    data class DTOStatus(
+        val status:BankingProductStatus
+    )
+
     @Autowired
     private lateinit var loanProductManagerService: LoanProductManagerService
 
@@ -58,8 +62,8 @@ class LoanProductController {
     }
 
     @PutMapping("status/{id}")
-    fun updateStatus(@PathVariable id: String, @RequestBody dtoLoanProductStatus: BankingProductStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
-        return loanProductManagerService.updateStatus(id.toLong(),dtoLoanProductStatus)
+    fun updateStatus(@PathVariable id: String, @RequestBody dtoLoanProductStatus: DTOStatus): ResponseEntity<DTOResponseSuccess<LoanProduct>> {
+        return loanProductManagerService.updateStatus(id.toLong(),dtoLoanProductStatus.status)
     }
 
     @GetMapping("{identificationCode}/retrieve")
@@ -71,7 +75,7 @@ class LoanProductController {
     @GetMapping("{identificationCode}/history")
     fun getLoanProductHistoryList(@PathVariable identificationCode:String): ResponseEntity<DTOPagedResponseSuccess>{
         val productList =  loanProductManagerService.getLoanProductHistoryList(identificationCode)
-        return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProduct>(it) }).response()
+        return DTOPagedResponseSuccess(productList.map { objectMapper.convertValue<DTOLoanProductView>(it) }).response()
     }
 
     @GetMapping("allByStatus")

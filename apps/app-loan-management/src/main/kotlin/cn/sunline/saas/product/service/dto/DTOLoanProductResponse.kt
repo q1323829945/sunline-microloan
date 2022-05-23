@@ -3,7 +3,6 @@ package cn.sunline.saas.product.service.dto
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.loan.product.model.LoanProductType
 
