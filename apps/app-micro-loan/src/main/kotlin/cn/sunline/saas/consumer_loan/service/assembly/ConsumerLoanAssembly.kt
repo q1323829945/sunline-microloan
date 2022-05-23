@@ -41,9 +41,10 @@ object ConsumerLoanAssembly {
         val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
             DTOInterestArrangementAdd(
                 interestType = interestType,
-                adjustFrequency = interestModality.adjustFrequency,
+                baseYearDays = interest.baseYearDays,
+                adjustFrequency = interest.adjustFrequency,
                 overdueInterestRatePercentage = overdueInterest.overdueInterestRatePercentage,
-                planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlanId),
+                planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(this.ratePlan),
                 baseRate = baseRate
             )
         }
