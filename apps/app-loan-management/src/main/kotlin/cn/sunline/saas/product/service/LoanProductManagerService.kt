@@ -88,8 +88,11 @@ class LoanProductManagerService(
             }
         }
 
+        loanProductData.version = oldLoanProduct?.run {
+            updateStatus(this.id.toLong(),BankingProductStatus.OBSOLETE)
+            (this.version.toInt() + 1).toString()
+        }?: "1"
 
-        loanProductData.version = if (oldLoanProduct == null) "1" else (oldLoanProduct.version.toInt() + 1).toString()
         return addBusinessUnitType(loanProductService.register(loanProductData))
     }
 
