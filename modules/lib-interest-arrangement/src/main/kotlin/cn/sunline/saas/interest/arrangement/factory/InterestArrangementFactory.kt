@@ -28,7 +28,6 @@ class InterestArrangementFactory {
         dtoInterestArrangementAdd: DTOInterestArrangementAdd,
     ): InterestArrangement {
         val planRates = objectMapper.convertValue<MutableList<InterestRate>>(dtoInterestArrangementAdd.planRates)
-
         return InterestArrangement(
             id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,

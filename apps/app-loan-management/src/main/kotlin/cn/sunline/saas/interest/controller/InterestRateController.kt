@@ -53,4 +53,6 @@ class InterestRateController {
         return page.content.map { objectMapper.convertValue(it) }
     }
 
+
+
 }

@@ -476,3 +476,11 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
 
 }
+
+
+fun main() {
+
+    LoanTermType.values().singleOrNull { it.term == TermType(1080) }
+    println(LoanTermType.values().singleOrNull { it.term == TermType(1080) })
+
+}
