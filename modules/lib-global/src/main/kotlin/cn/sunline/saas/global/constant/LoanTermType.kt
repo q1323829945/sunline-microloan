@@ -1,7 +1,6 @@
 package cn.sunline.saas.global.constant
 
-import org.joda.time.DateTime
-import org.joda.time.Instant
+import cn.sunline.saas.global.model.TermType
 
 /**
  * @title: TermType
@@ -9,37 +8,11 @@ import org.joda.time.Instant
  * @author Kevin-Cui
  * @date 2022/3/10 11:10
  */
-enum class LoanTermType(val days:Int) {
-    ONE_MONTH(30) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusMonths(1).toInstant()
-        }
-    },
-    THREE_MONTHS(90) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusMonths(2).toInstant()
-        }
-    },
-    SIX_MONTHS(180) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusMonths(6).toInstant()
-        }
-    },
-    ONE_YEAR(360) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusYears(1).toInstant()
-        }
-    },
-    TWO_YEAR(720) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusYears(2).toInstant()
-        }
-    },
-    THREE_YEAR(1080) {
-        override fun calDays(startDay: Instant): Instant {
-            return DateTime(startDay).plusYears(3).toInstant()
-        }
-    };
-
-    abstract fun calDays(startDay: Instant): Instant
+enum class LoanTermType(val term: TermType) {
+    ONE_MONTH(TermType(1, TermUnit.MONTH)),
+    THREE_MONTHS(TermType(3, TermUnit.MONTH)),
+    SIX_MONTHS(TermType(6, TermUnit.MONTH)),
+    ONE_YEAR(TermType(1, TermUnit.YEAR)),
+    TWO_YEAR(TermType(2, TermUnit.YEAR)),
+    THREE_YEAR(TermType(3, TermUnit.YEAR))
 }

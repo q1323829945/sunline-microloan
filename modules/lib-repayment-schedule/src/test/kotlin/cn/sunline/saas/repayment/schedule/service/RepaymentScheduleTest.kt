@@ -136,7 +136,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL,
             startDate = startDate,
             endDate = endDate,
-            repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS,
+            repaymentFrequency = RepaymentFrequency.ONE_YEAR,
             repaymentDay = 21
         )
 
@@ -249,7 +249,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT,
             startDate = startDate,
             endDate = endDate,
-            repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS,
+            repaymentFrequency = RepaymentFrequency.ONE_YEAR,
             repaymentDay = 21
         )
 
@@ -362,7 +362,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             paymentMethod = PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY,
             startDate = startDate,
             endDate = endDate,
-            repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS,
+            repaymentFrequency = RepaymentFrequency.ONE_YEAR,
             repaymentDay = 21
         )
 
@@ -432,7 +432,6 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
 
     private fun formatPlan(repaymentSchedule: RepaymentSchedule) {
         var allLoansStr = ""
-        val format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         for (schedule in repaymentSchedule.schedule) {
             val lbmStr =
                         "\t the " + schedule.period + " period" +

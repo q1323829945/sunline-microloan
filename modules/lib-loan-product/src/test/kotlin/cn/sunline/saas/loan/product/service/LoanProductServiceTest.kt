@@ -4,7 +4,6 @@ import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.global.constant.*
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.loan.product.model.LoanProductType

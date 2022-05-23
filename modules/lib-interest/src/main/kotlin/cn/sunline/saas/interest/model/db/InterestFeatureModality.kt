@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.model.db
 
-import cn.sunline.saas.interest.constant.BaseYearDays
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull

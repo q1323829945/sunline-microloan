@@ -106,7 +106,7 @@ class CalcInstallmentComponentTest {
         val periods = 12
         val period = 2
         val paymentMethod = PaymentMethodType.EQUAL_PRINCIPAL
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val interestMonthRate = BigDecimal(0.01)
         val result = CalcInstallmentComponent.calcBasePrincipal(
             DTOPrincipalCalculator(
@@ -194,7 +194,7 @@ class CalcInstallmentComponentTest {
         val periods = 12
         val period = 2
         val paymentMethod = PaymentMethodType.EQUAL_INSTALLMENT
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val interestMonthRate = BigDecimal(0.01)
         val result = CalcInstallmentComponent.calcBasePrincipal(
             DTOPrincipalCalculator(

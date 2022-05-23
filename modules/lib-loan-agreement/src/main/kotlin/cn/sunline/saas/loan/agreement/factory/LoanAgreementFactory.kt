@@ -49,7 +49,7 @@ class LoanAgreementFactory {
             signedDate = now,
             fromDateTime = now,
             term = term,
-            toDateTime = term.calDays(now),
+            toDateTime = term.term.calDate(now),
             version = 1,
             status = AgreementStatus.OFFERED,
             amount = BigDecimal(dtoLoanAgreementAdd.amount),

@@ -1,8 +1,7 @@
 package cn.sunline.saas.dapr_wrapper.actor
 
-import cn.sunline.saas.dapr_wrapper.actor.model.ActorContext
-import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
+import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 
 /**
  * @title: TestRegisterActor

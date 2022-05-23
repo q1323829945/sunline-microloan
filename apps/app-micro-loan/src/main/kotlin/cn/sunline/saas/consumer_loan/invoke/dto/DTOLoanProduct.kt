@@ -3,7 +3,6 @@ package cn.sunline.saas.consumer_loan.invoke.dto
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.loan.product.model.LoanProductType
 
@@ -57,7 +56,8 @@ data class DTORepaymentFeatureModality(
     val id: Long,
     val paymentMethod: PaymentMethodType,
     val frequency: RepaymentFrequency,
-    val repaymentDayType: RepaymentDayType
+    val repaymentDayType: RepaymentDayType,
+    val graceDays: Int,
 )
 
 data class DTOPrepaymentFeatureModality(

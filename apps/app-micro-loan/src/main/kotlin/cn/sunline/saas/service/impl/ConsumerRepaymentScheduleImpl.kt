@@ -1,13 +1,10 @@
 package cn.sunline.saas.service.impl
 
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentDayType
-import cn.sunline.saas.global.constant.RepaymentFrequency
-import cn.sunline.saas.interest.constant.BaseYearDays
+import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.interest.service.InterestFeatureService
 import cn.sunline.saas.interest.service.RatePlanService
-import cn.sunline.saas.interest.util.InterestRateUtil
 import cn.sunline.saas.loan.product.service.LoanProductService
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
@@ -20,7 +17,6 @@ import cn.sunline.saas.response.response
 import cn.sunline.saas.service.ConsumerRepaymentScheduleService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.joda.time.DateTime
 import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
@@ -64,7 +60,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
         val ratePlanId = (interestProduct?.ratePlanId)!!
         val ratePlan = ratePlanService.getOne(ratePlanId)!!
         val rates = ratePlan.rates
-        val interestRate = InterestRateUtil.getRate(term, rates)
+        val interestRate = InterestRateHelper.getRate(term, rates)
 
         val repaymentFeature = repaymentFeatureService.getPaged({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -85,7 +81,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
                 interestRate = interestRate,
                 paymentMethod = repaymentFeature?.payment?.paymentMethod!!,
                 startDate = loanDateInstant,
-                endDate = term.calDays(loanDateInstant),
+                endDate = term.term.calDate(loanDateInstant),
                 repaymentFrequency = repaymentFeature.payment.frequency,
                 baseYearDays = interestProduct.interest.baseYearDays,
                 repaymentDay = repaymentDay,

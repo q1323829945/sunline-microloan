@@ -11,7 +11,6 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
@@ -91,7 +90,8 @@ class LoanAgreementServiceTest {
                 disbursementArrangement = disbursementArrangement,
                 applicationId = 1,
                 userId = 1,
-                purpose = null
+                purpose = null,
+                graceDays = 0
             )
         val actual = loanAgreementService.registered(dtoLoanAgreementAdd)
 

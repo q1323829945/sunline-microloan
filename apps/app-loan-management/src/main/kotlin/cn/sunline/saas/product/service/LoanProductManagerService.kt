@@ -2,6 +2,7 @@ package cn.sunline.saas.product.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.global.model.TermType
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
@@ -41,8 +42,8 @@ class LoanProductManagerService {
 
     fun addOne(loanProductData: DTOLoanProduct): DTOLoanProductView {
         checkTermConditions(
-            loanProductData.termConfiguration.maxValueRange.days,
-            loanProductData.termConfiguration.minValueRange.days
+            loanProductData.termConfiguration.maxValueRange.term,
+            loanProductData.termConfiguration.minValueRange.term
         )
         checkAmountConditions(
             BigDecimal(loanProductData.amountConfiguration.maxValueRange),
@@ -94,8 +95,8 @@ class LoanProductManagerService {
     ): DTOLoanProductView {
         checkProductStatus(id, false)
         checkTermConditions(
-            dtoLoanProduct.termConfiguration.maxValueRange.days,
-            dtoLoanProduct.termConfiguration.minValueRange.days
+            dtoLoanProduct.termConfiguration.maxValueRange.term,
+            dtoLoanProduct.termConfiguration.minValueRange.term
         )
         checkAmountConditions(
             BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange),
@@ -150,7 +151,7 @@ class LoanProductManagerService {
         return loanProductService.getLoanProductListByStatus(status, pageable)
     }
 
-    private fun checkTermConditions(termMaxValueRange: Int, termMinValueRange: Int) {
+    private fun checkTermConditions(termMaxValueRange: TermType, termMinValueRange: TermType) {
         if (termMaxValueRange < termMinValueRange) {
             throw LoanProductBusinessException(
                 "The term's config of product was error",

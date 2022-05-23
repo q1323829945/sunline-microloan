@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.interest.constant.BaseYearDays
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
