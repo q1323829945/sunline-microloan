@@ -41,6 +41,8 @@ dependencies {
     implementation(project(":lib-underwriting-arrangement"))
     implementation(project(":lib-invoice"))
     implementation(project(":lib-formula"))
+    implementation(project(":lib-schedule"))
+    implementation(project(":lib-invoice"))
 
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-obs-huaweicloud"))

@@ -25,17 +25,18 @@ class InterestArrangementFactory {
     fun instance(
         agreementId: Long,
         term: LoanTermType,
-        dtoInterestArrangementAdd: DTOInterestArrangementAdd
+        dtoInterestArrangementAdd: DTOInterestArrangementAdd,
     ): InterestArrangement {
         val planRates = objectMapper.convertValue<MutableList<InterestRate>>(dtoInterestArrangementAdd.planRates)
 
         return InterestArrangement(
             id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,
-            rate = InterestRateHelper.getRate(term, planRates),
+            rate = InterestRateHelper.getRate(term, planRates)!!,
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
-            overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage)
+            overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage),
+            baseRate = dtoInterestArrangementAdd.baseRate?.run { BigDecimal(this) }
         )
     }
 

@@ -91,4 +91,6 @@ enum class ManagementExceptionCode(val code: Int) {
     DISBURSEMENT_LEND_TYPE_NOT_SUPPORTED(5563),
     DISBURSEMENT_INSTRUCTION_NOT_FOUND(5564),
 
+    //interest arrangement 5600-5610
+    BASE_RATE_NULL(5600)
 }

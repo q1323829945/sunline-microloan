@@ -15,7 +15,8 @@ data class DTOInterestArrangementAdd(
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
     val overdueInterestRatePercentage: String,
-    val planRates: MutableList<DTOInterestRate>
+    val planRates: MutableList<DTOInterestRate>,
+    val baseRate: String?
 )
 
 data class DTOInterestRate(

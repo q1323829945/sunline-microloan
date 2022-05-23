@@ -4,7 +4,6 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.joda.time.Instant
-import org.joda.time.format.DateTimeFormatter
 
 /**
  * @title: CalculatePeriod
@@ -13,6 +12,8 @@ import org.joda.time.format.DateTimeFormatter
  * @date 2022/5/19 11:20
  */
 object CalculatePeriod {
+
+    data class PeriodDate(val fromDateTime: Instant,val toDateTime: Instant)
 
     /**
      * for now,the term is equaled to an integer multiple of frequency
@@ -28,22 +29,24 @@ object CalculatePeriod {
         frequency: RepaymentFrequency,
         repaymentDayType: RepaymentDayType = RepaymentDayType.BASE_LOAN_DAY,
         withDay: Instant? = null
-    ): MutableList<Instant> {
+    ): MutableList<PeriodDate> {
         return when (repaymentDayType) {
-            RepaymentDayType.BASE_LOAN_DAY -> getPeriodDatesWithDay(fromDateTime, toDateTime, frequency)
+            RepaymentDayType.BASE_LOAN_DAY -> getPeriodDatesByStandard(fromDateTime, toDateTime, frequency)
         }
     }
 
-    fun getPeriodDatesWithDay(
+    fun getPeriodDatesByStandard(
         fromDateTime: Instant, toDateTime: Instant, frequency: RepaymentFrequency
-    ): MutableList<Instant> {
-        val periodDates = mutableListOf<Instant>()
+    ): MutableList<PeriodDate> {
+        val periodDates = mutableListOf<PeriodDate>()
         if (fromDateTime.isAfter(toDateTime))
             return periodDates
-        var d = frequency.term.calDate(fromDateTime)
-        while (d.isBefore(toDateTime) || d.isEqual(toDateTime)) {
-            periodDates.add(d)
-            d = frequency.term.calDate(d)
+        var lastDate = fromDateTime
+        var nextDate = frequency.term.calDate(fromDateTime)
+        while (nextDate.isBefore(toDateTime) || nextDate.isEqual(toDateTime)) {
+            periodDates.add(PeriodDate(lastDate,nextDate))
+            lastDate = nextDate
+            nextDate = frequency.term.calDate(nextDate)
         }
         return periodDates
     }

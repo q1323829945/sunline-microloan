@@ -60,7 +60,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
         val ratePlanId = (interestProduct?.ratePlanId)!!
         val ratePlan = ratePlanService.getOne(ratePlanId)!!
         val rates = ratePlan.rates
-        val interestRate = InterestRateHelper.getRate(term, rates)
+        val interestRate = InterestRateHelper.getRate(term, rates)!!
 
         val repaymentFeature = repaymentFeatureService.getPaged({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

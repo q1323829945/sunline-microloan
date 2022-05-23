@@ -6,8 +6,11 @@ import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
 import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
+import cn.sunline.saas.formula.Schedule
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
+import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
+import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
@@ -32,7 +35,8 @@ object ConsumerLoanAssembly {
 
     fun convertToDTOLoanAgreementAdd(
         customerOffer: DTOCustomerOffer,
-        loanProduct: DTOLoanProduct
+        loanProduct: DTOLoanProduct,
+        baseRate:String?
     ): DTOLoanAgreementAdd {
         val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
             DTOInterestArrangementAdd(
@@ -40,7 +44,8 @@ object ConsumerLoanAssembly {
                 baseYearDays = interestModality.baseYearDays,
                 adjustFrequency = interestModality.adjustFrequency,
                 overdueInterestRatePercentage = overdueInterest.overdueInterestRatePercentage,
-                planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlanId)
+                planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlanId),
+                baseRate = baseRate
             )
         }
 
@@ -124,5 +129,26 @@ object ConsumerLoanAssembly {
         )
 
         return DTOUnderwritingArrangementAdd(loanAgreementAggregate.loanAgreement.id, underwritingArrangements)
+    }
+
+    fun convertToDTOLoanInvoice(
+        schedule: MutableList<Schedule>,
+        dtoLoanAgreement: DTOLoanAgreementView
+    ): MutableList<DTOLoanInvoice> {
+        val dtoLoanInvoice = mutableListOf<DTOLoanInvoice>()
+        schedule.forEach {
+            dtoLoanInvoice.add(
+                DTOLoanInvoice(
+                    it.fromDate.toString(),
+                    it.dueDate.toString(),
+                    dtoLoanAgreement.loanAgreement.involvements.first { involvement -> LoanAgreementInvolvementType.LOAN_BORROWER == involvement.involvementType }.partyId,
+                    it.principal,
+                    it.interest,
+                    null,
+                    dtoLoanAgreement.loanAgreement.id
+                )
+            )
+        }
+        return dtoLoanInvoice
     }
 }

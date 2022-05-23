@@ -12,15 +12,8 @@ import java.math.BigDecimal
  */
 object InterestRateHelper {
 
-    fun getRate(loanTerm: LoanTermType, rates: MutableList<InterestRate>): BigDecimal {
-        var rate: BigDecimal = BigDecimal.ZERO
-        rates.sortBy { item -> item.period.term }
-        for (item in rates) {
-            if (loanTerm.term <= item.period.term) {
-                rate = item.rate
-                break
-            }
-        }
-        return rate
+    fun getRate(loanTerm: LoanTermType, rates: MutableList<InterestRate>?): BigDecimal? {
+        rates?.sortBy { item -> item.period.term }
+        return rates?.first { it.period.term >= loanTerm.term }?.rate
     }
 }

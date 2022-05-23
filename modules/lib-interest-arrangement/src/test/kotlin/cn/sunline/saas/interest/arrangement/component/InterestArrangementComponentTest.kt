@@ -25,15 +25,10 @@ class InterestArrangementComponentTest {
             rate = BigDecimal("7.5"),
             baseYearDays = BaseYearDays.ACTUAL_YEAR,
             adjustFrequency = "1",
-            overdueInterestRatePercentage = BigDecimal("150")
+            overdueInterestRatePercentage = BigDecimal("150"),
+            baseRate = BigDecimal("2.1")
         )
-        val baseRates = mutableListOf(
-            InterestRate(1, LoanTermType.ONE_MONTH, BigDecimal("1.6"), 1),
-            InterestRate(2, LoanTermType.THREE_MONTHS, BigDecimal("1.8"), 1),
-            InterestRate(3, LoanTermType.SIX_MONTHS, BigDecimal("2.1"), 1),
-            InterestRate(4, LoanTermType.THREE_YEAR, BigDecimal("2.5"), 1)
-        )
-        val actual = interestArrangement.getExecutionRate(LoanTermType.ONE_YEAR,baseRates)
+        val actual = interestArrangement.getExecutionRate()
 
         assertThat(actual).isEqualTo(BigDecimal("7.5"))
     }
@@ -46,15 +41,11 @@ class InterestArrangementComponentTest {
             rate = BigDecimal("30"),
             baseYearDays = BaseYearDays.ACTUAL_YEAR,
             adjustFrequency = "1",
-            overdueInterestRatePercentage = BigDecimal("150")
+            overdueInterestRatePercentage = BigDecimal("150"),
+            baseRate = BigDecimal("2.5")
         )
-        val baseRates = mutableListOf(
-            InterestRate(1, LoanTermType.ONE_MONTH, BigDecimal("1.6"), 1),
-            InterestRate(2, LoanTermType.THREE_MONTHS, BigDecimal("1.8"), 1),
-            InterestRate(3, LoanTermType.SIX_MONTHS, BigDecimal("2.1"), 1),
-            InterestRate(4, LoanTermType.THREE_YEAR, BigDecimal("2.5"), 1)
-        )
-        val actual = interestArrangement.getExecutionRate(LoanTermType.ONE_YEAR,baseRates)
+
+        val actual = interestArrangement.getExecutionRate()
 
         assertThat(actual).isEqualTo(BigDecimal("0.032500"))
     }
