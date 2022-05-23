@@ -8,6 +8,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation(project(":lib-global"))
     api(project(":lib-interest-util"))
+    implementation(project(":lib-formula"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
 

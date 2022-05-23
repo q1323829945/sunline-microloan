@@ -1,11 +1,9 @@
-package cn.sunline.saas.banking.transaction.model
+package cn.sunline.saas.account.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
@@ -15,6 +13,7 @@ import javax.validation.constraints.NotNull
  * @date 2022/4/18 14:30
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(name="applied_interest")
 class AppliedInterest(
     @Id

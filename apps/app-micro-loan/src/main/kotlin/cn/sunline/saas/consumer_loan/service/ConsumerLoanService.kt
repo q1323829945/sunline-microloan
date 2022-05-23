@@ -58,6 +58,7 @@ class ConsumerLoanService(
                 )
             )
         }
+        // Calculate Repayment Schedule
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate)
         signAndLending(loanAgreement)

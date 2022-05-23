@@ -99,7 +99,8 @@ object ConsumerLoanAssembly {
             lender = mutableListOf(loanProduct.businessUnit), disbursementArrangement = dtoDisbursementArrangementAdd,
             purpose = customerOffer.purpose ?: loanProduct.loanPurpose,
             applicationId = customerOffer.applicationId,
-            userId = customerOffer.userId
+            userId = customerOffer.userId,
+            graceDays = loanProduct.repaymentFeature.payment.graceDays
         )
     }
 

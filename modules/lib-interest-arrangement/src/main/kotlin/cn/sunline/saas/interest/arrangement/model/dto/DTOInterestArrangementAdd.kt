@@ -1,9 +1,8 @@
 package cn.sunline.saas.interest.arrangement.model.dto
 
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
-import cn.sunline.saas.interest.model.InterestRate
 
 /**
  * @title: DTOInterestArrangementAdd

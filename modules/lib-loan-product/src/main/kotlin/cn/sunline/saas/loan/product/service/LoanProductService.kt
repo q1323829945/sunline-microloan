@@ -7,6 +7,7 @@ import cn.sunline.saas.fee.model.db.FeeFeature
 import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.model.TermType
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
@@ -119,12 +120,12 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
 
         val feeFeatures = loanProductData.feeFeatures?.run {
-            if(this.size > 0){
+            if (this.size > 0) {
                 feeProductFeatureService.register(
                     newProductId,
                     objectMapper.convertValue(this)
                 )
-            }else{
+            } else {
                 mutableListOf()
             }
         }
@@ -135,8 +136,9 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         dtoLoanProduct.interestFeature = objectMapper.convertValue(interestFeature)
 
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.run { objectMapper.convertValue<DTORepaymentFeatureView>(this) }
-        dtoLoanProduct.feeFeatures = feeFeatures?.run { objectMapper.convertValue(this)}
+        dtoLoanProduct.repaymentFeature =
+            repaymentFeature?.run { objectMapper.convertValue<DTORepaymentFeatureView>(this) }
+        dtoLoanProduct.feeFeatures = feeFeatures?.run { objectMapper.convertValue(this) }
 
         return dtoLoanProduct
     }
@@ -154,7 +156,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val feeFeatures = feeProductFeatureService.findByProductId(id)
 
         dtoLoanProduct.interestFeature = interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
+        dtoLoanProduct.repaymentFeature =
+            repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
         dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
         return dtoLoanProduct
     }
@@ -189,9 +192,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         val newProduct = getMaxVersionProductList(page)
 
-        return rePaged(newProduct,pageable)
+        return rePaged(newProduct, pageable)
     }
-
 
 
     @Transactional
@@ -256,7 +258,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         val newProduct = getMaxVersionProductList(page)
 
-        return rePaged(newProduct,pageable)
+        return rePaged(newProduct, pageable)
     }
 
     @Transactional
@@ -284,8 +286,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             oldLoanProduct.configurationOptions.forEach {
                 if (this.id?.toLong() == it.id) {
                     it.setValue(
-                        this.maxValueRange.days.let { it1 -> BigDecimal(it1) },
-                        this.minValueRange.days.let { it1 -> BigDecimal(it1) }
+                        this.maxValueRange.term.num.let { it1 -> BigDecimal(it1) },
+                        this.minValueRange.term.num.let { it1 -> BigDecimal(it1) }
                     )
                 }
             }
@@ -374,7 +376,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                     )
                 }
                 val updateRepaymentFeature = repaymentProductFeatureService.save(repaymentFeature)
-                dtoLoanProduct.repaymentFeature = objectMapper.convertValue<DTORepaymentFeatureView>(updateRepaymentFeature)
+                dtoLoanProduct.repaymentFeature =
+                    objectMapper.convertValue<DTORepaymentFeatureView>(updateRepaymentFeature)
             }
         }
 
@@ -405,8 +408,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
 
         val page = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            val connection = root.join<LoanProduct,LoanUploadConfigure>("loanUploadConfigureFeatures",JoinType.INNER)
-            predicates.add(criteriaBuilder.equal(connection.get<String>("id"),loanUploadConfigureId))
+            val connection = root.join<LoanProduct, LoanUploadConfigure>("loanUploadConfigureFeatures", JoinType.INNER)
+            predicates.add(criteriaBuilder.equal(connection.get<String>("id"), loanUploadConfigureId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
 
@@ -437,11 +440,11 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     private fun getValueRange(value: BigDecimal): LoanTermType {
-        return LoanTermType.values().single { it.days == value.toInt() }
+        return LoanTermType.values().single { it.term == TermType(value.toInt()) }
     }
 
 
-    private fun getMaxVersionProductList(page:Page<LoanProduct>):List<LoanProduct>{
+    private fun getMaxVersionProductList(page: Page<LoanProduct>): List<LoanProduct> {
         val map = mutableMapOf<String, String>()
         page.forEach {
             val key = map[it.identificationCode]

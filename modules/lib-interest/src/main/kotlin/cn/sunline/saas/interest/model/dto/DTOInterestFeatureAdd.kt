@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.model.dto
 
-import cn.sunline.saas.interest.constant.BaseYearDays
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 
 /**

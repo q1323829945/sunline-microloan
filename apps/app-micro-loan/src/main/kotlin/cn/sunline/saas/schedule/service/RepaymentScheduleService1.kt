@@ -1,11 +1,12 @@
 package cn.sunline.saas.schedule.service
 
+import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.RatePlanType
-import cn.sunline.saas.interest.util.InterestRateUtil
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
@@ -45,7 +46,7 @@ class RepaymentScheduleService1(
             val ratePlanId = product.interestFeature?.ratePlanId
             val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
             val rates = objectMapper.convertValue<MutableList<InterestRate>>(ratePlan?.rates!!)
-            interestRate = InterestRateUtil.getRate(term, rates)
+            interestRate = InterestRateHelper.getRate(term, rates)
         }else if(product.interestFeature?.interestType == InterestType.FLOATING_RATE_NOTE) {
             val ratePlanId = product.interestFeature?.ratePlanId
             val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
@@ -53,9 +54,9 @@ class RepaymentScheduleService1(
             val baseRatePlan = scheduleInvoke.getRatePlanByRatePlanType(RatePlanType.STANDARD)?.data
             val baseRates = objectMapper.convertValue<MutableList<InterestRate>>(baseRatePlan?.rates!!)
 
-            val floatInterestRate = InterestRateUtil.getRate(term, rates)
-            val baseInterestRate = InterestRateUtil.getRate(term, baseRates)
-            interestRate = InterestRateUtil.calRate(baseInterestRate,floatInterestRate)
+            val floatInterestRate = InterestRateHelper.getRate(term, rates)
+            val baseInterestRate = InterestRateHelper.getRate(term, baseRates)
+            interestRate = CalculateInterestRate(baseInterestRate).calRate(floatInterestRate)
         }else{
             interestRate = BigDecimal.ZERO
         }
@@ -73,7 +74,7 @@ class RepaymentScheduleService1(
                 interestRate = interestRate,
                 paymentMethod = product.repaymentFeature?.payment?.paymentMethod!!,
                 startDate = loanDateInstant,
-                endDate = term.calDays(loanDateInstant),
+                endDate = term.term.calDate(loanDateInstant),
                 repaymentFrequency = product.repaymentFeature?.payment?.frequency!!,
                 baseYearDays = product.interestFeature?.interest?.baseYearDays!!,
                 repaymentDay = repaymentDay,

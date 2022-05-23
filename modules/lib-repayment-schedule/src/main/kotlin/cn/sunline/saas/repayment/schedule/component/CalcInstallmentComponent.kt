@@ -16,7 +16,7 @@ object CalcInstallmentComponent {
     fun calcCapitalInstallment (loanAmount: BigDecimal, loanRate: BigDecimal,periods: Int,repaymentFrequency: RepaymentFrequency): BigDecimal {
         // 每月还款金额 = [总贷款金额 * 月利率 * （1 + 月利率） ^ 还款月数] / [(1 + 利率) ^ 还款月数 -1]
         // 每季应还款额＝【借款本金×季度利率×（1＋季度利率）^还款期数】/【（1＋季度利率）^还款期数－1】
-        val realInterestMonthRate = loanRate.multiply(repaymentFrequency.months.toBigDecimal())
+        val realInterestMonthRate = loanRate.multiply(repaymentFrequency.term.num.toBigDecimal())
         val factor = realInterestMonthRate.add(BigDecimal.ONE).pow(periods)
         // 平均还款金额
         return loanAmount.multiply(realInterestMonthRate).multiply(factor).divide(factor.subtract(BigDecimal.ONE), 2, RoundingMode.HALF_UP)
@@ -35,7 +35,7 @@ object CalcInstallmentComponent {
             }
             PaymentMethodType.EQUAL_INSTALLMENT -> {
                 //B=a*i(1+i)^(n-1)/[(1+i)^N-1]
-                val realLoanRate = interestMonthRate.multiply(repaymentFrequency?.months?.toBigDecimal())
+                val realLoanRate = interestMonthRate.multiply(repaymentFrequency?.term?.num?.toBigDecimal())
                 val factor = realLoanRate.add(BigDecimal.ONE).pow(period-1)
                 val factor1 = realLoanRate.add(BigDecimal.ONE).pow(periods)?.subtract(BigDecimal.ONE)
                 calcAmount.multiply(realLoanRate).multiply(factor).divide(factor1,2,RoundingMode.HALF_UP)

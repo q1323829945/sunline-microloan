@@ -3,13 +3,11 @@ package cn.sunline.saas.interest.arrangement.factory
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.arrangement.model.db.InterestArrangement
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
+import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.interest.util.InterestRateUtil
-import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
 
@@ -24,13 +22,17 @@ class InterestArrangementFactory {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun instance(agreementId:Long,term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd): InterestArrangement {
+    fun instance(
+        agreementId: Long,
+        term: LoanTermType,
+        dtoInterestArrangementAdd: DTOInterestArrangementAdd
+    ): InterestArrangement {
         val planRates = objectMapper.convertValue<MutableList<InterestRate>>(dtoInterestArrangementAdd.planRates)
 
         return InterestArrangement(
             id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,
-            rate = InterestRateUtil.getRate(term, planRates),
+            rate = InterestRateHelper.getRate(term, planRates),
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
             overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage)

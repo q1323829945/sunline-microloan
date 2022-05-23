@@ -24,7 +24,8 @@ data class DTOLoanAgreementAdd(
     val borrower: Long,
     val lender: MutableList<Long>,
     val disbursementArrangement: DTODisbursementArrangementAdd?,
-    val purpose:String?,
+    val purpose: String?,
     val applicationId: Long,
-    val userId: Long
+    val userId: Long,
+    val graceDays: Int,
 )

@@ -1,8 +1,8 @@
 package cn.sunline.saas.interest.arrangement.component
 
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.arrangement.model.db.InterestArrangement
-import cn.sunline.saas.interest.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.InterestRate
 import org.assertj.core.api.Assertions.assertThat
@@ -56,6 +56,6 @@ class InterestArrangementComponentTest {
         )
         val actual = interestArrangement.getExecutionRate(LoanTermType.ONE_YEAR,baseRates)
 
-        assertThat(actual).isEqualTo(BigDecimal("3.250000"))
+        assertThat(actual).isEqualTo(BigDecimal("0.032500"))
     }
 }

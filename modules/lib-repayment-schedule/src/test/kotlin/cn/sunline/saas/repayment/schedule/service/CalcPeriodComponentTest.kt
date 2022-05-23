@@ -67,7 +67,7 @@ class CalcPeriodComponentTest {
         val startDateInstant = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDateInstant = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDay = 21
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
         Assertions.assertThat(result).isEqualTo(1)
     }
@@ -78,7 +78,7 @@ class CalcPeriodComponentTest {
         val startDateInstant = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDateInstant = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDay = 23
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
         Assertions.assertThat(result).isEqualTo(2)
     }
@@ -88,7 +88,7 @@ class CalcPeriodComponentTest {
         val startDateInstant = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDateInstant = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDay = 23
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
         Assertions.assertThat(result).isEqualTo(2)
     }
@@ -98,7 +98,7 @@ class CalcPeriodComponentTest {
         val startDateInstant = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDateInstant = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDay = 23
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
         Assertions.assertThat(result).isEqualTo(2)
     }
@@ -108,7 +108,7 @@ class CalcPeriodComponentTest {
         val startDateInstant = DateTime(2022, 3, 21, 0, 0).toInstant()
         val endDateInstant = DateTime(2023, 3, 21, 0, 0).toInstant()
         val repaymentDay = 23
-        val repaymentFrequency = RepaymentFrequency.TWELVE_MONTHS
+        val repaymentFrequency = RepaymentFrequency.ONE_YEAR
         val result = CalcPeriodComponent.calcDuePeriods(startDateInstant,endDateInstant,repaymentDay,repaymentFrequency)
         Assertions.assertThat(result).isEqualTo(2)
     }

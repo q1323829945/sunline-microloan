@@ -1,4 +1,4 @@
-package cn.sunline.saas.interest.constant
+package cn.sunline.saas.global.constant
 
 /**
  * @title: BaseYearDays

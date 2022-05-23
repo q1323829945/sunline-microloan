@@ -2,6 +2,7 @@ package cn.sunline.saas.invoice.model.db
 
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.joda.time.Instant
 import java.math.BigDecimal
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
  * @date 2022/4/25 11:25
  */
 @Entity
+@EntityListeners(TenantListener::class)
 @Table(name = "invoice", indexes = [Index(name = "idx_invoice_invoicee", columnList = "invoicee")])
 class Invoice(
     @Id
