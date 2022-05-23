@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":lib-formula"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
+    implementation(project(":lib-exceptions"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

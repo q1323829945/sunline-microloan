@@ -10,12 +10,17 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.interest.arrangement.component.getExecutionRate
+import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
+import cn.sunline.saas.schedule.ScheduleService
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * @title: ConsumerLoanService
@@ -41,13 +46,16 @@ class ConsumerLoanService(
     @Autowired
     private lateinit var disbursementInstructionService: DisbursementInstructionService
 
+    @Autowired
+    private lateinit var invoiceService: InvoiceService
+
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
         val loanProduct = consumerLoanInvoke.retrieveLoanProduct(customerOffer.productId)
 
         val loanAgreementAggregate = loanAgreementService.registered(
             ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
-                customerOffer, loanProduct
+                customerOffer, loanProduct, InterestRateHelper.getRate(customerOffer.term, consumerLoanInvoke.retrieveBaseInterestRate())?.toPlainString()
             )
         )
         customerOffer.guarantors?.run {
@@ -58,7 +66,18 @@ class ConsumerLoanService(
                 )
             )
         }
-        // Calculate Repayment Schedule
+        // Calculate Repayment Schedule and create invoices
+        val interestRate = loanAgreementAggregate.interestArrangement.getExecutionRate()
+        val shedules = ScheduleService(
+            BigDecimal(customerOffer.amount),
+            interestRate,
+            customerOffer.term,
+            loanProduct.repaymentFeature.payment.frequency,
+            loanAgreementAggregate.loanAgreement.fromDateTime,
+            loanAgreementAggregate.loanAgreement.toDateTime
+        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+
+        invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(shedules,loanAgreementAggregate))
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate)
         signAndLending(loanAgreement)

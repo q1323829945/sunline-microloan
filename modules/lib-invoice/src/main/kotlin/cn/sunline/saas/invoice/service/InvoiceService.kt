@@ -1,5 +1,6 @@
 package cn.sunline.saas.invoice.service
 
+import cn.sunline.saas.invoice.factory.InvoiceFactory
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
@@ -24,53 +25,22 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
     BaseMultiTenantRepoService<Invoice, Long>(invoiceRepository) {
 
     @Autowired
-    private lateinit var seq: Sequence
+    private lateinit var invoiceFactory: InvoiceFactory
 
     fun initiateLoanInvoice(dtoLoanInvoice: DTOLoanInvoice): Invoice {
-        val invoiceLine = mutableListOf<InvoiceLine>()
-
-        invoiceLine.add(
-            InvoiceLine(
-                id = seq.nextId(),
-                invoiceAmountType = InvoiceAmountType.PRINCIPAL,
-                invoiceAmount = dtoLoanInvoice.principal
-            )
-        )
-        invoiceLine.add(
-            InvoiceLine(
-                id = seq.nextId(),
-                invoiceAmountType = InvoiceAmountType.INTEREST,
-                invoiceAmount = dtoLoanInvoice.interest
-            )
-        )
-        invoiceLine.add(
-            InvoiceLine(
-                id = seq.nextId(),
-                invoiceAmountType = InvoiceAmountType.FEE,
-                invoiceAmount = dtoLoanInvoice.fee
-            )
-        )
-
-        val invoiceAmount = dtoLoanInvoice.principal.add(dtoLoanInvoice.interest).add(dtoLoanInvoice.fee)
-
-        //TODO create invoice document
-        val document: String = ""
+        invoiceFactory.getInstance(dtoLoanInvoice)
 
         return save(
-            Invoice(
-                id = seq.nextId(),
-                invoiceType = InvoiceType.LOAN,
-                invoiceDueDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
-                invoicePeriodFromDate = Instant(dtoLoanInvoice.invoicePeriodFromDate),
-                invoicePeriodToDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
-                invoiceAssignedDocument = document,
-                invoiceAddress = dtoLoanInvoice.invoiceAddress,
-                invoiceAmount = invoiceAmount,
-                invoiceStatus = InvoiceStatus.INITIATE,
-                invoicee = dtoLoanInvoice.invoicee,
-                invoiceLines = invoiceLine,
-                agreementId = dtoLoanInvoice.agreementId
-            )
+            invoiceFactory.getInstance(dtoLoanInvoice)
         )
     }
+
+    fun initiateLoanInvoice(dtoLoanInvoices: MutableList<DTOLoanInvoice>): Iterable<Invoice> {
+        val invoices = mutableListOf<Invoice>()
+        dtoLoanInvoices.forEach {
+            invoices.add(invoiceFactory.getInstance(it))
+        }
+        return save(invoices)
+    }
+
 }

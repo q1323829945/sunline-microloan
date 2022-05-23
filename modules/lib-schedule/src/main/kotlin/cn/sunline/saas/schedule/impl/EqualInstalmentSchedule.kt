@@ -49,7 +49,7 @@ class EqualInstalmentSchedule(
                 instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
             }
             remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
-            schedules.add(Schedule(it, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
+            schedules.add(Schedule(it.fromDateTime,it.toDateTime, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
 
         }
 

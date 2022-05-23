@@ -44,10 +44,6 @@ class Invoice(
     val invoiceAssignedDocument:String,
 
     @NotNull
-    @Column(name = "invoice_address", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val invoiceAddress:String,
-
-    @NotNull
     @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
     var invoiceAmount:BigDecimal,
 

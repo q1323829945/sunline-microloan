@@ -11,10 +11,9 @@ import java.math.BigDecimal
 data class DTOLoanInvoice(
     val invoicePeriodFromDate: String,
     val invoicePeriodToDate: String,
-    val invoiceAddress: String,
     val invoicee: Long,
     val principal: BigDecimal,
     val interest: BigDecimal,
-    val fee: BigDecimal,
+    val fee: BigDecimal?,
     val agreementId:Long
 )

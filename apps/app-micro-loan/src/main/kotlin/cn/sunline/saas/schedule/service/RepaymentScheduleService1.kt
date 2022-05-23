@@ -46,7 +46,7 @@ class RepaymentScheduleService1(
             val ratePlanId = product.interestFeature?.ratePlanId
             val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
             val rates = objectMapper.convertValue<MutableList<InterestRate>>(ratePlan?.rates!!)
-            interestRate = InterestRateHelper.getRate(term, rates)
+            interestRate = InterestRateHelper.getRate(term, rates)!!
         }else if(product.interestFeature?.interestType == InterestType.FLOATING_RATE_NOTE) {
             val ratePlanId = product.interestFeature?.ratePlanId
             val ratePlan = scheduleInvoke.getRatePlan(ratePlanId!!.toLong())?.data
@@ -54,8 +54,8 @@ class RepaymentScheduleService1(
             val baseRatePlan = scheduleInvoke.getRatePlanByRatePlanType(RatePlanType.STANDARD)?.data
             val baseRates = objectMapper.convertValue<MutableList<InterestRate>>(baseRatePlan?.rates!!)
 
-            val floatInterestRate = InterestRateHelper.getRate(term, rates)
-            val baseInterestRate = InterestRateHelper.getRate(term, baseRates)
+            val floatInterestRate = InterestRateHelper.getRate(term, rates)!!
+            val baseInterestRate = InterestRateHelper.getRate(term, baseRates)!!
             interestRate = CalculateInterestRate(baseInterestRate).calRate(floatInterestRate)
         }else{
             interestRate = BigDecimal.ZERO

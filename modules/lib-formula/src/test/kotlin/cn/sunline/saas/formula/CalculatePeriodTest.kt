@@ -33,7 +33,7 @@ class CalculatePeriodTest {
     fun `test get period dates with lending date`() {
 
         val startDateTime = Instant.now()
-        val actual = CalculatePeriod.getPeriodDatesWithDay(
+        val actual = CalculatePeriod.getPeriodDatesByStandard(
             startDateTime,
             LoanTermType.SIX_MONTHS.term.calDate(startDateTime),
             RepaymentFrequency.ONE_MONTH
@@ -47,7 +47,7 @@ class CalculatePeriodTest {
     fun `test get period dates with lending date when minutes of toDateTime is less then minutes of fromDateTime `() {
 
         val startDateTime = Instant.now()
-        val actual = CalculatePeriod.getPeriodDatesWithDay(
+        val actual = CalculatePeriod.getPeriodDatesByStandard(
             startDateTime,
             LoanTermType.SIX_MONTHS.term.calDate(startDateTime).plus(2),
             RepaymentFrequency.ONE_MONTH

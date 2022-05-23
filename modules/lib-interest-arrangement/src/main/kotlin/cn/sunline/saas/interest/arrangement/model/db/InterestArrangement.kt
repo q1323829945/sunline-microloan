@@ -42,7 +42,10 @@ class InterestArrangement(
 
     @NotNull
     @Column(name = "overdue_interest_rate_percentage", nullable = false, columnDefinition = "number(9,6) not null")
-    val overdueInterestRatePercentage: BigDecimal
+    val overdueInterestRatePercentage: BigDecimal,
+
+    @Column(name="base_rate",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) null")
+    val baseRate: BigDecimal?,
 
 ) : MultiTenant {
 
