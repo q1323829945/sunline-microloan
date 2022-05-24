@@ -119,7 +119,7 @@ class AppCustomerOfferService(
 
         val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
         val product = customerOfferInvoke.getProduct(customerOffer.productId)
-        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
+        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data)
 
         return DTOInvokeCustomerOfferView(
             id.toString(),

@@ -38,8 +38,9 @@ class CustomerOffer (
     @Column(name = "status", length = 256, columnDefinition = "varchar(256) not null")
     var status:ApplyStatus = ApplyStatus.RECORD,
 
-    @Column(name = "data", columnDefinition = "text ")
-    var data:String?,
+    @NotNull
+    @Column(name = "data", columnDefinition = "text not null")
+    var data:String,
 
     @NotNull
     var datetime:Instant,
