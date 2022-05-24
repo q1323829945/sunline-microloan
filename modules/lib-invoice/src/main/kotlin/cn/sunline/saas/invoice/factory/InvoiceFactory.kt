@@ -23,7 +23,7 @@ class InvoiceFactory {
     @Autowired
     private lateinit var seq: Sequence
 
-    fun getInstance(dtoLoanInvoice: DTOLoanInvoice): Invoice {
+    fun getLoanInvoiceInstance(dtoLoanInvoice: DTOLoanInvoice): Invoice {
         val invoiceLine = mutableListOf<InvoiceLine>()
 
         var invoiceAmount: BigDecimal = BigDecimal.ZERO
@@ -57,7 +57,7 @@ class InvoiceFactory {
         return Invoice(
             id = seq.nextId(),
             invoiceType = InvoiceType.LOAN,
-            invoiceDueDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
+            invoiceRepaymentDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
             invoicePeriodFromDate = Instant(dtoLoanInvoice.invoicePeriodFromDate),
             invoicePeriodToDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
             invoiceAssignedDocument = document,

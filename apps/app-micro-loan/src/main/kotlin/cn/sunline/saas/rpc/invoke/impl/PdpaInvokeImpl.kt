@@ -21,10 +21,10 @@ class PdpaInvokeImpl: PdpaInvoke {
             methodName = "pdpa/$countryCode/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
-            tenant = ContextUtil.getTenant().toString()
+            tenant = ContextUtil.getTenant()
         )
     }
 }
