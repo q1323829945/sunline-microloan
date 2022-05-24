@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 class RepaymentScheduleController {
 
     @Autowired
-    private lateinit var consumerRepaymentScheduleImpl: ConsumerRepaymentScheduleImpl
+    private lateinit var consumerRepaymentScheduleService: ConsumerRepaymentScheduleService
 
 //    @Autowired
 //    private lateinit var loanProductDirectoryService: LoanProductDirectoryService
@@ -33,7 +33,7 @@ class RepaymentScheduleController {
 
     @GetMapping("{productId}/{amount}/{term}/calculate")
     fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
-        val calculate = consumerRepaymentScheduleImpl.calculate(productId, amount.toBigDecimal(),term)
+        val calculate = consumerRepaymentScheduleService.calculate(productId, amount.toBigDecimal(),term)
         return DTOResponseSuccess(calculate).response()
     }
 

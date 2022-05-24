@@ -25,7 +25,7 @@ import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 @Service
-class ConsumerRepaymentScheduleImpl{
+class ConsumerRepaymentScheduleService{
 
     @Autowired
     private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
