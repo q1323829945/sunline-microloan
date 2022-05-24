@@ -1,8 +1,12 @@
 package cn.sunline.saas.repayment.schedule.controllders
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleService
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.service.ConsumerRepaymentScheduleImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,15 +25,16 @@ import org.springframework.web.bind.annotation.RestController
 class RepaymentScheduleController {
 
     @Autowired
-    private lateinit var repaymentScheduleService: RepaymentScheduleService
+    private lateinit var consumerRepaymentScheduleImpl: ConsumerRepaymentScheduleImpl
 
 //    @Autowired
 //    private lateinit var loanProductDirectoryService: LoanProductDirectoryService
 
-    /*
+
     @GetMapping("{productId}/{amount}/{term}/calculate")
-    fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term:Int): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
-        return repaymentScheduleService.calculate(productId, amount.toBigDecimal(),term)
+    fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
+        val calculate = consumerRepaymentScheduleImpl.calculate(productId, amount.toBigDecimal(),term)
+        return DTOResponseSuccess(calculate).response()
     }
-    */
+
 }
