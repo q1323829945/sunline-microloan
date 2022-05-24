@@ -7,12 +7,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
     generate-ddl: false
     database-platform: org.hibernate.dialect.H2Dialect
 
   datasource:
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    initialization-mode: always
+    url: "jdbc:mysql://localhost:3306/db_test?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    username: "root"
+    password: "123456"
+    driver-class-name: "com.mysql.cj.jdbc.Driver"

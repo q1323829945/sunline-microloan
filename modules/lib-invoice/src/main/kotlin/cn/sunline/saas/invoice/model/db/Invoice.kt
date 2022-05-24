@@ -2,6 +2,7 @@ package cn.sunline.saas.invoice.model.db
 
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
+import cn.sunline.saas.invoice.model.dto.RepaymentStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.joda.time.Instant
@@ -29,7 +30,7 @@ class Invoice(
 
     @NotNull
     @Column(name = "invoice_due_date", nullable = false)
-    val invoiceDueDate: Instant,
+    val invoiceRepaymentDate: Instant,
 
     @NotNull
     @Column(name = "invoice_period_from_date", nullable = false)
@@ -50,7 +51,7 @@ class Invoice(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "invoice_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val invoiceStatus: InvoiceStatus,
+    var invoiceStatus: InvoiceStatus,
 
     @NotNull
     @Column(name = "invoicee", nullable = false, columnDefinition = "bigint not null")
@@ -63,7 +64,12 @@ class Invoice(
 
     @NotNull
     @Column(name = "agreement_id", nullable = false, columnDefinition = "bigint not null")
-    val agreementId:Long
+    val agreementId:Long,
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "repayment_status", nullable = false, columnDefinition = "varchar(32) not null")
+    var repaymentStatus: RepaymentStatus = RepaymentStatus.UNDO
 
 ) : MultiTenant {
 

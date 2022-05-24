@@ -1,6 +1,7 @@
 package cn.sunline.saas.multi_tenant.model
 
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
+import org.joda.time.DateTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @EntityListeners(TenantListener::class)
+@Table(name="test_db_model")
 class TestDBModel(
 
     @Id
@@ -20,8 +22,12 @@ class TestDBModel(
     val id: Long? = null,
 
     @NotNull
-    @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
-    var uuid: UUID = UUID.randomUUID()
+    @Column(columnDefinition = "varchar(100)", nullable = false, updatable = false)
+    var uuid: String = "UUID.randomUUID()",
+
+    @Column(nullable = false, updatable = false,columnDefinition = "datetime")
+    @Temporal(TemporalType.TIMESTAMP)
+    var date:Date
 
 ) : MultiTenant {
 

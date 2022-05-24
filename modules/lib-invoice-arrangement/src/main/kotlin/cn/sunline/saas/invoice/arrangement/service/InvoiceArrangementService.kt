@@ -1,7 +1,5 @@
-package cn.sunline.saas.invoice.service
+package cn.sunline.saas.invoice.arrangement.service
 
-import cn.sunline.saas.global.constant.RepaymentDayType
-import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.invoice.arrangement.model.InvoiceArrangement
 import cn.sunline.saas.invoice.arrangement.repository.InvoiceArrangementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService

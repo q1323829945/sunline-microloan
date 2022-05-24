@@ -9,5 +9,5 @@ import cn.sunline.saas.global.util.getTenant
  * @author Kevin-Cui
  * @date 2022/5/13 11:20
  */
-abstract class RPCRequestWithTenant(tenant: String = ContextUtil.getTenant().toString()) : RPCRequest(tenant) {
+abstract class RPCRequestWithTenant(tenant: String = ContextUtil.getTenant()) : RPCRequest(tenant) {
 }
