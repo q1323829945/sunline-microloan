@@ -1,4 +1,4 @@
-package cn.sunline.saas.service.impl
+package cn.sunline.saas.schedule.service
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType
@@ -14,7 +14,6 @@ import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleService
 import cn.sunline.saas.repayment.service.RepaymentFeatureService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.service.ConsumerRepaymentScheduleService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.joda.time.Instant
@@ -26,7 +25,7 @@ import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 @Service
-class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
+class ConsumerRepaymentScheduleImpl{
 
     @Autowired
     private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
@@ -49,11 +48,11 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    override fun initiate() {
+    fun initiate() {
 
     }
 
-    override fun calculate(productId: Long,amount: BigDecimal,term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
+    fun calculate(productId: Long, amount: BigDecimal, term: LoanTermType): DTORepaymentScheduleTrialView {
         val loanDateInstant = Instant.now()
         val interestProduct = interestProductFeatureService.findByProductId(productId)
 
@@ -74,7 +73,7 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
             repaymentDay = loanDateInstant.toDateTime().dayOfMonth().get()
         }
 
-        val dtoRepaymentScheduleTrialView = repaymentScheduleCalcGeneration.calculator(
+        return repaymentScheduleCalcGeneration.calculator(
             DTORepaymentScheduleCalculateTrial(
                 amount = amount,
                 term = term,
@@ -88,16 +87,15 @@ class ConsumerRepaymentScheduleImpl : ConsumerRepaymentScheduleService {
                 repaymentDayType = repaymentDayType
             )
         )
-        return DTOResponseSuccess(dtoRepaymentScheduleTrialView).response()
     }
 
-    override fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
+    fun register(dtoRepaymentSchedule: DTORepaymentScheduleAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleView>> {
         //val savedRepaymentSchedule :RepaymentSchedule //= repaymentScheduleService.register(dtoRepaymentSchedule)
         val dtoRepaymentScheduleView = changeMapper(null)
         return DTOResponseSuccess(dtoRepaymentScheduleView).response()
     }
 
-    override fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal){
+    fun updateOne(id: Long, productId: Long, repaymentDate: String, term: LoanTermType, remainLoanAmount: BigDecimal){
 
 //        val loanDateInstant = Instant.now()
 //
