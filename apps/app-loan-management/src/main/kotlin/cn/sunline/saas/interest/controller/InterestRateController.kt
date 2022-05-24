@@ -48,7 +48,7 @@ class InterestRateController {
     }
 
     @GetMapping("all")
-    fun getAll( @RequestParam(required = false) ratePlanId: String): List<DTOInterestRate> {
+    fun getInvokeAll( @RequestParam(required = false) ratePlanId: String): List<DTOInterestRate> {
         val page = interestRateManagerService.getPaged(ratePlanId.toLong(), Pageable.unpaged())
         return page.content.map { objectMapper.convertValue(it) }
     }

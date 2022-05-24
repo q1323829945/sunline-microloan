@@ -51,10 +51,12 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
             BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
         }
 
+        //update status
         dtoCustomerOfferLoanAdd.kyc?.run {
             customerOffer.status = ApplyStatus.SUBMIT
             customerOfferService.save(customerOffer)
         }
+
         val customerLoanApply = this.getOne(customerOfferId) ?: CustomerLoanApply(customerOfferId, amount, data)
         customerLoanApply.data = data
         customerLoanApply.amount = amount

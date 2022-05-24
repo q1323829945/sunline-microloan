@@ -133,7 +133,7 @@ class ConsumerLoanService(
         consumerLoanPublish.initiatePositionKeeping(DTOBankingTransaction(
             name = disbursementArrangement.disbursementAccountBank,
             agreementId = disbursementInstruction.agreementId,
-            instructionId = 1,
+            instructionId = disbursementInstruction.id,
             transactionDescription = null,
             currency = loanAgreement.currency,
             amount = loanAgreement.amount,

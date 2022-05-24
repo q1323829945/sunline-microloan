@@ -1,5 +1,7 @@
 package cn.sunline.saas.customer_offer.service
 
+import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
@@ -46,13 +48,12 @@ class CustomerOfferProcedureService(
         //get product info
         val loanProduct = this.getProduct(dtoCustomerOffer.product.productId)
 
-        val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
         val key = this.pdpaSign(dtoCustomerOffer.customerOfferProcedure.customerId,dtoCustomerOffer.pdpa.pdpaTemplateId,signature.originalFilename!!,signature.inputStream)
-
         dtoCustomerOffer.product.productName = loanProduct.name
         dtoCustomerOffer.pdpa.signature = key
         val customerOfferProcedure = customerOfferService.initiate(dtoCustomerOffer)
 
+        val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
         return DTOCustomerOfferView(customerOfferProcedure,dtoLoanProduct)
     }
 
@@ -62,16 +63,12 @@ class CustomerOfferProcedureService(
         val customerOffer = customerOfferService.getOne(customerOfferId)
         customerOffer?.run {
             //add customer offer procedure
-            val dtoCustomerOffer = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data!!)
-            val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)
-            dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
-            dTOCustomerOfferProcedureView.status = customerOffer.status
-            dtoCustomerOfferLoanView.customerOfferProcedure = dTOCustomerOfferProcedureView
+            val dtoCustomerOffer = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data)
+            dtoCustomerOfferLoanView.customerOfferProcedure = coverToDTOCustomerOfferProcedureView(this,dtoCustomerOffer)
 
             //add product info
             val loanProduct = getProduct(dtoCustomerOffer.product.productId)
-            val dtoLoanProduct = objectMapper.convertValue<DTOProductView>(loanProduct)
-            dtoCustomerOfferLoanView.product = dtoLoanProduct
+            dtoCustomerOfferLoanView.product = objectMapper.convertValue<DTOProductView>(loanProduct)
 
             //add pdpa info
             val pdpa = getPDPA(countryCode)
@@ -81,22 +78,29 @@ class CustomerOfferProcedureService(
         return dtoCustomerOfferLoanView
     }
 
+    private fun coverToDTOCustomerOfferProcedureView(
+        customerOffer: CustomerOffer
+        ,dtoCustomerOfferData:DTOCustomerOfferData):DTOCustomerOfferProcedureView{
+        val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOfferData.customerOfferProcedure)
+        dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
+        dTOCustomerOfferProcedureView.status = customerOffer.status
+        return dTOCustomerOfferProcedureView
+    }
+
     fun submit(customerOfferId: Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<CustomerLoanApplyService.DTOFile>){
         val result = customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd, dtoFile)
 
         val customerOffer = customerOfferService.getOne(customerOfferId)
-        val kyc = result.kyc
-        val detail = result.detail
-        if(kyc != null && customerOffer != null && detail != null){
+
+        if(customerOffer?.status == ApplyStatus.SUBMIT){
             val dtoLoanApplicationData = DTOLoanApplicationData(
                 customerOfferId.toString(),
                 DTODetail(
                     customerOffer.customerId.toString(),
-                    detail.name,
-                    detail.registrationNo
+                    result.detail!!.name,
+                    result.detail!!.registrationNo
                 )
             )
-
             customerOfferPublish.initiateUnderwriting(dtoLoanApplicationData)
         }
 

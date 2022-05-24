@@ -1,9 +1,7 @@
-package cn.sunline.saas.repayment.schedule.controllders
+package cn.sunline.saas.schedule.controllders
 
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleTrialView
-import cn.sunline.saas.repayment.schedule.service.RepaymentScheduleService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.schedule.service.ConsumerRepaymentScheduleImpl
