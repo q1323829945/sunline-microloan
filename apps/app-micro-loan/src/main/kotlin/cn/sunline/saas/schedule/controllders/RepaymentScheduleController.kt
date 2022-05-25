@@ -4,7 +4,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.schedule.service.ConsumerRepaymentScheduleImpl
+import cn.sunline.saas.schedule.service.ConsumerRepaymentScheduleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
