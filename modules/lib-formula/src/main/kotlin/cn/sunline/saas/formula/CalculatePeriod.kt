@@ -19,7 +19,7 @@ object CalculatePeriod {
      * for now,the term is equaled to an integer multiple of frequency
      * for future,the term could be not equaled to an integer multiple of frequency,must modify the follow code
      */
-    fun calculatePeriods(loanTerm: LoanTermType, frequency: RepaymentFrequency): Int {
+    fun  calculatePeriods(loanTerm: LoanTermType, frequency: RepaymentFrequency): Int {
         return loanTerm.term.calBetweenMultiple(frequency.term)
     }
 

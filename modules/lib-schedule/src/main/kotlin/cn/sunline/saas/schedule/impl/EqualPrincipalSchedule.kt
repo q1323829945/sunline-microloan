@@ -9,13 +9,8 @@ import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-/**
- * @title: CalculateEqualInstalment
- * @description:
- * @author Kevin-Cui
- * @date 2022/5/19 10:10
- */
-class EqualInstalmentSchedule(
+
+class EqualPrincipalSchedule(
     amount: BigDecimal,
     interestRateYear: BigDecimal,
     term: LoanTermType,
@@ -23,35 +18,28 @@ class EqualInstalmentSchedule(
     fromDateTime: Instant,
     toDateTime: Instant?
 ) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime, toDateTime) {
-
     override fun getSchedules(): MutableList<Schedule> {
+
         val periods = CalculatePeriod.calculatePeriods(term, frequency)
-        val instalmentAmount = CalculateEqualInstalment.getInstalment(amount, interestRateYear, periods)
         val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
         val interestRate = CalculateInterestRate(interestRateYear)
+        val instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount,periods)
 
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
         for ((index, it) in periodDates.withIndex()) {
-            val instalmentPrincipal: BigDecimal
-            val instalmentInterest: BigDecimal
-            if (index == periodDates.size - 1) {
-                instalmentPrincipal = remainingPrincipal
-                instalmentInterest = instalmentAmount.subtract(instalmentPrincipal)
+
+            val instalmentInterest = if (index == periodDates.size - 1) {
+                remainingPrincipal.subtract(instalmentPrincipal)
             } else {
-                instalmentInterest =
-                    CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
-                        frequency.term.toMonthUnit().num
-                    ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-
-                instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
+                CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
+                    frequency.term.toMonthUnit().num
+                ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
-            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
-            schedules.add(Schedule(it.fromDateTime,it.toDateTime, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
 
+            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
+            schedules.add(Schedule(it.fromDateTime,it.toDateTime, null, instalmentPrincipal, instalmentInterest, remainingPrincipal))
         }
         return schedules
     }
-
-
 }

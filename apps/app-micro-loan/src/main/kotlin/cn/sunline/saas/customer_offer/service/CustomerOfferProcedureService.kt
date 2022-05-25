@@ -1,5 +1,7 @@
 package cn.sunline.saas.customer_offer.service
 
+import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService

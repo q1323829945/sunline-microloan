@@ -157,9 +157,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
         val feeFeatures = feeProductFeatureService.findByProductId(id)
 
-        dtoLoanProduct.interestFeature = interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }
-        dtoLoanProduct.repaymentFeature =
-            repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }
+        dtoLoanProduct.interestFeature = interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }!!
+        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }!!
         dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
         return dtoLoanProduct
     }
@@ -350,18 +349,15 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
         if (repaymentFeature == null) {
 
-            val repaymentFeatureData =
-                loanProductData.repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureAdd>(it) }
-            if (repaymentFeatureData != null) {
-                repaymentProductFeatureService.register(
-                    id,
-                    repaymentFeatureData
-                )
-            }
-            dtoLoanProduct.repaymentFeature = repaymentFeature
+            val repaymentFeatureData = loanProductData.repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeatureAdd>(it) }
+            val repaymentFeatureResult = repaymentProductFeatureService.register(
+                id,
+                repaymentFeatureData
+            )
+            dtoLoanProduct.repaymentFeature =  objectMapper.convertValue<DTORepaymentFeatureView>(repaymentFeatureResult)
 
         } else {
-            loanProductData.repaymentFeature?.run {
+            loanProductData.repaymentFeature.run {
                 repaymentFeature.payment = RepaymentFeatureModality(
                     repaymentFeature.id,
                     this.paymentMethod,
