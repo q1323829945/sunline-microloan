@@ -1,7 +1,5 @@
 package cn.sunline.saas.customer_offer.service
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
@@ -53,6 +51,9 @@ class CustomerOfferProcedureService(
         dtoCustomerOffer.pdpa.signature = key
         val customerOfferProcedure = customerOfferService.initiate(dtoCustomerOffer)
 
+        //TODO: 登记时创建组织信息
+        customerOfferPublish.registeredOrganisation()
+
         val dtoLoanProduct = objectMapper.convertValue<ProductView>(loanProduct)
         return DTOCustomerOfferView(customerOfferProcedure,dtoLoanProduct)
     }
@@ -64,7 +65,7 @@ class CustomerOfferProcedureService(
         customerOffer?.run {
             //add customer offer procedure
             val dtoCustomerOffer = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data)
-            dtoCustomerOfferLoanView.customerOfferProcedure = coverToDTOCustomerOfferProcedureView(this,dtoCustomerOffer)
+            dtoCustomerOfferLoanView.customerOfferProcedure = convertToDTOCustomerOfferProcedureView(this,dtoCustomerOffer)
 
             //add product info
             val loanProduct = getProduct(dtoCustomerOffer.product.productId)
@@ -78,9 +79,9 @@ class CustomerOfferProcedureService(
         return dtoCustomerOfferLoanView
     }
 
-    private fun coverToDTOCustomerOfferProcedureView(
-        customerOffer: CustomerOffer
-        ,dtoCustomerOfferData:DTOCustomerOfferData):DTOCustomerOfferProcedureView{
+    private fun convertToDTOCustomerOfferProcedureView(
+        customerOffer: CustomerOffer,
+        dtoCustomerOfferData:DTOCustomerOfferData):DTOCustomerOfferProcedureView{
         val dTOCustomerOfferProcedureView = objectMapper.convertValue<DTOCustomerOfferProcedureView>(dtoCustomerOfferData.customerOfferProcedure)
         dTOCustomerOfferProcedureView.customerOfferId = customerOffer.id
         dTOCustomerOfferProcedureView.status = customerOffer.status

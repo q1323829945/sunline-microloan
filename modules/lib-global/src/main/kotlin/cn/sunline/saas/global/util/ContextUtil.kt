@@ -1,6 +1,8 @@
 package cn.sunline.saas.global.util
 
-import cn.sunline.saas.global.exception.ContextNullException
+import cn.sunline.saas.global.exception.TenantUninitializedException
+import cn.sunline.saas.global.exception.UserUninitializedException
+import org.joda.time.DateTimeZone
 
 /**
  * @title: ContextUtil
@@ -9,12 +11,13 @@ import cn.sunline.saas.global.exception.ContextNullException
  * @date 2022/4/11 16:31
  */
 object ContextUtil {
-    private val context = ThreadLocal<MutableMap<String, String>>()
+    private val context = ThreadLocal<MutableMap<String, Any>>()
 
     internal const val TENANT_KEY = "TENANT_ID"
     internal const val USER_KEY = "USER_ID"
+    internal const val TIME_ZONE = "TIME_ZONE"
 
-    internal fun put(key: String, value: String) {
+    internal fun put(key: String, value: Any) {
         if (context.get() == null) {
             context.set(mutableMapOf(key to value))
         } else {
@@ -22,7 +25,7 @@ object ContextUtil {
         }
     }
 
-    internal fun get(key: String): String? {
+    internal fun get(key: String): Any? {
         return context.get()?.get(key)
     }
 
@@ -32,8 +35,13 @@ fun ContextUtil.setTenant(tenantId: String) {
     put(TENANT_KEY, tenantId)
 }
 
-fun ContextUtil.getTenant(): Long {
-    return get(TENANT_KEY)?.toLong() ?: throw ContextNullException("tenant id is null in context")
+fun ContextUtil.getTenant(): String {
+    val tenantId = get(TENANT_KEY)
+    if (tenantId == null){
+        throw TenantUninitializedException("tenant is not in the context")
+    }else{
+        return tenantId.toString()
+    }
 }
 
 fun ContextUtil.setUserId(userId: String) {
@@ -41,5 +49,18 @@ fun ContextUtil.setUserId(userId: String) {
 }
 
 fun ContextUtil.getUserId(): String {
-    return get(USER_KEY)?: throw ContextNullException("user id is null in context")
+    val userId = get(USER_KEY)
+    if (userId == null){
+        throw UserUninitializedException("user is not in the context")
+    }else{
+        return userId.toString()
+    }
+}
+
+fun ContextUtil.getTimeZone(): DateTimeZone? {
+    return get(TIME_ZONE)?.run { this as DateTimeZone }
+}
+
+fun ContextUtil.setTimeZone(timZone:DateTimeZone)  {
+    put(TIME_ZONE, timZone)
 }

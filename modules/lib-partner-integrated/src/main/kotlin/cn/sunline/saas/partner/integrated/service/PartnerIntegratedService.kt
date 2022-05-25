@@ -18,14 +18,14 @@ class PartnerIntegratedService(private val partnerIntegratedRepo: PartnerIntegra
     BaseRepoService<PartnerIntegrated, Long>(partnerIntegratedRepo) {
 
     fun get(): PartnerIntegrated? {
-        return getOne(ContextUtil.getTenant())
+        return getOne(ContextUtil.getTenant().toLong())
     }
 
     fun registered(partnerIntegrated: PartnerIntegrated): PartnerIntegrated {
         var poPartnerIntegrated = partnerIntegrated
         if (partnerIntegrated.tenantId == 0L) {
             poPartnerIntegrated = PartnerIntegrated(
-                ContextUtil.getTenant(),
+                ContextUtil.getTenant().toLong(),
                 partnerIntegrated.customerCreditRatingPartner,
                 partnerIntegrated.creditRiskPartner,
                 partnerIntegrated.regulatoryCompliancePartner,

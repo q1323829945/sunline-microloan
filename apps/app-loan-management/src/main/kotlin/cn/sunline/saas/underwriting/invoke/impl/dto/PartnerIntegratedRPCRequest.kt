@@ -19,7 +19,7 @@ class PartnerIntegratedRPCRequest : RPCRequestWithTenant() {
 
     override fun getHeaderParams(): Map<String, String> {
         return mapOf(
-            Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+            Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
             Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
         )
     }

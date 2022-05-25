@@ -9,8 +9,9 @@ enum class ManagementExceptionCode(val code: Int) {
     DATA_ALREADY_EXIST(1005),
     TYPE_ERROR(1006),
     DATA_NOT_FOUND(1007),
-
     CONTEXT_IS_NULL(1008),
+    USER_UNINITIALIZED(1009),
+    TENANT_UNINITIALIZED(1010),
 
     // Dapr client 1200 - 1299
     DAPR_INVOCATION_NETWORK_ERROR(1200),
@@ -38,6 +39,8 @@ enum class ManagementExceptionCode(val code: Int) {
 
     // Tenant 3000 - 3999
     TENANT_DATA_SOURCE_INVALID(3000),
+    TENANT_NOT_FOUND(3001),
+
 
     //upload 4000 - 4999
     // Obs and Document 4000 - 4999

@@ -122,14 +122,6 @@ class ConsumerLoanService(
 
         val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
 
-
-
-        var customerId:Long = 0
-        loanAgreement.involvements.forEach {
-            if(it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER){
-                customerId = it.partyId
-            }
-        }
         consumerLoanPublish.initiatePositionKeeping(DTOBankingTransaction(
             name = disbursementArrangement.disbursementAccountBank,
             agreementId = disbursementInstruction.agreementId,
@@ -140,7 +132,7 @@ class ConsumerLoanService(
             businessUnit = disbursementInstruction.businessUnit,
             appliedFee = null,
             appliedRate = null,
-            customerId = customerId,
+            customerId = loanAgreement.involvements.first{ it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
         ))
         consumerLoanPublish.financialAccounting(disbursementInstruction)
     }
