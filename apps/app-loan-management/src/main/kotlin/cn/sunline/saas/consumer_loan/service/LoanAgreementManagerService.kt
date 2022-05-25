@@ -4,17 +4,19 @@ import cn.sunline.saas.consumer_loan.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class LoanAgreementManagerService {
+class LoanAgreementManagerService(
+    val tenantDateTime: TenantDateTime
+) {
 
     @Autowired
     private lateinit var agreementService: LoanAgreementService
@@ -27,9 +29,9 @@ class LoanAgreementManagerService {
             DTOLoanAgreementView(
                 id = it.id.toString(),
                 agreementType = it.agreementType,
-                signedDate = it.signedDate.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd"),
-                fromDateTime = it.fromDateTime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd"),
-                toDateTime = it.toDateTime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd"),
+                signedDate = tenantDateTime.toTenantDateTime(it.signedDate).toString(),
+                fromDateTime = tenantDateTime.toTenantDateTime(it.fromDateTime).toString(),
+                toDateTime = tenantDateTime.toTenantDateTime(it.toDateTime).toString(),
                 term = it.term,
                 version = it.version,
                 status = it.status,

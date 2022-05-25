@@ -3,7 +3,6 @@ package cn.sunline.saas.partner.integrated.model.db
 import cn.sunline.saas.partner.integrated.model.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import java.time.Instant
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull

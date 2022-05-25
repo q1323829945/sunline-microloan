@@ -4,7 +4,7 @@ import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
-import java.time.Instant
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -36,10 +36,12 @@ class FinancialAccountingTransaction(
 
     @NotNull
     @Column(name = "initiated_date", nullable = false)
-    val initiatedDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val initiatedDate: Date,
 
     @Column(name = "executed_date", nullable = true)
-    val executedDate: Instant?,
+    @Temporal(TemporalType.TIMESTAMP)
+    val executedDate: Date?,
 
     @Column(name = "transaction_description", nullable = false, length = 128, columnDefinition = "varchar(128) null")
     val transactionDescription: String?,

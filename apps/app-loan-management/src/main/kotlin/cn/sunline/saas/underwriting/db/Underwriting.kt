@@ -1,13 +1,12 @@
 package cn.sunline.saas.underwriting.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import cn.sunline.saas.underwriting.db.UnderwritingApplicationData
 import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.UpdateTimestamp
-import java.time.Instant
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -53,10 +52,10 @@ class Underwriting(
     var status:OperationType? = null,
 
     @CreationTimestamp
-    var created: Instant? = null,
+    var created: Date? = null,
 
     @UpdateTimestamp
-    var updated: Instant? = null
+    var updated: Date? = null
 ) : MultiTenant {
 
     @NotNull

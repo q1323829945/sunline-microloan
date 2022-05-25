@@ -4,8 +4,8 @@ import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
 import java.math.BigDecimal
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -38,10 +38,12 @@ class BankingTransaction(
 
     @NotNull
     @Column(name = "initiated_date", nullable = false)
-    val initiatedDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val initiatedDate: Date,
 
     @Column(name = "executed_date", nullable = true)
-    var executedDate: Instant?,
+    @Temporal(TemporalType.TIMESTAMP)
+    var executedDate: Date?,
 
     @Column(name = "transaction_description", nullable = true, length = 128, columnDefinition = "varchar(128) null")
     val transactionDescription: String?,

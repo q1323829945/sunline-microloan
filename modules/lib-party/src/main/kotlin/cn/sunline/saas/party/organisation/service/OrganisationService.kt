@@ -1,6 +1,7 @@
 package cn.sunline.saas.party.organisation.service
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.organisation.exception.OrganisationNotFoundException
 import cn.sunline.saas.party.organisation.model.db.Organisation
 import cn.sunline.saas.party.organisation.model.db.OrganisationIdentification
@@ -14,8 +15,6 @@ import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.joda.time.DateTimeZone
-import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import javax.persistence.criteria.JoinType
@@ -28,7 +27,8 @@ import javax.persistence.criteria.Predicate
  * @date 2022/4/14 15:55
  */
 @Service
-class OrganisationService(private val organisationRepos: OrganisationRepository) :
+class OrganisationService(private val organisationRepos: OrganisationRepository,
+    private val tenantDateTime: TenantDateTime) :
     BaseMultiTenantRepoService<Organisation, Long>(organisationRepos) {
 
     @Autowired
@@ -57,7 +57,7 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
             parentOrganisationId = dtoOrganisationAdd.parentOrganisationId?.toLong(),
             legalEntityIndicator = dtoOrganisationAdd.legalEntityIndicator,
             organisationSector = dtoOrganisationAdd.organisationSector,
-            organisationRegistrationDate = Instant.parse(dtoOrganisationAdd.organisationRegistrationDate),
+            organisationRegistrationDate = dtoOrganisationAdd.organisationRegistrationDate?.run { tenantDateTime.toTenantDateTime(this).toDate() },
             placeOfRegistration = dtoOrganisationAdd.placeOfRegistration
         )
         organisation.organisationIdentifications = objectMapper.convertValue(dtoOrganisationAdd.organisationIdentifications)
@@ -121,7 +121,7 @@ class OrganisationService(private val organisationRepos: OrganisationRepository)
             id = organisation.id.toString(),
             legalEntityIndicator = organisation.legalEntityIndicator,
             organisationSector = organisation.organisationSector,
-            organisationRegistrationDate = organisation.organisationRegistrationDate?.toDateTime(DateTimeZone.getDefault())?.toString("yyyy-MM-dd"),
+            organisationRegistrationDate = organisation.organisationRegistrationDate?.run { tenantDateTime.toTenantDateTime(this).toString() },
             parentOrganisationId = organisation.parentOrganisationId?.toString(),
             placeOfRegistration = organisation.placeOfRegistration,
             organisationIdentifications = objectMapper.convertValue(organisation.organisationIdentifications),

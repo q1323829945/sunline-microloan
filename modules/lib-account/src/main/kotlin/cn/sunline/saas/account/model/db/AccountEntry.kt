@@ -3,8 +3,8 @@ package cn.sunline.saas.account.model.db
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
 import java.math.BigDecimal
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -41,7 +41,9 @@ class AccountEntry(
 
     @NotNull
     @Column(name = "account_entry_value_date", nullable = false)
-    val accountEntryValueDate: Instant
+    @Temporal(TemporalType.TIMESTAMP)
+    val accountEntryValueDate: Date
+
 
 ) : MultiTenant {
 

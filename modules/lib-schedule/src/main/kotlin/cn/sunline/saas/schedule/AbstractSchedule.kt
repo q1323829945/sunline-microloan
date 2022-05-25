@@ -1,6 +1,5 @@
 package cn.sunline.saas.schedule
 
-import cn.sunline.saas.formula.Schedule
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.joda.time.Instant

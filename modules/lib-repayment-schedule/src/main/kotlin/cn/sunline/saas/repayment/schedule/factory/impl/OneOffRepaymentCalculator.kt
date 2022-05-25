@@ -2,6 +2,7 @@ package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.formula.CalculateInterest
 import cn.sunline.saas.formula.CalculateInterestRate
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.schedule.component.*
 import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
@@ -21,7 +22,9 @@ import java.util.*
  *  日利率 = 年利率 / 360
  */
 @Service
-class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
+class OneOffRepaymentCalculator(
+    val tenantDateTime: TenantDateTime
+) : BaseRepaymentScheduleCalculator {
 
 
     override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
@@ -85,7 +88,8 @@ class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
             // 每期利息
             val interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
                 repaymentDate,
-                nextRepaymentDateTime, baseYearDays
+                tenantDateTime.toTenantDateTime(nextRepaymentDateTime).toInstant()
+                , baseYearDays
             )
 
             detail.interest = interest

@@ -5,7 +5,6 @@ import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
-import org.joda.time.Instant
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -43,7 +42,8 @@ class CustomerOffer (
     var data:String,
 
     @NotNull
-    var datetime:Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    var datetime:Date,
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

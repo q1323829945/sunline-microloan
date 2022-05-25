@@ -3,8 +3,8 @@ package cn.sunline.saas.invoice.arrangement.service
 import cn.sunline.saas.invoice.arrangement.model.InvoiceArrangement
 import cn.sunline.saas.invoice.arrangement.repository.InvoiceArrangementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import org.joda.time.Instant
 import org.springframework.stereotype.Service
+import java.util.Date
 
 /**
  * @title: InvoiceArrangementService
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service
  */
 data class DTOInvoiceArrangement(
     val agreementId: Long,
-    val invoiceDay: Instant,
-    val repaymentDay: Instant,
+    val invoiceDay: Date,
+    val repaymentDay: Date,
     val graceDays: Int,
 )
 

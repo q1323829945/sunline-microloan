@@ -3,8 +3,8 @@ package cn.sunline.saas.account.model.db
 import cn.sunline.saas.account.model.AccountBalanceType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
 import java.math.BigDecimal
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -29,7 +29,8 @@ class AccountBalance(
 
     @NotNull
     @Column(name = "account_balance_date",nullable = false)
-    var accountBalanceDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    var accountBalanceDate: Date,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

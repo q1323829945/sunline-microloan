@@ -1,4 +1,4 @@
-package cn.sunline.saas.formula
+package cn.sunline.saas.schedule
 
 import org.joda.time.Instant
 import java.math.BigDecimal

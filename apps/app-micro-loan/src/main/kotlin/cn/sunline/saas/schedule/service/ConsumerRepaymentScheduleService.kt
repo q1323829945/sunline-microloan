@@ -6,6 +6,7 @@ import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.interest.service.InterestFeatureService
 import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
@@ -25,7 +26,9 @@ import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 @Service
-class ConsumerRepaymentScheduleService{
+class ConsumerRepaymentScheduleService(
+    val tenantDateTime: TenantDateTime
+){
 
     @Autowired
     private lateinit var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration
@@ -142,7 +145,7 @@ class ConsumerRepaymentScheduleService{
                 installment = schedule.installment,
                 principal = schedule.principal,
                 interest = schedule.interest,
-                repaymentDate = CalcDateComponent.formatInstantToView(schedule.repaymentDate)
+                repaymentDate = CalcDateComponent.formatInstantToView(tenantDateTime.toTenantDateTime(schedule.repaymentDate).toInstant())
             )
         }
         return DTORepaymentScheduleView(

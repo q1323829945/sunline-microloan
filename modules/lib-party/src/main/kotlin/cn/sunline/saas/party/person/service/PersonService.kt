@@ -1,6 +1,7 @@
 package cn.sunline.saas.party.person.service
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.person.exception.PersonNotFoundException
 import cn.sunline.saas.party.person.model.PersonIdentificationType
 import cn.sunline.saas.party.person.model.db.Person
@@ -15,16 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.module.kotlin.convertValue
-import org.joda.time.DateTimeZone
-import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import javax.persistence.criteria.Join
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
 
 @Service
-class PersonService(private val personRepository: PersonRepository) :
+class PersonService(private val personRepository: PersonRepository,
+    private val tenantDateTime: TenantDateTime
+) :
     BaseMultiTenantRepoService<Person, Long>(personRepository) {
     @Autowired
     private lateinit var sequence: Sequence
@@ -38,7 +38,7 @@ class PersonService(private val personRepository: PersonRepository) :
             id = id,
             personName = objectMapper.convertValue(dtoPersonAdd.personName),
             residentialStatus = dtoPersonAdd.residentialStatus,
-            birthDate = Instant.parse(dtoPersonAdd.birthDate),
+            birthDate = tenantDateTime.toTenantDateTime(dtoPersonAdd.birthDate).toDate(),
             nationality = dtoPersonAdd.nationality,
             ethnicity = dtoPersonAdd.ethnicity,
         )
@@ -129,7 +129,7 @@ class PersonService(private val personRepository: PersonRepository) :
             id = person.id.toString(),
             personName = objectMapper.convertValue(person.personName),
             residentialStatus = person.residentialStatus,
-            birthDate = person.birthDate.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd"),
+            birthDate = tenantDateTime.toTenantDateTime(person.birthDate).toString(),
             nationality = person.nationality,
             ethnicity = person.ethnicity,
             personIdentifications = objectMapper.convertValue(person.personIdentifications),

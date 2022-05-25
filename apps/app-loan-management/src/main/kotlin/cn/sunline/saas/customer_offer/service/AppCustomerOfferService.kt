@@ -13,6 +13,7 @@ import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -30,7 +31,8 @@ import javax.servlet.http.HttpServletResponse
 
 @Service
 class AppCustomerOfferService(
-    val customerOfferInvoke: CustomerOfferInvoke
+    val customerOfferInvoke: CustomerOfferInvoke,
+    val tenantDateTime: TenantDateTime
 ) {
 
     @Autowired
@@ -51,7 +53,7 @@ class AppCustomerOfferService(
                 it.id.toString(),
                 "TODO",//TODO:
                 apply?.amount?.toString(),
-                it.datetime.toDateTime(DateTimeZone.getDefault()).toString("yyyy-MM-dd HH:mm:ss"),
+                tenantDateTime.toTenantDateTime(it.datetime).toString(),
                 it.productName,
                 it.status
             )

@@ -4,7 +4,7 @@ import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.party.person.model.ResidentialStatus
-import org.joda.time.Instant
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -33,8 +33,9 @@ class Person(
     var residentialStatus: ResidentialStatus,
 
     @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "birth_date", nullable = false)
-    val birthDate: Instant,
+    val birthDate: Date,
 
     @NotNull
     @Column(name = "nationality", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
