@@ -6,7 +6,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
-import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGeneration
+import cn.sunline.saas.repayment.schedule.factory.RepaymentScheduleCalcGenerationService
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.dto.*
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -24,7 +24,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGeneration: RepaymentScheduleCalcGeneration,
+class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerationService: RepaymentScheduleCalcGenerationService,
                             @Autowired private var repaymentScheduleService: RepaymentScheduleService
 ) {
 
@@ -58,7 +58,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDay = 21
         )
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -85,7 +85,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDay = 21
         )
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -112,7 +112,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
             repaymentDay = 21
         )
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -141,7 +141,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -169,7 +169,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -198,7 +198,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -226,7 +226,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -254,7 +254,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -282,7 +282,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -311,7 +311,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -339,7 +339,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -367,7 +367,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -394,7 +394,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         )
 
         // 预览
-        val plan = repaymentScheduleCalcGeneration.calculator(dtoRepaymentScheduleCalculateTrial)
+        val plan = repaymentScheduleCalcGenerationService.calculator(dtoRepaymentScheduleCalculateTrial)
         Assertions.assertThat(plan).isNotNull
         formatPlanView(plan)
 
@@ -444,7 +444,7 @@ class RepaymentScheduleTest(@Autowired private var repaymentScheduleCalcGenerati
         logger.info("\t scheduleId: ${repaymentSchedule.id} " + "\t interestRate: ${repaymentSchedule.interestRate} \n\r " + "$allLoansStr")
     }
 
-    private fun formatPlanView(repaymentSchedule: DTORepaymentScheduleTrialView) {
+    private fun formatPlanView(repaymentSchedule: DTORepaymentScheduleView) {
         var allLoansStr = ""
         for (schedule in repaymentSchedule.schedule) {
             val lbmStr =

@@ -139,7 +139,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         dtoLoanProduct.interestFeature = objectMapper.convertValue(interestFeature)
 
         dtoLoanProduct.repaymentFeature =
-            repaymentFeature?.run { objectMapper.convertValue<DTORepaymentFeatureView>(this) }
+            repaymentFeature.run { objectMapper.convertValue<DTORepaymentFeatureView>(this) }
         dtoLoanProduct.feeFeatures = feeFeatures?.run { objectMapper.convertValue(this) }
 
         return dtoLoanProduct

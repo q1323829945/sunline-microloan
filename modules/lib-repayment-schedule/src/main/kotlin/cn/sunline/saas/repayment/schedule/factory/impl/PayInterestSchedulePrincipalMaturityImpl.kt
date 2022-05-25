@@ -2,19 +2,20 @@ package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.formula.CalculateInterest
 import cn.sunline.saas.formula.CalculateInterestRate
-import cn.sunline.saas.repayment.schedule.component.*
-import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
+import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
+import cn.sunline.saas.repayment.schedule.component.CalcInstallmentComponent
+import cn.sunline.saas.repayment.schedule.component.CalcPeriodComponent
+import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleService
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleCalculateTrial
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleDetailTrialView
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleDetailView
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleResetCalculate
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleTrialView
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleView
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 
 /**
  * 按期付息到期还款
@@ -24,10 +25,10 @@ import java.util.*
  *      X=每月还款本金+每月还款利息101
  */
 @Service
-class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalculator {
+class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
 
 
-    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
+    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleView {
 
         val amount = dtoRepaymentScheduleCalculateTrial.amount
         val interestRate = dtoRepaymentScheduleCalculateTrial.interestRate
@@ -59,7 +60,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
         val finalRepaymentDateTime = endDate.toDateTime()
 
         // 每期还款详情
-        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
+        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
         for (i in 0 until periods) {
 
             nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(
@@ -73,7 +74,7 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
             )
 
             // 计划明细
-            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
+            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailView(
                 period = i + 1,
                 installment = if (periods == i + 1) CalcInstallmentComponent.calcBaseRepaymentInstallment(
                     amount,
@@ -81,14 +82,14 @@ class PayInterestSchedulePrincipalMaturityCalculator : BaseRepaymentScheduleCalc
                 ) else interest.setScale(2, RoundingMode.HALF_UP),
                 principal = if (periods == i + 1) amount else BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                 interest = interest.setScale(2, RoundingMode.HALF_UP),
-                repaymentDate = CalcDateComponent.formatInstantToView(nextRepaymentDateTime.toInstant()),
+                repaymentDate = nextRepaymentDateTime.toInstant(),
                 remainPrincipal = if (periods == i + 1) BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP) else amount
             )
             currentRepaymentDateTime = nextRepaymentDateTime
             nextRepaymentDateTime = nextRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)
         }
         // 还款计划概述
-        return DTORepaymentScheduleTrialView(
+        return DTORepaymentScheduleView(
             interestRate = interestRate.setScale(6, RoundingMode.HALF_UP),
             schedule = dtoRepaymentScheduleDetailTrialView
         )

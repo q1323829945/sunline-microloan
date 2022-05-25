@@ -5,7 +5,7 @@ import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.component.CalcInstallmentComponent
 import cn.sunline.saas.repayment.schedule.component.CalcPeriodComponent
-import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
+import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleService
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.*
@@ -20,9 +20,9 @@ import java.math.BigDecimal
  * 每期应还款额＝【借款本金×季度利率×（1＋季度利率）^还款期数】/【（1＋季度利率）^还款期数－1】
  */
 @Service
-class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
+class EqualInstallmentImpl : BaseRepaymentScheduleService {
 
-    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
+    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial):DTORepaymentScheduleView {
         val term = dtoRepaymentScheduleCalculateTrial.term
 
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
@@ -82,7 +82,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
         var isEquals = true
 
         // 还款明细
-        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
+        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
         for (i in 0 until periods) {
 
             // 还款日
@@ -125,11 +125,11 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
             totalInterest = totalInterest.add(interest)
             nextInstallment = CalcInstallmentComponent.calcBaseRepaymentInstallment(principal, interest)
             // 计划明细
-            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
+            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailView(
                 period = i + 1,
                 principal = principal,
                 interest = interest,
-                repaymentDate = CalcDateComponent.formatInstantToView(nextRepaymentDateTime.toInstant()),
+                repaymentDate = nextRepaymentDateTime.toInstant(),
                 remainPrincipal = remainPrincipal,
                 installment = nextInstallment
             )
@@ -141,7 +141,7 @@ class EqualInstallmentCalculator : BaseRepaymentScheduleCalculator {
         // 还款总额
         val totalRepayment = amount.add(totalInterest)
         // 还款计划概述
-        return DTORepaymentScheduleTrialView(
+        return DTORepaymentScheduleView(
             interestRate = interestRate,
             installment = nextInstallment,
             schedule = dtoRepaymentScheduleDetailTrialView

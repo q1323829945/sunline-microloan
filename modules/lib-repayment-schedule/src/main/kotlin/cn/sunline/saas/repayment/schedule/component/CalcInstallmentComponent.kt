@@ -12,7 +12,6 @@ object CalcInstallmentComponent {
         return principal.add(interest).setScale(2, RoundingMode.HALF_UP)
     }
 
-
     fun calcCapitalInstallment (loanAmount: BigDecimal, loanRate: BigDecimal,periods: Int,repaymentFrequency: RepaymentFrequency): BigDecimal {
         // 每月还款金额 = [总贷款金额 * 月利率 * （1 + 月利率） ^ 还款月数] / [(1 + 利率) ^ 还款月数 -1]
         // 每季应还款额＝【借款本金×季度利率×（1＋季度利率）^还款期数】/【（1＋季度利率）^还款期数－1】

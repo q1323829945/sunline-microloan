@@ -3,10 +3,10 @@
 package cn.sunline.saas.repayment.schedule.factory
 
 import cn.sunline.saas.global.constant.PaymentMethodType
-import cn.sunline.saas.repayment.schedule.factory.impl.EqualInstallmentCalculator
-import cn.sunline.saas.repayment.schedule.factory.impl.EqualPrincipalCalculator
-import cn.sunline.saas.repayment.schedule.factory.impl.OneOffRepaymentCalculator
-import cn.sunline.saas.repayment.schedule.factory.impl.PayInterestSchedulePrincipalMaturityCalculator
+import cn.sunline.saas.repayment.schedule.factory.impl.EqualInstallmentImpl
+import cn.sunline.saas.repayment.schedule.factory.impl.EqualPrincipalImpl
+import cn.sunline.saas.repayment.schedule.factory.impl.OneOffRepaymentImpl
+import cn.sunline.saas.repayment.schedule.factory.impl.PayInterestSchedulePrincipalMaturityImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -14,23 +14,23 @@ import org.springframework.stereotype.Component
 class CalculatorFactory {
 
     @Autowired
-    private lateinit var equalPrincipalCalculator: EqualPrincipalCalculator
+    private lateinit var equalPrincipalImpl: EqualPrincipalImpl
 
     @Autowired
-    private lateinit var equalInstallmentCalculator: EqualInstallmentCalculator
+    private lateinit var equalInstallmentImpl: EqualInstallmentImpl
 
     @Autowired
-    private lateinit var payInterestSchedulePrincipalMaturityCalculator: PayInterestSchedulePrincipalMaturityCalculator
+    private lateinit var payInterestSchedulePrincipalMaturityImpl: PayInterestSchedulePrincipalMaturityImpl
 
     @Autowired
-    private lateinit var oneOffRepaymentCalculator: OneOffRepaymentCalculator
+    private lateinit var oneOffRepaymentImpl: OneOffRepaymentImpl
 
-    fun instance(repaymentType: PaymentMethodType): BaseRepaymentScheduleCalculator {
+    fun instance(repaymentType: PaymentMethodType): BaseRepaymentScheduleService {
         return when (repaymentType) {
-            PaymentMethodType.EQUAL_PRINCIPAL -> equalPrincipalCalculator
-            PaymentMethodType.EQUAL_INSTALLMENT -> equalInstallmentCalculator
-            PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> payInterestSchedulePrincipalMaturityCalculator
-            PaymentMethodType.ONE_OFF_REPAYMENT -> oneOffRepaymentCalculator
+            PaymentMethodType.EQUAL_PRINCIPAL -> equalPrincipalImpl
+            PaymentMethodType.EQUAL_INSTALLMENT -> equalInstallmentImpl
+            PaymentMethodType.PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> payInterestSchedulePrincipalMaturityImpl
+            PaymentMethodType.ONE_OFF_REPAYMENT -> oneOffRepaymentImpl
         }
     }
 }

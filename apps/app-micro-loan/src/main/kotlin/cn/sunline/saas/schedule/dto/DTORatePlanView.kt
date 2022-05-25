@@ -2,6 +2,7 @@ package cn.sunline.saas.schedule.dto
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.RatePlanType
+import java.math.BigDecimal
 
 data class DTORatePlanView(
     val id: String,

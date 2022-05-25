@@ -2,18 +2,18 @@ package cn.sunline.saas.repayment.schedule.factory.impl
 
 import cn.sunline.saas.formula.CalculateInterest
 import cn.sunline.saas.formula.CalculateInterestRate
-import cn.sunline.saas.repayment.schedule.component.*
-import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleCalculator
+import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
+import cn.sunline.saas.repayment.schedule.component.CalcInstallmentComponent
+import cn.sunline.saas.repayment.schedule.factory.BaseRepaymentScheduleService
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentScheduleDetail
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleCalculateTrial
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleDetailTrialView
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleDetailView
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleResetCalculate
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleTrialView
+import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleView
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 
 /**
  * 到期还本还息
@@ -21,10 +21,10 @@ import java.util.*
  *  日利率 = 年利率 / 360
  */
 @Service
-class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
+class OneOffRepaymentImpl : BaseRepaymentScheduleService {
 
 
-    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
+    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleView {
 
         val amount = dtoRepaymentScheduleCalculateTrial.amount
         val interestRate = dtoRepaymentScheduleCalculateTrial.interestRate
@@ -38,7 +38,7 @@ class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
         val finalRepaymentDateTime = endDate.toDateTime()
 
         // 每期还款详情
-        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
+        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
 
         nextRepaymentDateTime = CalcDateComponent.calcNextRepaymentDateTime(
             currentRepaymentDateTime,
@@ -53,15 +53,15 @@ class OneOffRepaymentCalculator : BaseRepaymentScheduleCalculator {
         )
 
         // 计划明细
-        dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
+        dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailView(
             period = 1,
             installment = CalcInstallmentComponent.calcBaseRepaymentInstallment(amount, interest),
             principal = amount,
             interest = interest,
-            repaymentDate = CalcDateComponent.formatInstantToView(nextRepaymentDateTime.toInstant()),
+            repaymentDate = nextRepaymentDateTime.toInstant(),
             remainPrincipal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
         )
-        return DTORepaymentScheduleTrialView(
+        return DTORepaymentScheduleView(
             interestRate = interestRate.setScale(6, RoundingMode.HALF_UP),
             schedule = dtoRepaymentScheduleDetailTrialView
         )

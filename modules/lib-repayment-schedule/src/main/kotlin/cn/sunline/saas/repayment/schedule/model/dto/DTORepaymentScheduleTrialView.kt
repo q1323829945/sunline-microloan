@@ -1,20 +1,22 @@
 package cn.sunline.saas.repayment.schedule.model.dto
 
+import org.joda.time.Instant
 import java.math.BigDecimal
 
-data class DTORepaymentScheduleTrialView(
-//    val repaymentScheduleId: Long,
+data class DTORepaymentScheduleView(
+    val repaymentScheduleId: Long? = null,
     val installment: BigDecimal? = null,
     val interestRate: BigDecimal,
-    val schedule: MutableList<DTORepaymentScheduleDetailTrialView>
+    var schedule: MutableList<DTORepaymentScheduleDetailView>
 )
 
-data class DTORepaymentScheduleDetailTrialView(
-//    val id: Long,
+data class DTORepaymentScheduleDetailView(
+    val id: Long? = null,
+    val repaymentScheduleId: Long? = null,
     val period: Int,
-    val repaymentDate: String,
+    val repaymentDate: Instant,
     val installment: BigDecimal,
     val principal: BigDecimal,
     val interest: BigDecimal,
-    val remainPrincipal : BigDecimal
+    val remainPrincipal: BigDecimal
 )
