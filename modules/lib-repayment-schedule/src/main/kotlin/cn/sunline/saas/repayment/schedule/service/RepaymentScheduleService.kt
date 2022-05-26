@@ -35,7 +35,7 @@ class RepaymentScheduleService(private val repaymentScheduleRepository: Repaymen
                 installment = schedule.installment,
                 principal = schedule.principal,
                 interest = schedule.interest,
-                repaymentDate = CalcDateComponent.parseViewToInstant(schedule.repaymentDate)
+                repaymentDate = CalcDateComponent.parseViewToInstant(schedule.repaymentDate).toDate()
             )
             totalInterest += schedule.interest
             totalRepayment += (schedule.principal + schedule.interest)

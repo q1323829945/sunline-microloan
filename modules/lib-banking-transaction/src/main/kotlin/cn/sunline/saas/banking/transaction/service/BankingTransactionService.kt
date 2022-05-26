@@ -5,8 +5,8 @@ import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.banking.transaction.repository.BankingTransactionRepository
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
-import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service
  * @date 2022/4/14 13:48
  */
 @Service
-class BankingTransactionService(private val bankingTransactionRepo: BankingTransactionRepository) :
+class BankingTransactionService(private val bankingTransactionRepo: BankingTransactionRepository,
+    private val tenantDateTime: TenantDateTime) :
     BaseMultiTenantRepoService<BankingTransaction, Long>(bankingTransactionRepo) {
 
     @Autowired
@@ -29,7 +30,7 @@ class BankingTransactionService(private val bankingTransactionRepo: BankingTrans
             name = dtoBankingTransaction.name,
             agreementId = dtoBankingTransaction.agreementId,
             instructionId = dtoBankingTransaction.instructionId,
-            initiatedDate = Instant.now(),
+            initiatedDate = tenantDateTime.now().toDate(),
             executedDate = null,
             transactionDescription = dtoBankingTransaction.transactionDescription,
             transactionStatus = TransactionStatus.INITIATE,
@@ -44,7 +45,7 @@ class BankingTransactionService(private val bankingTransactionRepo: BankingTrans
     }
 
     fun execute(bankingTransaction:BankingTransaction):BankingTransaction{
-        bankingTransaction.executedDate = Instant.now()
+        bankingTransaction.executedDate = tenantDateTime.now().toDate()
         bankingTransaction.transactionStatus = TransactionStatus.EXECUTED
         return save(bankingTransaction)
     }

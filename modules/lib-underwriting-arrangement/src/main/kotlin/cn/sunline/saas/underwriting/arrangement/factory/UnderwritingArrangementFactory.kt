@@ -1,5 +1,6 @@
 package cn.sunline.saas.underwriting.arrangement.factory
 
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.underwriting.arrangement.model.ArrangementLifecycleStatus
 import cn.sunline.saas.underwriting.arrangement.model.db.UnderwritingArrangement
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Component
  * @date 2022/3/22 19:09
  */
 @Component
-class UnderwritingArrangementFactory {
+class UnderwritingArrangementFactory(
+    private val tenantDateTime: TenantDateTime
+) {
 
     @Autowired
     private lateinit var seq: Sequence
@@ -40,8 +43,8 @@ class UnderwritingArrangementFactory {
             val underwritingArrangement = UnderwritingArrangement(
                 id = seq.nextId(),
                 agreementId = agreementId,
-                startDate = DateTime(it.startDate).toInstant(),
-                endDate = DateTime(it.endDate).toInstant(),
+                startDate = tenantDateTime.toTenantDateTime(it.startDate).toDate(),
+                endDate = tenantDateTime.toTenantDateTime(it.endDate).toDate(),
                 involvements = involvements,
                 status = ArrangementLifecycleStatus.PROPOSED
             )

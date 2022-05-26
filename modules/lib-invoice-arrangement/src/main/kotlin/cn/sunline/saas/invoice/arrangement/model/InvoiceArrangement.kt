@@ -2,7 +2,7 @@ package cn.sunline.saas.invoice.arrangement.model
 
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -23,11 +23,13 @@ class InvoiceArrangement(
 
     @NotNull
     @Column(name = "invoice_day", nullable = false)
-    var invoiceDay: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    var invoiceDay: Date,
 
     @NotNull
     @Column(name = "repayment_day", nullable = false)
-    var repaymentDay: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    var repaymentDay: Date,
 
     @NotNull
     @Column(name = "grace_days", nullable = false, columnDefinition = "tinyint not null")

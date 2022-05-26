@@ -1,7 +1,7 @@
 package cn.sunline.saas.account.model.dto
 
 import cn.sunline.saas.global.model.CurrencyType
-import org.joda.time.Instant
+import java.util.Date
 
 /**
  * @title: DTOAccountAdd
@@ -14,7 +14,7 @@ data class DTOAccountAdd(
     val purpose: String?,
     val currency: CurrencyType,
     val amount: String,
-    val date: Instant,
+    val date: Date,
     val businessUnit: Long,
     val customerId: Long
 )

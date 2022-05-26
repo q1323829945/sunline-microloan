@@ -5,8 +5,8 @@ import cn.sunline.saas.invoice.model.InvoiceType
 import cn.sunline.saas.invoice.model.dto.RepaymentStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
 import java.math.BigDecimal
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -30,15 +30,18 @@ class Invoice(
 
     @NotNull
     @Column(name = "invoice_due_date", nullable = false)
-    val invoiceRepaymentDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val invoiceRepaymentDate: Date,
 
     @NotNull
     @Column(name = "invoice_period_from_date", nullable = false)
-    val invoicePeriodFromDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val invoicePeriodFromDate: Date,
 
     @NotNull
     @Column(name = "invoice_period_to_date", nullable = false)
-    val invoicePeriodToDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val invoicePeriodToDate: Date,
 
     @NotNull
     @Column(name = "invoice_assigned_document", nullable = false, length = 32, columnDefinition = "varchar(32) not null")

@@ -2,7 +2,7 @@ package cn.sunline.saas.party.organisation.model.db
 
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -34,7 +34,8 @@ class Organisation(
 
     @NotNull
     @Column(name = "organisation_registration_date")
-    var organisationRegistrationDate: Instant?,
+    @Temporal(TemporalType.TIMESTAMP)
+    var organisationRegistrationDate: Date?,
 
     @NotNull
     @Column(name = "place_of_registration",length = 128, columnDefinition = "varchar(128) not null")

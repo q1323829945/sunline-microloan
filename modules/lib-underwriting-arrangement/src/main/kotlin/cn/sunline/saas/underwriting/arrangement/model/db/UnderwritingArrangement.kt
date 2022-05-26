@@ -2,7 +2,7 @@ package cn.sunline.saas.underwriting.arrangement.model.db
 
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.underwriting.arrangement.model.ArrangementLifecycleStatus
-import org.joda.time.Instant
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -25,10 +25,12 @@ class UnderwritingArrangement(
     val agreementId: Long,
 
     @NotNull
-    val startDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val startDate: Date,
 
     @NotNull
-    val endDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val endDate: Date,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

@@ -4,7 +4,6 @@ import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.jetbrains.annotations.NotNull
-import org.joda.time.Instant
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
@@ -39,7 +38,8 @@ class RepaymentScheduleDetail (
 
      @NotNull
      @Column(name = "repayment_date", nullable = false)
-     var repaymentDate : Instant,
+     @Temporal(TemporalType.TIMESTAMP)
+     var repaymentDate : Date,
 
      @CreationTimestamp
      @Temporal(TemporalType.TIMESTAMP)

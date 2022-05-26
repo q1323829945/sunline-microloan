@@ -6,7 +6,7 @@ import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
 import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
-import cn.sunline.saas.formula.Schedule
+import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice

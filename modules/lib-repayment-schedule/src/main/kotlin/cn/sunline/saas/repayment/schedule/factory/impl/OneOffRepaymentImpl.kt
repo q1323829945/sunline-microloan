@@ -61,7 +61,7 @@ class OneOffRepaymentImpl : BaseRepaymentScheduleService {
             repaymentDate = nextRepaymentDateTime.toInstant(),
             remainPrincipal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
         )
-        return DTORepaymentScheduleView(
+        return DTORepaymentScheduleTrialView(
             interestRate = interestRate.setScale(6, RoundingMode.HALF_UP),
             schedule = dtoRepaymentScheduleDetailTrialView
         )

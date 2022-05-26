@@ -6,12 +6,12 @@ import cn.sunline.saas.customer.offer.modules.dto.CustomerOfferProcedureView
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferAdd
 import cn.sunline.saas.customer.offer.repositories.CustomerOfferRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
-import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -19,7 +19,8 @@ import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
 @Service
-class CustomerOfferService (private val customerOfferRepo: CustomerOfferRepository) :
+class CustomerOfferService (private val customerOfferRepo: CustomerOfferRepository,
+        private val tenantDateTime: TenantDateTime) :
         BaseMultiTenantRepoService<CustomerOffer, Long>(customerOfferRepo){
 
     @Autowired
@@ -39,7 +40,7 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
                 dtoCustomerOffer.product.productName,
                 ApplyStatus.RECORD,
                 data,
-                Instant.now()
+                tenantDateTime.now().toDate()
         ))
 
         val customerOfferProcedureView = objectMapper.convertValue<CustomerOfferProcedureView>(dtoCustomerOffer.customerOfferProcedure)

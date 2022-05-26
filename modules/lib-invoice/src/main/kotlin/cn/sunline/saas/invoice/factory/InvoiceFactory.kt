@@ -6,8 +6,8 @@ import cn.sunline.saas.invoice.model.InvoiceType
 import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.model.db.InvoiceLine
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
-import org.joda.time.Instant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
@@ -19,7 +19,9 @@ import java.math.BigDecimal
  * @date 2022/5/23 13:43
  */
 @Component
-class InvoiceFactory {
+class InvoiceFactory(
+    private val tenantDateTime: TenantDateTime
+) {
     @Autowired
     private lateinit var seq: Sequence
 
@@ -57,9 +59,9 @@ class InvoiceFactory {
         return Invoice(
             id = seq.nextId(),
             invoiceType = InvoiceType.LOAN,
-            invoiceRepaymentDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
-            invoicePeriodFromDate = Instant(dtoLoanInvoice.invoicePeriodFromDate),
-            invoicePeriodToDate = Instant(dtoLoanInvoice.invoicePeriodToDate),
+            invoiceRepaymentDate = tenantDateTime.toTenantDateTime(dtoLoanInvoice.invoicePeriodToDate).toDate(),
+            invoicePeriodFromDate = tenantDateTime.toTenantDateTime(dtoLoanInvoice.invoicePeriodFromDate).toDate(),
+            invoicePeriodToDate = tenantDateTime.toTenantDateTime(dtoLoanInvoice.invoicePeriodToDate).toDate(),
             invoiceAssignedDocument = document,
             invoiceAmount = invoiceAmount,
             invoiceStatus = InvoiceStatus.INITIATE,

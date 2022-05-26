@@ -17,6 +17,7 @@ import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.schedule.ScheduleService
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +33,8 @@ import java.math.BigDecimal
 @Service
 class ConsumerLoanService(
     private val consumerLoanInvoke: ConsumerLoanInvoke,
-    private val consumerLoanPublish: ConsumerLoanPublish
+    private val consumerLoanPublish: ConsumerLoanPublish,
+    private val tenantDateTime: TenantDateTime
 ) {
 
     @Autowired
@@ -76,8 +78,8 @@ class ConsumerLoanService(
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
-            loanAgreementAggregate.loanAgreement.fromDateTime,
-            loanAgreementAggregate.loanAgreement.toDateTime
+            tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime).toInstant(),
+            tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime).toInstant()
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
 
         invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))

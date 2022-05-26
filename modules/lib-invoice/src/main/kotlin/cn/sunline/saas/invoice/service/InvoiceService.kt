@@ -1,20 +1,13 @@
 package cn.sunline.saas.invoice.service
 
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.invoice.factory.InvoiceFactory
-import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.InvoiceType
 import cn.sunline.saas.invoice.model.db.Invoice
-import cn.sunline.saas.invoice.model.db.InvoiceLine
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
 import cn.sunline.saas.invoice.repository.InvoiceRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import cn.sunline.saas.seq.Sequence
-import org.joda.time.Instant
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification

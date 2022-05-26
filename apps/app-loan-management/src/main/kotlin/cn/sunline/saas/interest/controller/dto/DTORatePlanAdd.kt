@@ -4,7 +4,7 @@ import cn.sunline.saas.interest.model.RatePlanType
 
 
 data class DTORatePlan(
-    val id: String,
+    val id: String?,
     val name: String,
     val type: RatePlanType
 )

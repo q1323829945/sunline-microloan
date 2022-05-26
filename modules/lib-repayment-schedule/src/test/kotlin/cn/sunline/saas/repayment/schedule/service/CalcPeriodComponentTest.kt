@@ -26,7 +26,7 @@ class CalcPeriodComponentTest {
                     interest = BigDecimal(20),
                     period = i + 1,
                     installment = BigDecimal(300),
-                    repaymentDate = startDateTime.plusMonths(1).toInstant()
+                    repaymentDate = startDateTime.plusMonths(1).toDate()
                 )
             )
         }

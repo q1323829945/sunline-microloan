@@ -6,8 +6,8 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import org.joda.time.Instant
 import java.math.BigDecimal
+import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -32,13 +32,16 @@ class LoanAgreement(
     val agreementType: AgreementType = AgreementType.PRODUCT_SALE,
 
     @NotNull
-    val signedDate: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val signedDate: Date,
 
     @NotNull
-    val fromDateTime: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val fromDateTime: Date,
 
     @NotNull
-    val toDateTime: Instant,
+    @Temporal(TemporalType.TIMESTAMP)
+    val toDateTime: Date,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

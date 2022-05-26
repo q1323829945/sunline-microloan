@@ -36,7 +36,7 @@ object CalcPeriodComponent {
         val repaymentDateTime = repaymentDate.toDateTime()
         for (detail in repaymentScheduleDetail) {
             val dateTime = detail.repaymentDate
-            if (dateTime > repaymentDateTime) {
+            if (dateTime > repaymentDateTime.toDate()) {
                 if (!firstFlag) {
                     currentPeriod = detail.period
                 }

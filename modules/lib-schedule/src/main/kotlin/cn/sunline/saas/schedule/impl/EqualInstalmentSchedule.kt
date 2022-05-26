@@ -5,6 +5,7 @@ import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
+import cn.sunline.saas.schedule.Schedule
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
