@@ -99,9 +99,9 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.loanProductType,
             loanProductData.loanPurpose,
             loanProductData.businessUnit.toLong(),
+
             loanUploadConfigureList,
-            documentTemplateList
-        )
+            documentTemplateList        )
 
         loanProductData.amountConfiguration.apply {
             loanProductAdd.configurationOptions.add(

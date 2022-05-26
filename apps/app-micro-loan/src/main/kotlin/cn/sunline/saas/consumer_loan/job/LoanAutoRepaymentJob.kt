@@ -11,10 +11,9 @@ import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
  */
 class LoanAutoRepaymentJob(
     actorType: String = "LoanAutoRepaymentJob",
-    order: Int = 1,
     entityConfig: EntityConfig? = null
 ) :
-    AbstractActor(actorType, order, entityConfig) {
+    AbstractActor(actorType, entityConfig) {
 
     override fun doJob(actorId: String) {
         TODO()
