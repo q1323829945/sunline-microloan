@@ -51,10 +51,6 @@ class LoanProduct(
     @Column(name = "business_unit", columnDefinition = "bigint not null")
     var businessUnit: Long,
 
-    @NotNull
-    @Column(name = "grace_days", columnDefinition = "tinyint(1) not null")
-    var graceDays: Long = 0,
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "loan_product_upload_configure_mapping",

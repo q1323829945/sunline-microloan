@@ -27,7 +27,7 @@ class LoanAgreementFactory(
 
     fun instance(dtoLoanAgreementAdd: DTOLoanAgreementAdd): LoanAgreement {
         val loanAgreementId = seq.nextId()
-        val now = tenantDateTime.now().toDate()
+        val now = tenantDateTime.now()
         val term = dtoLoanAgreementAdd.term
         val involvements = mutableListOf<LoanAgreementInvolvement>()
         dtoLoanAgreementAdd.lender.forEach {
@@ -48,10 +48,10 @@ class LoanAgreementFactory(
         )
         return LoanAgreement(
             id = loanAgreementId,
-            signedDate = now,
-            fromDateTime = now,
+            signedDate = now.toDate(),
+            fromDateTime = now.toDate(),
             term = term,
-            toDateTime = term.term.calDate(tenantDateTime.toTenantDateTime(now).toInstant()).toDate(),
+            toDateTime = term.term.calDate(now).toDate(),
             version = 1,
             status = AgreementStatus.OFFERED,
             amount = BigDecimal(dtoLoanAgreementAdd.amount),

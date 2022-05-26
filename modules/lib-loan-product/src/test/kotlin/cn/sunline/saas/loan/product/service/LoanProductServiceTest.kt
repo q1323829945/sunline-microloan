@@ -80,7 +80,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             PaymentMethodType.ONE_OFF_REPAYMENT,
             RepaymentFrequency.ONE_MONTH,
             RepaymentDayType.BASE_LOAN_DAY,
-            prepayments
+            prepayments,
+            0
         )
 
         val feeFeatures = mutableListOf<DTOFeeFeatureAdd>()
@@ -111,12 +112,12 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             description = "test",
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
+
             businessUnit = "test",
-            graceDays = 11111,
-            status = BankingProductStatus.INITIATED,
+            graceDays = 11111,            status = BankingProductStatus.INITIATED,
             amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
-            interestFeature =  objectMapper.convertValue<DTOInterestFeature>(interestFeature),
+            interestFeature =  objectMapper.convertValue(interestFeature),
             repaymentFeature = repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeature>(it) },
             feeFeatures = feeFeatures.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) },
             loanUploadConfigureFeatures = listOf()

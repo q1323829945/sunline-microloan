@@ -21,8 +21,7 @@ data class DTOLoanProduct(
     var description: String,
     var loanProductType: LoanProductType,
     var loanPurpose: String,
-    var businessUnit:String,
-    var graceDays:Long,
+    var businessUnit: String,
     var status: BankingProductStatus?,
     var amountConfiguration: DTOAmountLoanProductConfiguration,
     var termConfiguration: DTOTermLoanProductConfiguration,
@@ -58,7 +57,8 @@ data class DTORepaymentFeature(
     val paymentMethod: PaymentMethodType,
     val frequency: RepaymentFrequency,
     val repaymentDayType: RepaymentDayType,
-    val prepaymentFeatureModality: MutableList<DTOPrepaymentFeatureModality>
+    val prepaymentFeatureModality: MutableList<DTOPrepaymentFeatureModality>,
+    val graceDays: Int
 )
 
 data class DTOPrepaymentFeatureModality(

@@ -3,7 +3,7 @@ package cn.sunline.saas.formula
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.assertj.core.api.Assertions
-import org.joda.time.Instant
+import org.joda.time.DateTime
 import org.junit.jupiter.api.Test
 
 /**
@@ -32,7 +32,7 @@ class CalculatePeriodTest {
     @Test
     fun `test get period dates with lending date`() {
 
-        val startDateTime = Instant.now()
+        val startDateTime = DateTime.now()
         val actual = CalculatePeriod.getPeriodDatesByStandard(
             startDateTime,
             LoanTermType.SIX_MONTHS.term.calDate(startDateTime),
@@ -46,7 +46,7 @@ class CalculatePeriodTest {
     @Test
     fun `test get period dates with lending date when minutes of toDateTime is less then minutes of fromDateTime `() {
 
-        val startDateTime = Instant.now()
+        val startDateTime = DateTime.now()
         val actual = CalculatePeriod.getPeriodDatesByStandard(
             startDateTime,
             LoanTermType.SIX_MONTHS.term.calDate(startDateTime).plus(2),

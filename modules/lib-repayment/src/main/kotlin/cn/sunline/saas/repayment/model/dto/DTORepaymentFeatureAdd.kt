@@ -13,10 +13,11 @@ data class DTORepaymentFeatureAdd(
     val paymentMethod: PaymentMethodType,
     val frequency: RepaymentFrequency,
     val repaymentDayType: RepaymentDayType,
-    val prepaymentFeatureModality: MutableList<DTOPrepaymentFeatureModalityAdd>
+    val prepaymentFeatureModality: MutableList<DTOPrepaymentFeatureModalityAdd>,
+    val graceDays: Int
 )
 
-data class DTOPrepaymentFeatureModalityAdd (
+data class DTOPrepaymentFeatureModalityAdd(
     val term: LoanTermType,
     val type: PrepaymentType,
     val penaltyRatio: String

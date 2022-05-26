@@ -10,8 +10,7 @@ import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
  * @date 2022/5/25 14:52
  */
 class LoanInvoiceJob(actorType: String = "LoanInvoiceJob",
-                     order: Int = 2,
-                     entityConfig: EntityConfig? = null):AbstractActor(actorType,order,entityConfig) {
+                     entityConfig: EntityConfig? = null):AbstractActor(actorType,entityConfig) {
     override fun doJob(actorId: String) {
         TODO("Not yet implemented")
     }

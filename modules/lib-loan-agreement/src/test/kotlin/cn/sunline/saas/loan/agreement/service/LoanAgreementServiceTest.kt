@@ -9,6 +9,7 @@ import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.setTimeZone
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
 import cn.sunline.saas.interest.constant.InterestType
@@ -17,6 +18,7 @@ import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementA
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,6 +39,7 @@ class LoanAgreementServiceTest {
 
     @BeforeAll
     fun `init tenant`(){
+        ContextUtil.setTimeZone(DateTimeZone.UTC)
         ContextUtil.setTenant("123456678")
     }
 

@@ -5,7 +5,9 @@ import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.setTimeZone
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +25,7 @@ class BankingTransactionServiceTest(@Autowired val bankingTransactionService: Ba
 
     @BeforeAll
     fun `init`(){
+        ContextUtil.setTimeZone(DateTimeZone.UTC)
         ContextUtil.setTenant("12344566")
     }
 

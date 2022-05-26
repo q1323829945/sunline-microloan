@@ -50,7 +50,8 @@ class RepaymentProductFeatureServiceTest(
             PaymentMethodType.ONE_OFF_REPAYMENT,
             RepaymentFrequency.ONE_MONTH,
             RepaymentDayType.BASE_LOAN_DAY,
-            prepayments
+            prepayments,
+            0
         )
 
         val actual = repaymentProductFeatureService.register(1,repaymentFeature)

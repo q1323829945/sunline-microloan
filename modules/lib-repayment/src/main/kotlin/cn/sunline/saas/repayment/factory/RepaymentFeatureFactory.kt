@@ -28,7 +28,8 @@ class RepaymentFeatureFactory {
             repaymentFeatureId,
             repaymentFeatureData.paymentMethod,
             repaymentFeatureData.frequency,
-            repaymentFeatureData.repaymentDayType
+            repaymentFeatureData.repaymentDayType,
+            repaymentFeatureData.graceDays
         )
 
         val prepayments = mutableListOf<PrepaymentFeatureModality>()
