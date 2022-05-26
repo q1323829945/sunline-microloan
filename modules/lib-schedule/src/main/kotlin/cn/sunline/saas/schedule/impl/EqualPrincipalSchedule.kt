@@ -23,22 +23,23 @@ class EqualPrincipalSchedule(
         val periods = CalculatePeriod.calculatePeriods(term, frequency)
         val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
         val interestRate = CalculateInterestRate(interestRateYear)
-        val instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount,periods)
+        var instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount,periods)
 
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
         for ((index, it) in periodDates.withIndex()) {
-
-            val instalmentInterest = if (index == periodDates.size - 1) {
-                remainingPrincipal.subtract(instalmentPrincipal)
-            } else {
-                CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
+            val instalmentInterest = CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
                     frequency.term.toMonthUnit().num
                 ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
+
+            if (index == periodDates.size - 1 && instalmentPrincipal != BigDecimal.ZERO) {
+                instalmentPrincipal = instalmentPrincipal.add(remainingPrincipal)
+                remainingPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
 
-            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
-            schedules.add(Schedule(it.fromDateTime,it.toDateTime, null, instalmentPrincipal, instalmentInterest, remainingPrincipal))
+            val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
+            schedules.add(Schedule(it.fromDateTime,it.toDateTime, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
         }
         return schedules
     }

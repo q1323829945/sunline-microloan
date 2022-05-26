@@ -24,24 +24,27 @@ class PayInterestSchedulePrincipalMaturitySchedule(
 
     override fun getSchedules(): MutableList<Schedule> {
 
-        val periods = CalculatePeriod.calculatePeriods(term, frequency)
-        val instalmentAmount = CalculateEqualInstalment.getInstalment(amount, interestRateYear, periods)
         val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
         val interestRate = CalculateInterestRate(interestRateYear)
 
         val schedules = mutableListOf<Schedule>()
-        val remainingPrincipal = amount
         for ((index, it) in periodDates.withIndex()) {
-            val instalmentPrincipal = if (index == periodDates.size - 1) {
-                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+            val remainingPrincipal: BigDecimal
+            val instalmentPrincipal: BigDecimal
+            if (index == periodDates.size - 1) {
+                remainingPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                instalmentPrincipal = amount.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             } else {
-                remainingPrincipal
+                remainingPrincipal = amount.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                instalmentPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
             val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
                 fromDateTime,
                 toDateTime,
                 baseYearDaysPara
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+
+            val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
             schedules.add(
                 Schedule(
                     it.fromDateTime,

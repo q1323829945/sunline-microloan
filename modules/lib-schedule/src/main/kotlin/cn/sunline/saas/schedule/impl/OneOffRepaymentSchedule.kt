@@ -27,16 +27,17 @@ class OneOffRepaymentSchedule(
         val interestRate = CalculateInterestRate(interestRateYear)
         val schedules = mutableListOf<Schedule>()
 
-        val instalmentPrincipal = amount
+        val instalmentPrincipal = amount.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
         val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
             fromDateTime,
             toDateTime,
             baseYearDaysPara).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+        val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
         schedules.add(
             Schedule(
                 fromDateTime,
                 toDateTime,
-                null,
+                instalmentAmount,
                 instalmentPrincipal,
                 instalmentInterest,
                 BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)

@@ -11,6 +11,7 @@ import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
 import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
 import org.joda.time.Instant
+import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 /**
@@ -19,6 +20,7 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/5/20 15:16
  */
+@Service
 class ScheduleService(
     private val amount: BigDecimal,
     private val interestRateYear: BigDecimal,
