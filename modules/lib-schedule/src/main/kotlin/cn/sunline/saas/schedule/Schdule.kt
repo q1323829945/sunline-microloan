@@ -10,10 +10,10 @@ import java.math.BigDecimal
  * @date 2022/5/20 11:13
  */
 data class Schedule(
+
     val fromDate: DateTime,
     val dueDate: DateTime,
-    val installment: BigDecimal,
-    val principal: BigDecimal,
+    val instalment: BigDecimal,    val principal: BigDecimal,
     val interest: BigDecimal,
     val remainingPrincipal: BigDecimal,
     val period: Int,

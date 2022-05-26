@@ -19,9 +19,10 @@ import org.springframework.stereotype.Component
 @Component
 class LoanAgreementSchedulerTask(
     actorType: String = "LoanAgreementSchedulerTask",
+    order: Int = 0,
     entityConfig: EntityConfig? = null
 ) :
-    AbstractActor(actorType, entityConfig) {
+    AbstractActor(actorType, order, entityConfig) {
 
     @Autowired
     private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
