@@ -112,11 +112,12 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             description = "test",
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
-
-            businessUnit = "test",            status = BankingProductStatus.INITIATED,            amountConfiguration = amountConfiguration,
+            businessUnit = "test",
+            status = BankingProductStatus.INITIATED,
+            amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
             interestFeature =  objectMapper.convertValue(interestFeature),
-            repaymentFeature = repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeature>(it) },
+            repaymentFeature = repaymentFeature.let { objectMapper.convertValue(it) },
             feeFeatures = feeFeatures.let { objectMapper.convertValue<MutableList<DTOFeeFeature>>(it) },
             loanUploadConfigureFeatures = listOf()
         )
@@ -124,6 +125,5 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
 
 
         assertThat(actual).isNotNull
-        //assertThat(actual.configurationOptions?.size).isEqualTo(2)
     }
 }

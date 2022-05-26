@@ -1,8 +1,8 @@
 package cn.sunline.saas.scheduler
 
-import LoanInvoiceJob
 import cn.sunline.saas.consumer_loan.job.InvoiceAccountJob
 import cn.sunline.saas.consumer_loan.job.LoanAutoRepaymentJob
+import cn.sunline.saas.consumer_loan.job.LoanInvoiceJob
 import cn.sunline.saas.dapr_wrapper.actor.ActorTimerService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig

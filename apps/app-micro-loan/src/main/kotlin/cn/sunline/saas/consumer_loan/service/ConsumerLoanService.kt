@@ -66,7 +66,10 @@ class ConsumerLoanService(
             ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
                 customerOffer,
                 loanProduct,
-                InterestRateHelper.getRate(customerOffer.term, consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id))?.toPlainString()
+                InterestRateHelper.getRate(
+                    customerOffer.term,
+                    consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id)
+                )?.toPlainString()
             )
         )
 
@@ -85,11 +88,16 @@ class ConsumerLoanService(
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
-
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
-            loanProduct.interestFeature.interest.baseYearDays        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-        invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))
+            loanProduct.interestFeature.interest.baseYearDays
+        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+        invoiceService.initiateLoanInvoice(
+            ConsumerLoanAssembly.convertToDTOLoanInvoice(
+                schedules,
+                loanAgreementAggregate
+            )
+        )
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate.loanAgreement)
         signAndLending(loanAgreement)
@@ -131,18 +139,20 @@ class ConsumerLoanService(
 
         val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
 
-        consumerLoanPublish.initiatePositionKeeping(DTOBankingTransaction(
-            name = disbursementArrangement.disbursementAccountBank,
-            agreementId = disbursementInstruction.agreementId,
-            instructionId = disbursementInstruction.id,
-            transactionDescription = null,
-            currency = loanAgreement.currency,
-            amount = loanAgreement.amount,
-            businessUnit = disbursementInstruction.businessUnit,
-            appliedFee = null,
-            appliedRate = null,
-            customerId = loanAgreement.involvements.first{ it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
-        ))
+        consumerLoanPublish.initiatePositionKeeping(
+            DTOBankingTransaction(
+                name = disbursementArrangement.disbursementAccountBank,
+                agreementId = disbursementInstruction.agreementId,
+                instructionId = disbursementInstruction.id,
+                transactionDescription = null,
+                currency = loanAgreement.currency,
+                amount = loanAgreement.amount,
+                businessUnit = disbursementInstruction.businessUnit,
+                appliedFee = null,
+                appliedRate = null,
+                customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
+            )
+        )
         consumerLoanPublish.financialAccounting(disbursementInstruction)
     }
 
@@ -160,13 +170,14 @@ class ConsumerLoanService(
         loanAgreementService.save(loanAgreement)
     }
 
-    fun getLoanAgreementByApplicationId(applicationId:Long):DTOLoanAgreementView?{
+    fun getLoanAgreementByApplicationId(applicationId: Long): DTOLoanAgreementView? {
         val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
         return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 
-    fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){
-        val  loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+    fun updateLoanAgreementStatus(applicationId: Long, status: AgreementStatus) {
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
         loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }
