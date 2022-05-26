@@ -5,7 +5,7 @@ import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.event.dto.*
-import cn.sunline.saas.underwriting.db.OperationType
+import cn.sunline.saas.underwriting.db.UnderwritingType
 import org.springframework.stereotype.Component
 
 /**
@@ -68,10 +68,10 @@ class UnderwritingPublishImpl : UnderwritingPublish {
         )
     }
 
-    override fun updateCustomerOfferStatus(applicationId: Long, operationType: OperationType) {
+    override fun updateCustomerOfferStatus(applicationId: Long, underwritingType: UnderwritingType) {
         val dtoCustomerOffer = DTOCustomerOffer(
             applicationId,
-            operationType
+            underwritingType
         )
 
         PubSubService.publish(

@@ -4,13 +4,7 @@ package cn.sunline.saas.customer.offer.modules.dto
 data class DTOCustomerOfferAdd(
         val customerOfferProcedure: DTOCustomerOfferProcedureAdd,
         val product: DTOProductAdd,
-        val pdpa: DTOPDPAAdd,
-        val referenceAccount:DTOReferenceAccountAdd
-)
-
-data class DTOReferenceAccountAdd(
-        val account: String,
-        val accountBank: String
+        val pdpa: DTOPDPAAdd
 )
 
 data class DTOCustomerOfferProcedureAdd(
@@ -36,4 +30,8 @@ data class DTOCustomerOfferLoanAdd (
         val financial:DTOFinancial?,
         val uploadDocument:MutableList<DTOUploadDocument>?,
         val kyc:DTOKyc?,
+        val referenceAccount:DTOReferenceAccount?
 )
+
+
+

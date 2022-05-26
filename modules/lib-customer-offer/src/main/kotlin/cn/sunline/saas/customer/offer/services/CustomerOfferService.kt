@@ -14,7 +14,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.convertValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
@@ -58,7 +60,9 @@ class CustomerOfferService (private val customerOfferRepo: CustomerOfferReposito
             productId?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("productId"),productId)) }
             productName?.run { predicates.add(criteriaBuilder.like(root.get("productName"),"$productName%")) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        },pageable)
+        },PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("datetime"))))
+
+
         return page
     }
 }

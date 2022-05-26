@@ -5,6 +5,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.underwriting.controllers.dto.DTOLoanApplicationData
 
 data class DTOManagementCustomerOfferView(
     var pdpa: PDPAInformationView? = null,
@@ -17,6 +18,7 @@ data class DTOManagementCustomerOfferView(
     val financial: DTOFinancialView? = null,
     val uploadDocument:List<DTOUploadDocumentView>? = null,
     val kyc: DTOKycView? = null,
+    var underwriting:DTOUnderwritingView? = null
 )
 
 
@@ -131,4 +133,16 @@ data class DTOKycView(
     val representsNeutrality: YesOrNo,
     val representsNeutralityShared: YesOrNo,
     val familiarWithBusiness:String,//TODO
+)
+
+
+data class DTOUnderwritingView (
+    val id: String,
+    val customerId: String,
+    val applicationData: DTOLoanApplicationData,
+    var customerCreditRate: String? = null,
+    var creditRisk: String? = null,
+    var fraudEvaluation: String? = null,
+    var regulatoryCompliance: String? = null,
+    val status: String?
 )

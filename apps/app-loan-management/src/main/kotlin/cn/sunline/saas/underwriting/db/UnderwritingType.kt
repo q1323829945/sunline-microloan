@@ -1,5 +1,5 @@
 package cn.sunline.saas.underwriting.db
 
-enum class OperationType {
+enum class UnderwritingType {
     PASS,REJECT
 }

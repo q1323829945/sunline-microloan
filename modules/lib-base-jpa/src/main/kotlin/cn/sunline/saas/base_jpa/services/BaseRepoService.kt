@@ -26,6 +26,8 @@ abstract class BaseRepoService<T, ID: Serializable>(private val baseRepository: 
         } else {
             baseRepository.findAll(specification, pageable)
         }
+
+
     }
 
     fun save(entity: T): T {

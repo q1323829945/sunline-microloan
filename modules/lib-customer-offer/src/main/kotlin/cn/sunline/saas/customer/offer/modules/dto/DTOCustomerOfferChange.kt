@@ -36,5 +36,6 @@ data class DTOCustomerOfferLoanChange (
         val financial:DTOFinancial?,
         val uploadDocument:MutableList<DTOUploadDocument>?,
         val kyc:DTOKyc?,
+        val referenceAccount:DTOReferenceAccount?
 )
 

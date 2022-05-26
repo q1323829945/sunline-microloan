@@ -12,37 +12,39 @@ class MenuService {
 
     init {
         val businessConfig = Menu("businessConfig","","","")
-
         val sysConfig = Menu("sysConfig","","","")
+        val enterpriseConfig = Menu("enterpriseConfig","","","")
+        val loanConfig = Menu("loanConfig","","","")
+
         val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role")
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions")
         val userConfig = Menu("userConfig","sysConfig","","/dashboard/user")
         val ratePlanConfig = Menu("ratePlanConfig","businessConfig","","/dashboard/ratePlan")
         val documentTemplateConfig = Menu("documentTemplateConfig","businessConfig","","/dashboard/documentTemplate")
         val loanProductConfig = Menu("loanProductConfig","businessConfig","","/dashboard/loanProduct")
-        val loanFileUploadConfig = Menu("loanFileUploadConfig","businessConfig","","/dashboard/loanFileUploadConfig")
         val riskControlRuleConfig = Menu("riskControlRuleConfig","businessConfig","","/dashboard/riskControlRule")
-        val organisationConfig = Menu("organisationConfig","businessConfig","","/dashboard/organisationConfig")
-        val personConfig = Menu("personConfig","businessConfig","","/dashboard/personConfig")
-        val customerOfferConfig = Menu("customerOfferConfig","businessConfig","","/dashboard/customerOfferConfig")
+        val organisationConfig = Menu("organisationConfig","enterpriseConfig","","/dashboard/organisationConfig")
+        val employeeConfig = Menu("employeeConfig","enterpriseConfig","","/dashboard/employeeConfig")
+        val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig")
+        val customerOfferConfig = Menu("customerOfferConfig","loanConfig","","/dashboard/customerOfferConfig")
         val underwritingManagementConfig = Menu("underwritingManagementConfig","businessConfig","","/dashboard/underwritingManagementConfig")
-        val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","businessConfig","","/dashboard/loanAgreementManagementConfig")
+        val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","loanConfig","","/dashboard/loanAgreementManagementConfig")
 
 
-        menuList = listOf(businessConfig,sysConfig
+        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,loanConfig
             ,roleConfig
             ,permissionConfig
             ,userConfig
             ,ratePlanConfig
             ,documentTemplateConfig
             ,loanProductConfig
-            ,loanFileUploadConfig
             ,riskControlRuleConfig
             ,organisationConfig
-            ,personConfig
+            ,customerConfig
             ,customerOfferConfig
             ,underwritingManagementConfig
-            ,loanAgreementManagementConfig)
+            ,loanAgreementManagementConfig
+            ,employeeConfig)
 
     }
 

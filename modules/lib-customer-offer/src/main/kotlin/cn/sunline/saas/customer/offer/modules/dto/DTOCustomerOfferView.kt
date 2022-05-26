@@ -36,6 +36,7 @@ data class DTOCustomerOfferLoanView (
         val financial:DTOFinancial? = null,
         val uploadDocument:List<DTOUploadDocument>? = null,
         val kyc:DTOKyc? = null,
+        val referenceAccount:DTOReferenceAccount? = null
 )
 
 data class DTOCustomerOfferProcedureView(

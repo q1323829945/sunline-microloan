@@ -49,7 +49,7 @@ class Underwriting(
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", length = 32, columnDefinition = "varchar(32) null")
-    var status:OperationType? = null,
+    var status:UnderwritingType? = null,
 
     @CreationTimestamp
     var created: Date? = null,

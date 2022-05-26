@@ -6,7 +6,7 @@ import cn.sunline.saas.response.response
 import cn.sunline.saas.underwriting.controllers.dto.DTOUnderwriting
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
-import cn.sunline.saas.underwriting.db.OperationType
+import cn.sunline.saas.underwriting.db.UnderwritingType
 import cn.sunline.saas.underwriting.service.UnderwritingManagementService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -45,7 +46,6 @@ class UnderwritingManagementController {
 
         val updateOne = underwritingManagementService.update(oldOne,newOne)
         return DTOResponseSuccess(getDTOUnderwriting(updateOne)).response()
-
     }
 
     @GetMapping("{id}")
@@ -54,11 +54,10 @@ class UnderwritingManagementController {
         return DTOResponseSuccess(getDTOUnderwriting(underwriting)).response()
     }
 
-
     @PutMapping("{status}/{id}")
-    fun updateStatus(@PathVariable(name = "status")operationType: OperationType,
+    fun updateStatus(@PathVariable(name = "status")underwritingType: UnderwritingType,
                      @PathVariable(name = "id")id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
-        underwritingManagementService.updateStatus(operationType,id)
+        underwritingManagementService.updateStatus(underwritingType,id.toLong())
 
         return DTOResponseSuccess(Unit).response()
     }

@@ -1,13 +1,9 @@
 package cn.sunline.saas.customer_offer.controllers
 
-import cn.sunline.saas.customer_offer.controllers.model.OperationType
+import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType
 import cn.sunline.saas.customer_offer.service.AppCustomerOfferService
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
-import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.model.CurrencyType
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -16,7 +12,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -30,7 +25,7 @@ class CustomerOfferController {
 
     data class DTOUpdateStatus(
         val id:String,
-        val operationType: OperationType,
+        val underwritingType: UnderwritingType,
     )
 
 
@@ -47,9 +42,9 @@ class CustomerOfferController {
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
-    @PostMapping("status")
+    @PutMapping("status")
     fun updateStatus(@RequestBody dtoUpdateStatus: DTOUpdateStatus):ResponseEntity<DTOResponseSuccess<Unit>>{
-        appCustomerOfferService.updateStatus(dtoUpdateStatus.operationType,dtoUpdateStatus.id.toLong())
+        appCustomerOfferService.updateStatus(dtoUpdateStatus.underwritingType,dtoUpdateStatus.id.toLong())
 
         return DTOResponseSuccess(Unit).response()
     }
@@ -64,8 +59,6 @@ class CustomerOfferController {
     fun download(@PathParam("path")path:String,response: HttpServletResponse){
         appCustomerOfferService.download(path, response)
     }
-
-
 
     @GetMapping("invoke/{id}")
     fun getCustomerOffer(@PathVariable(name = "id")id:String): DTOInvokeCustomerOfferView {

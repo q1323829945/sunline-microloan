@@ -1,12 +1,12 @@
 package cn.sunline.saas.customer_offer.service
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus.*
-import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferAdd
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferData
+import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer_offer.controllers.model.OperationType
-import cn.sunline.saas.customer_offer.controllers.model.OperationType.*
+import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType
+import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType.*
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
@@ -20,7 +20,6 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.apache.commons.io.IOUtils
-import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -49,20 +48,25 @@ class AppCustomerOfferService(
     fun getPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable):Page<DTOCustomerOfferPage> {
         val page = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).map {
             val apply = customerLoanApplyService.getOne(it.id!!)
+            val customerOfferLoanView = apply?.run {
+                objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
+            }
             DTOCustomerOfferPage(
-                it.id.toString(),
-                "TODO",//TODO:
-                apply?.amount?.toString(),
-                tenantDateTime.toTenantDateTime(it.datetime).toString(),
-                it.productName,
-                it.status
+                customerOfferId = it.id.toString(),
+                userName = customerOfferLoanView?.detail?.name,//TODO:
+                amount = apply?.amount?.toString(),
+                datetime = tenantDateTime.toTenantDateTime(it.datetime).toString(),
+                productName = it.productName,
+                status = it.status,
+                term = customerOfferLoanView?.loan?.term,
+                currency = customerOfferLoanView?.loan?.currency
             )
         }
 
         return page
     }
 
-    fun updateStatus(operationType: OperationType, id: Long){
+    fun updateStatus(operationType: UnderwritingType, id: Long){
         val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
         when(operationType){
             PASS -> {
@@ -99,6 +103,11 @@ class AppCustomerOfferService(
         managementCustomerOffer.product = objectMapper.convertValue(product)
         managementCustomerOffer.product!!.productId =product.id
 
+        val underwriting = customerOfferInvoke.getUnderwriting(id)
+        underwriting?.run {
+            managementCustomerOffer.underwriting = objectMapper.convertValue(this)
+        }
+
         return managementCustomerOffer
     }
 
@@ -131,7 +140,7 @@ class AppCustomerOfferService(
             customerOfferLoan.loan!!.amount,
             customerOfferLoan.loan!!.currency,
             customerOfferLoan.loan!!.term,
-            objectMapper.convertValue(data.referenceAccount),
+            objectMapper.convertValue(customerOfferLoan.referenceAccount!!),
             product.loanPurpose
         )
     }

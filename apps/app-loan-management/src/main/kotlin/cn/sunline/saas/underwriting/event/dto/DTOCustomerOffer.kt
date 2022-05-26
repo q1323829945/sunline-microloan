@@ -1,8 +1,8 @@
 package cn.sunline.saas.underwriting.event.dto
 
-import cn.sunline.saas.underwriting.db.OperationType
+import cn.sunline.saas.underwriting.db.UnderwritingType
 
 data class DTOCustomerOffer (
     val id:Long,
-    val operationType: OperationType,
+    val underwritingType: UnderwritingType,
 )

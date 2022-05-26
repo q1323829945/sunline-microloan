@@ -76,3 +76,9 @@ data class DTOKyc(
     val representsNeutralityShared: YesOrNo,
     val familiarWithBusiness:String,//TODO
 )
+
+
+data class DTOReferenceAccount(
+    val account: String,
+    val accountBank: String
+)

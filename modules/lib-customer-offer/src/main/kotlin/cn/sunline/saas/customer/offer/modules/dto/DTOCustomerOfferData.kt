@@ -4,14 +4,9 @@ package cn.sunline.saas.customer.offer.modules.dto
 data class DTOCustomerOfferData(
         val customerOfferProcedure: DTOCustomerOfferProcedureData,
         val product: DTOProductData,
-        val pdpa: DTOPDPAData,
-        val referenceAccount:DTOReferenceAccountData
+        val pdpa: DTOPDPAData
 )
 
-data class DTOReferenceAccountData(
-        val account: String,
-        val accountBank: String
-)
 
 data class DTOCustomerOfferProcedureData(
         val customerId: Long,
