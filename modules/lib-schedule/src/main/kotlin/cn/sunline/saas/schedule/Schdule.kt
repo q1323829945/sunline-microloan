@@ -1,6 +1,6 @@
 package cn.sunline.saas.schedule
 
-import org.joda.time.Instant
+import org.joda.time.DateTime
 import java.math.BigDecimal
 
 /**
@@ -10,8 +10,8 @@ import java.math.BigDecimal
  * @date 2022/5/20 11:13
  */
 data class Schedule(
-    val fromDate:Instant,
-    val dueDate: Instant,
+    val fromDate: DateTime,
+    val dueDate: DateTime,
     val installment: BigDecimal,
     val principal: BigDecimal,
     val interest: BigDecimal,

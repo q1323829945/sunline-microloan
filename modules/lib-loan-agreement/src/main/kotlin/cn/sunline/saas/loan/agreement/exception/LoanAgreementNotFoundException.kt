@@ -1,4 +1,4 @@
-package cn.sunline.saas.consumer_loan.exception
+package cn.sunline.saas.loan.agreement.exception
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
@@ -10,6 +10,6 @@ import cn.sunline.saas.exceptions.NotFoundException
  * @date 2022/5/7 10:05
  */
 class LoanAgreementNotFoundException(
-    exceptionMessage: String,
+    exceptionMessage: String?=null,
     statusCode: ManagementExceptionCode = ManagementExceptionCode.LOAN_AGREEMENT_NOT_FOUND
 ) : NotFoundException(exceptionMessage, statusCode)

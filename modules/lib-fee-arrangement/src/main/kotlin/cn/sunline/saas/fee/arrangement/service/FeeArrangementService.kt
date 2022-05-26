@@ -4,10 +4,16 @@ import cn.sunline.saas.fee.arrangement.model.db.FeeArrangement
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.arrangement.repository.FeeArrangementRepository
 import cn.sunline.saas.fee.util.FeeUtil
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Root
 
 /**
  * @title: FeeArrangementService
@@ -42,5 +48,16 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
         }
 
         return save(feeArrangements).toMutableList()
+    }
+
+    fun listByAgreementId(agreementId: Long): MutableList<FeeArrangement> {
+        val agreementIdSpecification: Specification<FeeArrangement> =
+            Specification { root: Root<FeeArrangement>, _, criteriaBuilder ->
+                val path: Expression<Long> = root.get("agreementId")
+                val predicate = criteriaBuilder.equal(path, agreementId)
+                criteriaBuilder.and(predicate)
+            }
+
+        return getPageWithTenant(agreementIdSpecification, Pageable.unpaged()).toMutableList()
     }
 }

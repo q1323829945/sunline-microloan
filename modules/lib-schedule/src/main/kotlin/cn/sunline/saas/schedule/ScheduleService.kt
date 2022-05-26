@@ -6,11 +6,12 @@ import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.PaymentMethodType.*
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.EqualInstalmentSchedule
+
+import org.joda.time.DateTime
 import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
 import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
-import org.joda.time.Instant
-import org.springframework.stereotype.Service
+import org.joda.time.Instantimport org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 /**
@@ -24,8 +25,8 @@ class ScheduleService(
     private val interestRateYear: BigDecimal,
     private val term: LoanTermType,
     private val frequency: RepaymentFrequency,
-    private val fromDateTime: Instant,
-    private val toDateTime: Instant?,
+    private val fromDateTime: DateTime,
+    private val toDateTime: DateTime?,
     private val baseYearDays: BaseYearDays,
     ) {
 

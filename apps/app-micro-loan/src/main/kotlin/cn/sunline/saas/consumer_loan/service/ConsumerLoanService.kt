@@ -3,7 +3,7 @@ package cn.sunline.saas.consumer_loan.service
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundException
-import cn.sunline.saas.consumer_loan.exception.LoanAgreementNotFoundException
+import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
@@ -85,7 +85,7 @@ class ConsumerLoanService(
 
         invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))
 
-        val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate)
+        val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate.loanAgreement)
         signAndLending(loanAgreement)
 
     }

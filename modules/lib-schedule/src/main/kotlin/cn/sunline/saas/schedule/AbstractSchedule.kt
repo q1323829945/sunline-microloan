@@ -2,6 +2,7 @@ package cn.sunline.saas.schedule
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
+import org.joda.time.DateTime
 import org.joda.time.Instant
 import java.math.BigDecimal
 
@@ -16,10 +17,10 @@ abstract class AbstractSchedule(
     val interestRateYear: BigDecimal,
     val term: LoanTermType,
     val frequency: RepaymentFrequency,
-    val fromDateTime: Instant,
-    toDateTime: Instant?
+    val fromDateTime: DateTime,
+    toDateTime: DateTime?
 ) {
-    var toDateTime: Instant
+    var toDateTime: DateTime
 
     init {
         if(toDateTime == null){

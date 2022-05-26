@@ -6,7 +6,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
 import cn.sunline.saas.schedule.Schedule
-import org.joda.time.Instant
+import org.joda.time.DateTime
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -21,8 +21,8 @@ class EqualInstalmentSchedule(
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
-    fromDateTime: Instant,
-    toDateTime: Instant?
+    fromDateTime: DateTime,
+    toDateTime: DateTime?
 ) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime, toDateTime) {
 
     override fun getSchedules(): MutableList<Schedule> {

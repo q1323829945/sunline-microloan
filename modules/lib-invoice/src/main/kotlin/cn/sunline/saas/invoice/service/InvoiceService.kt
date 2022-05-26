@@ -43,20 +43,33 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
         return save(invoices)
     }
 
-    fun listInvoicesByAccounted(agreementId:Long,pageable: Pageable): Page<Invoice> {
-        val agreementIdSpecification: Specification<Invoice> = Specification { root: Root<Invoice>, _, criteriaBuilder ->
-            val path: Expression<Long> = root.get("agreementId")
-            val predicate = criteriaBuilder.equal(path, agreementId)
-            criteriaBuilder.and(predicate)
-        }
+    fun listAccountedInvoices(agreementId: Long, pageable: Pageable): Page<Invoice> {
+        val agreementIdSpecification: Specification<Invoice> =
+            Specification { root: Root<Invoice>, _, criteriaBuilder ->
+                val path: Expression<Long> = root.get("agreementId")
+                val predicate = criteriaBuilder.equal(path, agreementId)
+                criteriaBuilder.and(predicate)
+            }
 
-        val invoiceStatusSpecification: Specification<Invoice> = Specification { root: Root<Invoice>, _, criteriaBuilder ->
-            val path: Expression<Long> = root.get("invoiceStatus")
-            val predicate = criteriaBuilder.equal(path, InvoiceStatus.ACCOUNTED)
-            criteriaBuilder.and(predicate)
-        }
+        val invoiceStatusSpecification: Specification<Invoice> =
+            Specification { root: Root<Invoice>, _, criteriaBuilder ->
+                val path: Expression<Long> = root.get("invoiceStatus")
+                val predicate = criteriaBuilder.equal(path, InvoiceStatus.ACCOUNTED)
+                criteriaBuilder.and(predicate)
+            }
 
-        return getPageWithTenant(agreementIdSpecification.and(invoiceStatusSpecification),pageable)
+        return getPageWithTenant(agreementIdSpecification.and(invoiceStatusSpecification), pageable)
+    }
+
+    fun listInvoiceByAgreementId(agreementId: Long, pageable: Pageable): Page<Invoice> {
+        val agreementIdSpecification: Specification<Invoice> =
+            Specification { root: Root<Invoice>, _, criteriaBuilder ->
+                val path: Expression<Long> = root.get("agreementId")
+                val predicate = criteriaBuilder.equal(path, agreementId)
+                criteriaBuilder.and(predicate)
+            }
+
+        return getPageWithTenant(agreementIdSpecification, pageable)
     }
 
 }

@@ -29,10 +29,10 @@ class TermType : Comparable<TermType> {
         this.unit = unit
     }
 
-    fun calDate(startDay: Instant): Instant {
+    fun calDate(startDay: DateTime): DateTime {
         return when (unit) {
-            TermUnit.MONTH -> DateTime(startDay).plusMonths(num).toInstant()
-            TermUnit.YEAR -> DateTime(startDay).plusYears(num).toInstant()
+            TermUnit.MONTH -> startDay.plusMonths(num)
+            TermUnit.YEAR -> startDay.plusYears(num)
         }
     }
 

@@ -27,6 +27,9 @@ enum class ManagementExceptionCode(val code: Int) {
     DAPR_ACTOR_NOT_FOUND_OR_MALFORMED_REQUEST(1211),
     DAPR_ACTOR_SERVER_ERROR(1212),
 
+    // scheduler 1300 - 1399
+    SCHEDULER_TIMER_NOT_CONFIGURE(1300),
+
     // Auth 2000 - 2999
     AUTHORIZATION_LOGIN_FAILED(2000),
     AUTHORIZATION_TOKEN_VALIDATION_FAILED(2001),
@@ -62,6 +65,7 @@ enum class ManagementExceptionCode(val code: Int) {
     RATE_PLAN_NOT_FOUND(5100),
     INTEREST_RATE_NOT_FOUND(5101),
     RATE_PLAN_HAS_BEEN_USED(5102),
+
     // Http 5150 - 5199
     HTTP_ERROR(5151),
 
@@ -94,6 +98,10 @@ enum class ManagementExceptionCode(val code: Int) {
     DISBURSEMENT_LEND_TYPE_NOT_SUPPORTED(5563),
     DISBURSEMENT_INSTRUCTION_NOT_FOUND(5564),
 
-    //interest arrangement 5600-5610
-    BASE_RATE_NULL(5600)
+    //interest arrangement 5600-5609
+    BASE_RATE_NULL(5600),
+    INTEREST_ARRANGEMENT_NOT_FOUND(5601),
+
+    //repayment arrangement 5610-5619
+    REPAYMENT_ARRANGEMENT_NOT_FOUND(5610)
 }

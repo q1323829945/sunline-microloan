@@ -3,13 +3,16 @@ package cn.sunline.saas.loan.agreement.service
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.interest.arrangement.exception.InterestArrangementNotFoundException
 import cn.sunline.saas.interest.arrangement.service.InterestArrangementService
+import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
 import cn.sunline.saas.loan.agreement.repository.LoanAgreementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.repayment.arrangement.exception.RepaymentArrangementNotFoundException
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -65,16 +68,15 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         )
     }
 
-    fun archiveAgreement(loanAgreementAggregate: DTOLoanAgreementView): LoanAgreement {
+    fun archiveAgreement(loanAgreement: LoanAgreement): LoanAgreement {
         //TODO Create Document and update loan agreement's agreementDocument property with documentId
         val referenceDocument: String = ""
 
-        val loanAgreement = loanAgreementAggregate.loanAgreement
         loanAgreement.agreementDocument = referenceDocument
         return save(loanAgreement)
     }
 
-    fun signAgreement(loanAgreement: LoanAgreement):LoanAgreement{
+    fun signAgreement(loanAgreement: LoanAgreement): LoanAgreement {
         // TODO sign component,the strategy is either offline or online
         // Offline Human participation
         // TODO management desk
@@ -87,6 +89,22 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         // TODO udpate loan agreement status to change to SIGN
         loanAgreement.status = AgreementStatus.SIGNED
         return save(loanAgreement)
+    }
+
+    fun retrieve(loanAgreementId: Long): DTOLoanAgreementView {
+        val loanAgreement = getOne(loanAgreementId)
+        val interestArrangement = interestArrangementService.getOne(loanAgreementId)
+        val repaymentArrangement = repaymentArrangementService.getOne(loanAgreementId)
+        val feeArrangement = feeArrangementService.listByAgreementId(loanAgreementId)
+        val disbursementArrangement = disbursementArrangementService.getOne(loanAgreementId)
+
+        return DTOLoanAgreementView(
+            loanAgreement?:throw LoanAgreementNotFoundException("loan agreement not found"),
+            interestArrangement?:throw InterestArrangementNotFoundException("interest arrangement not found"),
+            repaymentArrangement?:throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
+            feeArrangement,
+            disbursementArrangement
+        )
     }
 
 }

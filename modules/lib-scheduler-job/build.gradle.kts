@@ -6,11 +6,6 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
-    api(project(":lib-interest-arrangement"))
-    api(project(":lib-fee-arrangement"))
-    api(project(":lib-repayment-arrangement"))
-    api(project(":lib-disbursement-arrangement"))
-    api(project(":lib-invoice-arrangement"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
 

@@ -47,10 +47,9 @@ dependencies {
     implementation(project(":lib-dapr-wrapper"))
     implementation(project(":lib-customer-offer"))
     implementation(project(":lib-loan-agreement"))
-
+    implementation(project(":lib-scheduler-job"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
-
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -3,6 +3,7 @@ package cn.sunline.saas.formula
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
+import org.joda.time.DateTime
 import org.joda.time.Instant
 
 /**
@@ -13,7 +14,7 @@ import org.joda.time.Instant
  */
 object CalculatePeriod {
 
-    data class PeriodDate(val fromDateTime: Instant,val toDateTime: Instant)
+    data class PeriodDate(val fromDateTime: DateTime,val toDateTime: DateTime)
 
     /**
      * for now,the term is equaled to an integer multiple of frequency
@@ -24,11 +25,11 @@ object CalculatePeriod {
     }
 
     fun getPeriodDates(
-        fromDateTime: Instant,
-        toDateTime: Instant,
+        fromDateTime: DateTime,
+        toDateTime: DateTime,
         frequency: RepaymentFrequency,
         repaymentDayType: RepaymentDayType = RepaymentDayType.BASE_LOAN_DAY,
-        withDay: Instant? = null
+        withDay: DateTime? = null
     ): MutableList<PeriodDate> {
         return when (repaymentDayType) {
             RepaymentDayType.BASE_LOAN_DAY -> getPeriodDatesByStandard(fromDateTime, toDateTime, frequency)
@@ -36,7 +37,7 @@ object CalculatePeriod {
     }
 
     fun getPeriodDatesByStandard(
-        fromDateTime: Instant, toDateTime: Instant, frequency: RepaymentFrequency
+        fromDateTime: DateTime, toDateTime: DateTime, frequency: RepaymentFrequency
     ): MutableList<PeriodDate> {
         val periodDates = mutableListOf<PeriodDate>()
         if (fromDateTime.isAfter(toDateTime))

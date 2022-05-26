@@ -6,7 +6,11 @@ import cn.sunline.saas.invoice.model.dto.RepaymentStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
+<<<<<<< HEAD
 import java.util.Date
+=======
+import java.util.*
+>>>>>>> 3630e88b (added scheduler model)
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -29,18 +33,18 @@ class Invoice(
     val invoiceType: InvoiceType,
 
     @NotNull
-    @Column(name = "invoice_due_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="invoice_repayment_date")
     val invoiceRepaymentDate: Date,
 
     @NotNull
-    @Column(name = "invoice_period_from_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "invoice_period_from_date")
     val invoicePeriodFromDate: Date,
 
     @NotNull
-    @Column(name = "invoice_period_to_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "invoice_period_to_date")
     val invoicePeriodToDate: Date,
 
     @NotNull
