@@ -6,11 +6,11 @@ import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.PaymentMethodType.*
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.EqualInstalmentSchedule
+
 import org.joda.time.DateTime
 import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
-import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
-import java.math.BigDecimal
+import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturityScheduleimport java.math.BigDecimal
 
 /**
  * @title: ScheduleService
@@ -23,11 +23,11 @@ class ScheduleService(
     private val interestRateYear: BigDecimal,
     private val term: LoanTermType,
     private val frequency: RepaymentFrequency,
+
     private val fromDateTime: DateTime,
     private val toDateTime: DateTime?,
     private val baseYearDays: BaseYearDays,
-    ) {
-    fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
+    ) {    fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
         val scheduleMethod = when (paymentMethodType) {
             EQUAL_INSTALLMENT -> EqualInstalmentSchedule(
                 amount,

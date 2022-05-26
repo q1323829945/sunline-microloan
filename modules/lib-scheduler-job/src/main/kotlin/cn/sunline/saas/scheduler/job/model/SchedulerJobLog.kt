@@ -1,3 +1,41 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package cn.sunline.saas.scheduler.job.model
 
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
@@ -36,11 +74,8 @@ class SchedulerJobLog(
     val actorType: String,
 
     @NotNull
-    @Column(name = "task_id", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val taskId: String,
-
-    @Temporal(TemporalType.TIMESTAMP)
-    val accountDate: Date? = null,
+    @Column(name = "task_id", nullable = false,  columnDefinition = "bigint not null")
+    val taskId:Long,
 
     @Temporal(TemporalType.TIMESTAMP)
     var executeDate: Date? = null,
@@ -73,3 +108,5 @@ class SchedulerJobLog(
         tenantId = o
     }
 }
+
+
