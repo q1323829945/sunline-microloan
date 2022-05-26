@@ -1,14 +1,12 @@
-
-
 package cn.sunline.saas.scheduler
 
+import LoanInvoiceJob
+import cn.sunline.saas.consumer_loan.job.InvoiceAccountJob
 import cn.sunline.saas.consumer_loan.job.LoanAutoRepaymentJob
-import cn.sunline.saas.consumer_loan.job.LoanInvoiceJob
 import cn.sunline.saas.dapr_wrapper.actor.ActorTimerService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.dapr_wrapper.actor.request.Timer
-import cn.sunline.saas.consumer_loan.job.InvoiceAccountJob
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
@@ -16,11 +14,12 @@ import cn.sunline.saas.scheduler.job.component.CalculateSchedulerTimer
 import cn.sunline.saas.scheduler.job.model.SchedulerJobLog
 import cn.sunline.saas.scheduler.job.model.SchedulerType
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
+import cn.sunline.saas.seq.Sequence
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
-import cn.sunline.saas.seq.Sequence
-import org.joda.time.DateTime
+
 
 /**
  * @title: LoanAgreementSchedulerTask
@@ -100,7 +99,6 @@ class LoanAgreementSchedulerTask(
         }
     }
 
-
     private fun createTimerJob(
         actorType: String, actorId: String, targetDateTime: DateTime, accountDate: DateTime, taskId: String
     ) {
@@ -128,5 +126,4 @@ class LoanAgreementSchedulerTask(
 
         ActorTimerService.createTimer(actorType, actorId, jobId.toString(), dueTime, null)
     }
-
 }

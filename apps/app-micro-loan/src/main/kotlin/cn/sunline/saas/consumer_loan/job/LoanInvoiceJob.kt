@@ -1,7 +1,3 @@
-
-
-
-
 package cn.sunline.saas.consumer_loan.job
 
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
@@ -28,6 +24,7 @@ class LoanInvoiceJob(
             it.invoiceStatus == InvoiceStatus.ACCOUNTED
         }
         return invoices.isNotEmpty()
+
     }
 
 }
