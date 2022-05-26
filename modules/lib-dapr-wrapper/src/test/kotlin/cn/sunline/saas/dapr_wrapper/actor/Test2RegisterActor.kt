@@ -11,10 +11,9 @@ import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
  */
 class Test2RegisterActor(
     actorType: String = "Test2RegisteredActor",
-    order:Int =2,
     entityConfig: EntityConfig? = null
 ) :
-    AbstractActor(actorType,order, entityConfig) {
+    AbstractActor(actorType, entityConfig) {
 
     override fun doJob(actorId: String,jobId:String) {
         println("do my job")

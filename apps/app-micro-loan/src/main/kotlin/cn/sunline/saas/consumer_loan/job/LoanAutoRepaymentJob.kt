@@ -17,9 +17,11 @@ import cn.sunline.saas.invoice.model.dto.RepaymentStatus
  * @date 2022/5/25 14:44
  */
 class LoanAutoRepaymentJob(
-    actorType: String = "LoanAutoRepaymentJob", entityConfig: EntityConfig? = null
-) : AbstractActor(actorType, entityConfig) {
 
+    actorType: String = "LoanAutoRepaymentJob",
+    entityConfig: EntityConfig? = null
+) :
+    AbstractActor(actorType, entityConfig) {
     fun prerequisites(invoices: List<Invoice>): Boolean {
         invoices.filter {
             it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus == RepaymentStatus.UNDO || it.repaymentStatus == RepaymentStatus.OVERDUE)

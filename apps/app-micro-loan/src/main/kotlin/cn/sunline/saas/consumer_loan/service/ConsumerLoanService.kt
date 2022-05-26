@@ -85,10 +85,10 @@ class ConsumerLoanService(
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
+
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
             loanProduct.interestFeature.interest.baseYearDays        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-
         invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate.loanAgreement)

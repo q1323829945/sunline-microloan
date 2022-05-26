@@ -113,8 +113,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
 
-            businessUnit = "test",            status = BankingProductStatus.INITIATED,
-            amountConfiguration = amountConfiguration,
+            businessUnit = "test",            status = BankingProductStatus.INITIATED,            amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
             interestFeature =  objectMapper.convertValue(interestFeature),
             repaymentFeature = repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeature>(it) },

@@ -15,11 +15,9 @@ import cn.sunline.saas.invoice.model.db.Invoice
  * @author Kevin-Cui
  * @date 2022/5/25 14:52
  */
-class LoanInvoiceJob(
-    actorType: String = "LoanInvoiceJob", entityConfig: EntityConfig? = null
-) : AbstractActor(actorType, entityConfig) {
-    override fun doJob(actorId: String, jobId: String) {
-        TODO("Not yet implemented")
+class LoanInvoiceJob(actorType: String = "LoanInvoiceJob",
+                     entityConfig: EntityConfig? = null):AbstractActor(actorType,entityConfig) {
+    override         TODO("Not yet implemented")
     }
 
     fun prerequisites(invoices: List<Invoice>): Boolean {
