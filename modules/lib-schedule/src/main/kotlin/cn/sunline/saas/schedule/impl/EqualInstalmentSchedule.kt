@@ -33,6 +33,7 @@ class EqualInstalmentSchedule(
 
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
+        var period = 0
         for ((index, it) in periodDates.withIndex()) {
             val instalmentPrincipal: BigDecimal
             val instalmentInterest: BigDecimal
@@ -48,7 +49,20 @@ class EqualInstalmentSchedule(
                 instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
             }
             remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
-            schedules.add(Schedule(it.fromDateTime,it.toDateTime, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
+            period++
+
+            schedules.add(
+                Schedule(
+                    it.fromDateTime,
+                    it.toDateTime,
+                    instalmentAmount,
+                    instalmentPrincipal,
+                    instalmentInterest,
+                    remainingPrincipal,
+                    period,
+                    interestRateYear
+                )
+            )
 
         }
         return schedules

@@ -12,8 +12,10 @@ import java.math.BigDecimal
 data class Schedule(
     val fromDate:Instant,
     val dueDate: Instant,
-    val instalment: BigDecimal?,
+    val installment: BigDecimal,
     val principal: BigDecimal,
     val interest: BigDecimal,
-    val remainingPrincipal: BigDecimal
+    val remainingPrincipal: BigDecimal,
+    val period: Int,
+    val interestRate: BigDecimal
 )

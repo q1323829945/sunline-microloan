@@ -6,6 +6,7 @@ import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
+import cn.sunline.saas.schedule.Schedule
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -28,6 +29,7 @@ class PayInterestSchedulePrincipalMaturitySchedule(
         val interestRate = CalculateInterestRate(interestRateYear)
 
         val schedules = mutableListOf<Schedule>()
+        var period = 0
         for ((index, it) in periodDates.withIndex()) {
             val remainingPrincipal: BigDecimal
             val instalmentPrincipal: BigDecimal
@@ -45,6 +47,7 @@ class PayInterestSchedulePrincipalMaturitySchedule(
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 
             val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
+            period++
             schedules.add(
                 Schedule(
                     it.fromDateTime,
@@ -52,7 +55,9 @@ class PayInterestSchedulePrincipalMaturitySchedule(
                     instalmentAmount,
                     instalmentPrincipal,
                     instalmentInterest,
-                    remainingPrincipal
+                    remainingPrincipal,
+                    period,
+                    interestRateYear
                 )
             )
         }

@@ -79,7 +79,8 @@ class ConsumerLoanService(
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime).toInstant(),
-            tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime).toInstant()
+            tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime).toInstant(),
+            loanProduct.interestFeature.interest.baseYearDays
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
 
         invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))

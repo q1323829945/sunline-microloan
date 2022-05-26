@@ -19,17 +19,17 @@ class PayInterestSchedulePrincipalMaturityScheduleTest {
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
             RepaymentFrequency.ONE_MONTH, Instant.now(),null, BaseYearDays.ACCOUNT_YEAR).getSchedules()
 
-        Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("16100.00"))
+        Assertions.assertThat(actual[0].installment).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[0].principal).isEqualTo(BigDecimal("0.00"))
         Assertions.assertThat(actual[0].remainingPrincipal).isEqualTo(BigDecimal("1000000.00"))
 
-        Assertions.assertThat(actual[1].instalment).isEqualTo(BigDecimal("16100.00"))
+        Assertions.assertThat(actual[1].installment).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[1].interest).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[1].principal).isEqualTo(BigDecimal("0.00"))
         Assertions.assertThat(actual[1].remainingPrincipal).isEqualTo(BigDecimal("1000000.00"))
 
-        Assertions.assertThat(actual[2].instalment).isEqualTo(BigDecimal("1016100.00"))
+        Assertions.assertThat(actual[2].installment).isEqualTo(BigDecimal("1016100.00"))
         Assertions.assertThat(actual[2].interest).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[2].principal).isEqualTo(BigDecimal("1000000.00"))
         Assertions.assertThat(actual[2].remainingPrincipal).isEqualTo(BigDecimal("0.00"))

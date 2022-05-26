@@ -6,6 +6,7 @@ import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
+import cn.sunline.saas.schedule.Schedule
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -33,6 +34,7 @@ class OneOffRepaymentSchedule(
             toDateTime,
             baseYearDaysPara).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
         val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
+        val period = 1
         schedules.add(
             Schedule(
                 fromDateTime,
@@ -40,7 +42,9 @@ class OneOffRepaymentSchedule(
                 instalmentAmount,
                 instalmentPrincipal,
                 instalmentInterest,
-                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+                BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                period,
+                interestRateYear
             )
         )
         return schedules

@@ -1,10 +1,12 @@
 package cn.sunline.saas.schedule.controllders
 
+import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
 import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.schedule.dto.DTORepaymentScheduleDetailTrialView
 import cn.sunline.saas.schedule.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.schedule.service.ConsumerRepaymentScheduleService
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * @title: RepaymentScheduleController
@@ -36,20 +40,26 @@ class RepaymentScheduleController {
     }
 
 
-    private fun changeMapper(dtoRepaymentScheduleView: DTORepaymentScheduleView): DTORepaymentScheduleTrialView {
+    private fun changeMapper(dtoSchedule:  MutableList<Schedule>): DTORepaymentScheduleTrialView {
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
-        for (schedule in dtoRepaymentScheduleView.schedule) {
+
+        val interestRate = dtoSchedule.first().interestRate
+        var installment = dtoSchedule.first().installment
+        for (schedule in dtoSchedule) {
+            if(installment != schedule.installment){
+                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+            }
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
                 period = schedule.period,
                 installment = schedule.installment,
                 principal = schedule.principal,
                 interest = schedule.interest,
-                repaymentDate = CalcDateComponent.formatInstantToView(schedule.repaymentDate)
+                repaymentDate = CalcDateComponent.formatInstantToView(schedule.dueDate)
             )
         }
         return DTORepaymentScheduleTrialView(
-            installment = dtoRepaymentScheduleView.installment,
-            interestRate = dtoRepaymentScheduleView.interestRate,
+            installment = installment,
+            interestRate = interestRate,
             schedule = dtoRepaymentScheduleDetailTrialView
         )
     }

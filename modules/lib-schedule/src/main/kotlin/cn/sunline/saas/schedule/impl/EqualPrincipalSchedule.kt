@@ -5,6 +5,7 @@ import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
+import cn.sunline.saas.schedule.Schedule
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -23,14 +24,15 @@ class EqualPrincipalSchedule(
         val periods = CalculatePeriod.calculatePeriods(term, frequency)
         val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
         val interestRate = CalculateInterestRate(interestRateYear)
-        var instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount,periods)
+        var instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount, periods)
 
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
+        var period = 0
         for ((index, it) in periodDates.withIndex()) {
             val instalmentInterest = CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
-                    frequency.term.toMonthUnit().num
-                ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                frequency.term.toMonthUnit().num
+            ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
 
             if (index == periodDates.size - 1 && instalmentPrincipal != BigDecimal.ZERO) {
@@ -39,7 +41,20 @@ class EqualPrincipalSchedule(
             }
 
             val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
-            schedules.add(Schedule(it.fromDateTime,it.toDateTime, instalmentAmount, instalmentPrincipal, instalmentInterest, remainingPrincipal))
+            period++
+
+            schedules.add(
+                Schedule(
+                    it.fromDateTime,
+                    it.toDateTime,
+                    instalmentAmount,
+                    instalmentPrincipal,
+                    instalmentInterest,
+                    remainingPrincipal,
+                    period,
+                    interestRateYear
+                )
+            )
         }
         return schedules
     }
