@@ -10,7 +10,7 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     api(project(":lib-base-jpa"))
     implementation(project(":lib-exceptions"))
-    implementation(project(":lib-document"))
+    api(project(":lib-document"))
     implementation(project(":lib-obs-api"))
     implementation(project(":lib-seq-api"))
 

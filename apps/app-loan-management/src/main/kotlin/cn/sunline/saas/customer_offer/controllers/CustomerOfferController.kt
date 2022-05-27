@@ -1,6 +1,6 @@
 package cn.sunline.saas.customer_offer.controllers
 
-import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType
+import cn.sunline.saas.customer_offer.service.model.UnderwritingType
 import cn.sunline.saas.customer_offer.service.AppCustomerOfferService
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView

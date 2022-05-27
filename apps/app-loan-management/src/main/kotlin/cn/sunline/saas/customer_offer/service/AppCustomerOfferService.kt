@@ -5,8 +5,8 @@ import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferData
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType
-import cn.sunline.saas.customer_offer.controllers.model.UnderwritingType.*
+import cn.sunline.saas.customer_offer.service.model.UnderwritingType
+import cn.sunline.saas.customer_offer.service.model.UnderwritingType.*
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
@@ -51,6 +51,8 @@ class AppCustomerOfferService(
             val customerOfferLoanView = apply?.run {
                 objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
             }
+            val underwriting = customerOfferInvoke.getUnderwriting(it.id!!)
+
             DTOCustomerOfferPage(
                 customerOfferId = it.id.toString(),
                 userName = customerOfferLoanView?.detail?.name,//TODO:
@@ -59,7 +61,8 @@ class AppCustomerOfferService(
                 productName = it.productName,
                 status = it.status,
                 term = customerOfferLoanView?.loan?.term,
-                currency = customerOfferLoanView?.loan?.currency
+                currency = customerOfferLoanView?.loan?.currency,
+                underwritingType = underwriting?.run { UnderwritingType.valueOf(underwriting.status) }
             )
         }
 

@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.person.controllers
 
+import cn.sunline.saas.party.person.model.RoleType
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonChange
 import cn.sunline.saas.party.person.model.dto.DTOPersonView
@@ -26,8 +27,10 @@ class PersonController {
     private lateinit var personService: PersonService
 
     @GetMapping
-    fun getPaged(@PathParam("personIdentification")personIdentification: String?,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val paged = personService.getPersonPaged(personIdentification,pageable)
+    fun getPaged(@PathParam("personIdentification")personIdentification: String?,
+                 @PathParam("type")type: RoleType,
+                 pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
+        val paged = personService.getPersonPaged(personIdentification,type,pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 

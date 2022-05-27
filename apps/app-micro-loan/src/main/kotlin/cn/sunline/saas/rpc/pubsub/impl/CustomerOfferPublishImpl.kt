@@ -3,6 +3,7 @@ package cn.sunline.saas.rpc.pubsub.impl
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublishTopic
+import cn.sunline.saas.rpc.pubsub.dto.DTODocumentGeneration
 import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
 import cn.sunline.saas.rpc.pubsub.dto.DTOOrganisation
 import org.springframework.stereotype.Component
@@ -22,6 +23,10 @@ class CustomerOfferPublishImpl: CustomerOfferPublish {
     }
 
     override fun registeredOrganisation() {
+        //TODO:
+    }
+
+    override fun documentGeneration(list: List<DTODocumentGeneration>) {
         //TODO:
     }
 

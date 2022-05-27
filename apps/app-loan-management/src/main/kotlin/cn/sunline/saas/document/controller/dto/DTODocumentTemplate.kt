@@ -20,7 +20,8 @@ data class DTODocumentTemplateView(
     var documentStoreReference:String?,
     val directoryId: Long,
     val languageType: LanguageType?,
-    val fileType: FileType?
+    val fileType: FileType?,
+    val documentType: DocumentType?,
 )
 
 data class DTODocumentTemplateChange(

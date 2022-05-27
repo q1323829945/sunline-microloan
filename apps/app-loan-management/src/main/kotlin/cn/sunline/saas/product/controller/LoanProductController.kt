@@ -93,5 +93,4 @@ class LoanProductController {
     fun getUploadConfigById(@PathVariable id:String):List<DTOLoanUploadConfigure>{
         return loanProductManagerService.getUploadConfig(id.toLong())
     }
-
 }

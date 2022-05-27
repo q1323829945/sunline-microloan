@@ -1,10 +1,14 @@
 package cn.sunline.saas.product.service.dto
 
+import cn.sunline.saas.document.template.modules.FileType
+import cn.sunline.saas.document.template.modules.LanguageType
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.loan.product.model.LoanProductType
+import cn.sunline.saas.loan.product.model.dto.DocumentTemplateView
+import org.w3c.dom.DocumentType
 
 data class DTOLoanProductResponse(
     val id: String,
@@ -14,7 +18,8 @@ data class DTOLoanProductResponse(
     var interestFeature: DTOInterestFeature,
     var repaymentFeature: DTORepaymentFeature,
     var feeFeatures: MutableList<DTOFeeFeature>?,
-    var loanUploadConfigureFeatures: MutableList<DTOLoanUploadConfigure>?
+    var loanUploadConfigureFeatures: MutableList<DTOLoanUploadConfigure>?,
+    var documentTemplateFeatures:MutableList<DocumentTemplate>?
 )
 
 data class DTOInterestFeature(
@@ -73,3 +78,11 @@ data class DTOLoanUploadConfigure(
     val name: String,
 )
 
+data class DocumentTemplate(
+    val id:String,
+    val name:String,
+    val documentStoreReference:String,
+    val fileType: FileType,
+    val languageType: LanguageType,
+    val documentType: DocumentType
+)

@@ -1,6 +1,9 @@
 package cn.sunline.saas.loan.product.service
 
+import cn.sunline.saas.document.template.exception.DocumentTemplateNotFoundException
+import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
+import cn.sunline.saas.document.template.services.DocumentTemplateService
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.model.db.FeeFeature
@@ -67,6 +70,9 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     @Autowired
     private lateinit var loanUploadConfigureService: LoanUploadConfigureService
 
+    @Autowired
+    private lateinit var documentTemplateService: DocumentTemplateService
+
     @Transactional
     fun register(loanProductData: DTOLoanProduct): DTOLoanProductView {
         val newProductId = seq.nextId()
@@ -76,6 +82,12 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             val loanUploadConfigure =
                 loanUploadConfigureService.getOne(it) ?: throw Exception("loanUploadConfigure Not Found")
             loanUploadConfigureList.add(loanUploadConfigure)
+        }
+        val documentTemplateList = ArrayList<DocumentTemplate>()
+        loanProductData.documentTemplateFeatures?.forEach {
+            val documentTemplate =
+                documentTemplateService.getOne(it)?: throw DocumentTemplateNotFoundException("Invalid document template")
+            documentTemplateList.add(documentTemplate)
         }
 
         val loanProductAdd = LoanProduct(
@@ -87,7 +99,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.loanProductType,
             loanProductData.loanPurpose,
             loanProductData.businessUnit.toLong(),
-            loanUploadConfigureList
+            loanUploadConfigureList,
+            documentTemplateList
         )
 
         loanProductData.amountConfiguration.apply {
@@ -272,7 +285,18 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanUploadConfigureList.add(loanUploadConfigure)
         }
         oldLoanProduct.loanUploadConfigureFeatures = loanUploadConfigureList
+
+        val documentTemplateList = mutableListOf<DocumentTemplate>()
+        loanProductData.documentTemplateFeatures?.forEach {
+            val documentTemplate =
+                documentTemplateService.getOne(it)?: throw DocumentTemplateNotFoundException("Invalid document template")
+            documentTemplateList.add(documentTemplate)
+        }
+
+        oldLoanProduct.documentTemplateFeatures = documentTemplateList
+
         oldLoanProduct.businessUnit = loanProductData.businessUnit.toLong()
+
 
         //update loan product
         loanProductData.amountConfiguration.apply {
@@ -295,7 +319,6 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
 
         val updateLoanProduct = this.save(oldLoanProduct)
-
         val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(updateLoanProduct)
 
         updateLoanProduct.configurationOptions.forEach {
@@ -360,7 +383,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                     repaymentFeature.id,
                     this.paymentMethod,
                     this.frequency,
-                    this.repaymentDayType
+                    this.repaymentDayType,
+                    this.graceDays
                 )
                 repaymentFeature.prepayment.clear()
                 this.prepaymentFeatureModality.forEach {

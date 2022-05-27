@@ -4,6 +4,7 @@ import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.person.exception.PersonNotFoundException
 import cn.sunline.saas.party.person.model.PersonIdentificationType
+import cn.sunline.saas.party.person.model.RoleType
 import cn.sunline.saas.party.person.model.db.Person
 import cn.sunline.saas.party.person.model.db.PersonIdentification
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
@@ -111,13 +112,15 @@ class PersonService(private val personRepository: PersonRepository,
         return page.content.firstOrNull()
     }
 
-    fun getPersonPaged(personIdentification: String?,pageable: Pageable):Page<DTOPersonView>{
+    fun getPersonPaged(personIdentification: String?, type: RoleType, pageable: Pageable):Page<DTOPersonView>{
         return getPageWithTenant({root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             personIdentification?.run {
-                val connection = root.join<Person,PersonIdentification>("personIdentifications",JoinType.INNER)
-                predicates.add(criteriaBuilder.equal(connection.get<String>("personIdentification"),personIdentification))
+                val personIdentifications = root.join<Person,PersonIdentification>("personIdentifications",JoinType.INNER)
+                predicates.add(criteriaBuilder.equal(personIdentifications.get<String>("personIdentification"),personIdentification))
             }
+            val personRoles = root.join<Person,PersonIdentification>("personRoles",JoinType.INNER)
+            predicates.add(criteriaBuilder.equal(personRoles.get<RoleType>("type"),type))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable).map {
             getDTOPersonView(it)

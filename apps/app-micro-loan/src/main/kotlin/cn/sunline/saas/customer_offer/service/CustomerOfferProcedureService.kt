@@ -16,6 +16,7 @@ import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.rpc.invoke.CustomerOfferProcedureInvoke
+import cn.sunline.saas.rpc.pubsub.dto.DTODocumentGeneration
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -105,6 +106,19 @@ class CustomerOfferProcedureService(
                 )
             )
             customerOfferPublish.initiateUnderwriting(dtoLoanApplicationData)
+
+            //TODO:
+            val product = getProduct(customerOffer.id!!)
+            val list = mutableListOf<DTODocumentGeneration>()
+            product.documentTemplateFeatures?.forEach {
+                list.add(
+                    DTODocumentGeneration(
+                        it.id,
+                        mapOf()
+                    )
+                )
+            }
+            customerOfferPublish.documentGeneration(list)
         }
 
     }

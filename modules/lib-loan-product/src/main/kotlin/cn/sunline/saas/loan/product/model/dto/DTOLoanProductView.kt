@@ -1,5 +1,8 @@
 package cn.sunline.saas.loan.product.model.dto
 
+import cn.sunline.saas.document.model.DocumentType
+import cn.sunline.saas.document.template.modules.FileType
+import cn.sunline.saas.document.template.modules.LanguageType
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
@@ -23,14 +26,14 @@ data class DTOLoanProductView(
         val loanPurpose: String,
         var businessUnit:String,
         var business:BusinessUnitView?,
-        var graceDays:Long,
         val status: BankingProductStatus,
         var amountConfiguration: DTOAmountLoanProductConfigurationView?,
         var termConfiguration: DTOTermLoanProductConfigurationView?,
         var interestFeature: DTOInterestFeatureView?,
         var repaymentFeature: DTORepaymentFeatureView?,
         var feeFeatures:MutableList<DTOFeeFeatureView>?,
-        var loanUploadConfigureFeatures:MutableList<LoanUploadConfigureView>?
+        var loanUploadConfigureFeatures:MutableList<LoanUploadConfigureView>?,
+        var documentTemplateFeatures:MutableList<DocumentTemplateView>?
 )
 data class BusinessUnitView(
     val id:String,
@@ -41,6 +44,15 @@ data class BusinessUnitView(
 data class LoanUploadConfigureView(
         val id: String,
         val name: String,
+)
+
+data class DocumentTemplateView(
+        val id:String,
+        val name:String,
+        val documentStoreReference:String,
+        val fileType: FileType,
+        val languageType: LanguageType,
+        val documentType: DocumentType
 )
 
 data class DTOAmountLoanProductConfigurationView(
@@ -67,7 +79,8 @@ data class DTOInterestFeatureView(
 data class DTOInterestFeatureModalityView(
         val id: String,
         val baseYearDays: BaseYearDays,
-        val adjustFrequency: String
+        val adjustFrequency: String,
+        val graceDays: Int
 )
 
 data class DTOOverdueInterestFeatureModalityView(
@@ -85,7 +98,8 @@ data class DTORepaymentFeatureModalityView(
         val id: String,
         var paymentMethod: PaymentMethodType,
         var frequency: RepaymentFrequency,
-        var repaymentDayType: RepaymentDayType
+        var repaymentDayType: RepaymentDayType,
+        val graceDays: Int
 )
 
 data class DTOPrepaymentFeatureModalityView(

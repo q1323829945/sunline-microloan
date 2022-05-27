@@ -39,8 +39,8 @@ class DocumentTemplateController {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping
-    fun getPaged(pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
-        val paged = documentTemplateService.getPaged(pageable = pageable)
+    fun getAllPaged():ResponseEntity<DTOPagedResponseSuccess>{
+        val paged = documentTemplateService.getPaged(pageable = Pageable.unpaged())
         return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTODocumentTemplateView>(it)}).response()
     }
 

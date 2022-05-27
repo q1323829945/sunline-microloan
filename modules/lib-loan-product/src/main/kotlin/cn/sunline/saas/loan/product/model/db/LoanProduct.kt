@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.product.model.db
 
+import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
@@ -57,7 +58,16 @@ class LoanProduct(
         joinColumns = [JoinColumn(name = "product_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "loan_upload_configure_id", referencedColumnName = "id")]
     )
-    var loanUploadConfigureFeatures: MutableList<LoanUploadConfigure>? = mutableListOf()
+    var loanUploadConfigureFeatures: MutableList<LoanUploadConfigure>? = mutableListOf(),
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "loan_product_document_template_mapping",
+        joinColumns = [JoinColumn(name = "product_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "document_template_id", referencedColumnName = "id")]
+    )
+    var documentTemplateFeatures: MutableList<DocumentTemplate>? = mutableListOf()
 ) : MultiTenant {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
