@@ -27,8 +27,8 @@ data class DTOLoanProductView(
         val status: BankingProductStatus,
         var amountConfiguration: DTOAmountLoanProductConfigurationView?,
         var termConfiguration: DTOTermLoanProductConfigurationView?,
-        var interestFeature: DTOInterestFeatureView,
-        var repaymentFeature: DTORepaymentFeatureView,
+        var interestFeature: DTOInterestFeatureView?,
+        var repaymentFeature: DTORepaymentFeatureView?,
         var feeFeatures:MutableList<DTOFeeFeatureView>?,
         var loanUploadConfigureFeatures:MutableList<LoanUploadConfigureView>?
 )

@@ -1,6 +1,6 @@
 package cn.sunline.saas.rpc.invoke
 
-import cn.sunline.saas.rpc.invoke.dto.DTOLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
 
 
 /**
@@ -11,7 +11,7 @@ import cn.sunline.saas.rpc.invoke.dto.DTOLoanProduct
  */
 interface LoanProductInvoke {
 
-    fun getOneById(id: Long): DTOLoanProduct
+    fun getOneById(id: Long): DTOInvokeLoanProduct
 
-    fun getOneByIdentificationCode(identificationCode: String): DTOLoanProduct
+    fun getOneByIdentificationCode(identificationCode: String): DTOInvokeLoanProduct
 }

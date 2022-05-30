@@ -1,14 +1,12 @@
 package cn.sunline.saas.rpc.invoke
 
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
-import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
 
 
 interface ProductInvoke {
 
-    fun getProductInfoByProductId(productId: Long): DTOResponseSuccess<DTOLoanProductView>?
+    fun getProductInfoByProductId(productId: Long): DTOInvokeLoanProduct
 
-    fun getProductListByIdentificationCode(identificationCode:String): DTOResponseSuccess<MutableList<DTOLoanProduct>>?
+    fun getProductListByIdentificationCode(identificationCode:String): MutableList<DTOInvokeLoanProduct>
 
 }

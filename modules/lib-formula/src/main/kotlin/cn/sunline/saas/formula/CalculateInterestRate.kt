@@ -65,4 +65,9 @@ class CalculateInterestRate(private val yearInterestRatePercent: BigDecimal) {
         return dealPercent(calRateWithPercent(floatInterestRate))
     }
 
+    fun calRateWithNoPercent(floatInterestRate: BigDecimal): BigDecimal {
+        return yearInterestRatePercent.multiply(floatInterestRate)
+            .divide(BigDecimal(100), CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)
+            .add(yearInterestRatePercent)
+    }
 }

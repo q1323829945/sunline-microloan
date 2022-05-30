@@ -1,7 +1,7 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.rpc.invoke.LoanProductInvoke
-import cn.sunline.saas.rpc.invoke.dto.DTOLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
 import org.springframework.stereotype.Component
 
 /**
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component
  */
 @Component
 class LoanProductInvokeImpl : LoanProductInvoke {
-    override fun getOneById(id: Long): DTOLoanProduct {
+    override fun getOneById(id: Long): DTOInvokeLoanProduct {
         TODO("Not yet implemented")
     }
 
-    override fun getOneByIdentificationCode(identificationCode: String): DTOLoanProduct {
+    override fun getOneByIdentificationCode(identificationCode: String): DTOInvokeLoanProduct {
         TODO("Not yet implemented")
     }
 }

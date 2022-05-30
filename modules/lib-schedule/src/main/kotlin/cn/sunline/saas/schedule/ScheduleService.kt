@@ -19,7 +19,6 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/5/20 15:16
  */
-@Service
 class ScheduleService(
     private val amount: BigDecimal,
     private val interestRateYear: BigDecimal,

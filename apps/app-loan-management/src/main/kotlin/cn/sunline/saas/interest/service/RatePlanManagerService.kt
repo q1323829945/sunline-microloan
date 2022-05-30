@@ -59,4 +59,12 @@ class RatePlanManagerService {
         val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
         return objectMapper.convertValue(ratePlan)
     }
+
+    fun getInvokeAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
+        return ratePlanService.getPaged({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+    }
 }

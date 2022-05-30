@@ -98,6 +98,8 @@ class LoanProductManagerService(
 
     fun getOne(id: Long): DTOLoanProductView {
         return addBusinessUnitType(loanProductService.getLoanProduct(id))
+        //return loanProductService.getLoanProduct(id)
+
     }
 
     fun updateOne(

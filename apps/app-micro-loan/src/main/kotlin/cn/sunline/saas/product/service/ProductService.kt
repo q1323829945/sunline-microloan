@@ -15,12 +15,12 @@ class ProductService(private val productInvoke: ProductInvoke)  {
 
     fun findById(productId: Long): DTOLoanProductView {
         val dtoLoanProductViewResponse = productInvoke.getProductInfoByProductId(productId)
-        return objectMapper.convertValue(dtoLoanProductViewResponse!!.data!!)
+        return objectMapper.convertValue(dtoLoanProductViewResponse)
     }
 
     fun retrieve(identificationCode: String): MutableList<DTOLoanProduct> {
         val dtoLoanProductViewResponse = productInvoke.getProductListByIdentificationCode(identificationCode)
-        return objectMapper.convertValue(dtoLoanProductViewResponse!!.data!!)
+        return objectMapper.convertValue(dtoLoanProductViewResponse)
     }
 
 }

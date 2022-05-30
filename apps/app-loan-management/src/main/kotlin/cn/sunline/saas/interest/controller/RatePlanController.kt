@@ -49,4 +49,11 @@ class RatePlanController {
     fun getOne(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
         return DTOResponseSuccess(ratePlanManagerService.getOne(id)).response()
     }
+
+    @GetMapping("invokeAll")
+    fun getInvokeAll(@RequestParam("type")type:RatePlanType,pageable: Pageable): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>>{
+        val page = ratePlanManagerService.getInvokeAll(type,pageable)
+        val map = page.content.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
+        return DTOResponseSuccess(map).response()
+    }
 }
