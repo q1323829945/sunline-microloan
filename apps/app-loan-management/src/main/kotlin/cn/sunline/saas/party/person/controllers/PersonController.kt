@@ -28,7 +28,7 @@ class PersonController {
 
     @GetMapping
     fun getPaged(@PathParam("personIdentification")personIdentification: String?,
-                 @PathParam("type")type: RoleType,
+                 @PathParam("type")type: RoleType?,
                  pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = personService.getPersonPaged(personIdentification,type,pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()

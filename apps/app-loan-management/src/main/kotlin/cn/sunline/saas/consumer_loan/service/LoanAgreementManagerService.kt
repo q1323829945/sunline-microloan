@@ -53,15 +53,8 @@ class LoanAgreementManagerService(
     }
 
     fun paid(applicationId:String,status:AgreementStatus){
-
         loanAgreementPublish.updateLoanAgreementStatus(DTOLoanAgreement(
             applicationId,status
         ))
-
-        //TODO:
-//        customerLoanPublish.updateLoanAgreementStatus(DTOLoanAgreement(
-//            id,
-//            status
-//        ))
     }
 }

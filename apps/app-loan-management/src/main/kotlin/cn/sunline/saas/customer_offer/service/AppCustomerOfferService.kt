@@ -117,7 +117,7 @@ class AppCustomerOfferService(
         managementCustomerOffer.product = objectMapper.convertValue(product)
         managementCustomerOffer.product!!.productId =product.id
 
-        val underwriting = if(customerOffer.status == SUBMIT) customerOfferInvoke.getUnderwriting(customerOffer.id!!) else null
+        val underwriting = if(customerOffer.status != RECORD) customerOfferInvoke.getUnderwriting(customerOffer.id!!) else null
 
         underwriting?.run {
             managementCustomerOffer.underwriting = objectMapper.convertValue(this)
