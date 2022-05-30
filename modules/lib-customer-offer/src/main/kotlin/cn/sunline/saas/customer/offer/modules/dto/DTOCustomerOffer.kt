@@ -20,6 +20,7 @@ data class DTOCompany(
 )
 
 data class DTOContact(
+    val contacts:String,
     val contactNRIC:String,
     val mobileArea:String,
     val mobileNumber:String,

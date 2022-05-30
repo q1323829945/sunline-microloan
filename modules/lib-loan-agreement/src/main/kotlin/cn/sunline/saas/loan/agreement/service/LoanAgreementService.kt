@@ -107,4 +107,7 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         )
     }
 
+    fun findByApplicationId(id:Long): LoanAgreement?{
+        return loanAgreementRepo.findByApplicationId(id)
+    }
 }

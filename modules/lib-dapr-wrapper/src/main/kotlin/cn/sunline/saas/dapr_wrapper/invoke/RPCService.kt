@@ -107,7 +107,7 @@ class RPCService {
         inline fun <reified T> makeRequest(httpMethod: HttpMethod, serviceName: String, methodName: String, queryParams: Map<String, String>? = mapOf(), payload: Any? = null, headerParams: Map<String, String> = mapOf(), tenant: String? = null): T? {
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
-            val requestUrl = "http://localhost:3500/v1.0/invoke/$serviceName/method/$methodName"
+            val requestUrl = "http://localhost:3501/v1.0/invoke/$serviceName/method/$methodName"
             val resp = runBlocking(CoroutineName("RPC-${httpMethod.value}")) {
                 logger.info { "[$seq] Started RPC request: $requestUrl" }
                 try {

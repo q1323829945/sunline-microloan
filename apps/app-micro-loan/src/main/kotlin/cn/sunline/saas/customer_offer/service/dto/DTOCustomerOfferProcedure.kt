@@ -5,7 +5,7 @@ import cn.sunline.saas.customer.offer.modules.ApplyStatus
 data class DTOCustomerOfferProcedure(
         var customerOfferId:String,
         var amount:String?,
-        val datetime: Long,
+        val datetime: String,
         var productName:String,
         val status: ApplyStatus
 )
@@ -14,4 +14,7 @@ data class DTOProductUploadConfig(
         val id:String,
         val name:String
 )
+
+
+
 

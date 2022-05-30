@@ -10,6 +10,6 @@ data class DTOUnderwriting (
     var creditRisk: String? = null,
     var fraudEvaluation: String? = null,
     var regulatoryCompliance: String? = null,
-    val status: String
+    val status: String?
 )
 

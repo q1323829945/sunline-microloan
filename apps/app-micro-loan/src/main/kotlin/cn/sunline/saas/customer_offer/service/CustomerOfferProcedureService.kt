@@ -5,11 +5,13 @@ import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferProcedure
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTODetail
 import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
 import cn.sunline.saas.pdpa.dto.PDPAInformation
@@ -22,12 +24,15 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
 
 @Service
 class CustomerOfferProcedureService(
+    private val tenantDateTime: TenantDateTime,
     private val customerOfferPublish: CustomerOfferPublish,
     private val customerOfferProcedureInvoke: CustomerOfferProcedureInvoke,
     private val obsApi: ObsApi) {
@@ -97,28 +102,10 @@ class CustomerOfferProcedureService(
         val customerOffer = customerOfferService.getOne(customerOfferId)
 
         if(customerOffer?.status == ApplyStatus.SUBMIT){
-            val dtoLoanApplicationData = DTOLoanApplicationData(
-                customerOfferId.toString(),
-                DTODetail(
-                    customerOffer.customerId.toString(),
-                    result.detail!!.name,
-                    result.detail!!.registrationNo
-                )
-            )
-            customerOfferPublish.initiateUnderwriting(dtoLoanApplicationData)
+            initiateUnderwriting(result, customerOffer)
+            //TODO:文件生成
+            documentGeneration(result, customerOffer)
 
-            //TODO:
-            val product = getProduct(customerOffer.id!!)
-            val list = mutableListOf<DTODocumentGeneration>()
-            product.documentTemplateFeatures?.forEach {
-                list.add(
-                    DTODocumentGeneration(
-                        it.id,
-                        mapOf()
-                    )
-                )
-            }
-            customerOfferPublish.documentGeneration(list)
         }
 
     }
@@ -142,4 +129,54 @@ class CustomerOfferProcedureService(
     private fun getPDPA(countryCode:String): PDPAInformation {
         return pdpaMicroService.retrieve(countryCode)
     }
+
+    private fun initiateUnderwriting(result:DTOCustomerOfferLoanView,customerOffer: CustomerOffer){
+        val dtoLoanApplicationData = DTOLoanApplicationData(
+            customerOffer.id.toString(),
+            DTODetail(
+                customerOffer.customerId.toString(),
+                result.detail!!.name,
+                result.detail!!.registrationNo
+            )
+        )
+        customerOfferPublish.initiateUnderwriting(dtoLoanApplicationData)
+    }
+
+    private fun documentGeneration(result:DTOCustomerOfferLoanView,customerOffer: CustomerOffer){
+        val product = getProduct(customerOffer.productId)
+        val list = mutableListOf<DTODocumentGeneration>()
+        product.documentTemplateFeatures?.forEach {
+            list.add(
+                DTODocumentGeneration(
+                    it.id,
+                    mapOf()
+                )
+            )
+        }
+
+
+
+        customerOfferPublish.documentGeneration(list)
+    }
+
+    fun getCustomerOfferPaged(customerId: Long,pageable: Pageable):Page<DTOCustomerOfferProcedure>{
+        return customerOfferService.getCustomerOfferPaged(customerId,null,null,pageable).map {
+            val loanApply = customerLoanApplyService.getOne(it.id!!)
+            DTOCustomerOfferProcedure(
+                customerOfferId = it.id.toString(),
+                amount = loanApply?.run { this.amount?.toString() },
+                datetime = tenantDateTime.toTenantDateTime(it.datetime).toString(),
+                productName = it.productName,
+                status = it.status
+            )
+        }
+    }
 }
+
+private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+data class Ta(
+    val id:String,
+    val name:String,
+)
+

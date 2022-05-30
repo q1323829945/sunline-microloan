@@ -9,4 +9,6 @@ import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
  * @author Kevin-Cui
  * @date 2022/3/1 11:20
  */
-interface LoanAgreementRepository : BaseRepository<LoanAgreement, Long>
+interface LoanAgreementRepository : BaseRepository<LoanAgreement, Long>{
+    fun findByApplicationId(applicationId:Long):LoanAgreement?
+}

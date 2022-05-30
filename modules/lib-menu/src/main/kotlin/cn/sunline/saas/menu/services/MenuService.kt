@@ -27,7 +27,6 @@ class MenuService {
         val employeeConfig = Menu("employeeConfig","enterpriseConfig","","/dashboard/employeeConfig")
         val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig")
         val customerOfferConfig = Menu("customerOfferConfig","loanConfig","","/dashboard/customerOfferConfig")
-        val underwritingManagementConfig = Menu("underwritingManagementConfig","businessConfig","","/dashboard/underwritingManagementConfig")
         val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","loanConfig","","/dashboard/loanAgreementManagementConfig")
 
 
@@ -42,7 +41,6 @@ class MenuService {
             ,organisationConfig
             ,customerConfig
             ,customerOfferConfig
-            ,underwritingManagementConfig
             ,loanAgreementManagementConfig
             ,employeeConfig)
 

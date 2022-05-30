@@ -15,6 +15,8 @@ import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
+import cn.sunline.saas.rpc.pubsub.LoanAgreementPublish
+import cn.sunline.saas.rpc.pubsub.dto.DTOLoanAgreement
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -51,7 +53,15 @@ class AppCustomerOfferService(
             val customerOfferLoanView = apply?.run {
                 objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
             }
-            val underwriting = customerOfferInvoke.getUnderwriting(it.id!!)
+            val underwriting = if(it.status != RECORD) customerOfferInvoke.getUnderwriting(it.id!!) else null
+
+            val loanAgreement = underwriting?.status?.run {
+                if(UnderwritingType.valueOf(underwriting.status) == PASS){
+                    customerOfferInvoke.getLoanAgreement(it.id!!)
+                }else {
+                    null
+                }
+            }
 
             DTOCustomerOfferPage(
                 customerOfferId = it.id.toString(),
@@ -62,7 +72,8 @@ class AppCustomerOfferService(
                 status = it.status,
                 term = customerOfferLoanView?.loan?.term,
                 currency = customerOfferLoanView?.loan?.currency,
-                underwritingType = underwriting?.run { UnderwritingType.valueOf(underwriting.status) }
+                underwritingType = underwriting?.status?.run { UnderwritingType.valueOf(underwriting.status) },
+                loanAgreementType = loanAgreement?.run { this.status }
             )
         }
 
@@ -106,7 +117,8 @@ class AppCustomerOfferService(
         managementCustomerOffer.product = objectMapper.convertValue(product)
         managementCustomerOffer.product!!.productId =product.id
 
-        val underwriting = customerOfferInvoke.getUnderwriting(id)
+        val underwriting = if(customerOffer.status == SUBMIT) customerOfferInvoke.getUnderwriting(customerOffer.id!!) else null
+
         underwriting?.run {
             managementCustomerOffer.underwriting = objectMapper.convertValue(this)
         }
@@ -120,7 +132,7 @@ class AppCustomerOfferService(
 
         val fileName = path.substring(path.lastIndexOf("/")+1)
 
-        response.reset();
+        response.reset()
         response.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
         response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"))
 
@@ -133,7 +145,6 @@ class AppCustomerOfferService(
 
         val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
         val product = customerOfferInvoke.getProduct(customerOffer.productId)
-        val data = objectMapper.readValue<DTOCustomerOfferData>(customerOffer.data)
 
         return DTOInvokeCustomerOfferView(
             id.toString(),

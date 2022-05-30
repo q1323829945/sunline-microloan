@@ -8,6 +8,7 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
+import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementView
 import cn.sunline.saas.rpc.invoke.dto.DTOUnderwriting
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -48,5 +49,18 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
         )
 
         return underwriting?.run { objectMapper.convertValue(underwriting.data) }
+    }
+
+    override fun getLoanAgreement(applicationId: Long): DTOLoanAgreementView {
+        return RPCService.get<DTOLoanAgreementView>(
+            serviceName = "app-micro-loan",
+            methodName = "ConsumerLoan/$applicationId",
+            queryParams = mapOf(),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant()
+        )!!
     }
 }

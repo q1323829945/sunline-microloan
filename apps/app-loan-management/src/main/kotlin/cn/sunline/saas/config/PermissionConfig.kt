@@ -112,7 +112,6 @@ enum class PermissionConfig (
     EMPLOYEE_MENU("menu","employeeConfig", RequestMethod.GET,"View formal employeeConfig menu"),
     CUSTOMER_MENU("menu","customerConfig", RequestMethod.GET,"View formal customerConfig menu"),
     CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
-    UNDERWRITING_MANAGEMENT_MENU("menu","underwritingManagementConfig", RequestMethod.GET,"View formal underwritingManagementConfig menu"),
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
 
 

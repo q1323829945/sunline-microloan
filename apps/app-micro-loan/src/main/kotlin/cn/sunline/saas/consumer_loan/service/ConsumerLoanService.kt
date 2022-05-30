@@ -7,6 +7,7 @@ import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
+import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
@@ -20,6 +21,9 @@ import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.schedule.ScheduleService
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -51,6 +55,9 @@ class ConsumerLoanService(
 
     @Autowired
     private lateinit var invoiceService: InvoiceService
+
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -151,6 +158,17 @@ class ConsumerLoanService(
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
         loanAgreement.status = AgreementStatus.PAID
+        loanAgreementService.save(loanAgreement)
+    }
+
+    fun getLoanAgreementByApplicationId(applicationId:Long):DTOLoanAgreementView{
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        return objectMapper.convertValue(loanAgreement)
+    }
+
+    fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){
+        val  loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }
 }

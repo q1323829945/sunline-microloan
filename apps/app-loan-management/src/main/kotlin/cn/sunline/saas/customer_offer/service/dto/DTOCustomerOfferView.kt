@@ -1,6 +1,7 @@
 package cn.sunline.saas.customer_offer.service.dto
 
 import cn.sunline.saas.customer.offer.modules.OwnershipType
+import cn.sunline.saas.customer.offer.modules.dto.DTOReferenceAccount
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.model.CountryType
@@ -18,7 +19,8 @@ data class DTOManagementCustomerOfferView(
     val financial: DTOFinancialView? = null,
     val uploadDocument:List<DTOUploadDocumentView>? = null,
     val kyc: DTOKycView? = null,
-    var underwriting:DTOUnderwritingView? = null
+    var underwriting:DTOUnderwritingView? = null,
+    val referenceAccount: DTOReferenceAccountView? = null
 )
 
 
@@ -76,6 +78,7 @@ data class DTOCompanyView(
 )
 
 data class DTOContactView(
+    val contacts:String,
     val contactNRIC:String,
     val mobileArea:String,
     val mobileNumber:String,
@@ -145,4 +148,8 @@ data class DTOUnderwritingView (
     var fraudEvaluation: String? = null,
     var regulatoryCompliance: String? = null,
     val status: String?
+)
+data class DTOReferenceAccountView(
+    val account: String,
+    val accountBank: String
 )

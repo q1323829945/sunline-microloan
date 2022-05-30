@@ -1,7 +1,7 @@
 package cn.sunline.saas.consumer_loan.controller
 
 import cn.sunline.saas.consumer_loan.service.LoanAgreementManagerService
-import cn.sunline.saas.loan.agreement.service.LoanAgreementService
+import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -28,9 +28,9 @@ class LoanAgreementController {
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 
-    @PutMapping("status/{id}")
-    fun paid(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
-        loanAgreementManagerService.paid(id.toLong())
+    @PutMapping("{status}/{id}")
+    fun paid(@PathVariable(name = "id") id:String,@PathVariable(name = "status")status:AgreementStatus):ResponseEntity<DTOResponseSuccess<Unit>>{
+        loanAgreementManagerService.paid(id, status)
 
         return DTOResponseSuccess(Unit).response()
 
