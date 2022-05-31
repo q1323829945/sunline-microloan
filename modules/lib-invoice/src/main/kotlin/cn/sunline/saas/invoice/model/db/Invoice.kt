@@ -49,6 +49,7 @@ class Invoice(
     @NotNull
     @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     var invoiceAmount: BigDecimal,
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "invoice_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")

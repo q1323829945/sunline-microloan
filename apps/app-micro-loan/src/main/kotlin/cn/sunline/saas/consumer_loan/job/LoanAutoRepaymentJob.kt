@@ -21,7 +21,6 @@ class LoanAutoRepaymentJob(
 ) :
     AbstractActor(actorType, entityConfig) {
 
-
     fun prerequisites(invoices: List<Invoice>): Boolean {
         invoices.filter {
             it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus == RepaymentStatus.UNDO || it.repaymentStatus == RepaymentStatus.OVERDUE)

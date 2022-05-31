@@ -48,7 +48,6 @@ class OneOffRepaymentImpl : BaseRepaymentScheduleService {
 
         // 每期利息
         val interest = CalculateInterest(amount, CalculateInterestRate(interestRate)).getDaysInterest(
-
             currentRepaymentDateTime,
             nextRepaymentDateTime,
             baseYearDays        )
@@ -85,7 +84,6 @@ class OneOffRepaymentImpl : BaseRepaymentScheduleService {
             val nextRepaymentDateTime = detail.repaymentDate.toInstant()!!
             // 每期利息
             val interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
-
                 repaymentDate,
                 repaymentDate, baseYearDays            )
             detail.interest = interest

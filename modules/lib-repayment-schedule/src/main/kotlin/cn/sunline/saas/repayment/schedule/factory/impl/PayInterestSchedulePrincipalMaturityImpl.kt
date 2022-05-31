@@ -69,7 +69,6 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
                 nextRepaymentDateTime
             )
             interest = CalculateInterest(amount, CalculateInterestRate(interestRate)).getDaysInterest(
-
                 currentRepaymentDateTime,
                 nextRepaymentDateTime,
                 baseYearDays
@@ -121,10 +120,10 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
                 val nextRepaymentDateTime = DateTime(detail.repaymentDate)
                 // 每期利息
                 val interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
-
                     currentRepaymentDateTime,
                     nextRepaymentDateTime,
-                    baseYearDays                )
+                    baseYearDays
+                )
 
                 detail.interest = interest
                 detail.principal = if (finalPeriod == detail.period) remainLoanAmount else BigDecimal.ZERO.setScale(

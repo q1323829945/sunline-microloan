@@ -116,7 +116,7 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
             repaymentArrangement ?: throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
             feeArrangement,
             disbursementArrangement,
-            invoiceArrangement ?: throw InvoiceArrangementNotFoundException("invoice arrangement not found")
+            invoiceArrangement?:throw InvoiceArrangementNotFoundException("invoice arrangement not found")
         )
     }
 
