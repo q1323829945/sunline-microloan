@@ -21,7 +21,13 @@ class LoanAutoRepaymentJob(
     actorType: String = "LoanAutoRepaymentJob",
     entityConfig: EntityConfig? = null
 ) :
-    AbstractActor(actorType, entityConfig) {
+    AbstractActor(actorType, entityConfig) {    fun prerequisites(invoices: List<Invoice>): Boolean {
+        invoices.filter {
+            it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus == RepaymentStatus.UNDO || it.repaymentStatus == RepaymentStatus.OVERDUE)
+        }
+        return invoices.isNotEmpty()
+    }
+
     fun prerequisites(invoices: List<Invoice>): Boolean {
         invoices.filter {
             it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus == RepaymentStatus.UNDO || it.repaymentStatus == RepaymentStatus.OVERDUE)
@@ -29,8 +35,7 @@ class LoanAutoRepaymentJob(
         return invoices.isNotEmpty()
     }
 
-    override fun doJob(actorId: String, jobId: String) {
-        TODO()
+    override fun doJob(actorId: String, jobId: String) {        TODO()
     }
 
 }

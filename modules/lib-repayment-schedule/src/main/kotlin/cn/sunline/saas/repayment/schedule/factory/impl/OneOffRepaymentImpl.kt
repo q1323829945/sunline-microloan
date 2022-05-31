@@ -88,7 +88,6 @@ class OneOffRepaymentImpl : BaseRepaymentScheduleService {
 
                 repaymentDate,
                 repaymentDate, baseYearDays            )
-
             detail.interest = interest
             detail.principal = remainLoanAmount
             detail.installment = CalcInstallmentComponent.calcBaseRepaymentInstallment(detail.principal, interest)

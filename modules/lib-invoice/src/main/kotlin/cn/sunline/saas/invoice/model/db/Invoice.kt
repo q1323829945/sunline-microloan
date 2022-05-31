@@ -29,7 +29,8 @@ class Invoice(
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-
+    @Column(name = "invoice_repayment_date")
+    val invoiceRepaymentDate: Date,
     @Column(name = "invoice_repayment_date")    val invoiceRepaymentDate: Date,
 
     @NotNull
@@ -47,9 +48,8 @@ class Invoice(
     val invoiceAssignedDocument: String,
 
     @NotNull
-    @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
+    @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
     var invoiceAmount: BigDecimal,
-
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "invoice_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")

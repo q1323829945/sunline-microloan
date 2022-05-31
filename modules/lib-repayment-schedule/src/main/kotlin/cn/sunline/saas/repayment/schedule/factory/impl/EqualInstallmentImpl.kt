@@ -22,8 +22,7 @@ import java.math.BigDecimal
 @Service
 class EqualInstallmentImpl : BaseRepaymentScheduleService {
 
-    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial):DTORepaymentScheduleView {
-
+        val term = dtoRepaymentScheduleCalculateTrial.term    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
         val amount = dtoRepaymentScheduleCalculateTrial.amount
         val interestRate = dtoRepaymentScheduleCalculateTrial.interestRate

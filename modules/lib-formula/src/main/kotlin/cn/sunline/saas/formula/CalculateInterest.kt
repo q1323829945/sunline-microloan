@@ -28,8 +28,8 @@ class CalculateInterest(private val principal: BigDecimal, private val interestR
         return calculateInterest(interestRateYear.toDayRate(baseYearDays),days)
     }
 
-    fun getDaysInterest(startDay: DateTime, endDay: DateTime, baseYearDays: BaseYearDays): BigDecimal {        val days = Days.daysBetween(startDay, endDay).days
-        return  getDayInterest(days,baseYearDays)
+    fun getDaysInterest(startDay: DateTime, endDay: DateTime,baseYearDays: BaseYearDays): BigDecimal {
+        val days = Days.daysBetween(startDay, endDay).days        return  getDayInterest(days,baseYearDays)
     }
 
     private fun calculateInterest(interestRate:BigDecimal,num:Int):BigDecimal{
