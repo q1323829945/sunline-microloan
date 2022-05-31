@@ -26,8 +26,14 @@ class CustomerOfferPublishImpl: CustomerOfferPublish {
         //TODO:
     }
 
-    override fun documentGeneration(list: List<DTODocumentGeneration>) {
+    override fun documentGeneration(dtoDocumentGeneration: DTODocumentGeneration) {
+        return
         //TODO:
+        PubSubService.publish(
+            PUBSUB_NAME,
+            CustomerOfferPublishTopic.DOCUMENT_GENERATION.toString(),
+            dtoDocumentGeneration
+        )
     }
 
 }

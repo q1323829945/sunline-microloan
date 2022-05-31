@@ -1,9 +1,8 @@
-package cn.sunline.saas.rpc.pubsub.dto
+package cn.sunline.saas.document.generate.service.dto
 
 import cn.sunline.saas.document.template.modules.FileType
 
-
-data class DTODocumentGeneration(
+data class DTOGeneration(
     val templateId:Long,
     val params:Map<String,String>,
     val generateType: FileType,

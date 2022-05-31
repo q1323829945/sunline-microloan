@@ -7,6 +7,7 @@ import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferProcedure
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
+import cn.sunline.saas.document.template.modules.FileType
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTODetail
 import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
@@ -23,12 +24,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
+import java.math.BigDecimal
 
 @Service
 class CustomerOfferProcedureService(
@@ -103,7 +106,7 @@ class CustomerOfferProcedureService(
 
         if(customerOffer?.status == ApplyStatus.SUBMIT){
             initiateUnderwriting(result, customerOffer)
-            //TODO:文件生成
+            //TODO:文件生成,可能不是这一个步骤
             documentGeneration(result, customerOffer)
 
         }
@@ -144,19 +147,17 @@ class CustomerOfferProcedureService(
 
     private fun documentGeneration(result:DTOCustomerOfferLoanView,customerOffer: CustomerOffer){
         val product = getProduct(customerOffer.productId)
-        val list = mutableListOf<DTODocumentGeneration>()
         product.documentTemplateFeatures?.forEach {
-            list.add(
+            customerOfferPublish.documentGeneration(
                 DTODocumentGeneration(
-                    it.id,
-                    mapOf()
+                    templateId = it.id.toLong(),
+                    params = mapOf(),
+                    generateType = FileType.PDF,
+                    key = "${customerOffer.customerId}/${it.name}"
                 )
             )
         }
 
-
-
-        customerOfferPublish.documentGeneration(list)
     }
 
     fun getCustomerOfferPaged(customerId: Long,pageable: Pageable):Page<DTOCustomerOfferProcedure>{
@@ -172,11 +173,4 @@ class CustomerOfferProcedureService(
         }
     }
 }
-
-private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-data class Ta(
-    val id:String,
-    val name:String,
-)
 

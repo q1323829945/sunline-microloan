@@ -65,7 +65,7 @@ class AppCustomerOfferService(
 
             DTOCustomerOfferPage(
                 customerOfferId = it.id.toString(),
-                userName = customerOfferLoanView?.detail?.name,//TODO:
+                userName = customerOfferLoanView?.detail?.name,
                 amount = apply?.amount?.toString(),
                 datetime = tenantDateTime.toTenantDateTime(it.datetime).toString(),
                 productName = it.productName,

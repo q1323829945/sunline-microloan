@@ -8,5 +8,5 @@ interface CustomerOfferPublish {
 
     fun registeredOrganisation()
 
-    fun documentGeneration(list: List<DTODocumentGeneration>)
+    fun documentGeneration(dtoDocumentGeneration: DTODocumentGeneration)
 }

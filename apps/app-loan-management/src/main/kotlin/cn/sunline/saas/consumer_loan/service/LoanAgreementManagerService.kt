@@ -23,7 +23,7 @@ class LoanAgreementManagerService(
 
     fun getPaged(pageable: Pageable):Page<DTOLoanAgreementView>{
 
-        //TODO:
+        //TODO:外调接口查询列表？可能需要
 //        val paged = customerLoanInvoke.getLoanAgreementPaged(pageable).toPage().map {
 //            objectMapper.convertValue<DTOLoanAgreementView>(it)
 //        }
