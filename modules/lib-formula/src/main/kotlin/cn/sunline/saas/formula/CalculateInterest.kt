@@ -2,6 +2,7 @@ package cn.sunline.saas.formula
 
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
+import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Instant
 import java.math.BigDecimal
@@ -27,7 +28,7 @@ class CalculateInterest(private val principal: BigDecimal, private val interestR
         return calculateInterest(interestRateYear.toDayRate(baseYearDays),days)
     }
 
-    fun getDaysInterest(startDay: Instant, endDay: Instant,baseYearDays: BaseYearDays): BigDecimal {
+    fun getDaysInterest(startDay: DateTime, endDay: DateTime, baseYearDays: BaseYearDays): BigDecimal {
         val days = Days.daysBetween(startDay, endDay).days
         return  getDayInterest(days,baseYearDays)
     }

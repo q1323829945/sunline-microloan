@@ -69,8 +69,9 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
                 nextRepaymentDateTime
             )
             interest = CalculateInterest(amount, CalculateInterestRate(interestRate)).getDaysInterest(
-                currentRepaymentDateTime.toInstant(),
-                nextRepaymentDateTime.toInstant(), baseYearDays
+                currentRepaymentDateTime,
+                nextRepaymentDateTime,
+                baseYearDays
             )
 
             // 计划明细
@@ -108,7 +109,7 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
         val repaymentScheduleDetails: MutableList<RepaymentScheduleDetail> = ArrayList()
 
         // 剩余期数和当前期数
-        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate, repaymentScheduleDetail)
+        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate.toInstant(), repaymentScheduleDetail)
         val currentPeriod = result[0]
         val finalPeriod = result[1]
         var currentRepaymentDateTime = DateTime(repaymentDate)
@@ -119,8 +120,9 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
                 val nextRepaymentDateTime = DateTime(detail.repaymentDate)
                 // 每期利息
                 val interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
-                    currentRepaymentDateTime.toInstant(),
-                    nextRepaymentDateTime.toInstant(), baseYearDays
+                    currentRepaymentDateTime,
+                    nextRepaymentDateTime,
+                    baseYearDays
                 )
 
                 detail.interest = interest

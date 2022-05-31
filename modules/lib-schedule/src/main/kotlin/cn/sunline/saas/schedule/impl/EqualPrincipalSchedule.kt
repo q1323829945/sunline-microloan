@@ -18,7 +18,7 @@ class EqualPrincipalSchedule(
     frequency: RepaymentFrequency,
     fromDateTime: Instant,
     toDateTime: Instant?
-) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime, toDateTime) {
+) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime.toDateTime(), toDateTime?.toDateTime()) {
     override fun getSchedules(): MutableList<Schedule> {
 
         val periods = CalculatePeriod.calculatePeriods(term, frequency)

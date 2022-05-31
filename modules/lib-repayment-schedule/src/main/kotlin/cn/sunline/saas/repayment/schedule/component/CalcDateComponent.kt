@@ -19,7 +19,7 @@ object CalcDateComponent {
         }
     }
 
-    fun formatInstantToView(instant: Instant): String{
+    fun formatInstantToView(instant: DateTime): String{
         return instant.toString(format)
     }
 

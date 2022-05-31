@@ -11,7 +11,6 @@ import org.joda.time.DateTime
 import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
 import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
-import org.joda.time.Instantimport org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 /**
@@ -45,8 +44,8 @@ class ScheduleService(
                 interestRateYear,
                 term,
                 frequency,
-                fromDateTime,
-                toDateTime
+                fromDateTime.toInstant(),
+                toDateTime?.toInstant()
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentSchedule(
                 amount,

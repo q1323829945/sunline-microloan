@@ -7,6 +7,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
 import cn.sunline.saas.schedule.Schedule
+import org.joda.time.DateTime
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -16,8 +17,8 @@ class OneOffRepaymentSchedule(
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
-    fromDateTime: Instant,
-    toDateTime: Instant?,
+    fromDateTime: DateTime,
+    toDateTime: DateTime?,
     baseYearDays: BaseYearDays
 ) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime, toDateTime) {
 

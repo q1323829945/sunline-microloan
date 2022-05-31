@@ -90,8 +90,8 @@ class EqualPrincipalImpl : BaseRepaymentScheduleService {
             interest =
                 if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)) != 0) {
                     calculateInterest.getDaysInterest(
-                        currentRepaymentDateTime.toInstant(),
-                        nextRepaymentDateTime.toInstant(),
+                        currentRepaymentDateTime,
+                        nextRepaymentDateTime,
                         baseYearDays
                     )
                 } else {
@@ -138,7 +138,7 @@ class EqualPrincipalImpl : BaseRepaymentScheduleService {
         val repaymentScheduleDetails: MutableList<RepaymentScheduleDetail> = ArrayList()
 
         // 剩余期数和当前期数
-        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate, repaymentScheduleDetail)
+        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate.toInstant(), repaymentScheduleDetail)
         val currentPeriod = result[0]
         val finalPeriod = result[1]
         val periods = result[2]
@@ -166,8 +166,8 @@ class EqualPrincipalImpl : BaseRepaymentScheduleService {
                 val interest =
                     if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)) != 0) {
                         calculateInterest.getDaysInterest(
-                            currentRepaymentDateTime.toInstant(),
-                            nextRepaymentDateTime.toInstant(),
+                            currentRepaymentDateTime,
+                            nextRepaymentDateTime,
                             baseYearDays
                         )
                     } else {

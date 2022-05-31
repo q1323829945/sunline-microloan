@@ -4,6 +4,7 @@ package cn.sunline.saas.repayment.schedule.model.dto
 
 import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.repayment.schedule.model.db.RepaymentSchedule
+import org.joda.time.DateTime
 import org.joda.time.Instant
 import java.math.BigDecimal
 import java.util.*
@@ -25,7 +26,7 @@ data class DTORepaymentScheduleCalculateTrial  (
 
 data class DTORepaymentScheduleResetCalculate (
     var remainLoanAmount: BigDecimal,
-    var repaymentDate: Instant,
+    var repaymentDate: DateTime,
     var repaymentDay: Int,
     var baseYearDays: BaseYearDays,
     var paymentMethod: PaymentMethodType,

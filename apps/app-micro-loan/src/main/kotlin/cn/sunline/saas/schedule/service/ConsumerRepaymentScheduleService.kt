@@ -55,7 +55,7 @@ class ConsumerRepaymentScheduleService(private val tenantDateTime: TenantDateTim
             interestRate,
             term,
             loanProduct.repaymentFeature.payment.frequency,
-            tenantDateTime.now().toInstant(),
+            tenantDateTime.now(),
             //DateTime.now().toInstant(),
             null,
             loanProduct.interestFeature.interest.baseYearDays
@@ -75,6 +75,8 @@ class ConsumerRepaymentScheduleService(private val tenantDateTime: TenantDateTim
                 )
             )
         }
+
+        return rates
     }
 
     private fun getExecutionRate(interestType: InterestType, term: LoanTermType, ratePlanId: Long): BigDecimal {

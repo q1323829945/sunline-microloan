@@ -95,8 +95,8 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
             // 首期或未期不足月先按日计算利息
             if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)) != 0) {
                 interest = CalculateInterest(remainPrincipal, CalculateInterestRate(interestRate)).getDaysInterest(
-                    currentRepaymentDateTime.toInstant(),
-                    nextRepaymentDateTime.toInstant(),
+                    currentRepaymentDateTime,
+                    nextRepaymentDateTime,
                     baseYearDays
                 )
                 principal = repaymentInstallment.subtract(interest)
@@ -166,7 +166,7 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
         val loanRateMonth = CalculateInterestRate(interestRate).toMonthRate()
 
         // 剩余期数和当前期数
-        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate, repaymentScheduleDetail)
+        val result = CalcPeriodComponent.calcRemainPeriods(repaymentDate.toInstant(), repaymentScheduleDetail)
         val currentPeriod = result[0]
         val periods = result[2]
 
@@ -179,7 +179,7 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
         )
         val totalLoanAmount = remainLoanAmount
         var totalInterest = BigDecimal.ZERO
-        var currentRepaymentDateTime = repaymentDate.toDateTime()
+        var currentRepaymentDateTime = repaymentDate
         var i = 0
         for (detail in repaymentScheduleDetail) {
             if (currentPeriod <= detail.period) {
@@ -189,8 +189,8 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
                 // 首期或未期不足月先按日计算利息
                 if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)) != 0) {
                     interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
-                            currentRepaymentDateTime.toInstant(),
-                            nextRepaymentDateTime.toInstant(),
+                            currentRepaymentDateTime,
+                            nextRepaymentDateTime,
                             baseYearDays
                         )
                     principal = repaymentInstallment.subtract(interest)
