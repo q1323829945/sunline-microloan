@@ -4,8 +4,6 @@ import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.AgreementType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.CurrencyType
-import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
-import java.math.BigDecimal
 
 data class DTOLoanAgreementView (
     val id:String,
@@ -29,5 +27,5 @@ data class DTOLoanAgreementView (
 data class LoanAgreementInvolvementView(
     val id:String,
     val partyId: String,
-    val involvementType: LoanAgreementInvolvementType,
+    val involvementType: String, //LoanAgreementInvolvementType
 )
