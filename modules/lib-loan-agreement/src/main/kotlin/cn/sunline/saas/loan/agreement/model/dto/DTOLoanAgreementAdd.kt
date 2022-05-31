@@ -5,6 +5,7 @@ import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
+import cn.sunline.saas.invoice.arrangement.service.DTOInvoiceArrangement
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 
 /**
@@ -27,5 +28,5 @@ data class DTOLoanAgreementAdd(
     val purpose: String?,
     val applicationId: Long,
     val userId: Long,
-    val graceDays: Int,
+    val invoiceArrangement:DTOInvoiceArrangement
 )

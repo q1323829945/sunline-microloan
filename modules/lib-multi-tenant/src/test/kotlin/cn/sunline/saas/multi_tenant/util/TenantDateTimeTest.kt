@@ -45,4 +45,23 @@ class TenantDateTimeTest(@Autowired val tenantDateTime: TenantDateTime) {
 
         Assertions.assertThat(simpleDateFormat.format(tenantDateTime)).isNotEqualTo(now.toString())
     }
+
+    @Test
+    fun `test between two datetime`(){
+        // now is 2022-05-25T23:23:40.123Z
+        val dt1 = DateTime(2022, 5, 25, 23, 30, 40, 123, DateTimeZone.UTC)
+        val dt2 = DateTime(2022, 5, 25, 23, 23, 40, 123, DateTimeZone.UTC)
+        val actual1 = tenantDateTime.betweenTimes(dt1,dt2)
+
+        Assertions.assertThat(actual1.minutes).isEqualTo(7)
+
+
+        val dt3 = DateTime(2022, 5, 26, 23, 30, 40, 123, DateTimeZone.UTC)
+        val dt4 = DateTime(2022, 5, 25, 23, 23, 40, 123, DateTimeZone.UTC)
+        val actual2 = tenantDateTime.betweenTimes(dt3,dt4)
+
+        Assertions.assertThat(actual2.minutes).isEqualTo(7)
+        Assertions.assertThat(actual2.days * 24 + actual2.hours).isEqualTo(24)
+
+    }
 }

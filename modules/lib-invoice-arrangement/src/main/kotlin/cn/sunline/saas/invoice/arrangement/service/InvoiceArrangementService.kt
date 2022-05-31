@@ -4,7 +4,6 @@ import cn.sunline.saas.invoice.arrangement.model.InvoiceArrangement
 import cn.sunline.saas.invoice.arrangement.repository.InvoiceArrangementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
-import java.util.Date
 
 /**
  * @title: InvoiceArrangementService
@@ -13,24 +12,23 @@ import java.util.Date
  * @date 2022/5/18 14:53
  */
 data class DTOInvoiceArrangement(
-    val agreementId: Long,
-    val invoiceDay: Date,
-    val repaymentDay: Date,
-    val graceDays: Int,
+    val invoiceDay: Int?,
+    val repaymentDay: Int?,
+    val graceDays: Int?,
 )
 
 @Service
 class InvoiceArrangementService(private val invoiceArrangementRepository: InvoiceArrangementRepository) :
     BaseMultiTenantRepoService<InvoiceArrangement, Long>(invoiceArrangementRepository) {
 
-    fun registerInvoiceArrangement(dtoInvoiceArrangement: DTOInvoiceArrangement): InvoiceArrangement {
+    fun registerInvoiceArrangement(agreementId: Long,dtoInvoiceArrangement: DTOInvoiceArrangement): InvoiceArrangement {
         // compute first invoice day and repayment day
 
 
 
         return save(
             InvoiceArrangement(
-                dtoInvoiceArrangement.agreementId,
+                agreementId,
                 dtoInvoiceArrangement.invoiceDay,
                 dtoInvoiceArrangement.repaymentDay,
                 dtoInvoiceArrangement.graceDays

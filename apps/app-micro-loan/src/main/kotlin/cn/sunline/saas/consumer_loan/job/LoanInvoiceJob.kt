@@ -2,6 +2,8 @@ package cn.sunline.saas.consumer_loan.job
 
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
+import cn.sunline.saas.invoice.model.InvoiceStatus
+import cn.sunline.saas.invoice.model.db.Invoice
 
 /**
  * @title: LoanInvoiceJob
@@ -9,10 +11,18 @@ import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
  * @author Kevin-Cui
  * @date 2022/5/25 14:52
  */
-class LoanInvoiceJob(actorType: String = "LoanInvoiceJob",
-                     entityConfig: EntityConfig? = null):AbstractActor(actorType,entityConfig) {
-    override fun doJob(actorId: String) {
+class LoanInvoiceJob(
+    actorType: String = "LoanInvoiceJob", entityConfig: EntityConfig? = null
+) : AbstractActor(actorType, entityConfig) {
+    override fun doJob(actorId: String, jobId: String) {
         TODO("Not yet implemented")
+    }
+
+    fun prerequisites(invoices: List<Invoice>): Boolean {
+        invoices.filter {
+            it.invoiceStatus == InvoiceStatus.ACCOUNTED
+        }
+        return invoices.isNotEmpty()
     }
 
 }

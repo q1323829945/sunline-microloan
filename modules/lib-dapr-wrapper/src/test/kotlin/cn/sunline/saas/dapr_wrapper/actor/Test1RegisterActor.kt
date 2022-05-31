@@ -15,7 +15,7 @@ class Test1RegisterActor(
 ) :
     AbstractActor(actorType, entityConfig) {
 
-    override fun doJob(actorId: String) {
+    override fun doJob(actorId: String,jobId:String) {
         throw Exception("do my $actorId job")
     }
 }

@@ -28,7 +28,6 @@ class AppCommandRunner(
 
     private fun reloadAdminUser() {
         val adminUser = userService.getByUsername(adminUsername)?: kotlin.run {
-            println("Admin account not found, creating a new admin account")
             val newUser = User(username = adminUsername, password = adminUsername, email = "admin@sunline.cn")
             userService.register(newUser)
         }
@@ -37,23 +36,18 @@ class AppCommandRunner(
             adminUser.roles.clear()
             adminUser.roles.add(this)
             userService.save(adminUser)
-            println("Admin role has been assigned to Admin account")
         }
     }
 
     private fun reloadAdminRole() {
         val adminRole = roleService.getByName(adminRole)?: kotlin.run {
-            println("Admin role not found, creating a new admin role")
             Role(name = adminRole, remark = "Admin Role")
         }
 
         val permissions = permissionService.getPaged(pageable = Pageable.unpaged()).toSet()
-
-        println("Adding total of ${permissions.size} permission configs to admin role")
         adminRole.permissions.clear()
         adminRole.permissions.addAll(permissions)
         val addedAdminRole = roleService.save(adminRole)
-        println("Added permission configs for admin role")
     }
 
     private fun reloadPermissions() {
@@ -64,11 +58,7 @@ class AppCommandRunner(
                 .map { PermissionConfig.valueOf(it) }
                 .map { Permission(name = it.name, tag = it.permissionGroup, remark = it.remark) }
                 .toList()
-
-        println("Adding total of ${missingPermissionConfigs.size} permission configs")
-
         val addedPermissionConfigs = permissionService.save(missingPermissionConfigs)
-        println("Added permission configs: $addedPermissionConfigs")
     }
 
     private fun validatePermissionConfig(name: String): Boolean {

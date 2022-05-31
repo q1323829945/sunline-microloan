@@ -23,7 +23,6 @@ import java.math.BigDecimal
 class EqualInstallmentImpl : BaseRepaymentScheduleService {
 
     override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial):DTORepaymentScheduleView {
-        val term = dtoRepaymentScheduleCalculateTrial.term
 
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
         val amount = dtoRepaymentScheduleCalculateTrial.amount
@@ -33,7 +32,6 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
         val startDate = dtoRepaymentScheduleCalculateTrial.startDate
         val endDate = dtoRepaymentScheduleCalculateTrial.endDate
         val baseYearDays = dtoRepaymentScheduleCalculateTrial.baseYearDays
-        val repaymentDayType = dtoRepaymentScheduleCalculateTrial.repaymentDayType
 
         // 每期利率
         val loanRateMonth = CalculateInterestRate(interestRate).toMonthRate()
@@ -77,9 +75,7 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
         var remainPrincipal = amount
 
         // 每期还款详情
-        var firstInstallment = BigDecimal.ZERO
         var nextInstallment = BigDecimal.ZERO
-        var isEquals = true
 
         // 还款明细
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailView> = ArrayList()
@@ -139,7 +135,6 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
         }
 
         // 还款总额
-        val totalRepayment = amount.add(totalInterest)
         // 还款计划概述
         return DTORepaymentScheduleView(
             interestRate = interestRate,

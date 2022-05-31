@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-dapr-wrapper"))
+    implementation(project(":lib-scheduler-job"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

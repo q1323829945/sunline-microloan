@@ -5,6 +5,8 @@ import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.interest.arrangement.exception.InterestArrangementNotFoundException
 import cn.sunline.saas.interest.arrangement.service.InterestArrangementService
+import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
+import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
@@ -42,6 +44,9 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
     @Autowired
     private lateinit var disbursementArrangementService: DisbursementArrangementService
 
+    @Autowired
+    private lateinit var invoiceArrangementService: InvoiceArrangementService
+
     @Transactional
     fun registered(dtoLoanAgreementAdd: DTOLoanAgreementAdd): DTOLoanAgreementView {
         val loanAgreement = save(loanAgreementFactory.instance(dtoLoanAgreementAdd))
@@ -59,12 +64,15 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
             disbursementArrangementService.registered(loanAgreement.id, this)
         }
 
+        val invoiceArrangement = invoiceArrangementService.registerInvoiceArrangement(loanAgreement.id,dtoLoanAgreementAdd.invoiceArrangement)
+
         return DTOLoanAgreementView(
             loanAgreement,
             interestArrangement,
             repaymentArrangement,
             feeArrangement,
-            disbursementArrangement
+            disbursementArrangement,
+            invoiceArrangement
         )
     }
 
@@ -97,13 +105,15 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         val repaymentArrangement = repaymentArrangementService.getOne(loanAgreementId)
         val feeArrangement = feeArrangementService.listByAgreementId(loanAgreementId)
         val disbursementArrangement = disbursementArrangementService.getOne(loanAgreementId)
+        val invoiceArrangement = invoiceArrangementService.getOne(loanAgreementId)
 
         return DTOLoanAgreementView(
             loanAgreement?:throw LoanAgreementNotFoundException("loan agreement not found"),
             interestArrangement?:throw InterestArrangementNotFoundException("interest arrangement not found"),
             repaymentArrangement?:throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
             feeArrangement,
-            disbursementArrangement
+            disbursementArrangement,
+            invoiceArrangement?:throw InvoiceArrangementNotFoundException("invoice arrangement not found")
         )
     }
     fun findByApplicationId(id:Long): LoanAgreement?{

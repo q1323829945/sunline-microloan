@@ -30,8 +30,8 @@ class CalculateInterestTest {
 
     @Test
     fun `calculate days interest`() {
-        val actual = calculateInterest.getDaysInterest(DateTime.now().toInstant(),
-            DateTime.now().plusDays(3).toInstant(),BaseYearDays.ACCOUNT_YEAR)
+        val actual = calculateInterest.getDaysInterest(DateTime.now(),
+            DateTime.now().plusDays(3),BaseYearDays.ACCOUNT_YEAR)
 
         Assertions.assertThat(actual).isEqualTo(BigDecimal("6000.000000"))
     }

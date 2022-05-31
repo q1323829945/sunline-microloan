@@ -1,5 +1,7 @@
 package cn.sunline.saas.dapr_wrapper.actor.model
 
+import org.joda.time.DateTime
+
 /**
  * @title: RegisteredActor
  * @description: TODO
@@ -12,10 +14,10 @@ data class EntityConfig(
     val reentrancyEnabled: Boolean? = null
 )
 
-abstract class AbstractActor(private val actorType: String, val entityConfig: EntityConfig? = null) {
+abstract class AbstractActor(val actorType: String, val entityConfig: EntityConfig? = null) {
     fun registerActor() {
         ActorContext.registerActor(actorType, this)
     }
 
-    abstract fun doJob(actorId: String)
+    abstract fun doJob(actorId: String, jobId: String)
 }

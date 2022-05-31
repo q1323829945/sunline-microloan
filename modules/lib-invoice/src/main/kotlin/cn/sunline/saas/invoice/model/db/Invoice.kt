@@ -20,8 +20,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(TenantListener::class)
 @Table(name = "invoice", indexes = [Index(name = "idx_invoice_invoicee", columnList = "invoicee")])
 class Invoice(
-    @Id
-    val id: Long,
+    @Id val id: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -30,7 +29,7 @@ class Invoice(
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="invoice_repayment_date")
+    @Column(name = "invoice_repayment_date")
     val invoiceRepaymentDate: Date,
 
     @NotNull
@@ -45,11 +44,11 @@ class Invoice(
 
     @NotNull
     @Column(name = "invoice_assigned_document", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    val invoiceAssignedDocument:String,
+    val invoiceAssignedDocument: String,
 
     @NotNull
     @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
-    var invoiceAmount:BigDecimal,
+    var invoiceAmount: BigDecimal,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -58,21 +57,25 @@ class Invoice(
 
     @NotNull
     @Column(name = "invoicee", nullable = false, columnDefinition = "bigint not null")
-    val invoicee:Long,
+    val invoicee: Long,
 
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "invoice_id")
-    val invoiceLines : MutableList<InvoiceLine>,
+    val invoiceLines: MutableList<InvoiceLine>,
 
     @NotNull
     @Column(name = "agreement_id", nullable = false, columnDefinition = "bigint not null")
-    val agreementId:Long,
+    val agreementId: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "repayment_status", nullable = false, columnDefinition = "varchar(32) not null")
-    var repaymentStatus: RepaymentStatus = RepaymentStatus.UNDO
+    var repaymentStatus: RepaymentStatus = RepaymentStatus.UNDO,
+
+    @NotNull
+    @Column(name = "repayment_amount",nullable = false,scale = 19,precision = 2,columnDefinition = "number(19,2) not null")
+    var repaymentAmount: BigDecimal = BigDecimal.ZERO
 
 ) : MultiTenant {
 

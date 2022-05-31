@@ -8,6 +8,8 @@ import cn.sunline.saas.multi_tenant.exception.TenantNotFoundException
 import cn.sunline.saas.multi_tenant.services.TenantService
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Interval
+import org.joda.time.Period
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -30,6 +32,17 @@ class TenantDateTime(private val tenantService: TenantService) {
 
     fun now(): DateTime {
         return DateTime.now(getTenantTimeZone())
+    }
+
+    fun getYearMonthDay(dt: DateTime): String {
+        val year = dt.year().toString()
+        val month = dt.monthOfYear().toString()
+        val day = dt.dayOfMonth().toString()
+        return year + month + day
+    }
+
+    fun betweenTimes(end: DateTime, start: DateTime = now()): Period {
+        return Interval(start,end).toPeriod()
     }
 
     private fun getTenantTimeZone(): DateTimeZone {

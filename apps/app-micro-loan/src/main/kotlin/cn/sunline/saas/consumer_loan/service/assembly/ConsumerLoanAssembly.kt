@@ -9,6 +9,7 @@ import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
+import cn.sunline.saas.invoice.arrangement.service.DTOInvoiceArrangement
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
@@ -36,7 +37,7 @@ object ConsumerLoanAssembly {
     fun convertToDTOLoanAgreementAdd(
         customerOffer: DTOCustomerOffer,
         loanProduct: DTOLoanProduct,
-        baseRate:String?
+        baseRate: String?
     ): DTOLoanAgreementAdd {
         val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
             DTOInterestArrangementAdd(
@@ -88,6 +89,12 @@ object ConsumerLoanAssembly {
             )
         }
 
+        val dtoInvoiceArrangement = DTOInvoiceArrangement(
+            invoiceDay = null,
+            repaymentDay = null,
+            graceDays = loanProduct.repaymentFeature.payment.graceDays
+        )
+
         return DTOLoanAgreementAdd(
             productId = customerOffer.productId,
             term = customerOffer.term,
@@ -106,7 +113,7 @@ object ConsumerLoanAssembly {
             purpose = customerOffer.purpose ?: loanProduct.loanPurpose,
             applicationId = customerOffer.applicationId,
             userId = customerOffer.userId,
-            graceDays = loanProduct.repaymentFeature.payment.graceDays
+            invoiceArrangement = dtoInvoiceArrangement
         )
     }
 

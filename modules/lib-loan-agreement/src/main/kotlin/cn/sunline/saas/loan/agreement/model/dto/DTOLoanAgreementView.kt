@@ -6,6 +6,7 @@ import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.arrangement.model.db.InterestArrangement
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
+import cn.sunline.saas.invoice.arrangement.model.InvoiceArrangement
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentArrangement
 
@@ -20,5 +21,6 @@ data class DTOLoanAgreementView(
     val interestArrangement: InterestArrangement,
     val repaymentArrangement: RepaymentArrangement,
     val feeArrangement: MutableList<FeeArrangement>?,
-    val disbursementArrangement: DisbursementArrangement?
+    val disbursementArrangement: DisbursementArrangement?,
+    val invoiceArrangement: InvoiceArrangement
 )

@@ -21,19 +21,15 @@ class InvoiceArrangement(
     @Id
     val id: Long,
 
-    @NotNull
-    @Column(name = "invoice_day", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    var invoiceDay: Date,
+    @Column(name = "invoice_day", nullable = true, columnDefinition = "tinyint null")
+    var invoiceDay: Int? = null,
 
-    @NotNull
-    @Column(name = "repayment_day", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    var repaymentDay: Date,
+    @Column(name = "repayment_day", nullable = true, columnDefinition = "tinyint null")
+    var repaymentDay: Int? = null,
 
     @NotNull
     @Column(name = "grace_days", nullable = false, columnDefinition = "tinyint not null")
-    var graceDays: Int = 0
+    var graceDays: Int? = 0
 
 ) : MultiTenant {
     @NotNull

@@ -13,6 +13,7 @@ import cn.sunline.saas.global.util.setTimeZone
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
 import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.invoice.arrangement.service.DTOInvoiceArrangement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
@@ -79,6 +80,8 @@ class LoanAgreementServiceTest {
 
         val disbursementArrangement = DTODisbursementArrangementAdd("123455", "120", DisbursementLendType.ONCE)
 
+        val invoiceArrangement = DTOInvoiceArrangement(null,null,0)
+
         val dtoLoanAgreementAdd =
             DTOLoanAgreementAdd(
                 productId = 1,
@@ -94,7 +97,7 @@ class LoanAgreementServiceTest {
                 applicationId = 1,
                 userId = 1,
                 purpose = null,
-                graceDays = 0
+                invoiceArrangement = invoiceArrangement
             )
         val actual = loanAgreementService.registered(dtoLoanAgreementAdd)
 

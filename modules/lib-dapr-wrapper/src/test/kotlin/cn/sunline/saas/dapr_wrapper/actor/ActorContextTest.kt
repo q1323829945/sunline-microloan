@@ -30,7 +30,7 @@ class ActorContextTest {
     fun `do job`() {
         val actor = ActorContext.getActor("Test1RegisteredActor")
         Assertions.assertThrows(Exception::class.java) {
-            actor.doJob("first")
+            actor.doJob("first","1")
         }
     }
 

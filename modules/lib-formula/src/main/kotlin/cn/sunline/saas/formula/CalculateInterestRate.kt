@@ -12,7 +12,6 @@ import java.math.RoundingMode
  * @date 2022/3/8 15:51
  */
 class CalculateInterestRate(private val yearInterestRatePercent: BigDecimal) {
-    private val yearInterestRate: BigDecimal = yearInterestRatePercent.divide(BigDecimal(100))
 
     private fun dealPercent(num: BigDecimal): BigDecimal {
         return num.divide(BigDecimal(100), CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)

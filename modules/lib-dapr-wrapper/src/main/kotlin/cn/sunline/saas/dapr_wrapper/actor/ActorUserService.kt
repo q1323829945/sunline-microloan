@@ -58,7 +58,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "methodName") methodName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId)
+        ActorContext.getActor(actorType).doJob(actorId,methodName)
 
         return DTOResponseSuccess(Unit).response()
     }
@@ -69,7 +69,18 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "reminderName") reminderName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId)
+        ActorContext.getActor(actorType).doJob(actorId,reminderName)
+
+        return DTOResponseSuccess(Unit).response()
+    }
+
+    @PutMapping("/actors/{actorType}/{actorId}/method/timer/{timerName}")
+    fun invokeTimer(
+        @PathVariable(name = "actorType") actorType: String,
+        @PathVariable(name = "actorId") actorId: String,
+        @PathVariable(name = "timerName") timerName: String
+    ): ResponseEntity<DTOResponseSuccess<Unit>> {
+        ActorContext.getActor(actorType).doJob(actorId,timerName)
 
         return DTOResponseSuccess(Unit).response()
     }
