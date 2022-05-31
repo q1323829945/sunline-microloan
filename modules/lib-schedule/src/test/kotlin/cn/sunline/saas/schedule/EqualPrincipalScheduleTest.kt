@@ -4,6 +4,7 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import org.assertj.core.api.Assertions
+import org.joda.time.DateTime
 import org.joda.time.Instant
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -22,7 +23,7 @@ class EqualPrincipalScheduleTest {
 
         val actual = EqualPrincipalSchedule(
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
-            RepaymentFrequency.ONE_MONTH, Instant.now(),null).getSchedules()
+            RepaymentFrequency.THREE_MONTHS, DateTime.now(),null).getSchedules()
 
         Assertions.assertThat(actual[0].installment).isEqualTo(BigDecimal("338583.33"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("5250.00"))

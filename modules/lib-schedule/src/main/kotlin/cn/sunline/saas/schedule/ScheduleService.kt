@@ -44,8 +44,8 @@ class ScheduleService(
                 interestRateYear,
                 term,
                 frequency,
-                fromDateTime.toInstant(),
-                toDateTime?.toInstant()
+                fromDateTime,
+                toDateTime
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentSchedule(
                 amount,
