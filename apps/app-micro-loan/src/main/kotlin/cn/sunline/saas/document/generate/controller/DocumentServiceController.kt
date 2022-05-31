@@ -1,6 +1,6 @@
 package cn.sunline.saas.document.generate.controller
 
-import cn.sunline.saas.document.generate.service.DocumentService
+import cn.sunline.saas.document.generate.service.DocumentGenerationService
 import cn.sunline.saas.document.generate.service.dto.DTOGeneration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController
 class DocumentServiceController {
 
     @Autowired
-    private lateinit var documentService:DocumentService
+    private lateinit var documentGenerationService:DocumentGenerationService
 
     @PostMapping("/generate")
     fun generate(@RequestBody dtoGeneration: DTOGeneration){
-        documentService.generate(dtoGeneration)
+        documentGenerationService.generate(dtoGeneration)
 
     }
 

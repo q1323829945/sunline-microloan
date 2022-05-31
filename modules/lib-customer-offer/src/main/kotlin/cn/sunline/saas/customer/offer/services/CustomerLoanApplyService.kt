@@ -52,7 +52,7 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
         }
 
         //update status
-        dtoCustomerOfferLoanAdd.kyc?.run {
+        dtoCustomerOfferLoanAdd.referenceAccount?.run {
             customerOffer.status = ApplyStatus.SUBMIT
             customerOfferService.save(customerOffer)
         }

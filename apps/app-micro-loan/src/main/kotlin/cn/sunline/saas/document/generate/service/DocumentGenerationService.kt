@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 import java.io.InputStream
 
 @Service
-class DocumentService {
+class DocumentGenerationService {
 
     @Autowired
     private lateinit var huaweiCloudService: ObsApi
