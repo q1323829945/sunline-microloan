@@ -104,6 +104,13 @@ class AppCustomerOfferService(
         val customerOfferLoan = customerLoanApplyService.retrieve(id)
         val managementCustomerOffer = objectMapper.convertValue<DTOManagementCustomerOfferView>(customerOfferLoan)
 
+        managementCustomerOffer.guarantor?.run {
+            guarantors.forEach {
+                it.primaryGuarantor = it.nric == this.primaryGuarantor
+            }
+        }
+
+
         managementCustomerOffer.uploadDocument?.forEach {
             val config = loanUploadConfigureService.getOne(it.documentTemplateId.toLong())
             config?.run {

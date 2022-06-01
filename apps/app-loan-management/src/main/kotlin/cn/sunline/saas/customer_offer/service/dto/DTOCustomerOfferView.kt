@@ -112,6 +112,7 @@ data class DTOGuarantorsView(
     val manageExpYear:Long,
     val residenceType:String,//TODO ×¡Õ¬ÀàÐÍ
     val residenceOwnership: OwnershipType,
+    var primaryGuarantor:Boolean?,
 )
 
 data class DTOFinancialView(

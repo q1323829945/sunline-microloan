@@ -14,7 +14,7 @@ class MenuService {
         val businessConfig = Menu("businessConfig","","","")
         val sysConfig = Menu("sysConfig","","","")
         val enterpriseConfig = Menu("enterpriseConfig","","","")
-        val loanConfig = Menu("loanConfig","","","")
+        val businessHandling= Menu("businessHandling","","","")
 
         val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role")
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions")
@@ -26,11 +26,11 @@ class MenuService {
         val organisationConfig = Menu("organisationConfig","enterpriseConfig","","/dashboard/organisationConfig")
         val employeeConfig = Menu("employeeConfig","enterpriseConfig","","/dashboard/employeeConfig")
         val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig")
-        val customerOfferConfig = Menu("customerOfferConfig","loanConfig","","/dashboard/customerOfferConfig")
-        val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","loanConfig","","/dashboard/loanAgreementManagementConfig")
+        val customerOfferConfig = Menu("customerOfferConfig","businessHandling","","/dashboard/customerOfferConfig")
+        val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","businessHandling","","/dashboard/loanAgreementManagementConfig")
 
 
-        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,loanConfig
+        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling
             ,roleConfig
             ,permissionConfig
             ,userConfig
