@@ -44,7 +44,7 @@ class ConsumerLoanController {
 
 
     @GetMapping("{applicationId}")
-    fun getLoanAgreementByApplicationId(@PathVariable applicationId:String):DTOLoanAgreementView{
+    fun getLoanAgreementByApplicationId(@PathVariable applicationId:String):DTOLoanAgreementView?{
         return consumerLoanService.getLoanAgreementByApplicationId(applicationId.toLong())
     }
 

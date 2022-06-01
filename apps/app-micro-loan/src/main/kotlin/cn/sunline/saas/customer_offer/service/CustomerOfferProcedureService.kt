@@ -8,6 +8,7 @@ import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferProcedure
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.document.template.modules.FileType
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTODetail
 import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
@@ -171,6 +172,11 @@ class CustomerOfferProcedureService(
                 status = it.status
             )
         }
+    }
+
+
+    fun getInterestRateByProductId(productId: String):List<LoanTermType>{
+        return customerOfferProcedureInvoke.getInterestRate(productId.toLong())
     }
 }
 

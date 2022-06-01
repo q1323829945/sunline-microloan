@@ -161,9 +161,9 @@ class ConsumerLoanService(
         loanAgreementService.save(loanAgreement)
     }
 
-    fun getLoanAgreementByApplicationId(applicationId:Long):DTOLoanAgreementView{
-        val loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
-        return objectMapper.convertValue(loanAgreement)
+    fun getLoanAgreementByApplicationId(applicationId:Long):DTOLoanAgreementView?{
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
+        return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 
     fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){

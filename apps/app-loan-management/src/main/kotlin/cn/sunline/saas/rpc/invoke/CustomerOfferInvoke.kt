@@ -9,5 +9,5 @@ interface CustomerOfferInvoke {
 
     fun getUnderwriting(applicationId:Long): DTOUnderwriting?
 
-    fun getLoanAgreement(applicationId:Long): DTOLoanAgreementView
+    fun getLoanAgreement(applicationId:Long): DTOLoanAgreementView?
 }

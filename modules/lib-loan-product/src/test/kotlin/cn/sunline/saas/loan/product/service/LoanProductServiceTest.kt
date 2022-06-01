@@ -112,9 +112,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             description = "test",
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
-
             businessUnit = "test",
-            graceDays = 11111,            status = BankingProductStatus.INITIATED,
+            status = BankingProductStatus.INITIATED,
             amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,
             interestFeature =  objectMapper.convertValue(interestFeature),

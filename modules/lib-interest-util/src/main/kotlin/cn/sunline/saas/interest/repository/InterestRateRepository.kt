@@ -7,4 +7,6 @@ import cn.sunline.saas.interest.model.InterestRate
 interface InterestRateRepository : BaseRepository<InterestRate, Long>{
 
     fun findByRatePlanIdAndPeriod(ratePlanId: Long,period: LoanTermType): InterestRate?
+
+    fun findByRatePlanId(ratePlanId: Long):List<InterestRate>?
 }

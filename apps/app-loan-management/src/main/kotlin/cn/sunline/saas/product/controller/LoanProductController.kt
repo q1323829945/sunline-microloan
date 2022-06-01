@@ -1,6 +1,7 @@
 package cn.sunline.saas.product.controller
 
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 
@@ -92,5 +93,11 @@ class LoanProductController {
     @GetMapping("uploadConfig/{id}")
     fun getUploadConfigById(@PathVariable id:String):List<DTOLoanUploadConfigure>{
         return loanProductManagerService.getUploadConfig(id.toLong())
+    }
+
+
+    @GetMapping("interestRate/{productId}")
+    fun getInterestRate(@PathVariable productId:String):List<LoanTermType>{
+        return loanProductManagerService.getInterestRate(productId.toLong())
     }
 }

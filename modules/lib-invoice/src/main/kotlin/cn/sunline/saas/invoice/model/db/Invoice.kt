@@ -48,7 +48,7 @@ class Invoice(
     val invoiceAssignedDocument:String,
 
     @NotNull
-    @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
+    @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     var invoiceAmount:BigDecimal,
 
     @NotNull
@@ -61,7 +61,7 @@ class Invoice(
     val invoicee:Long,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "invoice_id")
     val invoiceLines : MutableList<InvoiceLine>,
 

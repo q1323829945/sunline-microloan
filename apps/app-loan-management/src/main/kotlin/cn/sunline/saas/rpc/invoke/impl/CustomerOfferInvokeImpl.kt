@@ -51,7 +51,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
         return underwriting?.run { objectMapper.convertValue(underwriting.data) }
     }
 
-    override fun getLoanAgreement(applicationId: Long): DTOLoanAgreementView {
+    override fun getLoanAgreement(applicationId: Long): DTOLoanAgreementView? {
         return RPCService.get<DTOLoanAgreementView>(
             serviceName = "app-micro-loan",
             methodName = "ConsumerLoan/$applicationId",
@@ -61,6 +61,6 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
-        )!!
+        )
     }
 }

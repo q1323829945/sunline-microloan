@@ -2,16 +2,21 @@ package cn.sunline.saas.product.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.TermType
+import cn.sunline.saas.interest.service.InterestFeatureService
+import cn.sunline.saas.interest.service.InterestRateService
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
+import cn.sunline.saas.product.exception.RepaymentFeatureNotFoundException
 import cn.sunline.saas.product.exception.LoanProductBusinessException
 import cn.sunline.saas.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.product.service.dto.DTOLoanProductResponse
 import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
+import cn.sunline.saas.repayment.service.RepaymentFeatureService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.rpc.invoke.ProductInvoke
@@ -35,6 +40,10 @@ class LoanProductManagerService(
 
     @Autowired
     private lateinit var loanProductService: LoanProductService
+
+    @Autowired
+    private lateinit var interestRateService: InterestRateService
+
 
     fun getPaged(
         name: String?,
@@ -225,5 +234,18 @@ class LoanProductManagerService(
         val businessUnit = productInvoke.getBusinessUnit(product.businessUnit.toLong())
         product.business = objectMapper.convertValue(businessUnit)
         return product
+    }
+
+
+    fun getInterestRate(productId: Long):List<LoanTermType>{
+        val interestFeature = loanProductService.getLoanProduct(productId)
+
+        val ratePlanId = interestFeature.interestFeature!!.ratePlanId
+
+        val interestRateList = interestRateService.findByRatePlanId(ratePlanId.toLong())
+
+        return interestRateList?.map {
+            it.period
+        }?: mutableListOf()
     }
 }
