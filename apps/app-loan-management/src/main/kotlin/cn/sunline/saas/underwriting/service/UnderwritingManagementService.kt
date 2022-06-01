@@ -44,9 +44,10 @@ class UnderwritingManagementService (private val underwritingManagementRepositor
 
     fun updateStatus(underwritingType: UnderwritingType, id:Long){
         val underwriting = getOne(id)?: throw UnderwritingNotFound("Invalid underwriting")
-        underwriting.status?.run {
+        if(underwriting.status != UnderwritingType.PENDING){
             throw UnderwritingStatusCannotBeUpdate("underwriting status cannot be update")
         }
+
         underwriting.status = underwritingType
         save(underwriting)
         underwritingPublish.updateCustomerOfferStatus(id,underwritingType)

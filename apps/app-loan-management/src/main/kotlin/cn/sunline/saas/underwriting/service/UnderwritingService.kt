@@ -6,6 +6,7 @@ import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.db.UnderwritingApplicationData
+import cn.sunline.saas.underwriting.db.UnderwritingType
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.repository.UnderwritingRepository
 import org.springframework.stereotype.Service
@@ -32,9 +33,10 @@ class UnderwritingService(
     fun initiate(underwritingApplicationData: UnderwritingApplicationData) {
         save(
             Underwriting(
-                underwritingApplicationData.applId,
-                underwritingApplicationData.detail.customerId,
-                underwritingApplicationData
+                id = underwritingApplicationData.applId,
+                customerId = underwritingApplicationData.detail.customerId,
+                applicationData = underwritingApplicationData,
+                status = UnderwritingType.PENDING
             )
         )
 
