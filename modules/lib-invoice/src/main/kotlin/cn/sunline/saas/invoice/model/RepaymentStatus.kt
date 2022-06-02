@@ -1,4 +1,4 @@
-package cn.sunline.saas.invoice.model.dto
+package cn.sunline.saas.invoice.model
 
 /**
  * @title: RepaymentStatus
@@ -7,5 +7,5 @@ package cn.sunline.saas.invoice.model.dto
  * @date 2022/5/23 16:36
  */
 enum class RepaymentStatus {
-    UNDO,CLEAR,OVERDUE,MINI_REPAY
+    UNDO,OPEN,CLEAR,OVERDUE
 }

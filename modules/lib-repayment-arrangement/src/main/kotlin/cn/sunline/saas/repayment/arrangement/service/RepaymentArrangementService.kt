@@ -1,7 +1,10 @@
 package cn.sunline.saas.repayment.arrangement.service
 
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.repayment.arrangement.exception.RepaymentArrangementNotFoundException
 import cn.sunline.saas.repayment.arrangement.factory.RepaymentArrangementFactory
+import cn.sunline.saas.repayment.arrangement.model.db.RepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentArrangement
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.repository.RepaymentArrangementRepository
@@ -23,5 +26,11 @@ class RepaymentArrangementService(private val repaymentArrangementRepos: Repayme
 
     fun registered(agreementId: Long, dtoRepaymentArrangementAdd: DTORepaymentArrangementAdd): RepaymentArrangement {
         return save(repaymentArrangementFactory.instance(agreementId, dtoRepaymentArrangementAdd))
+    }
+
+    fun listRepaymentAccounts(agreementId: Long): MutableList<RepaymentAccount> {
+        val repaymentArrangement = getOne(agreementId)
+            ?: throw RepaymentArrangementNotFoundException("repayment arrangement not found")
+        return repaymentArrangement.repaymentAccounts.filter { it.status == YesOrNo.Y }.toMutableList()
     }
 }

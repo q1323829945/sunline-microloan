@@ -12,6 +12,7 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.invoice.service.InvoiceService
@@ -19,6 +20,9 @@ import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
+import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
+import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
 import cn.sunline.saas.schedule.ScheduleService
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -58,6 +62,11 @@ class ConsumerLoanService(
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+    @Autowired
+    private lateinit var repaymentInstructionService: RepaymentInstructionService
+
+    @Autowired
+    private lateinit var repaymentArrangementService : RepaymentArrangementService
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -92,6 +101,7 @@ class ConsumerLoanService(
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
             loanProduct.interestFeature.interest.baseYearDays
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+
         invoiceService.initiateLoanInvoice(
             ConsumerLoanAssembly.convertToDTOLoanInvoice(
                 schedules,
@@ -181,4 +191,24 @@ class ConsumerLoanService(
         loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }
+
+    fun repayLoanInvoice(repayAmount: BigDecimal, currencyType: CurrencyType, invoiceId: Long, agreementId: Long) {
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        val repaymentAccounts = repaymentArrangementService.listRepaymentAccounts(agreementId)
+        val repaymentInstruction =
+            repaymentInstructionService.registered(
+                DTORepaymentInstruction(
+                    repayAmount,
+                    loanAgreement.currency,
+                    null,
+                    null,
+                    repaymentAccounts[0].repaymentAccount,
+                    agreementId,
+                    loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId
+                )
+            )
+    }
+
 }

@@ -2,7 +2,7 @@ package cn.sunline.saas.invoice.model.db
 
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
-import cn.sunline.saas.invoice.model.dto.RepaymentStatus
+import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal

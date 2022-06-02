@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service
 class LoanInvoiceJob(
     actorType: String = "LoanInvoiceJob", entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
+
+
+
     override fun doJob(actorId: String, jobId: String) {
         TODO("Not yet implemented")
     }

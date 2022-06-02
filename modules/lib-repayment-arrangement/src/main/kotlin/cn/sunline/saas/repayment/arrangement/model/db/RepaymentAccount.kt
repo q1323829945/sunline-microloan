@@ -1,10 +1,8 @@
 package cn.sunline.saas.repayment.arrangement.model.db
 
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 /**
@@ -29,7 +27,13 @@ class RepaymentAccount(
         length = 32,
         columnDefinition = "varchar(32) not null"
     )
-    val repaymentAccountBank: String
+    val repaymentAccountBank: String,
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var status : YesOrNo = YesOrNo.Y
+
 ) : MultiTenant {
 
     @NotNull
