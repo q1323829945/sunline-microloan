@@ -2,8 +2,6 @@ package cn.sunline.saas.schedule.controllders
 
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.repayment.schedule.component.CalcDateComponent
-import cn.sunline.saas.repayment.schedule.model.dto.DTORepaymentScheduleView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.schedule.Schedule
@@ -54,7 +52,7 @@ class RepaymentScheduleController {
                 installment = schedule.instalment,
                 principal = schedule.principal,
                 interest = schedule.interest,
-                repaymentDate = CalcDateComponent.formatInstantToView(schedule.dueDate)
+                repaymentDate = schedule.dueDate.toString()
             )
         }
         return DTORepaymentScheduleTrialView(

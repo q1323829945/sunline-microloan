@@ -112,7 +112,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             description = "test",
             loanProductType = LoanProductType.CONSUMER_LOAN,
             loanPurpose = "test",
-            businessUnit = "test",
+            businessUnit = "123",
             status = BankingProductStatus.INITIATED,
             amountConfiguration = amountConfiguration,
             termConfiguration = termConfiguration,

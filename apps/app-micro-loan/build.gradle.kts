@@ -25,7 +25,6 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-obs-api"))
-    implementation(project(":lib-repayment-schedule"))
     implementation(project(":lib-loan-agreement"))
     implementation(project(":lib-banking-transaction"))
     implementation(project(":lib-schedule"))

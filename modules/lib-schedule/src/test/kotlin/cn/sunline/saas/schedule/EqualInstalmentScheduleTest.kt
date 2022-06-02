@@ -23,7 +23,7 @@ class EqualInstalmentScheduleTest {
             RepaymentFrequency.ONE_MONTH, DateTime.now(),null).getSchedules()
 
 
-        Assertions.assertThat(actual[0].installment).isEqualTo(BigDecimal("336839.44"))
+        Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("5250.00"))
         Assertions.assertThat(actual[0].principal).isEqualTo(BigDecimal("331589.44"))
         Assertions.assertThat(actual[0].remainingPrincipal).isEqualTo(BigDecimal("668410.56"))

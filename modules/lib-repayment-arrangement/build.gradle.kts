@@ -8,7 +8,7 @@ dependencies {
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
-    implementation(project(":lib-money-transfer-instruction"))
+    api(project(":lib-money-transfer-instruction"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

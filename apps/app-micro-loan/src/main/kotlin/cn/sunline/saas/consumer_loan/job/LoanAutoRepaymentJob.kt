@@ -3,10 +3,9 @@ package cn.sunline.saas.consumer_loan.job
 import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
-import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.job.component.execute
@@ -60,7 +59,6 @@ class LoanAutoRepaymentJob(
             schedulerJobLogService.save(this)
         }
 
-
         val invoices = invoiceService.listInvoiceByAgreementId(actorId.toLong(), Pageable.unpaged()).toList()
         invoices.sortBy { it.invoicePeriodToDate }
 
@@ -71,7 +69,7 @@ class LoanAutoRepaymentJob(
             //TODO automatic disburse amount from repayment account
 
 
-            //consumerLoanService.repayLoanInvoice(repaymentAmount,requiredRepaymentInvoices,actorId.toLong())
+            consumerLoanService.repayLoanInvoice(repaymentAmount,requiredRepaymentInvoices,actorId.toLong())
         }
 
         schedulerJobLog?.run {

@@ -93,11 +93,6 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
         return repaymentAmount
     }
 
-    fun repayInvoiceById(amount: BigDecimal, invoiceId: Long, graceDays: Int, today: DateTime):MutableMap<InvoiceAmountType,BigDecimal> {
-        val invoice = getOne(invoiceId)
-        return repayInvoice(amount, invoice, graceDays, today)
-    }
-
     fun repayInvoice(amount: BigDecimal, invoice: Invoice?, graceDays: Int, today: DateTime):MutableMap<InvoiceAmountType,BigDecimal> {
         val repaymentItem = mutableMapOf<InvoiceAmountType,BigDecimal>()
         var balanceAmount = amount

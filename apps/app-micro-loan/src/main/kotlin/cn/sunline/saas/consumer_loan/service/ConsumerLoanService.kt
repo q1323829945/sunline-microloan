@@ -15,7 +15,9 @@ import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.component.InterestRateHelper
 import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
+import cn.sunline.saas.invoice.exception.InvoiceNotFoundException
 import cn.sunline.saas.invoice.model.InvoiceAmountType
+import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
@@ -197,7 +199,12 @@ class ConsumerLoanService(
         loanAgreementService.save(loanAgreement)
     }
 
-    fun repayLoanInvoice(repayAmount: BigDecimal, invoiceId: Long, agreementId: Long) {
+    fun repayLoanInvoiceById(repayAmount: BigDecimal, invoiceId: Long, agreementId: Long) {
+        val invoice = invoiceService.getOne(invoiceId) ?: throw InvoiceNotFoundException("invoice not found")
+        repayLoanInvoice(repayAmount, invoice, agreementId)
+    }
+
+    fun repayLoanInvoice(repayAmount: BigDecimal, invoice: Invoice, agreementId: Long) {
         val loanAgreement = loanAgreementService.getOne(agreementId)
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
@@ -217,9 +224,10 @@ class ConsumerLoanService(
         val invoiceArrangement = invoiceArrangementService.getOne(agreementId)
             ?: throw InvoiceArrangementNotFoundException("invoice arrangement not found")
 
-        val repayAmount = invoiceService.repayInvoiceById(repayAmount, invoiceId, invoiceArrangement.graceDays ?: 0, tenantDateTime.now())
-        repayAmount[InvoiceAmountType.PRINCIPAL]?.run {
-            if (this > BigDecimal.ZERO){
+        val actualRepayAmount =
+            invoiceService.repayInvoice(repayAmount, invoice, invoiceArrangement.graceDays ?: 0, tenantDateTime.now())
+        actualRepayAmount[InvoiceAmountType.PRINCIPAL]?.run {
+            if (this > BigDecimal.ZERO) {
                 consumerLoanPublish.reducePositionKeeping(
                     DTOBankingTransaction(
                         name = repaymentAccount.repaymentAccountBank,
@@ -237,7 +245,6 @@ class ConsumerLoanService(
             }
         }
         //consumerLoanPublish.financialAccounting(repaymentInstruction)
-
     }
 
 }
