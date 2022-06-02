@@ -3,7 +3,6 @@ package cn.sunline.saas.consumer_loan.service
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundException
-import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
@@ -12,10 +11,13 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.global.constant.AgreementStatus
-import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
+import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.service.InvoiceService
+import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
@@ -66,7 +68,10 @@ class ConsumerLoanService(
     private lateinit var repaymentInstructionService: RepaymentInstructionService
 
     @Autowired
-    private lateinit var repaymentArrangementService : RepaymentArrangementService
+    private lateinit var repaymentArrangementService: RepaymentArrangementService
+
+    @Autowired
+    private lateinit var invoiceArrangementService: InvoiceArrangementService
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -192,11 +197,11 @@ class ConsumerLoanService(
         loanAgreementService.save(loanAgreement)
     }
 
-    fun repayLoanInvoice(repayAmount: BigDecimal, currencyType: CurrencyType, invoiceId: Long, agreementId: Long) {
+    fun repayLoanInvoice(repayAmount: BigDecimal, invoiceId: Long, agreementId: Long) {
         val loanAgreement = loanAgreementService.getOne(agreementId)
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
-        val repaymentAccounts = repaymentArrangementService.listRepaymentAccounts(agreementId)
+        val repaymentAccount = repaymentArrangementService.listRepaymentAccounts(agreementId)[0]
         val repaymentInstruction =
             repaymentInstructionService.registered(
                 DTORepaymentInstruction(
@@ -204,11 +209,35 @@ class ConsumerLoanService(
                     loanAgreement.currency,
                     null,
                     null,
-                    repaymentAccounts[0].repaymentAccount,
+                    repaymentAccount.repaymentAccount,
                     agreementId,
                     loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId
                 )
             )
+        val invoiceArrangement = invoiceArrangementService.getOne(agreementId)
+            ?: throw InvoiceArrangementNotFoundException("invoice arrangement not found")
+
+        val repayAmount = invoiceService.repayInvoiceById(repayAmount, invoiceId, invoiceArrangement.graceDays ?: 0, tenantDateTime.now())
+        repayAmount[InvoiceAmountType.PRINCIPAL]?.run {
+            if (this > BigDecimal.ZERO){
+                consumerLoanPublish.reducePositionKeeping(
+                    DTOBankingTransaction(
+                        name = repaymentAccount.repaymentAccountBank,
+                        agreementId = agreementId,
+                        instructionId = repaymentInstruction.id,
+                        transactionDescription = null,
+                        currency = loanAgreement.currency,
+                        amount = this,
+                        businessUnit = repaymentInstruction.businessUnit,
+                        appliedFee = null,
+                        appliedRate = null,
+                        customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
+                    )
+                )
+            }
+        }
+        //consumerLoanPublish.financialAccounting(repaymentInstruction)
+
     }
 
 }

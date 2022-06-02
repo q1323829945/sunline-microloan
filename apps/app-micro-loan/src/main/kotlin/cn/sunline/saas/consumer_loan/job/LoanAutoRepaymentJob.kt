@@ -1,5 +1,6 @@
 package cn.sunline.saas.consumer_loan.job
 
+import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
@@ -40,7 +41,7 @@ class LoanAutoRepaymentJob(
     private lateinit var schedulerJobLogService: SchedulerJobLogService
 
     @Autowired
-    private lateinit var invoiceArrangementService: InvoiceArrangementService
+    private lateinit var consumerLoanService: ConsumerLoanService
 
     fun prerequisites(invoices: List<Invoice>): Boolean {
         return filterAutoRepaymentInvoices(invoices).isNotEmpty()
@@ -70,7 +71,7 @@ class LoanAutoRepaymentJob(
             //TODO automatic disburse amount from repayment account
 
 
-            //invoiceService.repayInvoice(repaymentAmount,requiredRepaymentInvoices)
+            //consumerLoanService.repayLoanInvoice(repaymentAmount,requiredRepaymentInvoices,actorId.toLong())
         }
 
         schedulerJobLog?.run {

@@ -1,6 +1,7 @@
 package cn.sunline.saas.invoice.service
 
 import cn.sunline.saas.invoice.factory.InvoiceFactory
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
@@ -92,12 +93,13 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
         return repaymentAmount
     }
 
-    fun repayInvoiceById(amount: BigDecimal, invoiceId: Long, graceDays: Int, today: DateTime) {
+    fun repayInvoiceById(amount: BigDecimal, invoiceId: Long, graceDays: Int, today: DateTime):MutableMap<InvoiceAmountType,BigDecimal> {
         val invoice = getOne(invoiceId)
         return repayInvoice(amount, invoice, graceDays, today)
     }
 
-    fun repayInvoice(amount: BigDecimal, invoice: Invoice?, graceDays: Int, today: DateTime) {
+    fun repayInvoice(amount: BigDecimal, invoice: Invoice?, graceDays: Int, today: DateTime):MutableMap<InvoiceAmountType,BigDecimal> {
+        val repaymentItem = mutableMapOf<InvoiceAmountType,BigDecimal>()
         var balanceAmount = amount
         if (invoice != null) {
             invoice.invoiceLines.sortBy { it.invoiceAmountType.order }
@@ -108,16 +110,21 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
                     it.repaymentAmount = it.invoiceAmount
                     balanceAmount = balanceAmount.subtract(repaymentAmount)
                     it.repaymentStatus = RepaymentStatus.CLEAR
+
+                    repaymentItem[it.invoiceAmountType] = repaymentAmount
                 } else {
                     it.repaymentAmount = it.repaymentAmount.add(balanceAmount)
                     balanceAmount = BigDecimal.ZERO
                     it.repaymentStatus = RepaymentStatus.OPEN
+
+                    repaymentItem[it.invoiceAmountType] = balanceAmount
                 }
             }
             invoice.repaymentAmount = invoice.repaymentAmount.add(amount)
 
             if (invoice.invoiceLines.none { it.repaymentStatus != RepaymentStatus.CLEAR }) {
                 invoice.repaymentStatus = RepaymentStatus.CLEAR
+                invoice.invoiceStatus = InvoiceStatus.FINISHED
             } else {
                 if (determineOverdueStatus(
                         tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate), graceDays, today
@@ -129,12 +136,9 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
                 }
             }
 
-            if (invoice.repaymentStatus == RepaymentStatus.CLEAR) {
-                invoice.invoiceStatus = InvoiceStatus.FINISHED
-            }
-
             save(invoice)
         }
+        return repaymentItem
     }
 
     fun determineOverdueStatus(repaymentDate: DateTime, graceDays: Int, now: DateTime): Boolean {
