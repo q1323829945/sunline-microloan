@@ -44,14 +44,14 @@ class RepaymentScheduleController {
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
 
         val interestRate = dtoSchedule.first().interestRate
-        var installment = dtoSchedule.first().installment
+        var installment = dtoSchedule.first().instalment
         for (schedule in dtoSchedule) {
-            if(installment != schedule.installment){
+            if(installment != schedule.instalment){
                 installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
                 period = schedule.period,
-                installment = schedule.installment,
+                installment = schedule.instalment,
                 principal = schedule.principal,
                 interest = schedule.interest,
                 repaymentDate = CalcDateComponent.formatInstantToView(schedule.dueDate)

@@ -13,7 +13,8 @@ data class Schedule(
 
     val fromDate: DateTime,
     val dueDate: DateTime,
-    val instalment: BigDecimal,    val principal: BigDecimal,
+    val instalment: BigDecimal,
+    val principal: BigDecimal,
     val interest: BigDecimal,
     val remainingPrincipal: BigDecimal,
     val period: Int,
