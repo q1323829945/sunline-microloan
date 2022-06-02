@@ -13,7 +13,7 @@ data class DTORepaymentInstruction(
     val moneyTransferInstructionAmount: BigDecimal,
     val moneyTransferInstructionCurrency: CurrencyType,
     val moneyTransferInstructionPurpose: String?,
-    val payeeAccount: String,
+    val payeeAccount: String?,
     val payerAccount: String,
     val agreementId: Long,
     val businessUnit: Long

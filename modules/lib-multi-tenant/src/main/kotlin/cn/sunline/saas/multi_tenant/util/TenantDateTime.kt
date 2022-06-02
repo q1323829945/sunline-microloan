@@ -10,6 +10,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Interval
 import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -35,12 +36,8 @@ class TenantDateTime(private val tenantService: TenantService) {
     }
 
     fun getYearMonthDay(dt: DateTime): String {
-        val year = dt.year().toString()
-        val month = dt.monthOfYear().toString()
-        val day = dt.dayOfMonth().toString()
-        return year + month + day
+        return dt.toString(DateTimeFormat.forPattern("yyyyMMdd"))
     }
-
     fun betweenTimes(end: DateTime, start: DateTime = now()): Period {
         return Interval(start,end).toPeriod()
     }

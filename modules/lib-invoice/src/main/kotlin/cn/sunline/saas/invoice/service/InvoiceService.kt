@@ -1,16 +1,21 @@
 package cn.sunline.saas.invoice.service
 
 import cn.sunline.saas.invoice.factory.InvoiceFactory
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
+import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.invoice.repository.InvoiceRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
+import java.math.BigDecimal
 import javax.persistence.criteria.Expression
 import javax.persistence.criteria.Root
 
@@ -26,6 +31,9 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
 
     @Autowired
     private lateinit var invoiceFactory: InvoiceFactory
+
+    @Autowired
+    private lateinit var tenantDateTime: TenantDateTime
 
     fun initiateLoanInvoice(dtoLoanInvoice: DTOLoanInvoice): Invoice {
         invoiceFactory.getLoanInvoiceInstance(dtoLoanInvoice)
@@ -70,6 +78,66 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
             }
 
         return getPageWithTenant(agreementIdSpecification, pageable)
+    }
+
+    fun calculateRepaymentAmountById(invoiceId: Long): BigDecimal {
+        val invoice = getOne(invoiceId)
+        return calculateRepaymentAmount(invoice)
+    }
+
+    fun calculateRepaymentAmount(invoice: Invoice?): BigDecimal {
+        var repaymentAmount = BigDecimal.ZERO
+        invoice?.invoiceLines?.forEach {
+            repaymentAmount.add(it.invoiceAmount.subtract(it.repaymentAmount))
+        }
+        return repaymentAmount
+    }
+
+    fun repayInvoice(amount: BigDecimal, invoice: Invoice?, graceDays: Int, today: DateTime):MutableMap<InvoiceAmountType,BigDecimal> {
+        val repaymentItem = mutableMapOf<InvoiceAmountType,BigDecimal>()
+        var balanceAmount = amount
+        if (invoice != null) {
+            invoice.invoiceLines.sortBy { it.invoiceAmountType.order }
+            invoice.invoiceLines.forEach {
+                val repaymentAmount = it.invoiceAmount.subtract(it.repaymentAmount)
+
+                if (balanceAmount.subtract(repaymentAmount) >= BigDecimal.ZERO) {
+                    it.repaymentAmount = it.invoiceAmount
+                    balanceAmount = balanceAmount.subtract(repaymentAmount)
+                    it.repaymentStatus = RepaymentStatus.CLEAR
+
+                    repaymentItem[it.invoiceAmountType] = repaymentAmount
+                } else {
+                    it.repaymentAmount = it.repaymentAmount.add(balanceAmount)
+                    balanceAmount = BigDecimal.ZERO
+                    it.repaymentStatus = RepaymentStatus.OPEN
+
+                    repaymentItem[it.invoiceAmountType] = balanceAmount
+                }
+            }
+            invoice.repaymentAmount = invoice.repaymentAmount.add(amount)
+
+            if (invoice.invoiceLines.none { it.repaymentStatus != RepaymentStatus.CLEAR }) {
+                invoice.repaymentStatus = RepaymentStatus.CLEAR
+                invoice.invoiceStatus = InvoiceStatus.FINISHED
+            } else {
+                if (determineOverdueStatus(
+                        tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate), graceDays, today
+                    )
+                ) {
+                    invoice.repaymentStatus = RepaymentStatus.OVERDUE
+                } else {
+                    invoice.repaymentStatus = RepaymentStatus.OPEN
+                }
+            }
+
+            save(invoice)
+        }
+        return repaymentItem
+    }
+
+    fun determineOverdueStatus(repaymentDate: DateTime, graceDays: Int, now: DateTime): Boolean {
+        return tenantDateTime.getYearMonthDay(repaymentDate.plusDays(graceDays)) < tenantDateTime.getYearMonthDay(now)
     }
 
 }

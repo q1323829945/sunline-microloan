@@ -20,7 +20,7 @@ class OneOffRepaymentScheduleTest {
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.ONE_YEAR,
             RepaymentFrequency.ONE_MONTH, DateTime.now(),null, BaseYearDays.ACCOUNT_YEAR).getSchedules()
 
-        Assertions.assertThat(actual[0].installment).isEqualTo(BigDecimal("1063875.00"))
+        Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("1063875.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("63875.00"))
         Assertions.assertThat(actual[0].principal).isEqualTo(BigDecimal("1000000.00"))
         Assertions.assertThat(actual[0].remainingPrincipal).isEqualTo(BigDecimal("0.00"))

@@ -2,11 +2,11 @@ package cn.sunline.saas.invoice.model.db
 
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
-import cn.sunline.saas.invoice.model.dto.RepaymentStatus
+import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
-import java.util.Date
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -49,6 +49,7 @@ class Invoice(
     @NotNull
     @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     var invoiceAmount: BigDecimal,
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "invoice_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")

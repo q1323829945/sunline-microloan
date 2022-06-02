@@ -24,11 +24,11 @@ class ScheduleService(
     private val interestRateYear: BigDecimal,
     private val term: LoanTermType,
     private val frequency: RepaymentFrequency,
-
     private val fromDateTime: DateTime,
     private val toDateTime: DateTime?,
     private val baseYearDays: BaseYearDays,
-    ) {    fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
+) {
+    fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
         val scheduleMethod = when (paymentMethodType) {
             EQUAL_INSTALLMENT -> EqualInstalmentSchedule(
                 amount,

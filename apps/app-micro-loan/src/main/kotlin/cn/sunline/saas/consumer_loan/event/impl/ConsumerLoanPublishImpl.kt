@@ -20,6 +20,14 @@ class ConsumerLoanPublishImpl: ConsumerLoanPublish {
         )
     }
 
+    override fun reducePositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
+        PubSubService.publish(
+            PUBSUB_NAME,
+            ConsumerLoanPublishTopic.REDUCE_POSITION_KEEPING.toString(),
+            dtoBankingTransaction
+        )
+    }
+
     override fun financialAccounting(dtoBankingTransaction: DTODisbursementInstruction) {
     }
 

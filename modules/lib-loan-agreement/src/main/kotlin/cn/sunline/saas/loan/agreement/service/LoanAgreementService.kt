@@ -5,10 +5,10 @@ import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.interest.arrangement.exception.InterestArrangementNotFoundException
 import cn.sunline.saas.interest.arrangement.service.InterestArrangementService
-import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
+import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
@@ -64,7 +64,10 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
             disbursementArrangementService.registered(loanAgreement.id, this)
         }
 
-        val invoiceArrangement = invoiceArrangementService.registerInvoiceArrangement(loanAgreement.id,dtoLoanAgreementAdd.invoiceArrangement)
+        val invoiceArrangement = invoiceArrangementService.registerInvoiceArrangement(
+            loanAgreement.id,
+            dtoLoanAgreementAdd.invoiceArrangement
+        )
 
         return DTOLoanAgreementView(
             loanAgreement,
@@ -108,14 +111,17 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
         val invoiceArrangement = invoiceArrangementService.getOne(loanAgreementId)
 
         return DTOLoanAgreementView(
-            loanAgreement?:throw LoanAgreementNotFoundException("loan agreement not found"),
-            interestArrangement?:throw InterestArrangementNotFoundException("interest arrangement not found"),
-            repaymentArrangement?:throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
+            loanAgreement ?: throw LoanAgreementNotFoundException("loan agreement not found"),
+            interestArrangement ?: throw InterestArrangementNotFoundException("interest arrangement not found"),
+            repaymentArrangement ?: throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
             feeArrangement,
             disbursementArrangement,
             invoiceArrangement?:throw InvoiceArrangementNotFoundException("invoice arrangement not found")
         )
     }
-    fun findByApplicationId(id:Long): LoanAgreement?{
+
+    fun findByApplicationId(id: Long): LoanAgreement? {
         return loanAgreementRepo.findByApplicationId(id)
-    }}
+    }
+}
+

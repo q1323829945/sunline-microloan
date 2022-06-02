@@ -1,7 +1,3 @@
-
-
-
-
 package cn.sunline.saas.consumer_loan.job
 
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
@@ -20,8 +16,12 @@ import org.springframework.stereotype.Service
 class LoanInvoiceJob(
     actorType: String = "LoanInvoiceJob", entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
+
+
+
     override fun doJob(actorId: String, jobId: String) {
-        TODO("Not yet implemented")    }
+        TODO("Not yet implemented")
+    }
 
     fun prerequisites(invoices: List<Invoice>): Boolean {
         invoices.filter {

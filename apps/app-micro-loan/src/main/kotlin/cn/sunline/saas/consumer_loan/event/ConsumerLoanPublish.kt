@@ -13,6 +13,8 @@ interface ConsumerLoanPublish {
 
     fun initiatePositionKeeping(dtoBankingTransaction: DTOBankingTransaction)
 
+    fun reducePositionKeeping(dtoBankingTransaction: DTOBankingTransaction)
+
     fun financialAccounting(dtoBankingTransaction: DTODisbursementInstruction)
 
     fun disbursement(dtoBankingTransaction: DTODisbursementInstruction)

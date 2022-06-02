@@ -3,7 +3,6 @@ package cn.sunline.saas.consumer_loan.service
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundException
-import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
@@ -14,11 +13,20 @@ import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionS
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
+import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
+import cn.sunline.saas.invoice.exception.InvoiceNotFoundException
+import cn.sunline.saas.invoice.model.InvoiceAmountType
+import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.service.InvoiceService
+import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
+import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
+import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
 import cn.sunline.saas.schedule.ScheduleService
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -58,6 +66,14 @@ class ConsumerLoanService(
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+    @Autowired
+    private lateinit var repaymentInstructionService: RepaymentInstructionService
+
+    @Autowired
+    private lateinit var repaymentArrangementService: RepaymentArrangementService
+
+    @Autowired
+    private lateinit var invoiceArrangementService: InvoiceArrangementService
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -66,7 +82,10 @@ class ConsumerLoanService(
             ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
                 customerOffer,
                 loanProduct,
-                InterestRateHelper.getRate(customerOffer.term, consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id))?.toPlainString()
+                InterestRateHelper.getRate(
+                    customerOffer.term,
+                    consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id)
+                )?.toPlainString()
             )
         )
 
@@ -85,11 +104,17 @@ class ConsumerLoanService(
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
-
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
-            loanProduct.interestFeature.interest.baseYearDays        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-        invoiceService.initiateLoanInvoice(ConsumerLoanAssembly.convertToDTOLoanInvoice(schedules,loanAgreementAggregate))
+            loanProduct.interestFeature.interest.baseYearDays
+        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+
+        invoiceService.initiateLoanInvoice(
+            ConsumerLoanAssembly.convertToDTOLoanInvoice(
+                schedules,
+                loanAgreementAggregate
+            )
+        )
 
         val loanAgreement = loanAgreementService.archiveAgreement(loanAgreementAggregate.loanAgreement)
         signAndLending(loanAgreement)
@@ -131,18 +156,20 @@ class ConsumerLoanService(
 
         val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
 
-        consumerLoanPublish.initiatePositionKeeping(DTOBankingTransaction(
-            name = disbursementArrangement.disbursementAccountBank,
-            agreementId = disbursementInstruction.agreementId,
-            instructionId = disbursementInstruction.id,
-            transactionDescription = null,
-            currency = loanAgreement.currency,
-            amount = loanAgreement.amount,
-            businessUnit = disbursementInstruction.businessUnit,
-            appliedFee = null,
-            appliedRate = null,
-            customerId = loanAgreement.involvements.first{ it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
-        ))
+        consumerLoanPublish.initiatePositionKeeping(
+            DTOBankingTransaction(
+                name = disbursementArrangement.disbursementAccountBank,
+                agreementId = disbursementInstruction.agreementId,
+                instructionId = disbursementInstruction.id,
+                transactionDescription = null,
+                currency = loanAgreement.currency,
+                amount = loanAgreement.amount,
+                businessUnit = disbursementInstruction.businessUnit,
+                appliedFee = null,
+                appliedRate = null,
+                customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
+            )
+        )
         consumerLoanPublish.financialAccounting(disbursementInstruction)
     }
 
@@ -160,14 +187,64 @@ class ConsumerLoanService(
         loanAgreementService.save(loanAgreement)
     }
 
-    fun getLoanAgreementByApplicationId(applicationId:Long):DTOLoanAgreementView?{
+    fun getLoanAgreementByApplicationId(applicationId: Long): DTOLoanAgreementView? {
         val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
         return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 
-    fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){
-        val  loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+    fun updateLoanAgreementStatus(applicationId: Long, status: AgreementStatus) {
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
         loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }
+
+    fun repayLoanInvoiceById(repayAmount: BigDecimal, invoiceId: Long, agreementId: Long) {
+        val invoice = invoiceService.getOne(invoiceId) ?: throw InvoiceNotFoundException("invoice not found")
+        repayLoanInvoice(repayAmount, invoice, agreementId)
+    }
+
+    fun repayLoanInvoice(repayAmount: BigDecimal, invoice: Invoice, agreementId: Long) {
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        val repaymentAccount = repaymentArrangementService.listRepaymentAccounts(agreementId)[0]
+        val repaymentInstruction =
+            repaymentInstructionService.registered(
+                DTORepaymentInstruction(
+                    repayAmount,
+                    loanAgreement.currency,
+                    null,
+                    null,
+                    repaymentAccount.repaymentAccount,
+                    agreementId,
+                    loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId
+                )
+            )
+        val invoiceArrangement = invoiceArrangementService.getOne(agreementId)
+            ?: throw InvoiceArrangementNotFoundException("invoice arrangement not found")
+
+        val actualRepayAmount =
+            invoiceService.repayInvoice(repayAmount, invoice, invoiceArrangement.graceDays ?: 0, tenantDateTime.now())
+        actualRepayAmount[InvoiceAmountType.PRINCIPAL]?.run {
+            if (this > BigDecimal.ZERO) {
+                consumerLoanPublish.reducePositionKeeping(
+                    DTOBankingTransaction(
+                        name = repaymentAccount.repaymentAccountBank,
+                        agreementId = agreementId,
+                        instructionId = repaymentInstruction.id,
+                        transactionDescription = null,
+                        currency = loanAgreement.currency,
+                        amount = this,
+                        businessUnit = repaymentInstruction.businessUnit,
+                        appliedFee = null,
+                        appliedRate = null,
+                        customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
+                    )
+                )
+            }
+        }
+        //consumerLoanPublish.financialAccounting(repaymentInstruction)
+    }
+
 }

@@ -99,9 +99,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.loanProductType,
             loanProductData.loanPurpose,
             loanProductData.businessUnit.toLong(),
-
             loanUploadConfigureList,
-            documentTemplateList        )
+            documentTemplateList)
 
         loanProductData.amountConfiguration.apply {
             loanProductAdd.configurationOptions.add(
@@ -296,7 +295,6 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         oldLoanProduct.documentTemplateFeatures = documentTemplateList
 
         oldLoanProduct.businessUnit = loanProductData.businessUnit.toLong()
-
 
         //update loan product
         loanProductData.amountConfiguration.apply {

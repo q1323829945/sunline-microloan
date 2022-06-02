@@ -7,7 +7,7 @@ import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
-import cn.sunline.saas.invoice.model.dto.RepaymentStatus
+import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
@@ -113,25 +113,18 @@ class InvoiceAccountJob(
     }
 
     private fun handleLastInvoice(invoice: Invoice, agreementId: Long, invoiceDateTime: DateTime): Invoice? {
-        if (invoice.invoiceStatus == InvoiceStatus.ACCOUNTED) {
+        return if (invoice.invoiceStatus == InvoiceStatus.ACCOUNTED) {
             when (invoice.repaymentStatus) {
                 RepaymentStatus.OVERDUE -> {
                     handleOverDue(agreementId, invoice, invoiceDateTime)
-                }
-                RepaymentStatus.MINI_REPAY -> {
-                    invoice.invoiceLines.forEach {
-                        if (it.invoiceAmount != it.repaymentAmount) {
-                            outstandingAmount(it.invoiceAmountType, it.invoiceAmount.subtract(it.repaymentAmount))
-                        }
-                    }
                 }
                 else -> {}
             }
             invoice.invoiceStatus = InvoiceStatus.FINISHED
 
-            return invoice
+            invoice
         } else {
-            return null
+            null
         }
 
     }

@@ -64,4 +64,12 @@ class TenantDateTimeTest(@Autowired val tenantDateTime: TenantDateTime) {
         Assertions.assertThat(actual2.days * 24 + actual2.hours).isEqualTo(24)
 
     }
+
+    @Test
+    fun `test getYearMonthDay`(){
+        val dt1 = DateTime(2022, 5, 25, 23, 30, 40, 123, DateTimeZone.UTC)
+        val actual1 = tenantDateTime.getYearMonthDay(dt1)
+
+        Assertions.assertThat(actual1).isEqualTo("20220525")
+    }
 }
