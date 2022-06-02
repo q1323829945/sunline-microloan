@@ -1,3 +1,4 @@
+
 val jacksonVersion: String by rootProject.extra
 val jodaVersion: String by rootProject.extra
 
