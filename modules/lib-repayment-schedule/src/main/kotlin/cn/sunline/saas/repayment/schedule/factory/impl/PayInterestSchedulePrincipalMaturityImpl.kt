@@ -71,11 +71,9 @@ class PayInterestSchedulePrincipalMaturityImpl : BaseRepaymentScheduleService {
             interest = CalculateInterest(amount, CalculateInterestRate(interestRate)).getDaysInterest(
 
                 currentRepaymentDateTime,
-                nextRepaymentDateTime, baseYearDays
-            )
-                currentRepaymentDateTime,
                 nextRepaymentDateTime,
-                baseYearDays            )
+                baseYearDays
+            )
 
             // 计划明细
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailView(

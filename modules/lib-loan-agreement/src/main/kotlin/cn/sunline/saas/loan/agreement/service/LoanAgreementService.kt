@@ -9,7 +9,7 @@ import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
-import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactoryimport cn.sunline.saas.loan.agreement.model.db.LoanAgreement
+import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
 import cn.sunline.saas.loan.agreement.repository.LoanAgreementRepository

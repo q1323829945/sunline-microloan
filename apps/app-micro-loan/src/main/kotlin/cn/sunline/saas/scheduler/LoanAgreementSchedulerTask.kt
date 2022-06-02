@@ -36,9 +36,7 @@ enum class LoanSchedulerJobOrder(val order: Int) {
 @Component
 class LoanAgreementSchedulerTask(
     actorType: String = "LoanAgreementSchedulerTask", entityConfig: EntityConfig? = null
-) : AbstractActor(actorType, entityConfig) {    // timer job's interval time,the unit is minute
-    private val interval: Int = 2
-
+) : AbstractActor(actorType, entityConfig) {
     // timer job's interval time,the unit is minute
     private val interval: Int = 2
 

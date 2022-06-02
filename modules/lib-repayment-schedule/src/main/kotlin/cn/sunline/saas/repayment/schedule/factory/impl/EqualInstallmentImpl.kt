@@ -22,7 +22,8 @@ import java.math.BigDecimal
 @Service
 class EqualInstallmentImpl : BaseRepaymentScheduleService {
 
-        val term = dtoRepaymentScheduleCalculateTrial.term    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial): DTORepaymentScheduleTrialView {
+    override fun calRepaymentSchedule(dtoRepaymentScheduleCalculateTrial: DTORepaymentScheduleCalculateTrial):DTORepaymentScheduleView {
+
         val paymentMethod = dtoRepaymentScheduleCalculateTrial.paymentMethod
         val amount = dtoRepaymentScheduleCalculateTrial.amount
         val interestRate = dtoRepaymentScheduleCalculateTrial.interestRate
@@ -183,10 +184,10 @@ class EqualInstallmentImpl : BaseRepaymentScheduleService {
                 // 首期或未期不足月先按日计算利息
                 if (nextRepaymentDateTime.compareTo(currentRepaymentDateTime.plusMonths(1 * repaymentFrequency.term.toMonthUnit().num)) != 0) {
                     interest = CalculateInterest(remainLoanAmount, CalculateInterestRate(interestRate)).getDaysInterest(
-                            currentRepaymentDateTime,
-                            nextRepaymentDateTime,
-                            baseYearDays
-                        )
+                        currentRepaymentDateTime,
+                        nextRepaymentDateTime,
+                        baseYearDays
+                    )
                     principal = repaymentInstallment.subtract(interest)
                     if (remainLoanAmount.subtract(principal) < BigDecimal.ZERO) {
                         principal = principal.add(remainLoanAmount.subtract(principal))
