@@ -1,5 +1,5 @@
 package cn.sunline.saas.rpc.pubsub
 
 enum class LoanAgreementPublishTopic {
-    UPDATE_LOAN_AGREEMENT_STATUS
+    LOAN_AGREEMENT_SIGNED,LOAN_AGREEMENT_PAID,
 }

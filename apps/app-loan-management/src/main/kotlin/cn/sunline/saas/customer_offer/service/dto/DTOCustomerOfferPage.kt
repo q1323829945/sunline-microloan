@@ -1,9 +1,9 @@
 package cn.sunline.saas.customer_offer.service.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.customer_offer.service.model.UnderwritingType
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.global.model.CurrencyType
 
 data class DTOCustomerOfferPage(

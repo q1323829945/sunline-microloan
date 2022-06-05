@@ -1,7 +1,6 @@
 package cn.sunline.saas.underwriting.event
 
 import cn.sunline.saas.underwriting.db.Underwriting
-import cn.sunline.saas.underwriting.db.UnderwritingType
 
 /**
  * @title: UnderwritingPublish
@@ -19,7 +18,9 @@ interface UnderwritingPublish {
 
     fun execFraudEvaluation(partner: String, underwriting: Underwriting)
 
-    fun updateCustomerOfferStatus(applicationId: Long, underwritingType: UnderwritingType)
+    fun initiateLoanAgreement(applicationId:Long)
 
-    fun initiateLoanAgreement(applicationId:String)
+    fun customerOfferApproval(applicationId: Long)
+
+    fun customerOfferRejected(applicationId: Long)
 }

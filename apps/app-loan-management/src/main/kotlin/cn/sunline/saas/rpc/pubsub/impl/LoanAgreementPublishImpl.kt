@@ -10,11 +10,21 @@ import org.springframework.stereotype.Component
 
 @Component
 class LoanAgreementPublishImpl:LoanAgreementPublish {
-    override fun updateLoanAgreementStatus(dtoLoanAgreement: DTOLoanAgreement) {
+
+    override fun loanAgreementPaid(applicationId: Long) {
         PubSubService.publish(
             pubSubName = "underwriting-pub-sub",
-            topic = LoanAgreementPublishTopic.UPDATE_LOAN_AGREEMENT_STATUS.toString(),
-            payload = dtoLoanAgreement,
+            topic = LoanAgreementPublishTopic.LOAN_AGREEMENT_PAID.toString(),
+            payload = applicationId,
+            tenant = ContextUtil.getTenant()
+        )
+    }
+
+    override fun loanAgreementSigned(applicationId: Long) {
+        PubSubService.publish(
+            pubSubName = "underwriting-pub-sub",
+            topic = LoanAgreementPublishTopic.LOAN_AGREEMENT_SIGNED.toString(),
+            payload = applicationId,
             tenant = ContextUtil.getTenant()
         )
     }

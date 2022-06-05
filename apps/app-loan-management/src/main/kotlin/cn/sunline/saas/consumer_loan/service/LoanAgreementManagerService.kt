@@ -4,7 +4,6 @@ import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.pubsub.LoanAgreementPublish
-import cn.sunline.saas.rpc.pubsub.dto.DTOLoanAgreement
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.data.domain.Page
@@ -52,9 +51,11 @@ class LoanAgreementManagerService(
 //        }
     }
 
-    fun paid(applicationId:String,status:AgreementStatus){
-        loanAgreementPublish.updateLoanAgreementStatus(DTOLoanAgreement(
-            applicationId,status
-        ))
+    fun paid(applicationId:String){
+        loanAgreementPublish.loanAgreementPaid(applicationId.toLong())
+    }
+
+    fun signed(applicationId:String){
+        loanAgreementPublish.loanAgreementPaid(applicationId.toLong())
     }
 }

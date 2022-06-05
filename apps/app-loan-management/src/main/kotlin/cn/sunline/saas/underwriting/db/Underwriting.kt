@@ -1,5 +1,6 @@
 package cn.sunline.saas.underwriting.db
 
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.annotations.CreationTimestamp
@@ -49,7 +50,7 @@ class Underwriting(
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", length = 32, columnDefinition = "varchar(32) null")
-    var status:UnderwritingType? = null,
+    var status: UnderwritingType? = null,
 
     @CreationTimestamp
     var created: Date? = null,

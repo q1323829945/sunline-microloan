@@ -1,6 +1,6 @@
 package cn.sunline.saas.underwriting.controllers.dto
 
-import cn.sunline.saas.underwriting.db.UnderwritingType
+import cn.sunline.saas.global.constant.UnderwritingType
 
 
 data class DTOUnderwriting (
@@ -11,6 +11,6 @@ data class DTOUnderwriting (
     var creditRisk: String? = null,
     var fraudEvaluation: String? = null,
     var regulatoryCompliance: String? = null,
-    val status:UnderwritingType?
+    val status: UnderwritingType?
 )
 

@@ -1,22 +1,20 @@
 package cn.sunline.saas.customer_offer.service
 
+import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.ApplyStatus.*
-import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferData
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer_offer.service.model.UnderwritingType
-import cn.sunline.saas.customer_offer.service.model.UnderwritingType.*
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
+import cn.sunline.saas.global.constant.UnderwritingType
+import cn.sunline.saas.global.constant.UnderwritingType.*
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
-import cn.sunline.saas.rpc.pubsub.LoanAgreementPublish
-import cn.sunline.saas.rpc.pubsub.dto.DTOLoanAgreement
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -56,7 +54,7 @@ class AppCustomerOfferService(
             val underwriting = if(it.status != RECORD) customerOfferInvoke.getUnderwriting(it.id!!) else null
 
             val loanAgreement = underwriting?.status?.run {
-                if(UnderwritingType.valueOf(underwriting.status) == PASS){
+                if(UnderwritingType.valueOf(underwriting.status) == APPROVAL){
                     customerOfferInvoke.getLoanAgreement(it.id!!)
                 }else {
                     null
@@ -80,24 +78,30 @@ class AppCustomerOfferService(
         return page
     }
 
-    fun updateStatus(operationType: UnderwritingType, id: Long){
+    fun approval(id: Long){
+        updateStatus(id,APPROVALED)
+
+    }
+
+    fun rejected(id:Long){
+        updateStatus(id, ApplyStatus.REJECTED)
+    }
+
+    private fun updateStatus(id:Long,status: ApplyStatus){
         val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
-        when(operationType){
-            PASS -> {
-                when(customerOffer.status){
-                    SUBMIT -> customerOffer.status = APPROVALED
-                    APPROVALED -> customerOffer.status = LOAN
-                    LOAN -> customerOffer.status = FINISH
-                    else -> throw CustomerOfferStatusException("status can not be update")
-                }
-            }
-            REJECT -> when(customerOffer.status){
-                SUBMIT -> customerOffer.status = REJECTED
-                else -> throw CustomerOfferStatusException("status can not be update")
-            }
-        }
+
+        checkStatus(customerOffer.status,status)
+
+        customerOffer.status = status
 
         customerOfferService.save(customerOffer)
+    }
+
+    private fun checkStatus(oldStatus:ApplyStatus,newStatus:ApplyStatus){
+        when(oldStatus){
+            SUBMIT -> if(newStatus != APPROVALED && newStatus != ApplyStatus.REJECTED) throw CustomerOfferStatusException("status can not be update")
+            else -> throw CustomerOfferStatusException("status can not be update")
+        }
     }
 
     fun getDetail(id: Long): DTOManagementCustomerOfferView {

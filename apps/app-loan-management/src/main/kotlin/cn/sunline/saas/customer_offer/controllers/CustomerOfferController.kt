@@ -1,9 +1,9 @@
 package cn.sunline.saas.customer_offer.controllers
 
-import cn.sunline.saas.customer_offer.service.model.UnderwritingType
 import cn.sunline.saas.customer_offer.service.AppCustomerOfferService
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -43,12 +42,19 @@ class CustomerOfferController {
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
-    @PostMapping("status")
-    fun updateStatus(@RequestBody dtoUpdateStatus: DTOUpdateStatus):ResponseEntity<DTOResponseSuccess<Unit>>{
-        appCustomerOfferService.updateStatus(dtoUpdateStatus.underwritingType,dtoUpdateStatus.id.toLong())
+    @PostMapping("approval")
+    fun approval(@RequestBody  id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        appCustomerOfferService.approval(id.toLong())
 
         return DTOResponseSuccess(Unit).response()
     }
+
+    @PostMapping("rejected")
+    fun rejected(@RequestBody  id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        appCustomerOfferService.rejected(id.toLong())
+        return DTOResponseSuccess(Unit).response()
+    }
+
 
     @GetMapping("{id}")
     fun getDetail(@PathVariable(name = "id")id:String):ResponseEntity<DTOResponseSuccess<DTOManagementCustomerOfferView>>{

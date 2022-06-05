@@ -192,9 +192,15 @@ class ConsumerLoanService(
         return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 
-    fun updateLoanAgreementStatus(applicationId: Long, status: AgreementStatus) {
-        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
-            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+    fun signedLoanAgreement(applicationId: Long){
+        updateLoanAgreementStatus(applicationId,AgreementStatus.SIGNED)
+    }
+
+    fun paidLoanAgreement(applicationId: Long){
+        updateLoanAgreementStatus(applicationId,AgreementStatus.PAID)
+    }
+
+    private fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){
         loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }

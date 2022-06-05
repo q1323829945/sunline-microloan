@@ -1,7 +1,7 @@
 package cn.sunline.saas.underwriting.service
 
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.underwriting.db.UnderwritingType
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
@@ -42,19 +42,24 @@ class UnderwritingManagementService (private val underwritingManagementRepositor
         return save(oldOne)
     }
 
-    fun updateStatus(underwritingType: UnderwritingType, id:Long){
+    fun approval(id:Long){
+        updateStatus(id,UnderwritingType.APPROVAL)
+        underwritingPublish.customerOfferApproval(id)
+        underwritingPublish.initiateLoanAgreement(id)
+    }
+
+    fun rejected(id:Long){
+        updateStatus(id,UnderwritingType.REJECTED)
+        underwritingPublish.customerOfferRejected(id)
+    }
+
+    private fun updateStatus( id:Long,underwritingType: UnderwritingType){
         val underwriting = getOne(id)?: throw UnderwritingNotFound("Invalid underwriting")
         if(underwriting.status != UnderwritingType.PENDING){
             throw UnderwritingStatusCannotBeUpdate("underwriting status cannot be update")
         }
-
         underwriting.status = underwritingType
         save(underwriting)
-        underwritingPublish.updateCustomerOfferStatus(id,underwritingType)
-
-        if(UnderwritingType.PASS == underwritingType){
-            underwritingPublish.initiateLoanAgreement(id.toString())
-        }
     }
 
 }

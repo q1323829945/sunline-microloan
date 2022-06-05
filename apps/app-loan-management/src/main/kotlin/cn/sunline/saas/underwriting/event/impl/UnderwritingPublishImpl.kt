@@ -1,11 +1,11 @@
 package cn.sunline.saas.underwriting.event.impl
 
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.event.dto.*
-import cn.sunline.saas.underwriting.db.UnderwritingType
 import org.springframework.stereotype.Component
 
 /**
@@ -68,25 +68,28 @@ class UnderwritingPublishImpl : UnderwritingPublish {
         )
     }
 
-    override fun updateCustomerOfferStatus(applicationId: Long, underwritingType: UnderwritingType) {
-        val dtoCustomerOffer = DTOCustomerOffer(
-            applicationId,
-            underwritingType
-        )
 
-        PubSubService.publish(
-            PUBSUB_NAME,
-            UnderwritingPublishTopic.CUSTOMER_OFFER_STATUS.toString(),
-            dtoCustomerOffer,
-        )
-    }
-
-
-    override fun initiateLoanAgreement(applicationId: String) {
+    override fun initiateLoanAgreement(applicationId: Long) {
         PubSubService.publish(
             PUBSUB_NAME,
             UnderwritingPublishTopic.INITIATE_LOAN_AGREEMENT.toString(),
             applicationId
+        )
+    }
+
+    override fun customerOfferApproval(applicationId: Long) {
+        PubSubService.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.CUSTOMER_OFFER_APPROVAL.toString(),
+            applicationId,
+        )
+    }
+
+    override fun customerOfferRejected(applicationId: Long) {
+        PubSubService.publish(
+            PUBSUB_NAME,
+            UnderwritingPublishTopic.CUSTOMER_OFFER_REJECTED.toString(),
+            applicationId,
         )
     }
 }

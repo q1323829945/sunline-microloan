@@ -54,7 +54,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
     override fun getLoanAgreement(applicationId: Long): DTOLoanAgreementView? {
         return RPCService.get<DTOLoanAgreementView>(
             serviceName = "app-micro-loan",
-            methodName = "ConsumerLoan/$applicationId",
+            methodName = "ConsumerLoan/LoanAgreement/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),

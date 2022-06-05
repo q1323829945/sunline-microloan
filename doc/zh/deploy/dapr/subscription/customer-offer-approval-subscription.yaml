@@ -1,10 +1,10 @@
 apiVersion: dapr.io/v1alpha1
 kind: Subscription
 metadata:
-  name: CUSTOMER_OFFER_STATUS
+  name: CUSTOMER_OFFER_APPROVAL
 spec:
-  topic: CUSTOMER_OFFER_STATUS
-  route: /CustomerOffer/status
+  topic: CUSTOMER_OFFER_APPROVAL
+  route: /CustomerOffer/approval
   pubsubname: underwriting-pub-sub
 scopes:
   - app-loan-management

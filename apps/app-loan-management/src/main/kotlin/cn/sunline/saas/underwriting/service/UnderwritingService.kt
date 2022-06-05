@@ -1,12 +1,12 @@
 package cn.sunline.saas.underwriting.service
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
+import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.partner.integrated.model.dto.DTOPartnerIntegrated
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.invoke.UnderwritingInvoke
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.db.UnderwritingApplicationData
-import cn.sunline.saas.underwriting.db.UnderwritingType
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.repository.UnderwritingRepository
 import org.springframework.stereotype.Service

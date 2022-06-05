@@ -28,11 +28,18 @@ class LoanAgreementController {
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 
-    @PutMapping("{status}/{id}")
-    fun paid(@PathVariable(name = "id") id:String,@PathVariable(name = "status")status:AgreementStatus):ResponseEntity<DTOResponseSuccess<Unit>>{
-        loanAgreementManagerService.paid(id, status)
-
+    @PutMapping("signed/{id}")
+    fun signed(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        loanAgreementManagerService.paid(id)
         return DTOResponseSuccess(Unit).response()
-
     }
+
+    @PutMapping("paid/{id}")
+    fun paid(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        loanAgreementManagerService.paid(id)
+        return DTOResponseSuccess(Unit).response()
+    }
+
+
+
 }

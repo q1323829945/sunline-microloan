@@ -43,14 +43,19 @@ class ConsumerLoanController {
     }
 
 
-    @GetMapping("{applicationId}")
+    @GetMapping("/LoanAgreement/{applicationId}")
     fun getLoanAgreementByApplicationId(@PathVariable applicationId:String):DTOLoanAgreementView?{
         return consumerLoanService.getLoanAgreementByApplicationId(applicationId.toLong())
     }
 
 
-    @PostMapping("status")
-    fun updateLoanAgreementStatus(@RequestBody dtoLoanAgreementStatus:DTOLoanAgreementStatus){
-        consumerLoanService.updateLoanAgreementStatus(dtoLoanAgreementStatus.applicationId.toLong(),dtoLoanAgreementStatus.status)
+    @PostMapping("/LoanAgreement/Signed")
+    fun signedLoanAgreement(@RequestBody applicationId:Long){
+        consumerLoanService.signedLoanAgreement(applicationId)
+    }
+
+    @PostMapping("/LoanAgreement/Paid")
+    fun paidLoanAgreement(@RequestBody applicationId:Long){
+        consumerLoanService.paidLoanAgreement(applicationId)
     }
 }

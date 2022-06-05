@@ -25,8 +25,8 @@ class InvoiceLine(
     val invoiceAmountType: InvoiceAmountType,
 
     @NotNull
-    @Column(name = "invoice_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "number(19,2) not null")
-    var invoiceAmount: BigDecimal,
+
+    @Column(name = "invoice_amount",nullable = false,scale = 19,precision = 2,columnDefinition = "decimal(19,2) not null")    var invoiceAmount: BigDecimal,
 
     @NotNull
     @Column(name = "repayment_amount",nullable = false,scale = 19,precision = 2,columnDefinition = "number(19,2) not null")
