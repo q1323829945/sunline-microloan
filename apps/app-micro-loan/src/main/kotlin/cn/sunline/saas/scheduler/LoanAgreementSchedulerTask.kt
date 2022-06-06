@@ -90,7 +90,7 @@ class LoanAgreementSchedulerTask(
                 ), accountDate, taskId
             )
         }
-        if (loanInvoiceJob.prerequisites(invoices)) {
+        if (loanInvoiceJob.prerequisites(accountDate,invoices)) {
             createTimerJob(
                 loanInvoiceJob.actorType, agreementId.toString(), accountDate.plusMinutes(
                     LoanSchedulerJobOrder.INVOICE_JOB.order * interval

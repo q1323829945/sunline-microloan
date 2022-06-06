@@ -21,7 +21,6 @@ class CalculateSchedulerTimer(
 ) {
 
     fun baseDateTime(current:DateTime = tenantDateTime.now()): DateTime {
-        println(current)
         val switchDayTime = schedulerTimerService.getOne(ContextUtil.getTenant().toLong())?.switchDayTime
         if (switchDayTime == null) {
             throw SchedulerTimerNotConfigureException("switch daytime has not configured")
