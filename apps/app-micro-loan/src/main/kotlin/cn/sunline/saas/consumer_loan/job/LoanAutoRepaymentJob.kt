@@ -48,7 +48,7 @@ class LoanAutoRepaymentJob(
 
     private fun filterAutoRepaymentInvoices(invoices:List<Invoice>):List<Invoice>{
         return invoices.filter {
-            it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus == RepaymentStatus.UNDO || it.repaymentStatus == RepaymentStatus.OVERDUE)
+            it.invoiceStatus == InvoiceStatus.ACCOUNTED && (it.repaymentStatus != RepaymentStatus.CLEAR)
         }
     }
 
