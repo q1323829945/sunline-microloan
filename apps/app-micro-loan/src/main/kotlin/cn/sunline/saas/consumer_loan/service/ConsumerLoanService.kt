@@ -7,6 +7,8 @@ import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
 import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
+import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleDetailTrialView
+import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
@@ -39,8 +41,6 @@ import cn.sunline.saas.rpc.invoke.impl.ProductInvokeImpl
 import cn.sunline.saas.rpc.invoke.impl.RatePlanInvokeImpl
 import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.schedule.ScheduleService
-import cn.sunline.saas.schedule.dto.DTORepaymentScheduleDetailTrialView
-import cn.sunline.saas.schedule.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
