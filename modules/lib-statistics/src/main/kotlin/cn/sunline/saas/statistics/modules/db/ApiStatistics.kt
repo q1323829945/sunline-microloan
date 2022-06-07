@@ -24,8 +24,8 @@ class ApiStatistics  (
     var frequency: Frequency,
 
     @NotNull
-    @Column(name = "time", columnDefinition = "bigint not null")
-    var time: Long,
+    @Column(name = "count", columnDefinition = "bigint not null")
+    var count: Long,
 
     @NotNull
     @Column(name = "year", columnDefinition = "bigint not null")

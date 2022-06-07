@@ -25,5 +25,6 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-statistics"))
+    implementation(project(":lib-seq-snowflake"))
 
 }

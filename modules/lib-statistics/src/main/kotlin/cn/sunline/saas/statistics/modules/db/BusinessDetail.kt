@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull
 class BusinessDetail  (
     @Id
     var id: Long? = null,
+
+
 ): MultiTenant {
 
     @NotNull
