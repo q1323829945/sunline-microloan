@@ -1,4 +1,4 @@
-package cn.sunline.saas.schedule.dto
+package cn.sunline.saas.consumer_loan.service.dto
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.InterestRate

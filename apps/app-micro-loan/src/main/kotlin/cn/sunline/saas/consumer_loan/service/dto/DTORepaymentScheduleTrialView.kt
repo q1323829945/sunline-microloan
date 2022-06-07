@@ -1,4 +1,4 @@
-package cn.sunline.saas.schedule.dto
+package cn.sunline.saas.consumer_loan.service.dto
 
 import java.math.BigDecimal
 

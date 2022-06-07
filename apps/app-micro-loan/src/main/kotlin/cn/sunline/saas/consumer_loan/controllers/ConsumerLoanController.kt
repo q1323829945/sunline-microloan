@@ -3,7 +3,12 @@ package cn.sunline.saas.consumer_loan.controllers
 import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.dto.DTORepaymentScheduleTrialView
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -57,5 +62,11 @@ class ConsumerLoanController {
     @PostMapping("/LoanAgreement/Paid")
     fun paidLoanAgreement(@RequestBody applicationId:Long){
         consumerLoanService.paidLoanAgreement(applicationId)
+    }
+
+    @GetMapping("{productId}/{amount}/{term}/calculate")
+    fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
+        val repaymentScheduleTrialResult = consumerLoanService.calculate(productId, amount.toBigDecimal(),term)
+        return DTOResponseSuccess(repaymentScheduleTrialResult).response()
     }
 }

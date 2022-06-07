@@ -10,9 +10,16 @@ import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
+import cn.sunline.saas.formula.CalculateInterestRate
+import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
+import cn.sunline.saas.interest.arrangement.exception.BaseRateNullException
 import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundException
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.invoice.exception.InvoiceNotFoundException
@@ -27,7 +34,13 @@ import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
 import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeRates
+import cn.sunline.saas.rpc.invoke.impl.ProductInvokeImpl
+import cn.sunline.saas.rpc.invoke.impl.RatePlanInvokeImpl
+import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.schedule.ScheduleService
+import cn.sunline.saas.schedule.dto.DTORepaymentScheduleDetailTrialView
+import cn.sunline.saas.schedule.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -35,6 +48,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * @title: ConsumerLoanService
@@ -74,6 +88,12 @@ class ConsumerLoanService(
 
     @Autowired
     private lateinit var invoiceArrangementService: InvoiceArrangementService
+
+    @Autowired
+    private lateinit var productInvokeImpl: ProductInvokeImpl
+
+    @Autowired
+    private lateinit var ratePlanInvokeImpl: RatePlanInvokeImpl
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -254,4 +274,85 @@ class ConsumerLoanService(
         //consumerLoanPublish.financialAccounting(repaymentInstruction)
     }
 
+
+    fun calculate(productId: Long, amount: BigDecimal, term: LoanTermType): DTORepaymentScheduleTrialView {
+
+        val loanProduct = productInvokeImpl.getProductInfoByProductId(productId)
+        val ratePlanId = loanProduct.interestFeature.ratePlanId
+        val interestRate = getExecutionRate(loanProduct.interestFeature.interestType,term,ratePlanId.toLong())
+        val schedule = ScheduleService(
+            amount,
+            interestRate,
+            term,
+            loanProduct.repaymentFeature.payment.frequency,
+            tenantDateTime.now(),
+            //DateTime.now().toInstant(),
+            null,
+            loanProduct.interestFeature.interest.baseYearDays
+        ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+
+        return convertMapper(schedule)
+    }
+
+
+    private fun convertRate(list: List<DTOInvokeRates>, ratePlanId: Long): MutableList<InterestRate> {
+        val rates = mutableListOf<InterestRate>()
+        for (rate in list) {
+            rates.add(
+                InterestRate(
+                    rate.id.toLong(),
+                    rate.period,
+                    rate.rate.toBigDecimal(),
+                    ratePlanId
+                )
+            )
+        }
+
+
+        return rates    }
+
+    private fun getExecutionRate(interestType: InterestType, term: LoanTermType, ratePlanId: Long): BigDecimal {
+
+        val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId.toLong())
+        val ratesModel = convertRate(rateResult.rates, ratePlanId.toLong())
+        val rate = InterestRateHelper.getRate(term, ratesModel)!!
+        val executionRate = when (interestType) {
+            InterestType.FIXED -> rate
+            InterestType.FLOATING_RATE_NOTE ->{
+                val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
+                val baseRateModel = convertRate(baseRateResult.rates, ratePlanId.toLong())
+                val baseRate = InterestRateHelper.getRate(term, baseRateModel)
+                if (baseRate == null) {
+                    throw BaseRateNullException("base rate must be not null when interest type is floating rate")
+                } else {
+                    CalculateInterestRate(baseRate).calRateWithNoPercent(rate)
+                }
+            }
+        }
+        return executionRate
+    }
+
+    private fun convertMapper(dtoSchedule:  MutableList<Schedule>): DTORepaymentScheduleTrialView {
+        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
+
+        val interestRate = dtoSchedule.first().interestRate
+        var installment = dtoSchedule.first().instalment
+        for (schedule in dtoSchedule) {
+            if(installment != schedule.instalment){
+                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+            }
+            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
+                period = schedule.period,
+                installment = schedule.instalment,
+                principal = schedule.principal,
+                interest = schedule.interest,
+                repaymentDate = schedule.dueDate.toString()
+            )
+        }
+        return DTORepaymentScheduleTrialView(
+            installment = installment,
+            interestRate = interestRate,
+            schedule = dtoRepaymentScheduleDetailTrialView
+        )
+    }
 }

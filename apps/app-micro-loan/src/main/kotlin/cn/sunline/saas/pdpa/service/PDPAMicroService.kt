@@ -1,8 +1,6 @@
 package cn.sunline.saas.pdpa.service
 
-import cn.sunline.saas.config.AppHttpConfiguration
 import cn.sunline.saas.config.IpConfig
-import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.rpc.invoke.PdpaInvoke
 import org.springframework.stereotype.Service
@@ -11,7 +9,7 @@ import java.io.InputStream
 @Service
 class PDPAMicroService(
     private var ipConfig:IpConfig,
-    private var appHttpConfiguration: AppHttpConfiguration,
+//    private var appHttpConfiguration: AppHttpConfiguration,
     private val pdpaInvoke: PdpaInvoke
 ) {
 
