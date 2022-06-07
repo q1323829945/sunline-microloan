@@ -4,6 +4,7 @@ import cn.sunline.saas.party.person.model.RoleType
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonChange
 import cn.sunline.saas.party.person.model.dto.DTOPersonView
+import cn.sunline.saas.party.person.service.PersonManagerService
 import cn.sunline.saas.party.person.service.PersonService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -26,6 +27,9 @@ class PersonController {
     @Autowired
     private lateinit var personService: PersonService
 
+    @Autowired
+    private lateinit var personManagerService: PersonManagerService
+
     @GetMapping
     fun getPaged(@PathParam("personIdentification")personIdentification: String?,
                  @PathParam("type")type: RoleType?,
@@ -36,7 +40,7 @@ class PersonController {
 
     @PostMapping
     fun register(@RequestBody dtoPersonAdd: DTOPersonAdd):ResponseEntity<DTOResponseSuccess<DTOPersonView>>{
-        val person = personService.register(dtoPersonAdd)
+        val person = personManagerService.register(dtoPersonAdd)
         return DTOResponseSuccess(person).response()
     }
 

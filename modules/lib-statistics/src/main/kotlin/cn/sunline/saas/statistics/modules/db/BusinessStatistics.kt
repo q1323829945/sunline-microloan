@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "business_statistics")
-@EntityListeners(TenantListener::class)
 class BusinessStatistics  (
     @Id
     var id: Long? = null,

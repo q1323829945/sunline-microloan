@@ -6,7 +6,7 @@ import cn.sunline.saas.party.organisation.model.OrganizationInvolvementType
 
 
 data class DTOOrganisationView(
-    var id:String?,
+    var id:String,
     val legalEntityIndicator:String,
     val organisationSector:String,
     var organisationRegistrationDate: String?,

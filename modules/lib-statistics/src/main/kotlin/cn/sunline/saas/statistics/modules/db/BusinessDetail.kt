@@ -1,7 +1,10 @@
 package cn.sunline.saas.statistics.modules.db
 
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import java.math.BigDecimal
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -12,6 +15,23 @@ class BusinessDetail  (
     @Id
     var id: Long? = null,
 
+    @NotNull
+    @Column(name = "loan_balance",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var loanBalance: BigDecimal,
+
+
+    @NotNull
+    @Column(name = "entry_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var entryAmount: BigDecimal,
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
+    val currency: CurrencyType,
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    var datetime: Date,
 
 ): MultiTenant {
 

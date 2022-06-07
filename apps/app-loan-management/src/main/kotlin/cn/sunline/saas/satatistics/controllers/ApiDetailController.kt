@@ -1,9 +1,7 @@
-package cn.sunline.saas.statistics.controllers
+package cn.sunline.saas.satatistics.controllers
 
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
-import cn.sunline.saas.statistics.modules.dto.DTOApiDetailApiCount
-import cn.sunline.saas.statistics.modules.dto.DTOApiDetailQueryDate
+import cn.sunline.saas.statistics.modules.dto.DTOApiCount
+import cn.sunline.saas.statistics.modules.dto.DTOApiDetailQueryParams
 import cn.sunline.saas.statistics.services.ApiDetailService
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,10 +25,10 @@ class ApiDetailController {
     }
 
     @GetMapping("{tenantId}")
-    fun getList(@PathVariable tenantId:Long):List<DTOApiDetailApiCount>{
+    fun getListTest(@PathVariable tenantId:Long):List<DTOApiCount>{
         val time = DateTime.now()
         return apiDetailService.getGroupByApiCount(
-            DTOApiDetailQueryDate(
+            DTOApiDetailQueryParams(
                 startDateTime = time.plusDays(-1).toDate(),
                 endDateTime = time.toDate(),
                 tenantId

@@ -1,9 +1,9 @@
 package cn.sunline.saas.party.organisation.controllers
 
-import cn.sunline.saas.party.organisation.model.db.Organisation
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationView
+import cn.sunline.saas.party.organisation.service.OrganisationManagerService
 import cn.sunline.saas.party.organisation.service.OrganisationService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -29,6 +29,9 @@ class OrganisationController {
     @Autowired
     private lateinit var organisationService: OrganisationService
 
+    @Autowired
+    private lateinit var organisationManagerService: OrganisationManagerService
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 
@@ -41,9 +44,8 @@ class OrganisationController {
 
     @PostMapping
     fun register(@RequestBody dtoOrganisationAdd: DTOOrganisationAdd):ResponseEntity<DTOResponseSuccess<DTOOrganisationView>>{
-        val organisation = organisationService.registerOrganisation(dtoOrganisationAdd)
-        val responseEntity = objectMapper.convertValue<DTOOrganisationView>(organisation)
-        return DTOResponseSuccess(responseEntity).response()
+        val organisation = organisationManagerService.register(dtoOrganisationAdd)
+        return DTOResponseSuccess(organisation).response()
     }
 
     @PutMapping("{id}")

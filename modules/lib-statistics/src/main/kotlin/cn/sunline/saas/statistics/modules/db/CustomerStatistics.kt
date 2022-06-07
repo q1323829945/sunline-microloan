@@ -1,7 +1,9 @@
 package cn.sunline.saas.statistics.modules.db
 
+import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -11,7 +13,41 @@ import javax.validation.constraints.NotNull
 class CustomerStatistics  (
     @Id
     var id: Long? = null,
-): MultiTenant {
+
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "frequency",length = 128, columnDefinition = "varchar(128) not null")
+    var frequency: Frequency,
+
+    @NotNull
+    @Column(name = "person_count", columnDefinition = "bigint not null")
+    var personCount: Long,
+
+    @NotNull
+    @Column(name = "organisation_count", columnDefinition = "bigint not null")
+    var organisationCount: Long,
+
+    @NotNull
+    @Column(name = "party_count", columnDefinition = "bigint not null")
+    var partyCount: Long,
+
+    @NotNull
+    @Column(name = "year", columnDefinition = "bigint not null")
+    var year: Long,
+
+    @NotNull
+    @Column(name = "month", columnDefinition = "bigint not null")
+    var month: Long,
+
+    @NotNull
+    @Column(name = "day",  columnDefinition = "bigint not null")
+    var day: Long,
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    var datetime: Date,
+
+    ): MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", columnDefinition = "bigint not null")
