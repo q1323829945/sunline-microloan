@@ -201,6 +201,7 @@ class ConsumerLoanService(
     }
 
     private fun updateLoanAgreementStatus(applicationId: Long,status: AgreementStatus){
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)?:throw LoanAgreementNotFoundException("Invalid loan agreement")
         loanAgreement.status = status
         loanAgreementService.save(loanAgreement)
     }
