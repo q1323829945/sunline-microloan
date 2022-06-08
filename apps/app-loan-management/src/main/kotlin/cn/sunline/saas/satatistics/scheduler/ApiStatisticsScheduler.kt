@@ -29,7 +29,7 @@ class ApiStatisticsScheduler(
     private lateinit var apiStatisticsService: ApiStatisticsService
 
     //每小时调度一次
-    @Scheduled(cron = "30 * * * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     fun runApiScheduler(){
         runScheduler()
     }
@@ -37,7 +37,7 @@ class ApiStatisticsScheduler(
     override fun saveYear(dateTime: DateTime){
         val api = checkApiExist(dateTime, Frequency.Y)
         api?:run {
-            val endDate = getLocalDate(dateTime).plusDays(1)
+            val endDate = getLocalDate(dateTime)
             val startDate = endDate.plusYears(-1)
             schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.Y)
         }
@@ -46,7 +46,7 @@ class ApiStatisticsScheduler(
     override fun saveMonth(dateTime: DateTime){
         val api = checkApiExist(dateTime, Frequency.M)
         api?:run {
-            val endDate = getLocalDate(dateTime).plusDays(1)
+            val endDate = getLocalDate(dateTime)
             val startDate = endDate.plusMonths(-1)
             schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.M)
         }
@@ -55,7 +55,7 @@ class ApiStatisticsScheduler(
     override fun saveDay(dateTime: DateTime){
         val api = checkApiExist(dateTime, Frequency.D)
         api?:run {
-            val endDate = getLocalDate(dateTime).plusDays(1)
+            val endDate = getLocalDate(dateTime)
             val startDate = endDate.plusDays(-1)
             schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.D)
         }

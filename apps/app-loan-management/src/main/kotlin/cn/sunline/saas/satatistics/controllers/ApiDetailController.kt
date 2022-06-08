@@ -22,7 +22,7 @@ class ApiDetailController {
     private lateinit var apiDetailService: ApiDetailService
 
     @GetMapping
-    fun getListTest(@PathParam("startDate") startDate:String,
+    fun getList(@PathParam("startDate") startDate:String,
                     @PathParam("endDate") endDate:String):List<DTOApiCount>{
         return apiDetailService.getGroupByApiCount(
             DTOApiDetailQueryParams(
@@ -31,6 +31,4 @@ class ApiDetailController {
             )
         )
     }
-
-
 }

@@ -27,7 +27,7 @@ class BusinessDetailController {
     }
 
     @GetMapping
-    fun getTest(@PathParam("startDate") startDate:String,
+    fun getList(@PathParam("startDate") startDate:String,
                 @PathParam("endDate") endDate:String):List<DTOBusinessCount>{
         return businessDetailService.getGroupByBusinessCount(
             DTOBusinessDetailQueryParams(

@@ -26,7 +26,7 @@ class CustomerDetailController {
     }
 
     @GetMapping
-    fun getListTest(@PathParam("startDate") startDate:String,
+    fun getList(@PathParam("startDate") startDate:String,
                     @PathParam("endDate") endDate:String):List<DTOCustomerCount>{
         return customerDetailService.getGroupByCustomerCount(
             DTOCustomerDetailQueryParams(
