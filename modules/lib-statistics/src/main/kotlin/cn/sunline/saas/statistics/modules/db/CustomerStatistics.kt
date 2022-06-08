@@ -8,7 +8,12 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = "customer_statistics")
+@Table(
+    name = "customer_statistics",
+    indexes = [
+        Index(name = "idx_customer_statistics_unique", columnList = "year,month,day,frequency,tenant_id",unique = true)
+    ]
+)
 @EntityListeners(TenantListener::class)
 class CustomerStatistics  (
     @Id

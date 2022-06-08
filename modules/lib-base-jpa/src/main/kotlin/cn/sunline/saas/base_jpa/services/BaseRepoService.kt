@@ -26,8 +26,10 @@ abstract class BaseRepoService<T, ID: Serializable>(private val baseRepository: 
         } else {
             baseRepository.findAll(specification, pageable)
         }
+    }
 
-
+    fun get(specification: Specification<T>): T? {
+        return baseRepository.findOne(specification).orElse(null)
     }
 
     fun save(entity: T): T {

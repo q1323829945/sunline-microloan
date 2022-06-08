@@ -9,7 +9,12 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
-@Table(name = "business_statistics")
+@Table(
+    name = "business_statistics",
+    indexes = [
+        Index(name = "idx_business_statistics_unique", columnList = "customer_id,year,month,day,frequency,tenant_id",unique = true)
+    ]
+)
 class BusinessStatistics  (
     @Id
     var id: Long? = null,

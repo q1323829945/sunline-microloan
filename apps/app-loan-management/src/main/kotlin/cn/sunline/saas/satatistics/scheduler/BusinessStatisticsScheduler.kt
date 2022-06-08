@@ -1,13 +1,13 @@
 package cn.sunline.saas.satatistics.scheduler
 
 import cn.sunline.saas.global.constant.Frequency
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.statistics.modules.db.BusinessStatistics
 import cn.sunline.saas.statistics.modules.dto.*
 import cn.sunline.saas.statistics.services.BusinessDetailService
 import cn.sunline.saas.statistics.services.BusinessStatisticsService
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
@@ -26,54 +26,49 @@ class BusinessStatisticsScheduler(
     @Autowired
     private lateinit var businessStatisticsService: BusinessStatisticsService
 
-    //每年
-    @Scheduled(cron = "0 0 0 1 1 ?")
-    fun schedulerYearOfBusiness(){
-        val tenantList = getTenantIdList()
-        tenantList.forEach {
-            ContextUtil.setTenant(it.id.toString())
-            val endDate = getNowDate()
-            val startDate = endDate.plusYears(-1)
-            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.Y)
-        }
-    }
-    //每月
-    @Scheduled(cron = "0 0 0 1 * ?")
-    fun schedulerMonthOfBusiness(){
-        val tenantList = getTenantIdList()
-        tenantList.forEach {
-            ContextUtil.setTenant(it.id.toString())
-            val endDate = getNowDate()
-            val startDate = endDate.plusMonths(-1)
-            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.M)
-        }
+    //每小时调度一次
+    @Scheduled(cron = "30 * * * * ?")
+    fun runBusinessScheduler(){
+        runScheduler()
     }
 
-    //每日
-    @Scheduled(cron = "0 0 0 * * ?")
-    fun schedulerDayOfBusiness(){
-        val tenantList = getTenantIdList()
-        tenantList.forEach {
-            ContextUtil.setTenant(it.id.toString())
-            //TODO:再想想怎么处理各时区的统计信息
-            val endDate = getNowDate()
-            val startDate = endDate.plusDays(-1)
-            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.D)
-        }
+    override fun saveYear(dateTime: DateTime){
+        val endDate = getLocalDate(dateTime).plusDays(1)
+        val startDate = endDate.plusYears(-1)
+        schedulerBusiness(dateTime,startDate.toDate(),endDate.toDate(),Frequency.Y)
     }
 
-    private fun schedulerBusiness(startDate: Date, endDate: Date, frequency: Frequency){
+    override fun saveMonth(dateTime: DateTime){
+        val endDate = getLocalDate(dateTime).plusDays(1)
+        val startDate = endDate.plusMonths(-1)
+        schedulerBusiness(dateTime,startDate.toDate(),endDate.toDate(),Frequency.M)
+    }
+
+    override fun saveDay(dateTime: DateTime){
+        val endDate = getLocalDate(dateTime).plusDays(1)
+        val startDate = endDate.plusDays(-1)
+        schedulerBusiness(dateTime,startDate.toDate(),endDate.toDate(),Frequency.D)
+    }
+
+    private fun schedulerBusiness(dateTime:DateTime,startDate: Date, endDate: Date, frequency: Frequency){
         val customer = businessDetailService.getGroupByBusinessCount(DTOBusinessDetailQueryParams(startDate,endDate))
         customer.forEach {
-            businessStatisticsService.saveBusinessStatistics(
-                DTOBusinessStatistics(
-                    customerId = it.customerId,
-                    amount = it.amount,
-                    currencyType = it.currency,
-                    frequency = frequency
+            val business = checkBusinessExist(it.customerId,dateTime,frequency)
+            business?:run {
+                businessStatisticsService.saveBusinessStatistics(
+                    DTOBusinessStatistics(
+                        customerId = it.customerId,
+                        amount = it.amount,
+                        currencyType = it.currency,
+                        frequency = frequency
+                    )
                 )
-            )
+            }
         }
+    }
+
+    private fun checkBusinessExist(customerId:Long,dateTime: DateTime, frequency: Frequency):BusinessStatistics?{
+        return businessStatisticsService.findByDate(DTOBusinessStatisticsFindParams(customerId,dateTime,frequency))
     }
 
 }
