@@ -42,10 +42,9 @@ class ApiDetailService (
 
 
     private fun getAllByParams(dtoApiDetailQueryParams: DTOApiDetailQueryParams):Page<ApiDetail>{
-        return getPaged({ root, query, criteriaBuilder ->
+        return getPageWithTenant({ root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.between(root.get("datetime"),dtoApiDetailQueryParams.startDateTime,dtoApiDetailQueryParams.endDateTime))
-            predicates.add(criteriaBuilder.equal(root.get<String>("tenantId"), dtoApiDetailQueryParams.tenantId?:ContextUtil.getTenant()))
             query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())

@@ -16,13 +16,17 @@ class BusinessDetail  (
     var id: Long? = null,
 
     @NotNull
-    @Column(name = "loan_balance",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var loanBalance: BigDecimal,
+    @Column(name = "agreement_id", columnDefinition = "bigint not null")
+    val agreementId: Long,
+
+    @NotNull
+    @Column(name = "customer_id",  columnDefinition = "bigint not null")
+    val customerId: Long,
 
 
     @NotNull
-    @Column(name = "entry_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var entryAmount: BigDecimal,
+    @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var amount: BigDecimal,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

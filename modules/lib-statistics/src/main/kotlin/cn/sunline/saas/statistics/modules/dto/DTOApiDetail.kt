@@ -5,7 +5,6 @@ import java.util.Date
 data class DTOApiDetailQueryParams(
     val startDateTime:Date,
     val endDateTime:Date,
-    val tenantId:Long? = null
 )
 
 

@@ -3,77 +3,77 @@ package cn.sunline.saas.satatistics.scheduler
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.statistics.modules.dto.DTOApiDetailQueryParams
-import cn.sunline.saas.statistics.modules.dto.DTOApiStatistics
-import cn.sunline.saas.statistics.services.ApiDetailService
-import cn.sunline.saas.statistics.services.ApiStatisticsService
+import cn.sunline.saas.statistics.modules.dto.*
+import cn.sunline.saas.statistics.services.BusinessDetailService
+import cn.sunline.saas.statistics.services.BusinessStatisticsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.Date
+import java.util.*
 
 @Component
 @EnableScheduling
-class ApiStatisticsScheduler(
+class BusinessStatisticsScheduler(
     private val tenantDateTime: TenantDateTime,
     private val tenantService: TenantService
-):BaseScheduler(tenantDateTime,tenantService) {
+):BaseScheduler(tenantDateTime,tenantService){
     @Autowired
-    private lateinit var apiDetailService: ApiDetailService
+    private lateinit var businessDetailService: BusinessDetailService
 
     @Autowired
-    private lateinit var apiStatisticsService: ApiStatisticsService
+    private lateinit var businessStatisticsService: BusinessStatisticsService
 
     //每年
     @Scheduled(cron = "0 0 0 1 1 ?")
-    fun schedulerYearOfApi(){
+    fun schedulerYearOfBusiness(){
         val tenantList = getTenantIdList()
         tenantList.forEach {
             ContextUtil.setTenant(it.id.toString())
             val endDate = getNowDate()
             val startDate = endDate.plusYears(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.Y)
+            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.Y)
         }
     }
     //每月
     @Scheduled(cron = "0 0 0 1 * ?")
-    fun schedulerMonthOfApi(){
+    fun schedulerMonthOfBusiness(){
         val tenantList = getTenantIdList()
         tenantList.forEach {
             ContextUtil.setTenant(it.id.toString())
             val endDate = getNowDate()
             val startDate = endDate.plusMonths(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.M)
+            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.M)
         }
     }
 
     //每日
     @Scheduled(cron = "0 0 0 * * ?")
-    fun schedulerDayOfApi(){
+    fun schedulerDayOfBusiness(){
         val tenantList = getTenantIdList()
         tenantList.forEach {
-            //TODO:再想想怎么处理各时区的统计信息
             ContextUtil.setTenant(it.id.toString())
+            //TODO:再想想怎么处理各时区的统计信息
             val endDate = getNowDate()
             val startDate = endDate.plusDays(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.D)
+            schedulerBusiness(startDate.toDate(),endDate.toDate(), Frequency.D)
         }
     }
 
-    private fun schedulerApi(startDate:Date,endDate: Date,frequency: Frequency){
-        val api = apiDetailService.getGroupByApiCount(DTOApiDetailQueryParams(startDate,endDate))
-        api.forEach {
-            apiStatisticsService.saveApiStatistics(DTOApiStatistics(
-                api = it.api,
-                count = it.count,
-                frequency = frequency
-            ))
+    private fun schedulerBusiness(startDate: Date, endDate: Date, frequency: Frequency){
+        val customer = businessDetailService.getGroupByBusinessCount(DTOBusinessDetailQueryParams(startDate,endDate))
+        customer.forEach {
+            businessStatisticsService.saveBusinessStatistics(
+                DTOBusinessStatistics(
+                    customerId = it.customerId,
+                    amount = it.amount,
+                    currencyType = it.currency,
+                    frequency = frequency
+                )
+            )
         }
     }
-
 
 }

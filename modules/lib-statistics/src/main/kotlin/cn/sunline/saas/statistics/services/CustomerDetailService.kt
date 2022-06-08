@@ -8,9 +8,9 @@ import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.statistics.modules.db.CustomerDetail
-import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetailQueryParams
 import cn.sunline.saas.statistics.modules.dto.DTOCustomerCount
 import cn.sunline.saas.statistics.modules.dto.DTOCustomerDetail
+import cn.sunline.saas.statistics.modules.dto.DTOCustomerDetailQueryParams
 import cn.sunline.saas.statistics.repositories.CustomerDetailRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -35,8 +35,8 @@ class CustomerDetailService (
         )
     }
 
-    fun getGroupByCustomerCount(dtoBusinessDetailQueryParams: DTOBusinessDetailQueryParams):List<DTOCustomerCount>{
-        val customerGroupBy = getAllByParams(dtoBusinessDetailQueryParams).content.groupBy { it.getTenantId() }
+    fun getGroupByCustomerCount(dtoCustomerDetailQueryParams: DTOCustomerDetailQueryParams):List<DTOCustomerCount>{
+        val customerGroupBy = getAllByParams(dtoCustomerDetailQueryParams).content.groupBy { it.getTenantId() }
 
         return customerGroupBy.map { (t, u) ->
             DTOCustomerCount(tenantId = t,
@@ -50,11 +50,10 @@ class CustomerDetailService (
     }
 
 
-    private fun getAllByParams(dtoBusinessDetailQueryParams: DTOBusinessDetailQueryParams):Page<CustomerDetail>{
-        return getPaged({ root, query, criteriaBuilder ->
+    private fun getAllByParams(dtoCustomerDetailQueryParams: DTOCustomerDetailQueryParams):Page<CustomerDetail>{
+        return getPageWithTenant({ root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.between(root.get("datetime"),dtoBusinessDetailQueryParams.startDateTime,dtoBusinessDetailQueryParams.endDateTime))
-            predicates.add(criteriaBuilder.equal(root.get<String>("tenantId"), dtoBusinessDetailQueryParams.tenantId?: ContextUtil.getTenant()))
+            predicates.add(criteriaBuilder.between(root.get("datetime"),dtoCustomerDetailQueryParams.startDateTime,dtoCustomerDetailQueryParams.endDateTime))
             query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())

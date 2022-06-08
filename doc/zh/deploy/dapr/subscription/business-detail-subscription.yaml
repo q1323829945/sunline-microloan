@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: BUSINESS_DETAIL
+spec:
+  topic: BUSINESS_DETAIL
+  route: /business_detail
+  pubsubname: underwriting-pub-sub
+scopes:
+  - app-loan-management
+

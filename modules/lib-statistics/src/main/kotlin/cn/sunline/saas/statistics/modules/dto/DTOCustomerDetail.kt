@@ -8,10 +8,9 @@ data class DTOCustomerDetail(
     val partyType: PartyType,
 )
 
-data class DTOBusinessDetailQueryParams(
+data class DTOCustomerDetailQueryParams(
     val startDateTime: Date,
     val endDateTime: Date,
-    val tenantId:Long? = null
 )
 
 data class DTOCustomerCount(

@@ -6,7 +6,7 @@ import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetailQueryParams
+import cn.sunline.saas.statistics.modules.dto.DTOCustomerDetailQueryParams
 import cn.sunline.saas.statistics.modules.dto.DTOCustomerStatistics
 import cn.sunline.saas.statistics.services.CustomerDetailService
 import cn.sunline.saas.statistics.services.CustomerStatisticsService
@@ -36,7 +36,7 @@ class CustomerStatisticsScheduler(
             ContextUtil.setTenant(it.id.toString())
             val endDate = getNowDate()
             val startDate = endDate.plusYears(-1)
-            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.Y,it)
+            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.Y)
         }
     }
     //每月
@@ -47,7 +47,7 @@ class CustomerStatisticsScheduler(
             ContextUtil.setTenant(it.id.toString())
             val endDate = getNowDate()
             val startDate = endDate.plusMonths(-1)
-            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.M,it)
+            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.M)
         }
     }
 
@@ -60,12 +60,12 @@ class CustomerStatisticsScheduler(
             //TODO:再想想怎么处理各时区的统计信息
             val endDate = getNowDate()
             val startDate = endDate.plusDays(-1)
-            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.D,it)
+            schedulerCustomer(startDate.toDate(),endDate.toDate(), Frequency.D)
         }
     }
 
-    private fun schedulerCustomer(startDate: Date, endDate: Date, frequency: Frequency, tenant: Tenant){
-        val customer = customerDetailService.getGroupByCustomerCount(DTOBusinessDetailQueryParams(startDate,endDate,tenant.id))
+    private fun schedulerCustomer(startDate: Date, endDate: Date, frequency: Frequency){
+        val customer = customerDetailService.getGroupByCustomerCount(DTOCustomerDetailQueryParams(startDate,endDate))
         customer.forEach {
             customerStatisticsService.saveCustomerStatistics(
                 DTOCustomerStatistics(

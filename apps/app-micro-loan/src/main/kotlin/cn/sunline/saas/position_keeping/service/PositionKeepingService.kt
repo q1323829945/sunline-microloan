@@ -6,6 +6,8 @@ import cn.sunline.saas.banking.transaction.model.db.BankingTransaction
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.banking.transaction.service.BankingTransactionService
 import cn.sunline.saas.global.constant.TransactionStatus
+import cn.sunline.saas.rpc.pubsub.PositionKeepingPublish
+import cn.sunline.saas.rpc.pubsub.dto.DTOBusinessDetail
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service
  * @date 2022/5/7 15:37
  */
 @Service
-class PositionKeepingService {
+class PositionKeepingService(
+    private val positionKeepingPublish: PositionKeepingPublish
+) {
 
     @Autowired
     private lateinit var bankingTransactionService: BankingTransactionService
@@ -49,6 +53,13 @@ class PositionKeepingService {
             }
 
             loanAccountService.saveAccount(dtoAccountAdd)
+
+            positionKeepingPublish.addBusinessDetail(DTOBusinessDetail(
+                agreementId = bankingTransaction.agreementId,
+                customerId = bankingTransaction.customerId,
+                amount = bankingTransaction.amount,
+                currency = bankingTransaction.currency
+            ))
         }
     }
 
