@@ -1,9 +1,9 @@
 package cn.sunline.saas.satatistics.controllers
 
+import cn.sunline.saas.statistics.modules.TransactionType
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessCount
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetail
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetailQueryParams
-import cn.sunline.saas.statistics.modules.dto.DTOCustomerDetailQueryParams
 import cn.sunline.saas.statistics.services.BusinessDetailService
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -23,6 +23,10 @@ class BusinessDetailController {
 
     @PostMapping
     fun addOne(@RequestBody dtoBusinessDetail: DTOBusinessDetail){
+        val businessDetail = businessDetailService.getFirstByAgreementId(dtoBusinessDetail.agreementId)
+        businessDetail?.run {
+            dtoBusinessDetail.transactionType = TransactionType.REPAYMENT
+        }
         businessDetailService.saveBusinessDetail(dtoBusinessDetail)
     }
 

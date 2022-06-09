@@ -1,8 +1,10 @@
 package cn.sunline.saas.satatistics.scheduler
 
 import cn.sunline.saas.global.constant.Frequency
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.statistics.modules.TransactionType
 import cn.sunline.saas.statistics.modules.db.BusinessStatistics
 import cn.sunline.saas.statistics.modules.dto.*
 import cn.sunline.saas.statistics.services.BusinessDetailService
@@ -53,12 +55,13 @@ class BusinessStatisticsScheduler(
     private fun schedulerBusiness(dateTime:DateTime,startDate: Date, endDate: Date, frequency: Frequency){
         val customer = businessDetailService.getGroupByBusinessCount(DTOBusinessDetailQueryParams(startDate,endDate))
         customer.forEach {
-            val business = checkBusinessExist(it.customerId,dateTime,frequency)
+            val business = checkBusinessExist(it.customerId,dateTime,frequency,it.currency)
             business?:run {
                 businessStatisticsService.saveBusinessStatistics(
                     DTOBusinessStatistics(
                         customerId = it.customerId,
-                        amount = it.amount,
+                        paymentAmount = it.paymentAmount,
+                        repaymentAmount = it.repaymentAmount,
                         currencyType = it.currency,
                         frequency = frequency
                     )
@@ -67,8 +70,8 @@ class BusinessStatisticsScheduler(
         }
     }
 
-    private fun checkBusinessExist(customerId:Long,dateTime: DateTime, frequency: Frequency):BusinessStatistics?{
-        return businessStatisticsService.findByDate(DTOBusinessStatisticsFindParams(customerId,dateTime,frequency))
+    private fun checkBusinessExist(customerId:Long, dateTime: DateTime, frequency: Frequency, currencyType: CurrencyType):BusinessStatistics?{
+        return businessStatisticsService.findByDate(DTOBusinessStatisticsFindParams(customerId,dateTime,frequency,currencyType))
     }
 
 }

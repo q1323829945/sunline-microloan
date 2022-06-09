@@ -3,6 +3,7 @@ package cn.sunline.saas.statistics.modules.db
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.statistics.modules.TransactionType
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
@@ -23,7 +24,6 @@ class BusinessDetail  (
     @Column(name = "customer_id",  columnDefinition = "bigint not null")
     val customerId: Long,
 
-
     @NotNull
     @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
     var amount: BigDecimal,
@@ -34,10 +34,15 @@ class BusinessDetail  (
     val currency: CurrencyType,
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "transaction_type",  length = 32, columnDefinition = "varchar(32) not null")
+    val transactionType: TransactionType,
+
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     var datetime: Date,
 
-): MultiTenant {
+    ): MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", columnDefinition = "bigint not null")

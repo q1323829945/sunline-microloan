@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import cn.sunline.saas.statistics.modules.db.BusinessDetail
 import cn.sunline.saas.statistics.repositories.BusinessDetailRepository
 import cn.sunline.saas.seq.Sequence
+import cn.sunline.saas.statistics.modules.TransactionType
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessCount
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetail
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetailQueryParams
@@ -21,6 +22,14 @@ class BusinessDetailService (
     private val tenantDateTime: TenantDateTime
     ):BaseMultiTenantRepoService<BusinessDetail, Long>(businessDetailRepository) {
 
+    fun getFirstByAgreementId(agreementId:Long): BusinessDetail?{
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Long>("agreementId"),agreementId))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged()).firstOrNull()
+    }
+
     fun saveBusinessDetail(dtoBusinessDetail: DTOBusinessDetail){
         save(
             BusinessDetail(
@@ -29,6 +38,7 @@ class BusinessDetailService (
                 customerId = dtoBusinessDetail.customerId,
                 amount = dtoBusinessDetail.amount,
                 currency = dtoBusinessDetail.currency,
+                transactionType = dtoBusinessDetail.transactionType,
                 datetime = tenantDateTime.now().toDate()
             )
         )
@@ -41,7 +51,11 @@ class BusinessDetailService (
          groupBy.forEach { customerMap ->
             val currencyGroupBy = customerMap.value.groupBy { it.currency }
             currencyGroupBy.forEach { currencyMap ->
-                dtoBusinessCount += DTOBusinessCount(customerMap.key,currencyMap.value.sumOf { it.amount },currencyMap.value.first().currency)
+                dtoBusinessCount += DTOBusinessCount(
+                    customerMap.key,
+                    currencyMap.value.filter { it.transactionType == TransactionType.PAYMENT }.sumOf { it.amount },
+                    currencyMap.value.filter { it.transactionType == TransactionType.REPAYMENT }.sumOf { it.amount },
+                    currencyMap.key)
             }
         }
 

@@ -1,8 +1,9 @@
 package cn.sunline.saas.statistics.modules.db
 
 import cn.sunline.saas.global.constant.Frequency
-import cn.sunline.saas.multi_tenant.jpa.TenantListener
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import cn.sunline.saas.statistics.modules.TransactionType
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.*
@@ -12,12 +13,12 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "business_statistics",
     indexes = [
-        Index(name = "idx_business_statistics_unique", columnList = "customer_id,year,month,day,frequency,tenant_id",unique = true)
+        Index(name = "idx_business_statistics_unique", columnList = "customer_id,currency,year,month,day,frequency,tenant_id",unique = true)
     ]
 )
 class BusinessStatistics  (
     @Id
-    var id: Long? = null,
+    val id: Long? = null,
 
     @NotNull
     @Column(name = "customer_id",  columnDefinition = "bigint not null")
@@ -26,27 +27,36 @@ class BusinessStatistics  (
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "frequency",length = 128, columnDefinition = "varchar(128) not null")
-    var frequency: Frequency,
+    val frequency: Frequency,
 
     @NotNull
-    @Column(name = "total_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var totalAmount: BigDecimal,
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
+    val currency: CurrencyType,
+
+    @NotNull
+    @Column(name = "repayment_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    val repaymentAmount: BigDecimal,
+
+    @NotNull
+    @Column(name = "payment_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    val paymentAmount: BigDecimal,
 
     @NotNull
     @Column(name = "year", columnDefinition = "bigint not null")
-    var year: Long,
+    val year: Long,
 
     @NotNull
     @Column(name = "month", columnDefinition = "bigint not null")
-    var month: Long,
+    val month: Long,
 
     @NotNull
     @Column(name = "day",  columnDefinition = "bigint not null")
-    var day: Long,
+    val day: Long,
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    var datetime: Date,
+    val datetime: Date,
 
     ): MultiTenant {
 

@@ -2,9 +2,7 @@ package cn.sunline.saas.tenant.controller
 
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.multi_tenant.model.Tenant
-import cn.sunline.saas.multi_tenant.model.TenantPermission
 import cn.sunline.saas.multi_tenant.services.TenantService
-import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.tenant.service.TenantManagerService
@@ -14,9 +12,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping

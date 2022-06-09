@@ -1,11 +1,13 @@
 package cn.sunline.saas.statistics.services
 
 import cn.sunline.saas.global.constant.Frequency
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
+import cn.sunline.saas.statistics.modules.TransactionType
 import org.springframework.stereotype.Service
 import cn.sunline.saas.statistics.modules.db.BusinessStatistics
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessStatistics
@@ -26,6 +28,7 @@ class BusinessStatisticsService (
         return get { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),dtoBusinessStatisticsFindParams.customerId))
+            predicates.add(criteriaBuilder.equal(root.get<CurrencyType>("currency"),dtoBusinessStatisticsFindParams.currencyType))
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),lastDate.year.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),lastDate.monthOfYear.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),lastDate.dayOfMonth.toLong()))
@@ -43,7 +46,9 @@ class BusinessStatisticsService (
                 id = sequence.nextId(),
                 customerId = dtoBusinessStatistics.customerId,
                 frequency = dtoBusinessStatistics.frequency,
-                totalAmount = dtoBusinessStatistics.amount,
+                paymentAmount = dtoBusinessStatistics.paymentAmount,
+                repaymentAmount = dtoBusinessStatistics.repaymentAmount,
+                currency = dtoBusinessStatistics.currencyType,
                 year = lastDateTime.year.toLong(),
                 month = lastDateTime.monthOfYear.toLong(),
                 day = lastDateTime.dayOfMonth.toLong(),

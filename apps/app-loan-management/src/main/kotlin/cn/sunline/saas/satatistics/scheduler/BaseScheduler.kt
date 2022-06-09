@@ -2,10 +2,12 @@ package cn.sunline.saas.satatistics.scheduler
 
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.setTimeZone
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.springframework.data.domain.Pageable
 
 abstract class BaseScheduler(
@@ -16,6 +18,7 @@ abstract class BaseScheduler(
         val tenantList = getTenantList()
         tenantList.forEach {
             ContextUtil.setTenant(it.id.toString())
+            ContextUtil.setTimeZone(DateTimeZone.forID(it.country.datetimeZone))
             val nowDate = tenantDateTime.now()
             //根据租户时区统计数据
             //每日统计
