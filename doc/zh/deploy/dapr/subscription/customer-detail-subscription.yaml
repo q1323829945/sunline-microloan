@@ -4,7 +4,7 @@ metadata:
   name: CUSTOMER_DETAIL
 spec:
   topic: CUSTOMER_DETAIL
-  route: /customer_detail
+  route: /CustomerStatistics
   pubsubname: underwriting-pub-sub
 scopes:
   - app-loan-management

@@ -1,5 +1,7 @@
 package cn.sunline.saas.satatistics.controllers
 
+import cn.sunline.saas.satatistics.service.BusinessStatisticsManagerService
+import cn.sunline.saas.satatistics.service.dto.DTOBusinessStatisticsCount
 import cn.sunline.saas.statistics.modules.TransactionType
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessCount
 import cn.sunline.saas.statistics.modules.dto.DTOBusinessDetail
@@ -16,10 +18,13 @@ import org.springframework.web.bind.annotation.RestController
 import javax.websocket.server.PathParam
 
 @RestController
-@RequestMapping("business_detail")
-class BusinessDetailController {
+@RequestMapping("BusinessStatistics")
+class BusinessStatisticsController {
     @Autowired
     private lateinit var businessDetailService: BusinessDetailService
+
+    @Autowired
+    private lateinit var businessStatisticsManagerService: BusinessStatisticsManagerService
 
     @PostMapping
     fun addOne(@RequestBody dtoBusinessDetail: DTOBusinessDetail){
@@ -31,13 +36,10 @@ class BusinessDetailController {
     }
 
     @GetMapping
-    fun getList(@PathParam("startDate") startDate:String,
-                @PathParam("endDate") endDate:String):List<DTOBusinessCount>{
-        return businessDetailService.getGroupByBusinessCount(
-            DTOBusinessDetailQueryParams(
-                startDateTime = DateTime.parse(startDate,DateTimeFormat.forPattern("yyyyMMddHHmmss")).toDate(),
-                endDateTime = DateTime.parse(endDate,DateTimeFormat.forPattern("yyyyMMddHHmmss")).toDate()
-            )
-        )
+    fun getStatisticsByDate(@PathParam("year") year:Long,
+                            @PathParam("month") month:Long,
+                            @PathParam("day") day:Long,
+                            @PathParam("tenantId") tenantId:Long):DTOBusinessStatisticsCount{
+        return businessStatisticsManagerService.getStatisticsByDate(year, month, day, tenantId)
     }
 }

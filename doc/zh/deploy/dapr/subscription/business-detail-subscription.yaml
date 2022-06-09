@@ -4,7 +4,7 @@ metadata:
   name: BUSINESS_DETAIL
 spec:
   topic: BUSINESS_DETAIL
-  route: /business_detail
+  route: /BusinessStatistics
   pubsubname: underwriting-pub-sub
 scopes:
   - app-loan-management
