@@ -61,7 +61,7 @@ class PubSubService {
         fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
-            val requestUrl = "http://localhost:3501/v1.0/publish/$pubSubName/$topic"
+            val requestUrl = "http://localhost:3500/v1.0/publish/$pubSubName/$topic"
             try {
                 runBlocking(CoroutineName("PUBSUB-$pubSubName-$topic")) {
                     logger.info { "[$seq] Started PubSub request: $requestUrl" }

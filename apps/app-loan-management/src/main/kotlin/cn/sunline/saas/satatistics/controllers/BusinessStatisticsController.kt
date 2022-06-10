@@ -39,7 +39,7 @@ class BusinessStatisticsController {
     fun getStatisticsByDate(@PathParam("year") year:Long,
                             @PathParam("month") month:Long,
                             @PathParam("day") day:Long,
-                            @PathParam("tenantId") tenantId:Long):DTOBusinessStatisticsCount{
+                            @PathParam("tenantId") tenantId:Long):List<DTOBusinessStatisticsCount>{
         return businessStatisticsManagerService.getStatisticsByDate(year, month, day, tenantId)
     }
 }

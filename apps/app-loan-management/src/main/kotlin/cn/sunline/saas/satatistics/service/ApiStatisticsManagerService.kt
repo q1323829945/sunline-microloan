@@ -1,5 +1,6 @@
 package cn.sunline.saas.satatistics.service
 
+import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.satatistics.service.dto.DTOApiStatisticsCount
@@ -16,17 +17,17 @@ class ApiStatisticsManagerService {
 
 
     fun getStatisticsByDate(year:Long,month:Long,day:Long,tenantId:Long): DTOApiStatisticsCount {
-        val page = apiStatisticsService.getPageWithTenant({
-            root, _, criteriaBuilder ->
+        val statistics = apiStatisticsService.get { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),year))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),month))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),day))
+            predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), Frequency.D))
             predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), tenantId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
+        }
 
-        return DTOApiStatisticsCount(page.content.sumOf { it.count },tenantId)
+        return DTOApiStatisticsCount(statistics?.count?:0,tenantId)
 
     }
 
