@@ -50,42 +50,40 @@ class TenantManagerService {
     }
 
     fun updateTenant(tenant:Tenant,dtoTenant: DTOTenant){
-        if(tenant.enabled || dtoTenant.enabled == true){
-            val tenantPermissions = mutableSetOf<TenantPermission>()
+        val tenantPermissions = mutableSetOf<TenantPermission>()
 
-            val productApplicationIds = dtoTenant.permissions?.map {
-                val tenantPermission = TenantPermission(
-                    productApplicationId = it.productApplicationId,
-                    tenantId = dtoTenant.id,
-                    enabled = true,
-                    subscriptionId = it.subscriptionId
-                )
-                tenantPermissions += tenantPermissionService.save(tenantPermission)
-                it.productApplicationId
-            }
-
-            if(productApplicationIds?.isEmpty() == false){
-                tenant.permissions?.filter {
-                    !productApplicationIds.contains(it.productApplicationId)
-                }?.forEach {
-                    it.enabled = false
-                }
-            } else {
-                tenant.permissions?.forEach {
-                    it.enabled = false
-                }
-            }
-
-
-            tenant.permissions?.run {
-                tenantPermissions += this
-            }
-
-            tenant.enabled = dtoTenant.enabled?:true
-            tenant.permissions = tenantPermissions.toMutableList()
-
-            tenantService.save(tenant)
+        val productApplicationIds = dtoTenant.permissions?.map {
+            val tenantPermission = TenantPermission(
+                productApplicationId = it.productApplicationId,
+                tenantId = dtoTenant.id,
+                enabled = true,
+                subscriptionId = it.subscriptionId
+            )
+            tenantPermissions += tenantPermissionService.save(tenantPermission)
+            it.productApplicationId
         }
+
+        if(productApplicationIds?.isEmpty() == false){
+            tenant.permissions?.filter {
+                !productApplicationIds.contains(it.productApplicationId)
+            }?.forEach {
+                it.enabled = false
+            }
+        } else {
+            tenant.permissions?.forEach {
+                it.enabled = false
+            }
+        }
+
+
+        tenant.permissions?.run {
+            tenantPermissions += this
+        }
+
+        tenant.enabled = dtoTenant.enabled
+        tenant.permissions = tenantPermissions.toMutableList()
+
+        tenantService.save(tenant)
 
     }
 }
