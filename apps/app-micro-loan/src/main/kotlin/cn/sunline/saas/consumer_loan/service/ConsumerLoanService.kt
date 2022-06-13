@@ -6,9 +6,7 @@ import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundEx
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
-import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
-import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleDetailTrialView
-import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleTrialView
+import cn.sunline.saas.consumer_loan.service.dto.*
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
@@ -31,6 +29,7 @@ import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
+import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
@@ -354,5 +353,29 @@ class ConsumerLoanService(
             interestRate = interestRate,
             schedule = dtoRepaymentScheduleDetailTrialView
         )
+    }
+
+
+    fun addRepaymentAccount(dtoRepaymentAccountAdd: DTORepaymentAccountAdd
+    ): DTORepaymentArrangementView {
+        val loanAgreement = loanAgreementService.getOne(dtoRepaymentAccountAdd.agreementId.toLong())
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+        return loanAgreementService.addRepaymentAccount(
+            dtoRepaymentAccountAdd.agreementId.toLong(),
+            ConsumerLoanAssembly.convertToDTORepaymentAgreementAdd(
+                dtoRepaymentAccountAdd.repaymentAccount,
+                dtoRepaymentAccountAdd.repaymentAccountBank,
+                loanProduct
+            )
+        )
+    }
+
+
+    fun repayEarly(dtoRepayEarly: DTORepayEarly): DTORepayEarly {
+        val loanAgreement = loanAgreementService.getOne(dtoRepayEarly.agreementId.toLong())
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+        return dtoRepayEarly
     }
 }

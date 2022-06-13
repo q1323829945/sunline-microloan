@@ -24,3 +24,7 @@ data class DTOLoanAgreementView(
     val disbursementArrangement: DisbursementArrangement?,
     val invoiceArrangement: InvoiceArrangement
 )
+
+data class DTORepaymentArrangementView(
+    val repaymentArrangement: RepaymentArrangement
+)
