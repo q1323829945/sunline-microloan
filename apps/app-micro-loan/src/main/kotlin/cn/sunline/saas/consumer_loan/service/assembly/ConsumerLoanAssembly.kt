@@ -6,7 +6,6 @@ import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
 import cn.sunline.saas.disbursement.arrangement.model.DisbursementLendType
 import cn.sunline.saas.disbursement.arrangement.model.dto.DTODisbursementArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
-import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestArrangementAdd
 import cn.sunline.saas.interest.arrangement.model.dto.DTOInterestRate
 import cn.sunline.saas.invoice.arrangement.service.DTOInvoiceArrangement
@@ -17,6 +16,7 @@ import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
 import cn.sunline.saas.repayment.arrangement.model.dto.DTOPrepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
+import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.underwriting.arrangement.model.dto.DTOUnderwritingArrangement
 import cn.sunline.saas.underwriting.arrangement.model.dto.DTOUnderwritingArrangementAdd
 import cn.sunline.saas.underwriting.arrangement.model.dto.DTOUnderwritingArrangementInvolvement
@@ -158,5 +158,43 @@ object ConsumerLoanAssembly {
             )
         }
         return dtoLoanInvoice
+    }
+
+
+
+    fun convertToDTORepaymentAgreementAdd(
+        repaymentAccount: String,
+        repaymentAccountBank: String,
+        loanProduct: DTOLoanProduct
+    ): DTORepaymentArrangementAdd {
+        val dtoPrepayments = mutableListOf<DTOPrepaymentArrangementAdd>()
+        loanProduct.repaymentFeature.prepayment.forEach {
+            dtoPrepayments.add(
+                DTOPrepaymentArrangementAdd(
+                    term = it.term,
+                    type = it.type,
+                    penaltyRatio = it.penaltyRatio
+                )
+            )
+        }
+
+        val dtoRepaymentAccounts = mutableListOf<DTORepaymentAccount>()
+        dtoRepaymentAccounts.add(
+            DTORepaymentAccount(
+                repaymentAccount = repaymentAccount,
+                repaymentAccountBank = repaymentAccountBank
+            )
+        )
+
+        val dtoRepaymentArrangementAdd = loanProduct.repaymentFeature.run {
+            DTORepaymentArrangementAdd(
+                paymentMethod = payment.paymentMethod,
+                frequency = payment.frequency,
+                repaymentDayType = payment.repaymentDayType,
+                prepaymentArrangement = dtoPrepayments,
+                repaymentAccount = dtoRepaymentAccounts
+            )
+        }
+        return dtoRepaymentArrangementAdd
     }
 }
