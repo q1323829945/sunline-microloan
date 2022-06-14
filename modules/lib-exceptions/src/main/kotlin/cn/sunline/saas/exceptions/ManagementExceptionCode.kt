@@ -110,5 +110,9 @@ enum class ManagementExceptionCode(val code: Int) {
     INVOICE_ARRANGEMENT_NOT_FOUND(5620),
 
     //invoice 5630-5639
-    INVOICE_NOT_FOUND(5630)
+    INVOICE_NOT_FOUND(5630),
+
+    //invoice 5640-5649
+    ACCOUNT_NOT_FOUND(5640),
+    ACCOUNT_BALANCE_NEGATE(5641),
 }

@@ -1,5 +1,6 @@
 package cn.sunline.saas.account.service
 
+import cn.sunline.saas.account.component.increase
 import cn.sunline.saas.account.model.*
 import cn.sunline.saas.account.model.db.Account
 import cn.sunline.saas.account.model.db.AccountBalance
@@ -9,8 +10,11 @@ import cn.sunline.saas.account.model.dto.DTOAccountAdd
 import cn.sunline.saas.account.repository.AccountEntryRepository
 import cn.sunline.saas.account.repository.AccountInvolvementRepository
 import cn.sunline.saas.account.repository.AccountRepository
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -33,16 +37,49 @@ class AccountService(
     @Autowired
     private lateinit var seq: Sequence
 
+    @Autowired
+    private lateinit var tenantDateTime: TenantDateTime
+
     @Transactional
-    fun saveAccount(
-        accountClass: AccountClass, accountType: AccountType, accountBalanceType: AccountBalanceType,
+    fun initialAccount(
+        accountClass: AccountClass,
+        accountType: AccountType,
+        accountBalanceType: AccountBalanceType,
         dtoAccountAdd: DTOAccountAdd
+    ): Account {
+        return accountRepository.findByIdOrNull(dtoAccountAdd.id) ?: createAccount(
+            accountClass, accountType, accountBalanceType, dtoAccountAdd
+        )
+    }
+
+    @Transactional
+    fun saveAccountBalance(
+        account: Account, amount: BigDecimal, dt: DateTime, currency: CurrencyType, purpose: String?
+    ): Account {
+        val accountPo = save(account)
+        saveAccountEntry(account.id, amount, dt, currency, purpose)
+        return accountPo
+    }
+
+    fun increaseBalance(
+        balances: MutableList<AccountBalance>, amount: BigDecimal, dt: DateTime, accountBalanceType: AccountBalanceType
     ) {
-        val account = accountRepository.findByIdOrNull(dtoAccountAdd.id)
-        if (account == null) {
-            createAccount(accountClass, accountType, accountBalanceType, dtoAccountAdd)
-        } else {
-            updateAccountBalance(accountBalanceType, account, dtoAccountAdd)
+        var exists = false
+        balances.forEach {
+            if (it.accountBalanceType == accountBalanceType){
+                it.increase(amount,dt)
+                exists = true
+            }
+        }
+        if (!exists){
+            balances.add(
+                AccountBalance(
+                    id = seq.nextId(),
+                    accountBalance = amount,
+                    accountBalanceDate = dt.toDate(),
+                    accountBalanceType = accountBalanceType
+                )
+            )
         }
     }
 
@@ -51,16 +88,12 @@ class AccountService(
         accountType: AccountType,
         accountBalanceType: AccountBalanceType,
         dtoAccountAdd: DTOAccountAdd
-    ) {
+    ): Account {
         val accountBalances = mutableListOf<AccountBalance>()
-        accountBalances.add(
-            AccountBalance(
-                id = seq.nextId(),
-                accountBalance = BigDecimal(dtoAccountAdd.amount),
-                accountBalanceDate = dtoAccountAdd.date,
-                accountBalanceType = accountBalanceType
-            )
-        )
+        val balance = BigDecimal(dtoAccountAdd.amount)
+        val dt = tenantDateTime.toTenantDateTime(dtoAccountAdd.date)
+
+        increaseBalance(accountBalances,balance, dt, accountBalanceType)
 
         val account = Account(
             id = dtoAccountAdd.id,
@@ -91,34 +124,23 @@ class AccountService(
             )
         )
 
-        accountRepository.save(account)
+        val accountPo = accountRepository.save(account)
         accountInvolvementRepository.saveAll(accountInvolvements)
 
-        saveAccountEntry(account.id, dtoAccountAdd)
+        saveAccountEntry(account.id, balance, dt, dtoAccountAdd.currency, dtoAccountAdd.purpose)
+        return accountPo
     }
 
-    private fun updateAccountBalance(
-        accountBalanceType: AccountBalanceType,
-        account: Account,
-        dtoAccountAdd: DTOAccountAdd
+    private fun saveAccountEntry(
+        accountId: Long, amount: BigDecimal, dt: DateTime, currency: CurrencyType, purpose: String?
     ) {
-        account.accountBalance.first { it.accountBalanceType == accountBalanceType }.run {
-            accountBalance = accountBalance.subtract(BigDecimal(dtoAccountAdd.amount))
-            accountBalanceDate = dtoAccountAdd.date
-        }
-
-        accountRepository.save(account)
-        saveAccountEntry(account.id, dtoAccountAdd)
-    }
-
-    private fun saveAccountEntry(accountId: Long, dtoAccountAdd: DTOAccountAdd) {
         val accountEntry = AccountEntry(
             id = seq.nextId(),
             accountId = accountId,
-            accountEntryAmount = BigDecimal(dtoAccountAdd.amount),
-            accountEntryCurrency = dtoAccountAdd.currency,
-            accountPurpose = dtoAccountAdd.purpose,
-            accountEntryValueDate = dtoAccountAdd.date
+            accountEntryAmount = amount,
+            accountEntryCurrency = currency,
+            accountPurpose = purpose,
+            accountEntryValueDate = dt.toDate()
         )
         accountEntryRepository.save(accountEntry)
     }

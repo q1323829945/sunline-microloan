@@ -8,6 +8,7 @@ import cn.sunline.saas.banking.transaction.service.BankingTransactionService
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.rpc.pubsub.PositionKeepingPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTOBusinessDetail
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
@@ -31,7 +32,10 @@ class PositionKeepingService(
     @Autowired
     private lateinit var loanAccountService: LoanAccountService
 
-    fun registeredPositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
+    @Autowired
+    private lateinit var tenantDateTime: TenantDateTime
+
+    fun initialPositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
         val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)
         val dealAccount = runBlocking(CoroutineName("POSITION-KEEPING-ACCOUNT")) {
             entryPositionKeepingAccount(bankingTransaction)
@@ -41,18 +45,24 @@ class PositionKeepingService(
     suspend fun entryPositionKeepingAccount(bankingTransaction: BankingTransaction) = coroutineScope {
         if (bankingTransaction.transactionStatus == TransactionStatus.INITIATE) {
             val dtoAccountAdd = bankingTransactionService.execute(bankingTransaction).run {
+                val dt = executedDate
+                val now = if(dt == null){
+                    tenantDateTime.now()
+                }else{
+                    tenantDateTime.toTenantDateTime(dt)
+                }
                 DTOAccountAdd(
                     id = agreementId,
                     purpose = transactionDescription,
                     currency = currency,
                     amount = amount.toPlainString(),
-                    date = executedDate!!,
+                    date = now.toString(),
                     businessUnit = businessUnit,
                     customerId = customerId
                 )
             }
 
-            loanAccountService.saveAccount(dtoAccountAdd)
+            loanAccountService.initialAccount(dtoAccountAdd)
 
             positionKeepingPublish.addBusinessDetail(DTOBusinessDetail(
                 agreementId = bankingTransaction.agreementId,
