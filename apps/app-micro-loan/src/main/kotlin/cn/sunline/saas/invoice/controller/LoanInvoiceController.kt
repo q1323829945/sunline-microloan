@@ -36,12 +36,10 @@ class LoanInvoiceController {
     @GetMapping("/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}")
     fun retrieveHistory(@PathVariable("customerId") customerId: Long,
                        @PathVariable("invoiceStartDate") invoiceStartDate: String,
-                       @PathVariable("invoiceEndDate") invoiceEndDate: String,
-                       pageable: Pageable
-    ): ResponseEntity<DTOPagedResponseSuccess> {
-
-        val page = loanInvoiceService.getHistoryPage(customerId,invoiceStartDate,invoiceEndDate,pageable)
-        return DTOPagedResponseSuccess(page.map { it }).response()
+                       @PathVariable("invoiceEndDate") invoiceEndDate: String
+    ): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
+        val response = loanInvoiceService.getHistoryPage(customerId,invoiceStartDate,invoiceEndDate)
+        return DTOResponseSuccess(response).response()
     }
 
     @PostMapping("/repay")
@@ -51,8 +49,8 @@ class LoanInvoiceController {
     }
 
     @GetMapping("/retrieve/{customerId}/current")
-    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<List<DTOInvoiceInfoView>>>{
-        val response = loanInvoiceService.retrieveCurrent(customerId)
+    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>>{
+        val response = loanInvoiceService.retrieveCurrentAccountedInvoices(customerId)
         return DTOResponseSuccess(response).response()
     }
 }

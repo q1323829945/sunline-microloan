@@ -4,16 +4,20 @@ import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.exception.DisbursementArrangementNotFoundException
 import cn.sunline.saas.consumer_loan.exception.LoanAgreementStatusCheckException
+import cn.sunline.saas.consumer_loan.exception.RepaymentAgreementBusinessException
 import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.service.assembly.ConsumerLoanAssembly
 import cn.sunline.saas.consumer_loan.service.dto.*
 import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
+import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.model.TermType
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.arrangement.exception.BaseRateNullException
 import cn.sunline.saas.interest.component.InterestRateHelper
@@ -29,9 +33,9 @@ import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
-import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.repayment.arrangement.service.RepaymentAccountService
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
 import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
@@ -46,6 +50,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PathVariable
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -93,6 +98,9 @@ class ConsumerLoanService(
 
     @Autowired
     private lateinit var ratePlanInvokeImpl: RatePlanInvokeImpl
+
+    @Autowired
+    private lateinit var repaymentAccountService: RepaymentAccountService
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -357,20 +365,60 @@ class ConsumerLoanService(
 
 
     fun addRepaymentAccount(dtoRepaymentAccountAdd: DTORepaymentAccountAdd
-    ): DTORepaymentArrangementView {
-        val loanAgreement = loanAgreementService.getOne(dtoRepaymentAccountAdd.agreementId.toLong())
-            ?: throw LoanAgreementNotFoundException("loan agreement not found")
-        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
-        return loanAgreementService.addRepaymentAccount(
+    ): MutableList<DTORepaymentAccountView> {
+
+        val repaymentAccount = repaymentAccountService.retrieveByRepaymentAccount(dtoRepaymentAccountAdd.repaymentAccount)
+        if(!repaymentAccount.isEmpty){
+            throw RepaymentAgreementBusinessException("The repaymentAccount already exists", ManagementExceptionCode.DATA_ALREADY_EXIST)
+        }
+
+        val result =  loanAgreementService.addRepaymentAccount(
             dtoRepaymentAccountAdd.agreementId.toLong(),
-            ConsumerLoanAssembly.convertToDTORepaymentAgreementAdd(
+            ConsumerLoanAssembly.convertToDTORepaymentAccountAdd(
                 dtoRepaymentAccountAdd.repaymentAccount,
-                dtoRepaymentAccountAdd.repaymentAccountBank,
-                loanProduct
+                dtoRepaymentAccountAdd.repaymentAccountBank
             )
+        )
+        return objectMapper.convertValue(result.repaymentArrangement.repaymentAccounts)
+    }
+
+    fun retrieveLoanAgreementDetail(agreementId: Long): DTOLoanAgreementDetailView {
+
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+
+        val repaymentArrangement = repaymentArrangementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("repayment arrangement not found")
+
+        val disbursementArrangement = disbursementArrangementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("disbursement arrangement not found")
+
+        return DTOLoanAgreementDetailView(
+            agreementId = agreementId.toString(),
+            productName = loanProduct.name,
+            amount = loanAgreement.amount.toPlainString(),
+            term = loanAgreement.term,
+            disbursementAccount = disbursementArrangement.disbursementAccount,
+            purpose = loanAgreement.purpose,
+            paymentMethod = repaymentArrangement.paymentMethod,
+            disbursementBank = disbursementArrangement.disbursementAccountBank,
+            agreementDocumentId = loanAgreement.agreementDocument,
         )
     }
 
+    fun retrieveBankList(): MutableList<DTOBankListView> {
+        val list = ArrayList<DTOBankListView>()
+        for (index in 1..10){
+            list += DTOBankListView(
+                id = index.toString(),
+                name = "bank"+index,
+                code = index.toString()
+            )
+        }
+        return list
+    }
 
     fun repayEarly(dtoRepayEarly: DTORepayEarly): DTORepayEarly {
         val loanAgreement = loanAgreementService.getOne(dtoRepayEarly.agreementId.toLong())

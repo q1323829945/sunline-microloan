@@ -60,7 +60,7 @@ class Invoice(
     val invoicee: Long,
 
     @NotNull
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "invoice_id")
     val invoiceLines: MutableList<InvoiceLine>,
 

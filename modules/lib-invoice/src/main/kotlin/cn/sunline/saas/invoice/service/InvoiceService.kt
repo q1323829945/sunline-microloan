@@ -122,26 +122,26 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
     fun listInvoiceByInvoiceeAndDate(
         invoicee: Long,
         invoiceStartDate: String?,
-        invoiceEndDate: String?,
-        pageable: Pageable
+        invoiceEndDate: String?
     ): Page<Invoice> {
         val specification: Specification<Invoice> =
             Specification { root: Root<Invoice>, _, criteriaBuilder ->
                 val predicates = mutableListOf<Predicate>()
+                predicates.add(criteriaBuilder.equal(root.get<InvoiceStatus>("invoiceStatus"), InvoiceStatus.FINISHED))
                 invoicee.run { predicates.add(criteriaBuilder.equal(root.get<Long>("invoicee"), invoicee)) }
                 invoiceStartDate?.run {
                     predicates.add(
                         criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("invoice_period_from_date"),
-                            invoiceStartDate
+                            root.get("invoicePeriodFromDate"),
+                            tenantDateTime.toTenantDateTime(invoiceStartDate).toDate()
                         )
                     )
                 }
                 invoiceEndDate?.run {
                     predicates.add(
-                        criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("invoice_period_to_date"),
-                            invoiceEndDate
+                        criteriaBuilder.lessThanOrEqualTo(
+                            root.get("invoicePeriodToDate"),
+                            tenantDateTime.toTenantDateTime(invoiceEndDate).toDate()
                         )
                     )
                 }
@@ -149,17 +149,20 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
             }
         return getPageWithTenant(
             specification,
-            PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc("datetime")))
+            Pageable.unpaged()
+            //PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc("invoicePeriodFromDate")))
         )
     }
 
-    fun currentInvoiceByInvoicee(
-        invoicee: Long
+    fun retrieveCurrentInvoices(
+        invoicee: Long,
+        invoiceStatus: InvoiceStatus?
     ): Page<Invoice> {
         val specification: Specification<Invoice> =
             Specification { root: Root<Invoice>, _, criteriaBuilder ->
                 val predicates = mutableListOf<Predicate>()
                 invoicee.run { predicates.add(criteriaBuilder.equal(root.get<Long>("invoicee"), invoicee)) }
+                invoiceStatus?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("invoiceStatus"), invoiceStatus)) }
                 criteriaBuilder.and(*(predicates.toTypedArray()))
             }
         return getPageWithTenant(specification, Pageable.unpaged())

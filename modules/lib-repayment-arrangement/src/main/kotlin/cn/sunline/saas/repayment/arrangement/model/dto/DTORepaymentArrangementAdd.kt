@@ -27,3 +27,10 @@ data class DTORepaymentAccount(
     val repaymentAccount: String,
     val repaymentAccountBank: String
 )
+
+
+data class DTORepaymentAccountAdd(
+    val id: Long,
+    val repaymentAccount: String,
+    val repaymentAccountBank: String
+)

@@ -20,7 +20,8 @@ data class DTOLoanProduct(
     var interestFeature: DTOInterestFeature,
     var repaymentFeature: DTORepaymentFeature,
     var feeFeatures: MutableList<DTOFeeFeature>?,
-    var loanUploadConfigureFeatures: MutableList<DTOLoanUploadConfigure>?
+    var loanUploadConfigureFeatures: MutableList<DTOLoanUploadConfigure>?,
+    var name: String
 )
 
 data class DTOInterestFeature(

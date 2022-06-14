@@ -1,8 +1,10 @@
 package cn.sunline.saas.repayment.arrangement.factory
 
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.repayment.arrangement.model.db.PrepaymentArrangement
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentArrangement
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,4 +58,28 @@ class RepaymentArrangementFactory {
         )
     }
 
+    fun instanceRepaymentAccount(repaymentArrangement: RepaymentArrangement, dtoRepaymentAccountList: MutableList<DTORepaymentAccount>): RepaymentArrangement {
+
+        val prepaymentArrangement = repaymentArrangement.prepayment
+        val repaymentAccount = repaymentArrangement.repaymentAccounts
+
+        dtoRepaymentAccountList.forEach{
+            repaymentAccount.add(
+                RepaymentAccount(
+                    id = seq.nextId(),
+                    repaymentAccount = it.repaymentAccount,
+                    repaymentAccountBank = it.repaymentAccountBank
+                )
+            )
+        }
+
+        return RepaymentArrangement(
+            id = repaymentArrangement.id,
+            paymentMethod = repaymentArrangement.paymentMethod,
+            frequency = repaymentArrangement.frequency,
+            repaymentDayType = repaymentArrangement.repaymentDayType,
+            prepayment = prepaymentArrangement,
+            repaymentAccounts = repaymentAccount
+        )
+    }
 }

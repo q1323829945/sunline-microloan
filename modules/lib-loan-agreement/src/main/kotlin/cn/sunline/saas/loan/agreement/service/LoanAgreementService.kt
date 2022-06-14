@@ -16,6 +16,7 @@ import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.repository.LoanAgreementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.repayment.arrangement.exception.RepaymentArrangementNotFoundException
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import org.springframework.beans.factory.annotation.Autowired
@@ -127,8 +128,8 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
     }
 
     @Transactional
-    fun addRepaymentAccount(agreementId: Long, repaymentArrangement: DTORepaymentArrangementAdd): DTORepaymentArrangementView {
-        val repaymentArrangement = repaymentArrangementService.registered(agreementId, repaymentArrangement)
+    fun addRepaymentAccount(agreementId: Long, dtoRepaymentAccountList: MutableList<DTORepaymentAccount>): DTORepaymentArrangementView {
+        val repaymentArrangement = repaymentArrangementService.addRepaymentAccount(agreementId, dtoRepaymentAccountList)
         return DTORepaymentArrangementView(repaymentArrangement)
     }
 }

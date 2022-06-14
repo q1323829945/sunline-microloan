@@ -39,6 +39,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             invoicee = invoice.invoicee,
             invoiceId = invoiceId,
             invoiceTotalAmount = invoiceTotalAmount.toPlainString(),
+            repaymentStatus = invoice.repaymentStatus,
             invoiceLines = lines
         )
     }
@@ -46,10 +47,9 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
     fun getHistoryPage(
         customerId: Long,
         invoiceStartDate: String?,
-        invoiceEndDate: String?,
-        pageable: Pageable
-    ): Page<DTOInvoiceInfoView> {
-        val page = invoiceService.listInvoiceByInvoiceeAndDate(customerId, invoiceStartDate, invoiceEndDate, pageable)
+        invoiceEndDate: String?
+    ): MutableList<DTOInvoiceInfoView> {
+        val page = invoiceService.listInvoiceByInvoiceeAndDate(customerId, invoiceStartDate, invoiceEndDate)
         val pageMap = page.map { invoice ->
             val lines = ArrayList<DTOInvoiceLinesView>()
             invoice?.invoiceLines?.forEach{
@@ -68,10 +68,11 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceTotalAmount =  invoice.invoiceAmount.toPlainString(),
                 invoiceCurrency = agreement.currency,
                 invoiceStatus = invoice.invoiceStatus,
+                invoiceRepaymentDate = invoice.invoiceRepaymentDate.toString(),
                 invoiceLines = lines
             )
         }
-        return pageMap
+        return pageMap.toList()
     }
 
     fun repay (dtoInvoiceRepay: List<DTOInvoiceRepay>): MutableList<DTOInvoiceInfoView> {
@@ -107,9 +108,9 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         return list
     }
 
-    fun retrieveCurrent(customerId: Long): List<DTOInvoiceInfoView>? {
-        val page = invoiceService.currentInvoiceByInvoicee(customerId)
-        val filterPage = page.filter { it.invoiceStatus != InvoiceStatus.FINISHED }.map {
+    fun retrieveCurrentAccountedInvoices(customerId: Long): MutableList<DTOInvoiceInfoView> {
+        val page = invoiceService.retrieveCurrentInvoices(customerId,InvoiceStatus.ACCOUNTED)
+        val mapPage = page.map {
                 invoice ->
             val lines = ArrayList<DTOInvoiceLinesView>()
             invoice?.invoiceLines?.forEach{
@@ -128,9 +129,12 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceTotalAmount =  invoice.invoiceAmount.toPlainString(),
                 invoiceCurrency = agreement.currency,
                 invoiceStatus = invoice.invoiceStatus,
+                repaymentStatus = invoice.repaymentStatus,
+                agreementId = invoice.agreementId.toString(),
+                loanAgreementFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(agreement.fromDateTime)),
                 invoiceLines = lines
             )
         }
-        return filterPage.toList()
+        return mapPage.toList()
     }
 }

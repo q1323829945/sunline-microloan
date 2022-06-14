@@ -6,6 +6,7 @@ import cn.sunline.saas.repayment.arrangement.exception.RepaymentArrangementNotFo
 import cn.sunline.saas.repayment.arrangement.factory.RepaymentArrangementFactory
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.db.RepaymentArrangement
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentAccount
 import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.repository.RepaymentArrangementRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,5 +33,10 @@ class RepaymentArrangementService(private val repaymentArrangementRepos: Repayme
         val repaymentArrangement = getOne(agreementId)
             ?: throw RepaymentArrangementNotFoundException("repayment arrangement not found")
         return repaymentArrangement.repaymentAccounts.filter { it.status == YesOrNo.Y }.toMutableList()
+    }
+
+    fun addRepaymentAccount(agreementId: Long, dtoRepaymentAccountList: MutableList<DTORepaymentAccount>): RepaymentArrangement{
+        val repaymentArrangement = this.getOne(agreementId)?: throw RepaymentArrangementNotFoundException("repayment arrangement not found")
+        return save(repaymentArrangementFactory.instanceRepaymentAccount(repaymentArrangement, dtoRepaymentAccountList))
     }
 }
