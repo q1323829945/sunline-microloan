@@ -16,7 +16,7 @@ class PositionKeepingController {
 
     @PostMapping
     fun register(@RequestBody dtoBankingTransaction: DTOBankingTransaction){
-        positionKeepingService.registeredPositionKeeping(dtoBankingTransaction)
+        positionKeepingService.initialPositionKeeping(dtoBankingTransaction)
     }
 
 }
