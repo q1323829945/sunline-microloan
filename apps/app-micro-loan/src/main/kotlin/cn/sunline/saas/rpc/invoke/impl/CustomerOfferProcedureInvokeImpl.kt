@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
@@ -13,11 +14,9 @@ import org.springframework.stereotype.Component
 @Component
 class CustomerOfferProcedureInvokeImpl: CustomerOfferProcedureInvoke {
 
-    private val applId = "app-loan-management"
-
     override fun getProductUploadConfig(productId: Long): List<DTOProductUploadConfig> {
         return RPCService.get(
-            applId,
+            APP_LOAN_MANAGEMENT,
             "LoanProduct/uploadConfig/$productId",
             mapOf(),
             headerParams = mapOf(
@@ -30,7 +29,7 @@ class CustomerOfferProcedureInvokeImpl: CustomerOfferProcedureInvoke {
 
     override fun getInterestRate(productId: Long): List<LoanTermType> {
         return RPCService.get(
-            applId,
+            APP_LOAN_MANAGEMENT,
             "LoanProduct/interestRate/$productId",
             mapOf(),
             headerParams = mapOf(

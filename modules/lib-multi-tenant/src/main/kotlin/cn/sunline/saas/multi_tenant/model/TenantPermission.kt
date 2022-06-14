@@ -18,6 +18,8 @@ import javax.validation.constraints.NotNull
 )
 class TenantPermission(
     @Id
+    val id: Long,
+
     @Column(name = "product_application_id", nullable = false, columnDefinition = "varchar(32)")
     val productApplicationId: String,
 

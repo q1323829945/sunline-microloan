@@ -1,6 +1,8 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.dapr_wrapper.invoke.response.RPCResponse
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -12,12 +14,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class PdpaInvokeImpl: PdpaInvoke {
-
-    private val applId = "app-loan-management"
-
-    override fun getPDPAInformation(countryCode: String): DTOResponseSuccess<PDPAInformation>? {
-        return RPCService.get<DTOResponseSuccess<PDPAInformation>>(
-            serviceName = applId,
+    override fun getPDPAInformation(countryCode: String): RPCResponse<PDPAInformation>? {
+        return RPCService.get<RPCResponse<PDPAInformation>>(
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "pdpa/$countryCode/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(

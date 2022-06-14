@@ -1,9 +1,8 @@
-package cn.sunline.saas.global.filter
+package cn.sunline.saas.filter
 
 import cn.sunline.saas.global.constant.meta.Header
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.global.util.setUserId
+import cn.sunline.saas.global.util.*
+import cn.sunline.saas.multi_tenant.services.TenantService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -11,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import org.apache.commons.io.IOUtils
 import org.springframework.core.MethodParameter
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.converter.HttpMessageConverter
@@ -21,7 +21,9 @@ import java.lang.reflect.Type
 import java.nio.charset.Charset
 
 @ControllerAdvice
-class RequestBodyAdviceFilter : RequestBodyAdvice {
+class RequestBodyAdviceFilter(
+    private val tenantService: TenantService
+) : RequestBodyAdvice {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -66,6 +68,14 @@ class RequestBodyAdviceFilter : RequestBodyAdvice {
 
                     this[Header.TENANT_AUTHORIZATION.key]?.run {
                         ContextUtil.setTenant(this)
+
+                        if(ContextUtil.getPermissions().isNullOrEmpty()){
+                            val tenants = tenantService.getOne(this.toLong())
+                            val permissions = tenants?.permissions?.map {
+                                it.productApplicationId
+                            }
+                            ContextUtil.setPermissions(permissions)
+                        }
                     }
                 }
                 return httpHeaders

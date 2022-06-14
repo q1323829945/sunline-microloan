@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: RETRIEVE_CUSTOMER_CREDIT_RATING
   route: /CreditRating
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-wrapper-pub-sub
 scopes:
 - app-wrapper
 

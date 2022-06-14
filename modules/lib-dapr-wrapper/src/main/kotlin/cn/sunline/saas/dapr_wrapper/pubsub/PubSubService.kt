@@ -4,6 +4,8 @@ import cn.sunline.saas.dapr_wrapper.pubsub.request.PubsubRequest
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.meta.Header
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getPermissions
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -59,6 +61,11 @@ class PubSubService {
          *                      `ManagementExceptionCode.DAPR_INVOCATION_POST_ERROR` is thrown.
          */
         fun publish(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
+            if(checkPermissions(pubSubName)){
+                logger.info { "没有权限" }
+                return
+            }
+
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
             val requestUrl = "http://localhost:3500/v1.0/publish/$pubSubName/$topic"
@@ -113,6 +120,16 @@ class PubSubService {
                     "requestMethod" to httpResponse.request.method.value
                 )
             )
+        }
+
+        private fun checkPermissions(applicationId:String):Boolean{
+            val permissions = ContextUtil.getPermissions()
+            if(permissions.isNullOrEmpty()){
+                logger.info { "permissions is empty" }
+            }
+            permissions?.firstOrNull { applicationId.startsWith(it) }?.run {
+                return false
+            }?: return true
         }
     }
 }

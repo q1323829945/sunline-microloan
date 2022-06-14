@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -18,15 +19,13 @@ import org.springframework.stereotype.Component
 @Component
 class RbacInvokeImpl: RbacInvoke {
 
-    private val applId = "app-loan-management"
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     override fun getPerson(id: Long?): DTOPerson? {
 
         id?.run {
             val person = RPCService.get<DTOResponseSuccess<DTOPerson>>(
-                serviceName = applId,
+                serviceName = APP_LOAN_MANAGEMENT,
                 methodName = "Person/$id",
                 queryParams = mapOf(),
                 headerParams = mapOf(

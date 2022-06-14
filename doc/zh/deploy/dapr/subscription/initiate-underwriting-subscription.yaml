@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: INITIATE_UNDERWRITING
   route: /Underwriting/Initiate
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-loan-management-pub-sub
 scopes:
   - app-loan-management
 

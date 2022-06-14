@@ -15,8 +15,8 @@ abstract class BaseScheduler(
     private val tenantService: TenantService
 ) {
     fun runScheduler(){
-        val tenantList = getTenantList()
-        tenantList.forEach {
+        val tenants = getTenants()
+        tenants.forEach {
             ContextUtil.setTenant(it.id.toString())
             ContextUtil.setTimeZone(DateTimeZone.forID(it.country.datetimeZone))
             val nowDate = tenantDateTime.now()
@@ -49,7 +49,7 @@ abstract class BaseScheduler(
         return tenantDateTime.toTenantDateTime(dateTime.toLocalDate().toDate())
     }
 
-    private fun getTenantList():List<Tenant>{
+    private fun getTenants():List<Tenant>{
         return tenantService.getPaged(null, Pageable.unpaged()).content
     }
 }

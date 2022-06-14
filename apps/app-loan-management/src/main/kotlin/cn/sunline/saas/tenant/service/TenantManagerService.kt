@@ -8,9 +8,12 @@ import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.tenant.service.dto.DTOTenant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import cn.sunline.saas.seq.Sequence
 
 @Service
-class TenantManagerService {
+class TenantManagerService(
+    private val sequence: Sequence
+) {
     @Autowired
     private lateinit var tenantService: TenantService
 
@@ -31,6 +34,7 @@ class TenantManagerService {
 
         dtoTenant.permissions?.map {
             val tenantPermission = TenantPermission(
+                sequence.nextId(),
                 productApplicationId = it.productApplicationId,
                 tenantId = dtoTenant.id,
                 enabled = true,
@@ -52,32 +56,27 @@ class TenantManagerService {
     fun updateTenant(tenant:Tenant,dtoTenant: DTOTenant){
         val tenantPermissions = mutableSetOf<TenantPermission>()
 
-        val productApplicationIds = dtoTenant.permissions?.map {
-            val tenantPermission = TenantPermission(
-                productApplicationId = it.productApplicationId,
-                tenantId = dtoTenant.id,
-                enabled = true,
-                subscriptionId = it.subscriptionId
-            )
-            tenantPermissions += tenantPermissionService.save(tenantPermission)
-            it.productApplicationId
+        tenant.permissions?.map { it.productApplicationId }?.run {
+            dtoTenant.permissions?.forEach {
+                if(!this.contains(it.productApplicationId)){
+                    tenantPermissions += tenantPermissionService.save(TenantPermission(
+                        sequence.nextId(),
+                        productApplicationId = it.productApplicationId,
+                        tenantId = dtoTenant.id,
+                        enabled = true,
+                        subscriptionId = it.subscriptionId
+                    ))
+                }
+            }
         }
 
-        if(productApplicationIds?.isEmpty() == false){
-            tenant.permissions?.filter {
-                !productApplicationIds.contains(it.productApplicationId)
-            }?.forEach {
-                it.enabled = false
-            }
-        } else {
+        dtoTenant.permissions?.map { it.productApplicationId }?.run {
             tenant.permissions?.forEach {
-                it.enabled = false
+                if(!this.contains(it.productApplicationId)){
+                    it.enabled = false
+                }
+                tenantPermissions += it
             }
-        }
-
-
-        tenant.permissions?.run {
-            tenantPermissions += this
         }
 
         tenant.enabled = dtoTenant.enabled

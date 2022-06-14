@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: CALL_BACK_CREDIT_RISK
   route: /Underwriting/CreditRisk
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-loan-management-pub-sub
 scopes:
   - app-loan-management
 

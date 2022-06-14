@@ -38,6 +38,8 @@ class PermissionFilter : GenericFilterBean() {
         val authentication = SecurityContextHolder.getContext().authentication
         val uri = httpServletRequest.requestURI
 
+
+
         try {
             searchForSuitablePermission(uri, httpServletRequest.method, authentication)
             chain?.doFilter(request, response)

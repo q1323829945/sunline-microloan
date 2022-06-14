@@ -2,6 +2,7 @@ package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.consumer_loan.service.dto.DTORatePlanView
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -14,11 +15,9 @@ import org.springframework.stereotype.Component
 @Component
 class ScheduleInvokeImpl: ScheduleInvoke {
 
-    private val applId = "app-loan-management"
-
     override fun getRatePlan(ratePlanId: Long): DTOResponseSuccess<DTORatePlanView>? {
         return RPCService.get<DTOResponseSuccess<DTORatePlanView>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "RatePlan/${ratePlanId}",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -32,7 +31,7 @@ class ScheduleInvokeImpl: ScheduleInvoke {
     override fun getRatePlanByRatePlanType(ratePlanType: RatePlanType): DTOResponseSuccess<DTORatePlanView>? {
 
         return RPCService.get<DTOResponseSuccess<DTORatePlanView>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "RatePlan/all",
             queryParams = mapOf("type" to "$ratePlanType"),
             headerParams = mapOf(
