@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.pubsub.impl
 
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT_PUB_SUB
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublishTopic
 import cn.sunline.saas.rpc.pubsub.dto.DTODocumentGeneration
@@ -11,12 +12,10 @@ import org.springframework.stereotype.Component
 @Component
 class CustomerOfferPublishImpl: CustomerOfferPublish {
 
-    private val PUBSUB_NAME = "underwriting-pub-sub"
-
     override fun initiateUnderwriting(dtoLoanApplicationData: DTOLoanApplicationData) {
 
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_LOAN_MANAGEMENT_PUB_SUB,
             CustomerOfferPublishTopic.INITIATE_UNDERWRITING.toString(),
             dtoLoanApplicationData
         )
@@ -30,7 +29,7 @@ class CustomerOfferPublishImpl: CustomerOfferPublish {
         return
         //TODO:
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_LOAN_MANAGEMENT_PUB_SUB,
             CustomerOfferPublishTopic.DOCUMENT_GENERATION.toString(),
             dtoDocumentGeneration
         )

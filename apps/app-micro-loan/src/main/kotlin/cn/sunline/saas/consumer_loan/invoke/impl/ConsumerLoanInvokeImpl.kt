@@ -5,6 +5,7 @@ import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.invoke.dto.DTOCustomerOffer
 import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -16,13 +17,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class ConsumerLoanInvokeImpl: ConsumerLoanInvoke {
-
-    private val applId = "app-loan-management"
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     override fun retrieveCustomerOffer(applicationId: Long): DTOCustomerOffer {
         return RPCService.get<DTOCustomerOffer>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "CustomerOffer/invoke/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -36,7 +35,7 @@ class ConsumerLoanInvokeImpl: ConsumerLoanInvoke {
 
     override fun retrieveLoanProduct(productId: Long): DTOLoanProduct {
         return  RPCService.get<DTOLoanProduct>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "LoanProduct/invoke/$productId",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -49,7 +48,7 @@ class ConsumerLoanInvokeImpl: ConsumerLoanInvoke {
 
     override fun retrieveBaseInterestRate(ratePlanId: Long): MutableList<InterestRate>? {
         return  RPCService.get<MutableList<InterestRate>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "InterestRate/all",
             queryParams = mapOf("ratePlanId" to ratePlanId.toString()),
             headerParams = mapOf(

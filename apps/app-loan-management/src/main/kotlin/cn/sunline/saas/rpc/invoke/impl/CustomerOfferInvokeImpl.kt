@@ -2,6 +2,8 @@ package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.dapr_wrapper.invoke.response.RPCResponse
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.global.constant.APP_MICRO_LOAN
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -18,12 +20,11 @@ import org.springframework.stereotype.Component
 @Component
 class CustomerOfferInvokeImpl: CustomerOfferInvoke {
 
-    private val applId = "app-loan-management"
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     override fun getProduct(productId: Long): DTOLoanProductView {
         val product =  RPCService.get<RPCResponse<DTOLoanProductView>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "LoanProduct/$productId",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -38,7 +39,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
 
     override fun getUnderwriting(applicationId: Long): DTOUnderwriting? {
         val underwriting = RPCService.get<RPCResponse<DTOUnderwriting>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "UnderwritingManagement/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -53,7 +54,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
 
     override fun getLoanAgreement(applicationId: Long): DTOLoanAgreementView? {
         return RPCService.get<DTOLoanAgreementView>(
-            serviceName = "app-micro-loan",
+            serviceName = APP_MICRO_LOAN,
             methodName = "ConsumerLoan/LoanAgreement/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(

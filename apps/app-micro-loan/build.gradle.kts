@@ -46,6 +46,7 @@ dependencies {
 
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-obs-huaweicloud"))
+    implementation(project(":lib-filter"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

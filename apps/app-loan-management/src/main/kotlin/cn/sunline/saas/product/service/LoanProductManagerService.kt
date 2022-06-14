@@ -199,12 +199,12 @@ class LoanProductManagerService(
                 ManagementExceptionCode.PRODUCT_STATUS_ERROR
             )
         }
-        if (isUpdateStatus && BankingProductStatus.SOLD == status) {
-            throw LoanProductBusinessException(
-                "The status of product was SOLD,non-supported update",
-                ManagementExceptionCode.PRODUCT_STATUS_ERROR
-            )
-        }
+//        if (isUpdateStatus && BankingProductStatus.SOLD == status) {
+//            throw LoanProductBusinessException(
+//                "The status of product was SOLD,non-supported update",
+//                ManagementExceptionCode.PRODUCT_STATUS_ERROR
+//            )
+//        }
         if (!isUpdateStatus && BankingProductStatus.INITIATED != status) {
             throw LoanProductBusinessException(
                 "The status of product was not INITIATED,non-supported update",

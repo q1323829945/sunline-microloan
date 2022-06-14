@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":lib-loan-agreement"))
     implementation(project(":lib-scheduler-job"))
     implementation(project(":lib-statistics"))
+    implementation(project(":lib-filter"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
 

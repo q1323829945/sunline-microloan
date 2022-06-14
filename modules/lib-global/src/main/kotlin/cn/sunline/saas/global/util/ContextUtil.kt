@@ -16,6 +16,7 @@ object ContextUtil {
     internal const val TENANT_KEY = "TENANT_ID"
     internal const val USER_KEY = "USER_ID"
     internal const val TIME_ZONE = "TIME_ZONE"
+    internal const val PERMISSIONS = "PERMISSIONS"
 
     internal fun put(key: String, value: Any) {
         if (context.get() == null) {
@@ -63,4 +64,19 @@ fun ContextUtil.getTimeZone(): DateTimeZone? {
 
 fun ContextUtil.setTimeZone(timZone:DateTimeZone)  {
     put(TIME_ZONE, timZone)
+}
+
+fun ContextUtil.setPermissions(permissions:List<String>?){
+    permissions?.run {
+        put(PERMISSIONS,permissions)
+    }
+}
+
+fun ContextUtil.getPermissions():List<String>?{
+    val permissions = get(PERMISSIONS)
+
+    return permissions?.run {
+        this as List<String>
+        this
+    }
 }

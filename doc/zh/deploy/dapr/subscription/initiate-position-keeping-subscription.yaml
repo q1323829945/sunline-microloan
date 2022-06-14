@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: INITIATE_POSITION_KEEPING
   route: /PositionKeeping
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-micro-loan-pub-sub
 scopes:
   - app-micro-loan
 

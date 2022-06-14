@@ -91,12 +91,13 @@ enum class PermissionConfig (
     CUSTOMER_OFFER_DOWNLOAD("CustomerOffer", "CustomerOffer/download(\\?.*|\$)", RequestMethod.GET, "download"),
 
     UNDERWRITING_MANAGEMENT_LIST("UnderwritingManagement", "UnderwritingManagement(\\?.*|\$)", RequestMethod.GET, "View UnderwritingManagement list"),
-    UNDERWRITING_MANAGEMENT_MODIFY("UnderwritingManagement", "UnderwritingManagement/(PASS|REJECT)/[0-9]+\$", RequestMethod.PUT, "Modify UnderwritingManagement"),
     UNDERWRITING_MANAGEMENT_GET_ONE("UnderwritingManagement", "UnderwritingManagement/[0-9]+\$", RequestMethod.GET, "Get One UnderwritingManagement"),
-    UNDERWRITING_MANAGEMENT_UPDATE_STATUS("UnderwritingManagement", "UnderwritingManagement/status", RequestMethod.GET, "Update UnderwritingManagement status"),
+    UNDERWRITING_MANAGEMENT_APPROVAL("UnderwritingManagement", "UnderwritingManagement/approval/[0-9]+\$", RequestMethod.PUT, "Update UnderwritingManagement status"),
+    UNDERWRITING_MANAGEMENT_REJECTED("UnderwritingManagement", "UnderwritingManagement/rejected/[0-9]+\$", RequestMethod.PUT, "Update UnderwritingManagement status"),
 
     LOAN_AGREEMENT_MANAGEMENT_LIST("LoanAgreement", "LoanAgreement(\\?.*|\$)", RequestMethod.GET, "View LoanAgreement list"),
-    LOAN_AGREEMENT_MANAGEMENT_PAID("LoanAgreement", "LoanAgreement/stauts/[0-9]+\$", RequestMethod.PUT, "LoanAgreement paid"),
+    LOAN_AGREEMENT_MANAGEMENT_PAID("LoanAgreement", "LoanAgreement/paid/[0-9]+\$", RequestMethod.PUT, "LoanAgreement paid"),
+    LOAN_AGREEMENT_MANAGEMENT_SIGNED("LoanAgreement", "LoanAgreement/signed/[0-9]+\$", RequestMethod.PUT, "LoanAgreement signed"),
 
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -114,7 +115,5 @@ enum class PermissionConfig (
     CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
 
-
     PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),
-
 }
