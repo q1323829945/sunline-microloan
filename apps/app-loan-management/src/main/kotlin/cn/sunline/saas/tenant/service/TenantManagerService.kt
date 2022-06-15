@@ -71,6 +71,12 @@ class TenantManagerService(
         }
 
         dtoTenant.permissions?.map { it.productApplicationId }?.run {
+            tenant.permissions?.filter { !it.enabled }?.forEach {
+                if(this.contains(it.productApplicationId)){
+                    it.enabled = true
+                }
+            }
+
             tenant.permissions?.forEach {
                 if(!this.contains(it.productApplicationId)){
                     it.enabled = false
