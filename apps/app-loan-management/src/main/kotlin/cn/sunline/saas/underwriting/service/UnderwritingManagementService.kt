@@ -4,6 +4,7 @@ import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.underwriting.db.Underwriting
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
+import cn.sunline.saas.underwriting.exception.UnderwritingCannotBeUpdate
 import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
 import cn.sunline.saas.underwriting.exception.UnderwritingStatusCannotBeUpdate
 import cn.sunline.saas.underwriting.repository.UnderwritingManagementRepository
@@ -38,6 +39,15 @@ class UnderwritingManagementService (private val underwritingManagementRepositor
         oldOne.creditRisk = newOne.creditRisk
         oldOne.customerCreditRate = newOne.customerCreditRate
         oldOne.regulatoryCompliance = newOne.regulatoryCompliance
+
+        if(oldOne.status != UnderwritingType.PENDING){
+            throw UnderwritingCannotBeUpdate("underwriting cannot be update")
+        }
+
+        if(!oldOne.fraudEvaluation.isNullOrEmpty() && !oldOne.creditRisk.isNullOrEmpty()
+            && !oldOne.customerCreditRate.isNullOrEmpty() && !oldOne.regulatoryCompliance.isNullOrEmpty()){
+            approval(oldOne.id)
+        }
 
         return save(oldOne)
     }
