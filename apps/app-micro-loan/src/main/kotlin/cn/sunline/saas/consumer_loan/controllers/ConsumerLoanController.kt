@@ -9,6 +9,7 @@ import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import kotlin.random.Random
 
 /**
  * @title: ConsumerLoanController
@@ -23,6 +24,12 @@ class ConsumerLoanController {
     data class DTOLoanAgreementStatus(
         val applicationId: String,
         val status: AgreementStatus
+    )
+
+
+    data class DTOVerifyCode(
+        val mobilePhone: String,
+        val code: String
     )
 
 
@@ -86,5 +93,26 @@ class ConsumerLoanController {
     fun retrieveBankList(): ResponseEntity<DTOResponseSuccess<MutableList<DTOBankListView>>>{
         val result = consumerLoanService.retrieveBankList()
         return DTOResponseSuccess(result).response()
+    }
+
+
+    @GetMapping("/VerifyCode/{mobilePhone}")
+    fun getVerifyCode(@PathVariable mobilePhone: String): ResponseEntity<DTOResponseSuccess<DTOVerifyCode>> {
+        var code = ""
+        for(i in 1..4){
+            val randoms = Random.nextInt(0,9)
+            code += randoms
+        }
+        val result = DTOVerifyCode(
+            mobilePhone = mobilePhone,
+            code = code
+
+        )
+        return DTOResponseSuccess(result).response()
+    }
+
+    @PostMapping("/VerifyCode")
+    fun verifyCode(@RequestBody dtoVerifyCode: DTOVerifyCode): ResponseEntity<DTOResponseSuccess<Any>> {
+        return DTOResponseSuccess<Any>().response()
     }
 }
