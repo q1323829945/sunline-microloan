@@ -104,8 +104,6 @@ class ConsumerLoanService(
     @Autowired
     private lateinit var repaymentAccountService: RepaymentAccountService
 
-    @Autowired
-    private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -412,7 +410,8 @@ class ConsumerLoanService(
             productName = loanProduct.name,
             amount = loanAgreement.amount.toPlainString(),
             term = loanAgreement.term,
-            disbursementAccount = disbursementArrangement.disbursementAccount,
+            disbursementAccount = disbursementArrangement.disbursementAccountBank + "(${disbursementArrangement.disbursementAccount.
+                    substring(disbursementArrangement.disbursementAccount.length-4,disbursementArrangement.disbursementAccount.length)})",
             purpose = loanAgreement.purpose,
             paymentMethod = repaymentArrangement.paymentMethod,
             disbursementBank = disbursementArrangement.disbursementAccountBank,
@@ -442,8 +441,8 @@ class ConsumerLoanService(
     fun repay(dtoInvoiceRepay: DTOInvoiceRepay): MutableList<DTOInvoiceInfoView> {
         val list = mutableListOf<DTOInvoiceInfoView>()
         dtoInvoiceRepay.invoices.forEach {
-            val invoice =
-                invoiceService.getOne(it.invoiceId) ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
+            val invoice = invoiceService.getOne(it.invoiceId) ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
+
             repayLoanInvoice(it.amount.toBigDecimal(), invoice, invoice.agreementId)
 
             val lines = ArrayList<DTOInvoiceLinesView>()

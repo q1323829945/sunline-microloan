@@ -101,7 +101,7 @@ class ConsumerLoanController {
     @GetMapping("/VerifyCode/{mobilePhone}")
     fun getVerifyCode(@PathVariable mobilePhone: String): ResponseEntity<DTOResponseSuccess<DTOVerifyCode>> {
         var code = ""
-        for(i in 1..4){
+        for(i in 1..6){
             val randoms = Random.nextInt(0,9)
             code += randoms
         }

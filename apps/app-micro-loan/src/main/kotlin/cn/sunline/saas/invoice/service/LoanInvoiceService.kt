@@ -10,6 +10,8 @@ import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.scheduler.job.component.CalculateSchedulerTimer
+import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -24,6 +26,9 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
 
     @Autowired
     private lateinit var loanAgreementService: LoanAgreementService
+
+    @Autowired
+    private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
 
     fun calculate(invoiceId: Long): DTOInvoiceCalculateView {
         val invoice = invoiceService.getOne(invoiceId) ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
@@ -75,9 +80,13 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         return pageMap.toList()
     }
 
-    fun retrieveCurrentAccountedInvoices(customerId: Long): MutableList<DTOInvoiceInfoView> {
-        val page = invoiceService.retrieveCurrentInvoices(customerId,InvoiceStatus.ACCOUNTED)
-        val mapPage = page.map {
+    fun retrieveCurrentAccountedInvoices(customerId: Long): List<DTOInvoiceInfoView> {
+        val page = invoiceService.retrieveCurrentInvoices(customerId,null)
+        val accountDate = calculateSchedulerTimer.baseDateTime()
+        val mapPage = page.filter {
+            val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate))
+            it.invoiceStatus != InvoiceStatus.FINISHED && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
+        }.sortedByDescending { it.invoiceStatus }.map {
                 invoice ->
             val lines = ArrayList<DTOInvoiceLinesView>()
             invoice?.invoiceLines?.forEach{
@@ -102,6 +111,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceLines = lines
             )
         }
-        return mapPage.toList()
+        return mapPage
     }
+
 }

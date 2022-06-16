@@ -18,7 +18,8 @@ data class DTOLoanProductResponse(
     var repaymentFeature: DTORepaymentFeature,
     var feeFeatures: MutableList<DTOFeeFeature>?,
     var loanUploadConfigureFeatures: MutableList<DTOLoanUploadConfigure>?,
-    var documentTemplateFeatures:MutableList<DocumentTemplate>?
+    var documentTemplateFeatures:MutableList<DocumentTemplate>?,
+    var name: String
 )
 
 data class DTOInterestFeature(

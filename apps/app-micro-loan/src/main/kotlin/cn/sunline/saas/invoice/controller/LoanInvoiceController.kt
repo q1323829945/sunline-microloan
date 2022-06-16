@@ -44,7 +44,7 @@ class LoanInvoiceController {
     }
 
     @GetMapping("/retrieve/{customerId}/current")
-    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>>{
+    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<List<DTOInvoiceInfoView>>>{
         val response = loanInvoiceService.retrieveCurrentAccountedInvoices(customerId)
         return DTOResponseSuccess(response).response()
     }
