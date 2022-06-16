@@ -4,6 +4,8 @@ import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.consumer_loan.service.dto.*
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.invoice.service.dto.DTOInvoiceInfoView
+import cn.sunline.saas.invoice.service.dto.DTOInvoiceRepay
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
@@ -114,5 +116,11 @@ class ConsumerLoanController {
     @PostMapping("/VerifyCode")
     fun verifyCode(@RequestBody dtoVerifyCode: DTOVerifyCode): ResponseEntity<DTOResponseSuccess<Any>> {
         return DTOResponseSuccess<Any>().response()
+    }
+
+    @PostMapping("/invoice/repay")
+    fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
+        val response = consumerLoanService.repay(dtoInvoiceRepay)
+        return DTOResponseSuccess(response).response()
     }
 }

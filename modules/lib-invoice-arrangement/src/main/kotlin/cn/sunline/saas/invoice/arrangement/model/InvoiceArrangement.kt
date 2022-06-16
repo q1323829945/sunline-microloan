@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull
 @Entity
 @EntityListeners(TenantListener::class)
 @Table(
-    name = "lll"
+    name = "invoice_arrangement"
 )
 class InvoiceArrangement(
     @Id

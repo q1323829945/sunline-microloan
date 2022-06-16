@@ -38,6 +38,10 @@ data class DTOInvoiceLinesView(
 )
 
 data class DTOInvoiceRepay (
+    val invoices :MutableList<DTOInvoiceRepayDetails>
+)
+
+data class DTOInvoiceRepayDetails (
     val amount: String,
     val invoiceId: Long
 )

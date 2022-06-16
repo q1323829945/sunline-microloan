@@ -75,39 +75,6 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         return pageMap.toList()
     }
 
-    fun repay (dtoInvoiceRepay: List<DTOInvoiceRepay>): MutableList<DTOInvoiceInfoView> {
-        val list = mutableListOf<DTOInvoiceInfoView>()
-        list.apply {
-            dtoInvoiceRepay.forEach {
-                val invoice =
-                    invoiceService.getOne(it.invoiceId) ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
-                val repayResult =
-                    invoiceService.repayInvoice(it.amount.toBigDecimal(), invoice, 0, tenantDateTime.now())
-                val lines = ArrayList<DTOInvoiceLinesView>()
-                repayResult.map {
-                    lines += DTOInvoiceLinesView(
-                        invoiceAmountType = it.key,
-                        invoiceAmount = it.value.toPlainString()
-                    )
-                }
-                val agreement = loanAgreementService.getOne(invoice.agreementId)
-                    ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")
-                DTOInvoiceInfoView(
-                    invoicee = invoice.invoicee.toString(),
-                    invoiceId = invoice.id.toString(),
-                    invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
-                    invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
-                    invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                    invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
-                    invoiceCurrency = agreement.currency,
-                    invoiceStatus = invoice.invoiceStatus,
-                    invoiceLines = lines
-                )
-            }
-        }
-        return list
-    }
-
     fun retrieveCurrentAccountedInvoices(customerId: Long): MutableList<DTOInvoiceInfoView> {
         val page = invoiceService.retrieveCurrentInvoices(customerId,InvoiceStatus.ACCOUNTED)
         val mapPage = page.map {
