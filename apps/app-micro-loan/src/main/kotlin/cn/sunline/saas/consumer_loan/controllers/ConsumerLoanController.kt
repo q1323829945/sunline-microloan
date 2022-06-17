@@ -4,14 +4,14 @@ import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.consumer_loan.service.dto.*
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.invoice.service.dto.DTOInvoiceInfoView
-import cn.sunline.saas.invoice.service.dto.DTOInvoiceRepay
+import cn.sunline.saas.invoice.model.dto.DTOInvoiceInfoView
+import cn.sunline.saas.invoice.model.dto.DTOInvoiceRepay
+import cn.sunline.saas.invoice.model.dto.DTOPreRepaymentTrailView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import kotlin.random.Random
 
 /**
  * @title: ConsumerLoanController
@@ -27,14 +27,6 @@ class ConsumerLoanController {
         val applicationId: String,
         val status: AgreementStatus
     )
-
-
-    data class DTOVerifyCode(
-        val mobilePhone: String,
-        val code: String
-    )
-
-
 
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
@@ -73,14 +65,14 @@ class ConsumerLoanController {
         return DTOResponseSuccess(repaymentScheduleTrialResult).response()
     }
 
-    @PostMapping("/repaymentAgreement")
-    fun addRepaymentAccount(@RequestBody dtoRepaymentAccountAdd: DTORepaymentAccountAdd): ResponseEntity<DTOResponseSuccess<MutableList<DTORepaymentAccountView>>>{
+    @PostMapping("/repaymentAccount")
+    fun addRepaymentAccount(@RequestBody dtoRepaymentAccountAdd: DTORepaymentAccountAdd): ResponseEntity<DTOResponseSuccess<DTORepaymentAccountView>>{
         val result = consumerLoanService.addRepaymentAccount(dtoRepaymentAccountAdd)
         return DTOResponseSuccess(result).response()
     }
 
     @PostMapping("/repay")
-    fun repayEarly(@RequestBody dtoRepayEarly: DTORepayEarly): ResponseEntity<DTOResponseSuccess<DTORepayEarly>>{
+    fun repayEarly(@RequestBody dtoRepayEarly: DTOPreRepayment): ResponseEntity<DTOResponseSuccess<DTOPreRepayment>>{
         val result = consumerLoanService.repayEarly(dtoRepayEarly)
         return DTOResponseSuccess(result).response()
     }
@@ -100,16 +92,7 @@ class ConsumerLoanController {
 
     @GetMapping("/VerifyCode/{mobilePhone}")
     fun getVerifyCode(@PathVariable mobilePhone: String): ResponseEntity<DTOResponseSuccess<DTOVerifyCode>> {
-        var code = ""
-        for(i in 1..6){
-            val randoms = Random.nextInt(0,9)
-            code += randoms
-        }
-        val result = DTOVerifyCode(
-            mobilePhone = mobilePhone,
-            code = code
-
-        )
+        val result = consumerLoanService.getVerifyCode(mobilePhone)
         return DTOResponseSuccess(result).response()
     }
 
@@ -122,5 +105,17 @@ class ConsumerLoanController {
     fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
         val response = consumerLoanService.repay(dtoInvoiceRepay)
         return DTOResponseSuccess(response).response()
+    }
+
+    @GetMapping("/prepayment/calculate/{agreementId}")
+    fun calculatePrepayment(@PathVariable("agreementId") agreementId: Long): ResponseEntity<DTOResponseSuccess<DTOPreRepaymentTrailView>> {
+        val trailView = consumerLoanService.calculatePrepayment(agreementId)
+        return DTOResponseSuccess(trailView).response()
+    }
+
+    @GetMapping("/repaymentAccount/{agreementId}/retrieve")
+    fun getRepaymentAccounts(@PathVariable("agreementId") agreementId: Long): ResponseEntity<DTOResponseSuccess<DTORepaymentAccountView>> {
+        val trailView = consumerLoanService.getRepaymentAccounts(agreementId)
+        return DTOResponseSuccess(trailView).response()
     }
 }

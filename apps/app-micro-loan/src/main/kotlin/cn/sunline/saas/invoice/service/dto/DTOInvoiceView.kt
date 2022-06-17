@@ -8,15 +8,15 @@ import java.math.BigDecimal
 
 
 
-data class DTOInvoiceCalculateView (
+data class DTOInvoiceTrailView1 (
     val invoicee: Long,
     val invoiceId: Long,
     val invoiceTotalAmount: String,
     val repaymentStatus: RepaymentStatus,
-    val invoiceLines: List<DTOInvoiceLinesView>,
+    val invoiceLines: List<DTOInvoiceLinesView1>,
 )
 
-data class DTOInvoiceInfoView (
+data class DTOInvoiceInfoView1 (
     val invoicee: String,
     val invoiceId: String,
     val invoiceDueDate: String,
@@ -29,19 +29,19 @@ data class DTOInvoiceInfoView (
     val agreementId: String? = null,
     val loanAgreementFromDate: String? = null,
     val invoiceRepaymentDate: String? = null,
-    val invoiceLines: List<DTOInvoiceLinesView>
+    val invoiceLines: List<DTOInvoiceLinesView1>
 )
 
-data class DTOInvoiceLinesView(
+data class DTOInvoiceLinesView1(
     val invoiceAmountType: InvoiceAmountType,
     val invoiceAmount: String
 )
 
-data class DTOInvoiceRepay (
-    val invoices :MutableList<DTOInvoiceRepayDetails>
+data class DTOInvoiceRepay1 (
+    val invoices :MutableList<DTOInvoiceRepayDetails1>
 )
 
-data class DTOInvoiceRepayDetails (
+data class DTOInvoiceRepayDetails1 (
     val amount: String,
     val invoiceId: Long
 )

@@ -5,12 +5,9 @@ import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.PaymentMethodType.*
 import cn.sunline.saas.global.constant.RepaymentFrequency
-import cn.sunline.saas.schedule.impl.EqualInstalmentSchedule
+import cn.sunline.saas.schedule.impl.*
 
 import org.joda.time.DateTime
-import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
-import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
-import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
 import java.math.BigDecimal
 
 /**
@@ -27,6 +24,7 @@ class ScheduleService(
     private val fromDateTime: DateTime,
     private val toDateTime: DateTime?,
     private val baseYearDays: BaseYearDays,
+    private val repaymentDateTime: DateTime?
 ) {
     fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
         val scheduleMethod = when (paymentMethodType) {
@@ -70,38 +68,44 @@ class ScheduleService(
 
     fun getResetSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
         val scheduleMethod = when (paymentMethodType) {
-            EQUAL_INSTALLMENT -> EqualInstalmentSchedule(
+            EQUAL_INSTALLMENT -> EqualInstalmentScheduleReset(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDateTime!!,
                 fromDateTime,
-                toDateTime
-            )
-            EQUAL_PRINCIPAL -> EqualPrincipalSchedule(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                fromDateTime,
-                toDateTime
-            )
-            ONE_OFF_REPAYMENT -> OneOffRepaymentSchedule(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                fromDateTime,
-                toDateTime,
+                toDateTime!!,
                 baseYearDays
             )
-            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturitySchedule(
+            EQUAL_PRINCIPAL -> EqualPrincipalScheduleReset(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDateTime!!,
                 fromDateTime,
-                toDateTime,
+                toDateTime!!,
+                baseYearDays
+            )
+            ONE_OFF_REPAYMENT -> OneOffRepaymentScheduleReset(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDateTime!!,
+                fromDateTime,
+                toDateTime!!,
+                baseYearDays
+            )
+            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturityScheduleReset(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDateTime!!,
+                fromDateTime,
+                toDateTime!!,
                 baseYearDays
             )
         }

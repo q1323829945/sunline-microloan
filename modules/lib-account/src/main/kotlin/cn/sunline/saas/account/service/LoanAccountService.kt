@@ -77,5 +77,7 @@ class LoanAccountService {
 
     }
 
-
+    fun getAccount(agreementId: Long): Account? {
+        return accountService.getOne(agreementId)
+    }
 }
