@@ -12,9 +12,11 @@ import cn.sunline.saas.loan.agreement.factory.LoanAgreementFactory
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementAdd
 import cn.sunline.saas.loan.agreement.model.dto.DTOLoanAgreementView
+import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.repository.LoanAgreementRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.repayment.arrangement.exception.RepaymentArrangementNotFoundException
+import cn.sunline.saas.repayment.arrangement.model.dto.DTORepaymentArrangementAdd
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -122,6 +124,12 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
 
     fun findByApplicationId(id: Long): LoanAgreement? {
         return loanAgreementRepo.findByApplicationId(id)
+    }
+
+    @Transactional
+    fun addRepaymentAccount(agreementId: Long, repaymentArrangement: DTORepaymentArrangementAdd): DTORepaymentArrangementView {
+        val repaymentArrangement = repaymentArrangementService.registered(agreementId, repaymentArrangement)
+        return DTORepaymentArrangementView(repaymentArrangement)
     }
 }
 

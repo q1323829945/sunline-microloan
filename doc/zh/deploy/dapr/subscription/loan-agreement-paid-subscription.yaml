@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: LOAN_AGREEMENT_PAID
   route: /ConsumerLoan/LoanAgreement/Paid
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-micro-loan-pub-sub
 scopes:
   - app-micro-loan
 

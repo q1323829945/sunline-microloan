@@ -15,6 +15,8 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))
+    implementation(project(":lib-multi-tenant"))
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

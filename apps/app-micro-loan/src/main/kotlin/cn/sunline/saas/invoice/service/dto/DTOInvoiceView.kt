@@ -10,7 +10,7 @@ import java.math.BigDecimal
 data class DTOInvoiceCalculateView (
     val invoicee: Long,
     val invoiceId: Long,
-    val invoiceTotalAmount: BigDecimal,
+    val invoiceTotalAmount: String,
     val invoiceLines: List<DTOInvoiceLinesView>,
 )
 
@@ -20,7 +20,7 @@ data class DTOInvoiceInfoView (
     val invoiceDueDate: String,
     val invoicePeriodFromDate: String,
     val invoicePeriodToDate: String,
-    val invoiceTotalAmount: BigDecimal,
+    val invoiceTotalAmount: String,
     val invoiceCurrency: CurrencyType,
     val invoiceStatus: InvoiceStatus,
     val invoiceLines: List<DTOInvoiceLinesView>
@@ -28,7 +28,7 @@ data class DTOInvoiceInfoView (
 
 data class DTOInvoiceLinesView(
     val invoiceAmountType: InvoiceAmountType,
-    val invoiceAmount: BigDecimal
+    val invoiceAmount: String
 )
 
 data class DTOInvoiceRepay (

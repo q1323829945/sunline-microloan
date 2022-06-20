@@ -5,16 +5,14 @@ import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublishTopic
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruction
+import cn.sunline.saas.global.constant.APP_MICRO_LOAN_PUB_SUB
 import org.springframework.stereotype.Component
 
 @Component
 class ConsumerLoanPublishImpl: ConsumerLoanPublish {
-
-    private val PUBSUB_NAME = "underwriting-pub-sub"
-
     override fun initiatePositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_MICRO_LOAN_PUB_SUB,
             ConsumerLoanPublishTopic.INITIATE_POSITION_KEEPING.toString(),
             dtoBankingTransaction
         )
@@ -22,7 +20,7 @@ class ConsumerLoanPublishImpl: ConsumerLoanPublish {
 
     override fun reducePositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_MICRO_LOAN_PUB_SUB,
             ConsumerLoanPublishTopic.REDUCE_POSITION_KEEPING.toString(),
             dtoBankingTransaction
         )

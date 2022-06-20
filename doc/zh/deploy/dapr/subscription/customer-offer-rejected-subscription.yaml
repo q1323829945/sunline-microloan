@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: CUSTOMER_OFFER_REJECTED
   route: /CustomerOffer/rejected
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-loan-management-pub-sub
 scopes:
   - app-loan-management
 

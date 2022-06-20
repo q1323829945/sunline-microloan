@@ -295,6 +295,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         oldLoanProduct.documentTemplateFeatures = documentTemplateList
 
         oldLoanProduct.businessUnit = loanProductData.businessUnit.toLong()
+        oldLoanProduct.description = loanProductData.description
+        oldLoanProduct.loanPurpose = loanProductData.loanPurpose
 
         //update loan product
         loanProductData.amountConfiguration.apply {

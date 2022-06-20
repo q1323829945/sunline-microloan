@@ -26,14 +26,14 @@ class LoanInvoiceController {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    @GetMapping("/invoice/calculate/{invoiceId}")
+    @GetMapping("/calculate/{invoiceId}")
     fun calculate(@PathVariable("invoiceId") invoiceId: Long): ResponseEntity<DTOResponseSuccess<DTOInvoiceCalculateView>> {
         val calculateView = loanInvoiceService.calculate(invoiceId)
         val response = objectMapper.convertValue<DTOInvoiceCalculateView>(calculateView)
         return DTOResponseSuccess(response).response()
     }
 
-    @GetMapping(" /invoice/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}")
+    @GetMapping("/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}")
     fun retrieveHistory(@PathVariable("customerId") customerId: Long,
                        @PathVariable("invoiceStartDate") invoiceStartDate: String,
                        @PathVariable("invoiceEndDate") invoiceEndDate: String,
@@ -44,14 +44,14 @@ class LoanInvoiceController {
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
 
-    @PostMapping("/invoice/repay")
-    fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<DTOInvoiceInfoView>> {
+    @PostMapping("/repay")
+    fun repay(@RequestBody dtoInvoiceRepay: List<DTOInvoiceRepay>): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
         val response = loanInvoiceService.repay(dtoInvoiceRepay)
         return DTOResponseSuccess(response).response()
     }
 
-    @GetMapping("/invoice/retrieve/{customerId}/current")
-    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<DTOInvoiceInfoView>>{
+    @GetMapping("/retrieve/{customerId}/current")
+    fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<List<DTOInvoiceInfoView>>>{
         val response = loanInvoiceService.retrieveCurrent(customerId)
         return DTOResponseSuccess(response).response()
     }

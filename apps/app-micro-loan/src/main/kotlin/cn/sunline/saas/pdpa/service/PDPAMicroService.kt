@@ -59,6 +59,6 @@ class PDPAMicroService(
 
 
     fun retrieve(countryCode: String): PDPAInformation {
-        return pdpaInvoke.getPDPAInformation(countryCode)!!.data!!
+        return pdpaInvoke.getPDPAInformation(countryCode)!!.data
     }
 }

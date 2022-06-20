@@ -1,7 +1,7 @@
 package cn.sunline.saas.underwriting.event.impl
 
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
-import cn.sunline.saas.global.constant.UnderwritingType
+import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.db.Underwriting
@@ -17,12 +17,10 @@ import org.springframework.stereotype.Component
 @Component
 class UnderwritingPublishImpl : UnderwritingPublish {
 
-    private val PUBSUB_NAME = "underwriting-pub-sub"
-
     override fun retrieveCustomerCreditRating(applicationId: Long, partner: String, customerId: Long) {
         val dtoRetrieveCustomerCreditRating = DTORetrieveCustomerCreditRating(applicationId, partner, customerId)
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_WRAPPER_PUB_SUB,
             UnderwritingPublishTopic.RETRIEVE_CUSTOMER_CREDIT_RATING.toString(),
             dtoRetrieveCustomerCreditRating,
         )
@@ -35,7 +33,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
         )
 
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_WRAPPER_PUB_SUB,
             UnderwritingPublishTopic.EXECUTE_CREDIT_RISK.toString(),
             dtoExecCreditRisk,
         )
@@ -48,7 +46,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
         )
 
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_WRAPPER_PUB_SUB,
             UnderwritingPublishTopic.EXECUTE_REGULATORY_COMPLIANCE.toString(),
             dTOExecRegulatoryCompliance,
         )
@@ -62,7 +60,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
 
 
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_WRAPPER_PUB_SUB,
             UnderwritingPublishTopic.FRAUD_EVALUATION.toString(),
             dtoExecFraudEvaluation,
         )
@@ -71,7 +69,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
 
     override fun initiateLoanAgreement(applicationId: Long) {
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_MICRO_LOAN_PUB_SUB,
             UnderwritingPublishTopic.INITIATE_LOAN_AGREEMENT.toString(),
             applicationId
         )
@@ -79,7 +77,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
 
     override fun customerOfferApproval(applicationId: Long) {
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_LOAN_MANAGEMENT_PUB_SUB,
             UnderwritingPublishTopic.CUSTOMER_OFFER_APPROVAL.toString(),
             applicationId,
         )
@@ -87,7 +85,7 @@ class UnderwritingPublishImpl : UnderwritingPublish {
 
     override fun customerOfferRejected(applicationId: Long) {
         PubSubService.publish(
-            PUBSUB_NAME,
+            APP_LOAN_MANAGEMENT_PUB_SUB,
             UnderwritingPublishTopic.CUSTOMER_OFFER_REJECTED.toString(),
             applicationId,
         )

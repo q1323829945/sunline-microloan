@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component
 @Component
 class UnderwritingInvokeImpl : UnderwritingInvoke {
 
-    private val applId = "app-loan-management"
-
     override fun getPartnerIntegrated(): DTOPartnerIntegrated? {
         return RPCService.get<DTOPartnerIntegrated>(PartnerIntegratedRPCRequest())
     }

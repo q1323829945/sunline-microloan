@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
+import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -14,16 +15,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductInvokeImpl: ProductInvoke {
-
-    private val applId = "app-loan-management"
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 
     override fun getProductInfoByProductId(productId: Long): DTOInvokeLoanProduct {
 
         val loanProductResponse = RPCService.get<DTOResponseSuccess<DTOInvokeLoanProduct>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "LoanProduct/$productId",
             queryParams = mapOf(),
             headerParams = mapOf(
@@ -39,7 +37,7 @@ class ProductInvokeImpl: ProductInvoke {
 
     override fun getProductListByIdentificationCode(identificationCode: String): MutableList<DTOInvokeLoanProduct> {
         val loanProductResponse =  RPCService.get<DTOResponseSuccess<MutableList<DTOInvokeLoanProduct>>>(
-            serviceName = applId,
+            serviceName = APP_LOAN_MANAGEMENT,
             methodName = "LoanProduct/$identificationCode/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(

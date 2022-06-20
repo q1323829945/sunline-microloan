@@ -5,7 +5,7 @@ metadata:
 spec:
   topic: EXECUTE_REGULATORY_COMPLIANCE
   route: /RegulatoryCompliance
-  pubsubname: underwriting-pub-sub
+  pubsubname: app-wrapper-pub-sub
 scopes:
 - app-wrapper
 
