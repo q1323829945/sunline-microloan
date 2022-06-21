@@ -1,11 +1,16 @@
 package cn.sunline.saas.position_keeping.service
 
 import cn.sunline.saas.account.model.dto.DTOAccountAdd
+import cn.sunline.saas.account.model.dto.DTOAccountBalanceChange
 import cn.sunline.saas.account.service.LoanAccountService
 import cn.sunline.saas.banking.transaction.model.db.BankingTransaction
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.banking.transaction.service.BankingTransactionService
+import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublishTopic
+import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
+import cn.sunline.saas.global.constant.APP_MICRO_LOAN_PUB_SUB
 import cn.sunline.saas.global.constant.TransactionStatus
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.rpc.pubsub.PositionKeepingPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTOBusinessDetail
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
@@ -73,4 +78,39 @@ class PositionKeepingService(
         }
     }
 
+    fun reducePositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
+        val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)
+        val dealAccount = runBlocking(CoroutineName("POSITION-KEEPING-REDUCE")) {
+            reducePositionKeepingAccount(bankingTransaction)
+        }
+    }
+
+    suspend fun reducePositionKeepingAccount(bankingTransaction: BankingTransaction) = coroutineScope {
+        if (bankingTransaction.transactionStatus == TransactionStatus.INITIATE) {
+            val dtoAccountBalanceChange = bankingTransactionService.execute(bankingTransaction).run {
+                val dt = executedDate
+                val now = if(dt == null){
+                    tenantDateTime.now()
+                }else{
+                    tenantDateTime.toTenantDateTime(dt)
+                }
+                DTOAccountBalanceChange(
+                    id = agreementId,
+                    purpose = transactionDescription,
+                    currency = currency,
+                    amount = amount.toPlainString(),
+                    date = now.toString()
+                )
+            }
+
+            loanAccountService.repayAccount(dtoAccountBalanceChange)
+
+            positionKeepingPublish.addBusinessDetail(DTOBusinessDetail(
+                agreementId = bankingTransaction.agreementId,
+                customerId = bankingTransaction.customerId,
+                amount = bankingTransaction.amount,
+                currency = bankingTransaction.currency
+            ))
+        }
+    }
 }

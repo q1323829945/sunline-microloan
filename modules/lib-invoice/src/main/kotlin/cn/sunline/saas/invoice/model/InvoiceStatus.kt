@@ -7,5 +7,5 @@ package cn.sunline.saas.invoice.model
  * @date 2022/4/25 15:23
  */
 enum class InvoiceStatus {
-    INITIATE,ACCOUNTED, FINISHED
+    INITIATE,ACCOUNTED, FINISHED, CANCEL
 }

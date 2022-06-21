@@ -1,6 +1,6 @@
 package cn.sunline.saas.consumer_loan.service.dto
 
-data class DTOPreRepayment(
+data class DTOPrepayment(
     val agreementId: Long,
     val currency: String,
     val principal: String,

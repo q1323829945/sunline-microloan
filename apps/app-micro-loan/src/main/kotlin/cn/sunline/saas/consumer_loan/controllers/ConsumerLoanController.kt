@@ -48,6 +48,11 @@ class ConsumerLoanController {
         return consumerLoanService.getLoanAgreementByApplicationId(applicationId.toLong())
     }
 
+    @GetMapping("/LoanAgreement/{applicationId}/retrieve")
+    fun getLoanAgreementInfoByApplicationId(@PathVariable applicationId:String):DTOLoanAgreementViewInfo?{
+        return consumerLoanService.getLoanAgreementInfoByApplicationId(applicationId.toLong())
+    }
+
 
     @PostMapping("/LoanAgreement/Signed")
     fun signedLoanAgreement(@RequestBody applicationId:Long){
@@ -72,9 +77,8 @@ class ConsumerLoanController {
     }
 
     @PostMapping("/repay")
-    fun repayEarly(@RequestBody dtoRepayEarly: DTOPreRepayment): ResponseEntity<DTOResponseSuccess<DTOPreRepayment>>{
-        val result = consumerLoanService.repayEarly(dtoRepayEarly)
-        return DTOResponseSuccess(result).response()
+    fun prepayment(@RequestBody dtoPrepayment: DTOPrepayment){
+        val result = consumerLoanService.prepayment(dtoPrepayment)
     }
 
     @GetMapping("/LoanAgreement/detail/{agreementId}/retrieve")
@@ -103,7 +107,7 @@ class ConsumerLoanController {
 
     @PostMapping("/invoice/repay")
     fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
-        val response = consumerLoanService.repay(dtoInvoiceRepay)
+        val response = consumerLoanService.repayment(dtoInvoiceRepay)
         return DTOResponseSuccess(response).response()
     }
 

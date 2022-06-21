@@ -27,7 +27,7 @@ data class DTOInvoiceTrailView (
     val invoiceId: String,
     val invoiceTotalAmount: BigDecimal,
     val repaymentStatus: RepaymentStatus,
-    val invoiceLines: List<DTOInvoiceLinesView>,
+    val invoiceLines: List<DTOInvoiceLinesView>?,
 )
 
 data class DTOInvoiceInfoView (
