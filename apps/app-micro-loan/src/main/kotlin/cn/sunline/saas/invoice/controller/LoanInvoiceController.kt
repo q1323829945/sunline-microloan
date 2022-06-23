@@ -10,10 +10,7 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -33,9 +30,9 @@ class LoanInvoiceController {
     }
 
     @GetMapping("/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}")
-    fun retrieveHistory(@PathVariable("customerId") customerId: Long,
-                       @PathVariable("invoiceStartDate") invoiceStartDate: String?,
-                       @PathVariable("invoiceEndDate") invoiceEndDate: String?
+    fun retrieveHistory(@PathVariable("customerId",) customerId: Long,
+                       @PathVariable("invoiceStartDate",required = false) invoiceStartDate: String?,
+                       @PathVariable("invoiceEndDate",required = false) invoiceEndDate: String?
     ): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
         val response = loanInvoiceService.getHistoryPage(customerId,invoiceStartDate,invoiceEndDate)
         return DTOResponseSuccess(response).response()
@@ -48,4 +45,3 @@ class LoanInvoiceController {
     }
 
 }
-

@@ -30,7 +30,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         invoice.invoiceLines.forEach {
             lines += DTOInvoiceLinesView(
                 invoiceAmountType = it.invoiceAmountType,
-                invoiceAmount = it.invoiceAmount
+                invoiceAmount = it.invoiceAmount.toPlainString()
             )
         }
         val invoiceTotalAmount = invoiceService.calculateRepaymentAmountById(invoiceId)
@@ -54,7 +54,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             invoice?.invoiceLines?.forEach{
                 lines += DTOInvoiceLinesView(
                     invoiceAmountType = it.invoiceAmountType,
-                    invoiceAmount = it.invoiceAmount
+                    invoiceAmount = it.invoiceAmount.toPlainString()
                 )
             }
             val agreement = loanAgreementService.getOne(invoice.agreementId) ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")
@@ -86,7 +86,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             invoice?.invoiceLines?.forEach{
                 lines += DTOInvoiceLinesView(
                     invoiceAmountType = it.invoiceAmountType,
-                    invoiceAmount = it.invoiceAmount
+                    invoiceAmount = it.invoiceAmount.toPlainString()
                 )
             }
             val agreement = loanAgreementService.getOne(invoice.agreementId) ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")

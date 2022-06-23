@@ -116,4 +116,9 @@ enum class PermissionConfig (
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
 
     PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),
+
+    CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/invoice(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
+    CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
+    CUSTOMER_LOAN_INVOICE_FINISHED("ConsumerLoan","ConsumerLoan/invoice/finish",RequestMethod.PUT,"update invoice status"),
+
 }

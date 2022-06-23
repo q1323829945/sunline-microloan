@@ -10,7 +10,10 @@ import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstructionAdd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Predicate
 
 /**
  * @title: RepaymentInstructionService
@@ -58,4 +61,48 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
         )
     }
 
+    fun getPage(agreementId: Long?,customerId:
+                Long?,
+                moneyTransferInstructionType:MoneyTransferInstructionType,
+                moneyTransferInstructionStatus: InstructionLifecycleStatus,
+                pageable: Pageable
+    ): Page<MoneyTransferInstruction> {
+       return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            agreementId?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("agreementId"),
+                        agreementId
+                    )
+                )
+            }
+            customerId?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("businessUnit"),
+                        customerId
+                    )
+                )
+            }
+            moneyTransferInstructionType.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<MoneyTransferInstructionType>("moneyTransferInstructionType"),
+                        moneyTransferInstructionType
+                    )
+                )
+            }
+            moneyTransferInstructionStatus.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<MoneyTransferInstructionType>(
+                            "moneyTransferInstructionStatus"
+                        ), moneyTransferInstructionStatus
+                    )
+                )
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable)
+    }
 }

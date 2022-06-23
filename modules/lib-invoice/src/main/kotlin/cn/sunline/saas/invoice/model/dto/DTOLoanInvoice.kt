@@ -48,12 +48,12 @@ data class DTOInvoiceInfoView (
 
 data class DTOInvoiceLinesView(
     val invoiceAmountType: InvoiceAmountType,
-    val invoiceAmount: BigDecimal
+    val invoiceAmount: String
 )
 
 data class DTOPreRepaymentTrailView (
     val agreementId: String,
-    val totalAmount: BigDecimal,
+    val totalAmount: String,
     val prepaymentLines: List<DTOInvoiceLinesView>,
 )
 
@@ -63,6 +63,8 @@ data class DTOInvoiceRepay (
 )
 
 data class DTOInvoiceRepayDetails (
+    val repaymentAccountId: String,
+    val repaymentAccount: String,
     val amount: String,
     val invoiceId: String
 )
