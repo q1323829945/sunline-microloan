@@ -106,7 +106,7 @@ class ConsumerLoanController {
     }
 
     @PostMapping("/invoice/repay")
-    fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<MutableList<DTOInvoiceInfoView>>> {
+    fun repay(@RequestBody dtoInvoiceRepay: DTOInvoiceRepay): ResponseEntity<DTOResponseSuccess<DTOInvoiceInfoView>> {
         val response = consumerLoanService.repayment(dtoInvoiceRepay)
         return DTOResponseSuccess(response).response()
     }

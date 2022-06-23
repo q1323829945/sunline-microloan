@@ -502,64 +502,58 @@ class ConsumerLoanService(
         ))
     }
 
-    fun repayment(dtoInvoiceRepay: DTOInvoiceRepay): MutableList<DTOInvoiceInfoView> {
-        val list = mutableListOf<DTOInvoiceInfoView>()
-        dtoInvoiceRepay.invoices.forEach {
-            val invoice = invoiceService.getOne(it.invoiceId.toLong())
-                ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
-//            repayLoanInvoice(it.amount.toBigDecimal(), invoice, invoice.agreementId)
-            val loanAgreement =
-                loanAgreementService.getOne(invoice.agreementId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+    fun repayment(dtoInvoiceRepay: DTOInvoiceRepay): DTOInvoiceInfoView {
+        val invoice = invoiceService.getOne(dtoInvoiceRepay.invoiceId.toLong())
+            ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
 
-            val repaymentAccount = repaymentArrangementService.listRepaymentAccounts(invoice.agreementId)
-                .first{ a-> a.repaymentAccount == it.repaymentAccount}
+        val loanAgreement = loanAgreementService.getOne(invoice.agreementId)
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
-            val repaymentInstruction = repaymentInstructionService.registered(
-                DTORepaymentInstructionAdd(
-                    it.amount.toBigDecimal(),
-                    loanAgreement.currency,
-                    null,
-                    null,
-                    repaymentAccount.repaymentAccount,
-                    invoice.agreementId,
-                    loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId
-                )
+        val repaymentAccount = repaymentArrangementService.listRepaymentAccounts(invoice.agreementId)
+            .first { a -> a.repaymentAccount == dtoInvoiceRepay.repaymentAccount }
+
+        val repaymentInstruction = repaymentInstructionService.registered(
+            DTORepaymentInstructionAdd(
+                dtoInvoiceRepay.amount.toBigDecimal(),
+                loanAgreement.currency,
+                null,
+                null,
+                repaymentAccount.repaymentAccount,
+                invoice.agreementId,
+                loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId
             )
+        )
 
-            consumerLoanPublish.financialAccountingRepayment(
-                DTORepaymentInstruction(
-                    id = repaymentInstruction.id,
-                    instructionAmount = repaymentInstruction.moneyTransferInstructionAmount.toPlainString(),
-                    instructionCurrency = repaymentInstruction.moneyTransferInstructionCurrency,
-                    instructionPurpose = repaymentInstruction.moneyTransferInstructionPurpose,
-                    payeeAccount = repaymentInstruction.payeeAccount,
-                    payerAccount = repaymentInstruction.payerAccount,
-                    agreementId = repaymentInstruction.agreementId,
-                    businessUnit = repaymentInstruction.businessUnit,
-                )
+        consumerLoanPublish.financialAccountingRepayment(
+            DTORepaymentInstruction(
+                id = repaymentInstruction.id,
+                instructionAmount = repaymentInstruction.moneyTransferInstructionAmount.toPlainString(),
+                instructionCurrency = repaymentInstruction.moneyTransferInstructionCurrency,
+                instructionPurpose = repaymentInstruction.moneyTransferInstructionPurpose,
+                payeeAccount = repaymentInstruction.payeeAccount,
+                payerAccount = repaymentInstruction.payerAccount,
+                agreementId = repaymentInstruction.agreementId,
+                businessUnit = repaymentInstruction.businessUnit,
             )
+        )
 
-            val lines = ArrayList<DTOInvoiceLinesView>()
-            invoice.invoiceLines.map {
-                lines += DTOInvoiceLinesView(
-                    invoiceAmountType = it.invoiceAmountType, invoiceAmount = it.invoiceAmount.toPlainString()
-                )
-            }
-            list.add(
-                DTOInvoiceInfoView(
-                    invoicee = invoice.invoicee.toString(),
-                    invoiceId = invoice.id.toString(),
-                    invoiceDueDate = invoice.invoiceRepaymentDate.toString(),
-                    invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
-                    invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                    invoiceTotalAmount = invoice.invoiceAmount,
-                    invoiceCurrency = loanAgreement.currency,
-                    invoiceStatus = invoice.invoiceStatus,
-                    invoiceLines = lines
-                )
+        val lines = ArrayList<DTOInvoiceLinesView>()
+        invoice.invoiceLines.map {
+            lines += DTOInvoiceLinesView(
+                invoiceAmountType = it.invoiceAmountType, invoiceAmount = it.invoiceAmount.toPlainString()
             )
         }
-        return list
+       return DTOInvoiceInfoView(
+            invoicee = invoice.invoicee.toString(),
+            invoiceId = invoice.id.toString(),
+            invoiceDueDate = invoice.invoiceRepaymentDate.toString(),
+            invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
+            invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
+            invoiceTotalAmount = invoice.invoiceAmount,
+            invoiceCurrency = loanAgreement.currency,
+            invoiceStatus = invoice.invoiceStatus,
+            invoiceLines = lines
+        )
     }
 
     fun calculatePrepayment(agreementId: Long): DTOPreRepaymentTrailView {

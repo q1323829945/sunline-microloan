@@ -59,13 +59,17 @@ data class DTOPreRepaymentTrailView (
 
 
 data class DTOInvoiceRepay (
-    val invoices :MutableList<DTOInvoiceRepayDetails>
-)
-
-data class DTOInvoiceRepayDetails (
     val repaymentAccountId: String,
     val repaymentAccount: String,
     val amount: String,
-    val invoiceId: String
+    val invoiceId: String,
+    val currency: CurrencyType
 )
+
+//data class DTOInvoiceRepayDetails (
+//    val repaymentAccountId: String,
+//    val repaymentAccount: String,
+//    val amount: String,
+//    val invoiceId: String
+//)
 
