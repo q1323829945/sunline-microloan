@@ -111,7 +111,7 @@ class ConsumerLoanController {
         return DTOResponseSuccess(response).response()
     }
 
-    @GetMapping("/prepayment/calculate/{agreementId}")
+    @GetMapping("/prepayment/{agreementId}/calculate")
     fun calculatePrepayment(@PathVariable("agreementId") agreementId: Long): ResponseEntity<DTOResponseSuccess<DTOPreRepaymentTrailView>> {
         val trailView = consumerLoanService.calculatePrepayment(agreementId)
         return DTOResponseSuccess(trailView).response()

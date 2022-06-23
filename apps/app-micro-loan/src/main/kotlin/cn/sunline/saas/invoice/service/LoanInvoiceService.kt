@@ -79,7 +79,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         val accountDate = calculateSchedulerTimer.baseDateTime()
         val mapPage = page.filter {
             val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate))
-            it.invoiceStatus != InvoiceStatus.ACCOUNTED && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
+            it.invoiceStatus != InvoiceStatus.FINISHED && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
         }.sortedByDescending { it.invoiceStatus }.map {
                 invoice ->
             val lines = ArrayList<DTOInvoiceLinesView>()
@@ -102,6 +102,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 repaymentStatus = invoice.repaymentStatus,
                 agreementId = invoice.agreementId.toString(),
                 loanAgreementFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(agreement.fromDateTime)),
+                invoiceRepaymentDate = invoice.invoiceRepaymentDate.toString(),
                 invoiceLines = lines
             )
         }
