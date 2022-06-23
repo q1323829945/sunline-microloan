@@ -16,7 +16,8 @@ data class DTORepaymentInstructionAdd(
     val payeeAccount: String?,
     val payerAccount: String?,
     val agreementId: Long,
-    val businessUnit: Long
+    val businessUnit: Long,
+    val referenceId: Long
 )
 
 data class DTORepaymentInstruction(
@@ -27,5 +28,6 @@ data class DTORepaymentInstruction(
     val payeeAccount: String?,
     val payerAccount: String?,
     val agreementId: Long,
-    val businessUnit: Long
+    val businessUnit: Long,
+    val referenceId: Long
 )

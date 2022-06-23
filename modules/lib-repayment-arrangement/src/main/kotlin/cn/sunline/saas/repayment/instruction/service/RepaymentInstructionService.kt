@@ -39,7 +39,8 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
             payeeAccount = dtoRepaymentInstructionAdd.payeeAccount,
             payerAccount = dtoRepaymentInstructionAdd.payerAccount,
             agreementId = dtoRepaymentInstructionAdd.agreementId,
-            businessUnit = dtoRepaymentInstructionAdd.businessUnit
+            businessUnit = dtoRepaymentInstructionAdd.businessUnit,
+            referenceId = dtoRepaymentInstructionAdd.referenceId
         )
 
         return moneyTransferInstructionRepo.save(moneyTransferInstruction)
@@ -57,7 +58,8 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
             payeeAccount = transferInstruction.payeeAccount,
             payerAccount = transferInstruction.payerAccount,
             agreementId = transferInstruction.agreementId,
-            businessUnit = transferInstruction.businessUnit
+            businessUnit = transferInstruction.businessUnit,
+            referenceId = transferInstruction.referenceId!!
         )
     }
 

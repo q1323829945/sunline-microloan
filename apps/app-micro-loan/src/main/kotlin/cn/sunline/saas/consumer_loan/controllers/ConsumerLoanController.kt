@@ -66,7 +66,7 @@ class ConsumerLoanController {
 
     @GetMapping("{productId}/{amount}/{term}/calculate")
     fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
-        val repaymentScheduleTrialResult = consumerLoanService.calculate(productId, amount.toBigDecimal(),term)
+        val repaymentScheduleTrialResult = consumerLoanService.calculateSchedule(productId, amount.toBigDecimal(),term)
         return DTOResponseSuccess(repaymentScheduleTrialResult).response()
     }
 
@@ -121,5 +121,15 @@ class ConsumerLoanController {
     fun getRepaymentAccounts(@PathVariable("agreementId") agreementId: Long): ResponseEntity<DTOResponseSuccess<DTORepaymentAccountView>> {
         val trailView = consumerLoanService.getRepaymentAccounts(agreementId)
         return DTOResponseSuccess(trailView).response()
+    }
+
+    @PostMapping("/invoice/finish")
+    fun finishLoanInvoiceRepayment(@RequestBody instructionId:Long){
+        consumerLoanService.finishLoanInvoiceRepayment(instructionId)
+    }
+
+    @PostMapping("/invoice/cancel")
+    fun cancelLoanInvoiceRepayment(@RequestBody instructionId:Long){
+        consumerLoanService.cancelLoanInvoiceRepayment(instructionId)
     }
 }

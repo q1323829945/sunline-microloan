@@ -31,7 +31,8 @@ class SecurityConfiguration (private val tokenService: TokenService,
         ).regexMatchers( //pub-sub
             "/CustomerOffer/rejected","/BusinessStatistics","/CustomerStatistics","/CustomerOffer/approval",
             "/ConsumerLoan/LoanAgreement/Initiate","/PositionKeeping","/Underwriting/Initiate",
-            "/ConsumerLoan/LoanAgreement/Paid","/ConsumerLoan/LoanAgreement/Signed","/tenant"
+            "/ConsumerLoan/LoanAgreement/Paid","/ConsumerLoan/LoanAgreement/Signed","/tenant",
+            "/ConsumerLoan/invoice/finish/[0-9]+","/ConsumerLoan/invoice/cancel/[0-9]+"
         ).regexMatchers( //test
             "/test/pubsubGet","/test/test1(\\?.*|\$)","/test/test2/[0-9]+","/test/(.+)/test3","/test/pubsubGet2"
         )

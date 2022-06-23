@@ -119,6 +119,6 @@ enum class PermissionConfig (
 
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/invoice(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
-    CUSTOMER_LOAN_INVOICE_FINISHED("ConsumerLoan","ConsumerLoan/invoice/finish",RequestMethod.PUT,"update invoice status"),
-
+    CUSTOMER_LOAN_INVOICE_FINISH("ConsumerLoan","ConsumerLoan/invoice/finish/[0-9]+\$",RequestMethod.PUT,"finish invoice"),
+    CUSTOMER_LOAN_INVOICE_CANCEL("ConsumerLoan","ConsumerLoan/invoice/cancel/[0-9]+\$",RequestMethod.PUT,"cancel invoice"),
 }
