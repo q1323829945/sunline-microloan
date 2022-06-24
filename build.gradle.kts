@@ -83,7 +83,7 @@ subprojects {
 	}
 
 	tasks.getByName<Jar>("jar") {
-		enabled = project.name.startsWith("lib-")
+		enabled = project.name.startsWith("lib-") || project.name.startsWith("test-")
 	}
 }
 
