@@ -53,6 +53,11 @@ class ConsumerLoanController {
         return consumerLoanService.getLoanAgreementInfoByApplicationId(applicationId.toLong())
     }
 
+    @GetMapping("/LoanAgreement/Info/{agreementId}/retrieve")
+    fun getLoanAgreementInfoByAgreementId(@PathVariable agreementId:String):DTOLoanAgreementViewInfo?{
+        return consumerLoanService.getLoanAgreementInfoByAgreementId(agreementId.toLong())
+    }
+
 
     @PostMapping("/LoanAgreement/Signed")
     fun signedLoanAgreement(@RequestBody applicationId:Long){

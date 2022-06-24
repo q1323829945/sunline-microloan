@@ -66,7 +66,7 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
     fun getPage(agreementId: Long?,customerId:
                 Long?,
                 moneyTransferInstructionType:MoneyTransferInstructionType,
-                moneyTransferInstructionStatus: InstructionLifecycleStatus,
+                moneyTransferInstructionStatus: InstructionLifecycleStatus?,
                 pageable: Pageable
     ): Page<MoneyTransferInstruction> {
        return getPageWithTenant({ root, _, criteriaBuilder ->
@@ -95,7 +95,7 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
                     )
                 )
             }
-            moneyTransferInstructionStatus.run {
+            moneyTransferInstructionStatus?.run {
                 predicates.add(
                     criteriaBuilder.equal(
                         root.get<MoneyTransferInstructionType>(

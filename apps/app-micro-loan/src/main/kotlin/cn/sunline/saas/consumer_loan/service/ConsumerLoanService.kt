@@ -19,6 +19,7 @@ import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.arrangement.exception.BaseRateNullException
 import cn.sunline.saas.interest.component.InterestRateHelper
@@ -679,6 +680,7 @@ class ConsumerLoanService(
     fun callBackRepayment(instructionId: Long) {
         val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
         callBackRepayLoanInvoice(repaymentInstruction)
+        // TODO InstructionLifecycleStatus Change
     }
 
     fun callBackFinancialAccountingPrepayment(instructionId: Long) {
@@ -690,6 +692,7 @@ class ConsumerLoanService(
         val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
         callBackRepayLoanInvoice(repaymentInstruction)
         cancelInitLoanInvoice(repaymentInstruction.agreementId,repaymentInstruction.referenceId)
+        // TODO InstructionLifecycleStatus Change
     }
 
     private fun cancelInitLoanInvoice(agreementId: Long,invoiceId: Long){
@@ -745,20 +748,56 @@ class ConsumerLoanService(
 
     fun finishLoanInvoiceRepayment(instructionId: Long){
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
-        if (repaymentInstruction != null) {
-            repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FULFILLED
-            repaymentInstructionService.save(repaymentInstruction)
-            val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
-            callBackRepayLoanInvoice(repaymentInstruction)
+            ?: throw LoanInvoiceBusinessException("repayment instruction not found")
+
+        repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FULFILLED
+        repaymentInstructionService.save(repaymentInstruction)
+
+        val invoice = repaymentInstruction.referenceId?.let { invoiceService.getOne(it) }
+            ?: throw InvoiceArrangementNotFoundException("invoice not found")
+
+        val dtoRepaymentInstruction = DTORepaymentInstruction(
+            id = repaymentInstruction.id,
+            instructionAmount = repaymentInstruction.moneyTransferInstructionAmount.toPlainString(),
+            instructionCurrency = repaymentInstruction.moneyTransferInstructionCurrency,
+            instructionPurpose = repaymentInstruction.moneyTransferInstructionPurpose,
+            payeeAccount = repaymentInstruction.payeeAccount,
+            payerAccount = repaymentInstruction.payerAccount,
+            agreementId = repaymentInstruction.agreementId,
+            businessUnit = repaymentInstruction.businessUnit,
+            referenceId = repaymentInstruction.referenceId!!
+        )
+        callBackRepayLoanInvoice(dtoRepaymentInstruction)
+
+        val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
+        val invoicePeriodFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
+        val invoicePeriodToDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
+        if(invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate){
+            cancelInitLoanInvoice(repaymentInstruction.agreementId, repaymentInstruction.referenceId!!)
         }
     }
 
     fun cancelLoanInvoiceRepayment(instructionId: Long){
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
-        if (repaymentInstruction != null) {
-            repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FAILED
-            repaymentInstructionService.save(repaymentInstruction)
+            ?: throw LoanInvoiceBusinessException("repayment instruction not found")
+
+        repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FAILED
+        repaymentInstructionService.save(repaymentInstruction)
+
+        val invoice = repaymentInstruction.referenceId?.let { invoiceService.getOne(it) }
+            ?: throw InvoiceArrangementNotFoundException("invoice not found")
+
+        val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
+        val invoicePeriodFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
+        val invoicePeriodToDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
+        if(invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate){
+            invoice.invoiceStatus = InvoiceStatus.CANCEL
+            invoiceService.save(invoice)
         }
-//        callBackRepayLoanInvoice(repaymentInstruction)
+    }
+
+    fun getLoanAgreementInfoByAgreementId(agreementId: Long): DTOLoanAgreementViewInfo? {
+        val loanAgreement = loanAgreementService.getOne(agreementId)
+        return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 }

@@ -1,5 +1,6 @@
 package cn.sunline.saas.config
 
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
 enum class PermissionConfig (
@@ -121,4 +122,5 @@ enum class PermissionConfig (
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
     CUSTOMER_LOAN_INVOICE_FINISH("ConsumerLoan","ConsumerLoan/invoice/finish/[0-9]+\$",RequestMethod.PUT,"finish invoice"),
     CUSTOMER_LOAN_INVOICE_CANCEL("ConsumerLoan","ConsumerLoan/invoice/cancel/[0-9]+\$",RequestMethod.PUT,"cancel invoice"),
+    CUSTOMER_LOAN_INVOICE_DETAIL("ConsumerLoan","ConsumerLoan/invoice/detail/(.*?)/retrieve",RequestMethod.GET,"View invoice details")
 }

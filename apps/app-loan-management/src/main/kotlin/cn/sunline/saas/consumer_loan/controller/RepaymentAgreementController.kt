@@ -52,4 +52,10 @@ class RepaymentAgreementController {
         repaymentAgreementManagerService.cancelLoanInvoiceRepayment(id)
         return DTOResponseSuccess(Unit).response()
     }
+
+    @GetMapping("/invoice/detail/{invoiceId}/retrieve")
+    fun getInvoiceDetail(@PathVariable invoiceId:String, pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
+        val paged = repaymentAgreementManagerService.getInvoiceDetail(invoiceId.toLong(),pageable)
+        return DTOPagedResponseSuccess(paged.map { it }).response()
+    }
 }

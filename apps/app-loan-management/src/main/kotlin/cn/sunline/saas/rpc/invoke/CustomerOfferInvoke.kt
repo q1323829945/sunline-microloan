@@ -13,4 +13,6 @@ interface CustomerOfferInvoke {
     fun getLoanAgreement(applicationId:Long): DTOLoanAgreementView?
 
     fun getLoanAgreementInfo(applicationId:Long): DTOLoanAgreementViewInfo?
+
+    fun getLoanAgreementInfoByAgreementId(agreementId:Long): DTOLoanAgreementViewInfo?
 }

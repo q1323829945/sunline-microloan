@@ -1,13 +1,19 @@
 package cn.sunline.saas.consumer_loan.service
 
 import cn.sunline.saas.consumer_loan.exception.RepaymentAgreementBusinessException
+import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceLineView
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoicePage
+import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceTransferInstructionPage
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.UnderwritingType
+import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
+import cn.sunline.saas.invoice.model.InvoiceType
+import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
@@ -55,26 +61,30 @@ class RepaymentAgreementManagerService(
         customerId: String?,
         moneyTransferInstructionType: MoneyTransferInstructionType,
         moneyTransferInstructionStatus: InstructionLifecycleStatus, pageable: Pageable
-    ): Page<DTOInvoicePage> {
+    ): Page<DTOInvoiceTransferInstructionPage> {
 
         val page = repaymentInstructionService.getPage(
             agreementId?.toLong(), customerId?.toLong(),
-            MoneyTransferInstructionType.REPAYMENT, InstructionLifecycleStatus.PREPARED, pageable
+            MoneyTransferInstructionType.REPAYMENT, null, pageable
         ).map {
             val invokesPaged =
                 invoiceService.getInvokesPaged(it.businessUnit, InvoiceStatus.ACCOUNTED, pageable).first()
-            val loanAgreement = customerOfferInvoke.getLoanAgreementInfo(it.agreementId)
-            DTOInvoicePage(
+            val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(it.agreementId)
+            DTOInvoiceTransferInstructionPage(
                 id = it.id.toString(),
+                invoiceId = invokesPaged.id.toString(),
                 agreementId = it.agreementId.toString(),
                 invoiceType = invokesPaged.invoiceType,
-                fromDateTime = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodFromDate).toString(),
-                toDateTime = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodToDate).toString(),
+                invoicePeriodFromDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodFromDate).toString(),
+                invoicePeriodToDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodToDate).toString(),
+                invoiceRepaymentDate = tenantDateTime.toTenantDateTime(invokesPaged.invoiceRepaymentDate).toString(),
                 invoiceStatus = invokesPaged.invoiceStatus,
-                amount = invokesPaged.invoiceAmount.toPlainString(),
-                currency = loanAgreement?.currency,
-                userId = invokesPaged.invoicee.toString(),
-                repaymentStatus = invokesPaged.repaymentStatus
+                invoiceTotalAmount = invokesPaged.invoiceAmount.toPlainString(),
+                invoiceCurrency = loanAgreement?.currency,
+                invoicee = invokesPaged.invoicee.toString(),
+                repaymentStatus = invokesPaged.repaymentStatus,
+                instructionLifecycleStatus = it.moneyTransferInstructionStatus,
+                loanAgreementFromDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodFromDate).toString()
             )
         }
         return page
@@ -84,55 +94,43 @@ class RepaymentAgreementManagerService(
 
         val page = invoiceService.getInvokesPaged(customerId, InvoiceStatus.FINISHED, pageable).map {
 
-            val loanAgreement = customerOfferInvoke.getLoanAgreementInfo(it.agreementId)
+            val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(it.agreementId)
             DTOInvoicePage(
-                id = it.id.toString(),
+                invoiceId = it.id.toString(),
                 agreementId = it.agreementId.toString(),
                 invoiceType = it.invoiceType,
-                fromDateTime = tenantDateTime.toTenantDateTime(it.invoicePeriodFromDate).toString(),
-                toDateTime = tenantDateTime.toTenantDateTime(it.invoicePeriodToDate).toString(),
+                invoicePeriodFromDate = tenantDateTime.toTenantDateTime(it.invoicePeriodFromDate).toString(),
+                invoicePeriodToDate = tenantDateTime.toTenantDateTime(it.invoicePeriodToDate).toString(),
+                invoiceRepaymentDate = tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate).toString(),
                 invoiceStatus = it.invoiceStatus,
-                amount = it.invoiceAmount.toPlainString(),
-                currency = loanAgreement?.currency,
-                userId = it.invoicee.toString(),
+                invoiceTotalAmount = it.invoiceAmount.toPlainString(),
+                invoiceCurrency = loanAgreement?.currency,
+                invoicee = it.invoicee.toString(),
                 repaymentStatus = it.repaymentStatus
             )
         }
         return page
     }
 
-//    fun finish(id: Long) {
-//        updateStatus(id, InvoiceStatus.FINISHED)
-//    }
-
-//    fun rejected(id:Long){
-//        updateStatus(id, ApplyStatus.REJECTED)
-//    }
-
-//    private fun updateStatus(id: Long, status: InvoiceStatus) {
-//        val invoice = invoiceService.getOne(id) ?: throw RepaymentAgreementBusinessException(
-//            "Loan Invoice Not Found",
-//            ManagementExceptionCode.INVOICE_NOT_FOUND
-//        )
-//        checkStatus(invoice.invoiceStatus, status)
-//        invoice.invoiceStatus = status
-//        invoiceService.save(invoice)
-//    }
-//
-//    private fun checkStatus(oldStatus: InvoiceStatus, newStatus: InvoiceStatus) {
-//        when (oldStatus) {
-//            InvoiceStatus.ACCOUNTED ->
-//                if (newStatus != InvoiceStatus.FINISHED)
-//                    throw CustomerOfferStatusException(
-//                        "status can not be update",
-//                        ManagementExceptionCode.INVOICE_STATUS_ERROR
-//                    )
-//            else -> throw RepaymentAgreementBusinessException(
-//                "status can not be update",
-//                ManagementExceptionCode.INVOICE_STATUS_ERROR
-//            )
-//        }
-//    }
+    fun getInvoiceDetail(invoiceId: Long, pageable: Pageable): Page<DTOInvoiceLineView> {
+        val invoice = invoiceService.getOne(invoiceId)
+        val page = Page.empty<DTOInvoiceLineView>(pageable)
+        page.map {
+            invoice?.let { invoice ->
+                invoice.invoiceLines.forEach {
+                    DTOInvoiceLineView(
+                        Id = it.id.toString(),
+                        invoiceId =invoiceId.toString(),
+                        invoiceAmountType = it.invoiceAmountType,
+                        invoiceAmount = it.invoiceAmount.toPlainString(),
+                        repaymentAmount = it.repaymentAmount.toPlainString(),
+                        repaymentStatus = it.repaymentStatus
+                    )
+                }
+            }
+        }
+        return page
+    }
 
     fun finishLoanInvoiceRepayment(instructionId: String) {
         loanAgreementPublish.loanInvoiceRepaymentFinish(instructionId.toLong())

@@ -78,4 +78,17 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             tenant = ContextUtil.getTenant()
         )
     }
+
+    override fun getLoanAgreementInfoByAgreementId(agreementId:Long): DTOLoanAgreementViewInfo?{
+        return RPCService.get<DTOLoanAgreementViewInfo>(
+            serviceName = APP_MICRO_LOAN,
+            methodName = "ConsumerLoan/LoanAgreement/Info/$agreementId/retrieve",
+            queryParams = mapOf(),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant()
+        )
+    }
 }
