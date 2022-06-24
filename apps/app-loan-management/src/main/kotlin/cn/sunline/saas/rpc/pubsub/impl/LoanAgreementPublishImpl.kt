@@ -29,4 +29,22 @@ class LoanAgreementPublishImpl:LoanAgreementPublish {
             tenant = ContextUtil.getTenant()
         )
     }
+
+    override fun loanInvoiceRepaymentFinish(instructionId: Long) {
+        PubSubService.publish(
+            pubSubName = APP_MICRO_LOAN_PUB_SUB,
+            topic = LoanAgreementPublishTopic.LOAN_INVOICE_REPAYMENT_FINISH.toString(),
+            payload = instructionId,
+            tenant = ContextUtil.getTenant()
+        )
+    }
+
+    override fun loanInvoiceRepaymentCancel(instructionId: Long) {
+        PubSubService.publish(
+            pubSubName = APP_MICRO_LOAN_PUB_SUB,
+            topic = LoanAgreementPublishTopic.LOAN_INVOICE_REPAYMENT_CANCEL.toString(),
+            payload = instructionId,
+            tenant = ContextUtil.getTenant()
+        )
+    }
 }

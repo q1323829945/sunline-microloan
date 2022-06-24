@@ -53,7 +53,11 @@ class MoneyTransferInstruction(
 
     @NotNull
     @Column(name = "business_unit", nullable = false, columnDefinition = "bigint not null")
-    val businessUnit:Long
+    val businessUnit:Long,
+
+    @NotNull
+    @Column(name = "reference_id", nullable = true, columnDefinition = "bigint null")
+    val referenceId: Long?
 
 ) : MultiTenant {
 

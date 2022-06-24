@@ -95,7 +95,6 @@ class LoanProductController {
         return loanProductManagerService.getUploadConfig(id.toLong())
     }
 
-
     @GetMapping("interestRate/{productId}")
     fun getInterestRate(@PathVariable productId:String):List<LoanTermType>{
         return loanProductManagerService.getInterestRate(productId.toLong())

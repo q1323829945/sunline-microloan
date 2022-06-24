@@ -36,7 +36,8 @@ class DisbursementInstructionService(private val moneyTransferInstructionRepo: M
             payeeAccount = dtoDisbursementInstruction.payeeAccount,
             payerAccount = dtoDisbursementInstruction.payerAccount,
             agreementId = dtoDisbursementInstruction.agreementId,
-            businessUnit = dtoDisbursementInstruction.businessUnit
+            businessUnit = dtoDisbursementInstruction.businessUnit,
+            null
         )
 
         val transferInstruction = moneyTransferInstructionRepo.save(moneyTransferInstruction)

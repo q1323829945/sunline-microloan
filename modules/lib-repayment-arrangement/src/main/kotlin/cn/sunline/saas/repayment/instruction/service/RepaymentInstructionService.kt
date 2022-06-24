@@ -5,10 +5,15 @@ import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.money.transfer.instruction.repository.MoneyTransferInstructionRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.repayment.instruction.exception.RepaymentInstructionNotFoundException
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
+import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstructionAdd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Predicate
 
 /**
  * @title: RepaymentInstructionService
@@ -23,20 +28,99 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
     @Autowired
     private lateinit var seq: Sequence
 
-    fun registered(dtoRepaymentInstruction: DTORepaymentInstruction): MoneyTransferInstruction {
+    fun registered(dtoRepaymentInstructionAdd: DTORepaymentInstructionAdd): MoneyTransferInstruction {
         val moneyTransferInstruction = MoneyTransferInstruction(
             id = seq.nextId(),
             moneyTransferInstructionType = MoneyTransferInstructionType.REPAYMENT,
-            moneyTransferInstructionAmount = dtoRepaymentInstruction.moneyTransferInstructionAmount,
-            moneyTransferInstructionCurrency = dtoRepaymentInstruction.moneyTransferInstructionCurrency,
-            moneyTransferInstructionPurpose = dtoRepaymentInstruction.moneyTransferInstructionPurpose,
+            moneyTransferInstructionAmount = dtoRepaymentInstructionAdd.moneyTransferInstructionAmount,
+            moneyTransferInstructionCurrency = dtoRepaymentInstructionAdd.moneyTransferInstructionCurrency,
+            moneyTransferInstructionPurpose = dtoRepaymentInstructionAdd.moneyTransferInstructionPurpose,
             moneyTransferInstructionStatus = InstructionLifecycleStatus.PREPARED,
-            payeeAccount = dtoRepaymentInstruction.payeeAccount,
-            payerAccount = dtoRepaymentInstruction.payerAccount,
-            agreementId = dtoRepaymentInstruction.agreementId,
-            businessUnit = dtoRepaymentInstruction.businessUnit
+            payeeAccount = dtoRepaymentInstructionAdd.payeeAccount,
+            payerAccount = dtoRepaymentInstructionAdd.payerAccount,
+            agreementId = dtoRepaymentInstructionAdd.agreementId,
+            businessUnit = dtoRepaymentInstructionAdd.businessUnit,
+            referenceId = dtoRepaymentInstructionAdd.referenceId
         )
 
         return moneyTransferInstructionRepo.save(moneyTransferInstruction)
+    }
+
+    fun retrieve(id: Long): DTORepaymentInstruction {
+        val transferInstruction =
+            getOne(id) ?: throw RepaymentInstructionNotFoundException("repayment instruction not found")
+
+        return DTORepaymentInstruction(
+            id = transferInstruction.id,
+            instructionAmount = transferInstruction.moneyTransferInstructionAmount.toPlainString(),
+            instructionCurrency = transferInstruction.moneyTransferInstructionCurrency,
+            instructionPurpose = transferInstruction.moneyTransferInstructionPurpose,
+            payeeAccount = transferInstruction.payeeAccount,
+            payerAccount = transferInstruction.payerAccount,
+            agreementId = transferInstruction.agreementId,
+            businessUnit = transferInstruction.businessUnit,
+            referenceId = transferInstruction.referenceId!!
+        )
+    }
+
+    fun getPage(agreementId: Long?,customerId:
+                Long?,
+                moneyTransferInstructionType:MoneyTransferInstructionType,
+                moneyTransferInstructionStatus: InstructionLifecycleStatus?,
+                pageable: Pageable
+    ): Page<MoneyTransferInstruction> {
+       return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            agreementId?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("agreementId"),
+                        agreementId
+                    )
+                )
+            }
+            customerId?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("businessUnit"),
+                        customerId
+                    )
+                )
+            }
+            moneyTransferInstructionType.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<MoneyTransferInstructionType>("moneyTransferInstructionType"),
+                        moneyTransferInstructionType
+                    )
+                )
+            }
+            moneyTransferInstructionStatus?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<MoneyTransferInstructionType>(
+                            "moneyTransferInstructionStatus"
+                        ), moneyTransferInstructionStatus
+                    )
+                )
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable)
+    }
+
+    fun getPageByInvoiceId(invoiceId: Long,pageable: Pageable
+    ): Page<MoneyTransferInstruction> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            invoiceId.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("referenceId"),
+                        invoiceId
+                    )
+                )
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable)
     }
 }

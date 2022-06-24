@@ -4,6 +4,9 @@ interface LoanAgreementPublish {
 
     fun loanAgreementPaid(applicationId: Long)
 
-
     fun loanAgreementSigned(applicationId: Long)
+
+    fun loanInvoiceRepaymentFinish(instructionId: Long)
+
+    fun loanInvoiceRepaymentCancel(instructionId: Long)
 }

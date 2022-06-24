@@ -168,4 +168,15 @@ class InvoiceService(private val invoiceRepository: InvoiceRepository) :
         return getPageWithTenant(specification, Pageable.unpaged())
     }
 
+
+    fun getInvokesPaged(customerId:Long?,invoiceStatus: InvoiceStatus?,pageable: Pageable): Page<Invoice>{
+        val page = getPageWithTenant({root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            customerId?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("invoicee"),customerId)) }
+            invoiceStatus?.run { predicates.add(criteriaBuilder.equal(root.get<Long>("invoiceStatus"), invoiceStatus)) }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("invoiceRepaymentDate"))))
+        return page
+    }
+
 }

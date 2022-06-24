@@ -19,4 +19,9 @@ class PositionKeepingController {
         positionKeepingService.initialPositionKeeping(dtoBankingTransaction)
     }
 
+    @PostMapping("/repay")
+    fun repay(@RequestBody dtoBankingTransaction: DTOBankingTransaction){
+        positionKeepingService.reducePositionKeeping(dtoBankingTransaction)
+    }
+
 }
