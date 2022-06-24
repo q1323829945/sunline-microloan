@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-loan-management
+  labels:
+    app: app-loan-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-loan-management
+  template:
+    metadata:
+      labels: 
+        app: app-loan-management
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "app-loan-management"
+        dapr.io/app-port: "8083"
+    spec:
+      imagePullSecrets:
+      - name: huawei-key
+      containers:
+      - name: app-loan-management
+        image: swr.ap-southeast-3.myhuaweicloud.com/loansaas/microloan/app-loan-management:v1
+        ports:
+        - containerPort: 8083
+        imagePullPolicy: Always
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-loan-management-svc
+  annotations:
+    kubernetes.io/elb.id: 032d3c5f-bf42-4d89-82fe-51a09c0149fb
+spec:
+  type: NodePort
+  selector:
+    app: app-loan-management
+  ports:
+  - port: 8083
+    targetPort: 8083
+    nodePort: 30083
+        
+        

@@ -1,0 +1,30 @@
+global:
+  registry: swr.ap-southeast-3.myhuaweicloud.com/loansaas/dapr
+  tag: "micro"
+  dnsSuffix: ".cluster.local"
+  logAsJson: true
+  imagePullPolicy: Always
+  imagePullSecrets: huawei-key
+  nodeSelector: {}
+  tolerations: []
+  ha:
+    enabled: false
+    replicaCount: 3
+    disruption:
+      minimumAvailable: ""
+      maximumUnavailable: "25%"
+  prometheus:
+    enabled: true
+    port: 9090
+  mtls:
+    enabled: true
+    workloadCertTTL: 24h
+    allowedClockSkew: 15m
+  daprControlPlaneOs: linux
+  labels: {}
+dapr_dashboard:
+  image:
+    registry: swr.ap-southeast-3.myhuaweicloud.com/loansaas/dapr
+    name: dashboard
+    imagePullSecrets: huawei-key
+    tag: "micro"

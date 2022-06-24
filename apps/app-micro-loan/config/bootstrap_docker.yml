@@ -65,3 +65,10 @@ logging:
     cn.sunline.saas.huaweicloud: trace
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
+
+
+
+ipconfig:
+  pdpa: 127.0.0.1:8083
+  product: 127.0.0.1:8083
+  loan: 127.0.0.1:8083

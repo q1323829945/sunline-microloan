@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jsp-micro-loan
+  labels:
+    app: jsp-micro-loan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsp-micro-loan
+  strategy: 
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate  
+  template:
+    metadata:
+      labels: 
+        app: jsp-micro-loan
+    spec:
+      imagePullSecrets:
+      - name: huawei-key
+      containers:
+        - name: jsp-micro-loan
+          env:
+            - name: jsp-micro-loan
+          image: swr.ap-southeast-3.myhuaweicloud.com/loansaas/microloan/jsp-micro-loan:v1
+          imagePullPolicy: IfNotPresent
+          resources: 
+            limits:
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 0.4
+              memory: 256Mi         
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: jsp-micro-loan-svc
+  annotations:
+    kubernetes.io/elb.id: 032d3c5f-bf42-4d89-82fe-51a09c0149fb
+spec:
+  type: LoadBalancer
+  selector:
+    app: jsp-micro-loan
+  ports:
+  - port: 8081
+    targetPort: 80
+    nodePort: 31084

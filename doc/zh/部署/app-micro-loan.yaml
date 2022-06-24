@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-micro-loan
+  labels:
+    app: app-micro-loan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-micro-loan
+  template:
+    metadata:
+      labels: 
+        app: app-micro-loan
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "app-micro-loan"
+        dapr.io/app-port: "8084"
+    spec:
+      imagePullSecrets:
+      - name: huawei-key
+      containers:
+      - name: app-micro-loan
+        image: swr.ap-southeast-3.myhuaweicloud.com/loansaas/microloan/app-micro-loan:v1
+        ports:
+        - containerPort: 8084
+        imagePullPolicy: Always
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-micro-loan-svc
+spec:
+  type: NodePort
+  selector:
+    app: app-micro-loan
+  ports:
+  - port: 8084
+    targetPort: 8084
+    nodePort: 30084
+        
+        
