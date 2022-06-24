@@ -9,3 +9,8 @@ File("apps").walk().filter { it.isDirectory && it.name.startsWith("app-") }.forE
     include(dir.name)
     project(":${dir.name}").projectDir = dir
 }
+
+File("tests").walk().filter { it.isDirectory && it.name.startsWith("test-") }.forEach { dir ->
+    include(dir.name)
+    project(":${dir.name}").projectDir = dir
+}
