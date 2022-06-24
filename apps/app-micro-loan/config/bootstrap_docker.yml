@@ -1,6 +1,4 @@
 spring:
-  lifecycle:
-    timeout-per-shutdown-phase: 30s
   main:
     banner-mode: "off"
   jpa:
@@ -11,17 +9,14 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: true
     show-sql: true
-    use_sql_comments: true
   flyway:
     baseline-on-migrate: true
     enabled: false
   datasource:
-    #    url: "jdbc:mysql://10.18.106.176:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
-    url: "jdbc:log4jdbc:mysql://172.19.2.154:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    url: "jdbc:mysql://172.19.2.154:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
     username: "root"
     password: "uNEED2021@"
-    #    driver-class-name: "com.mysql.cj.jdbc.Driver"
-    driver-class-name: "net.sf.log4jdbc.DriverSpy"
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
   servlet:
     multipart:
       max-file-size: 100MB
@@ -29,8 +24,7 @@ spring:
 
 
 server:
-  port : 8083
-  shutdown: graceful
+  port : 8084
 
 management:
   endpoints:
@@ -68,13 +62,6 @@ redis:
 
 logging:
   level:
-    cn.sunline.saas: trace
-    jdbc:
-      sqlonly: OFF
-      audit: OFF
-      resultsettable: OFF
-      connection: OFF
-      sqltiming: INFO
-      resultset: OFF
+    cn.sunline.saas.huaweicloud: trace
   pattern:
-    console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
