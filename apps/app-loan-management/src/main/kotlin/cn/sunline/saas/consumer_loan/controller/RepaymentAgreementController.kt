@@ -41,13 +41,13 @@ class RepaymentAgreementController {
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
-    @PutMapping("/invoice/finish/{id}")
+    @PutMapping("/invoice/FULFILLED/{id}")
     fun finishLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
         repaymentAgreementManagerService.finishLoanInvoiceRepayment(id)
         return DTOResponseSuccess(Unit).response()
     }
 
-    @PutMapping("/invoice/cancel/{id}")
+    @PutMapping("/invoice/FAILED/{id}")
     fun cancelLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
         repaymentAgreementManagerService.cancelLoanInvoiceRepayment(id)
         return DTOResponseSuccess(Unit).response()
