@@ -1,42 +1,22 @@
 package cn.sunline.saas.consumer_loan.service
 
-import cn.sunline.saas.consumer_loan.exception.RepaymentAgreementBusinessException
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceLineView
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoicePage
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceTransferInstructionPage
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
-import cn.sunline.saas.document.template.services.LoanUploadConfigureService
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.UnderwritingType
-import cn.sunline.saas.global.model.CurrencyType
-import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.InvoiceType
-import cn.sunline.saas.invoice.model.RepaymentStatus
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
-import cn.sunline.saas.response.DTOResponseSuccess
-import cn.sunline.saas.response.response
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import cn.sunline.saas.rpc.pubsub.LoanAgreementPublish
-import cn.sunline.saas.underwriting.exception.UnderwritingNotFound
-import cn.sunline.saas.underwriting.exception.UnderwritingStatusCannotBeUpdate
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
-import org.springframework.http.ResponseEntity
+import org.springframework.data.domain.*
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import javax.persistence.criteria.Predicate
 
 
 @Service
@@ -114,22 +94,22 @@ class RepaymentAgreementManagerService(
 
     fun getInvoiceDetail(invoiceId: Long, pageable: Pageable): Page<DTOInvoiceLineView> {
         val invoice = invoiceService.getOne(invoiceId)
-        val page = Page.empty<DTOInvoiceLineView>(pageable)
-        page.map {
-            invoice?.let { invoice ->
-                invoice.invoiceLines.forEach {
+        val list = ArrayList<DTOInvoiceLineView>()
+        invoice?.let { invoice ->
+            invoice.invoiceLines.forEach {
+                list.add(
                     DTOInvoiceLineView(
                         Id = it.id.toString(),
-                        invoiceId =invoiceId.toString(),
+                        invoiceId = invoiceId.toString(),
                         invoiceAmountType = it.invoiceAmountType,
                         invoiceAmount = it.invoiceAmount.toPlainString(),
                         repaymentAmount = it.repaymentAmount.toPlainString(),
                         repaymentStatus = it.repaymentStatus
                     )
-                }
+                )
             }
         }
-        return page
+        return PageImpl(list)
     }
 
     fun finishLoanInvoiceRepayment(instructionId: String) {

@@ -107,4 +107,20 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable)
     }
+
+    fun getPageByInvoiceId(invoiceId: Long,pageable: Pageable
+    ): Page<MoneyTransferInstruction> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            invoiceId.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<Long>("referenceId"),
+                        invoiceId
+                    )
+                )
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable)
+    }
 }
