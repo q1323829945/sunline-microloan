@@ -47,25 +47,26 @@ class RepaymentAgreementManagerService(
             agreementId?.toLong(), customerId?.toLong(),
             MoneyTransferInstructionType.REPAYMENT, null, pageable
         ).map {
-            val invokesPaged =
-                invoiceService.getInvokesPaged(it.businessUnit, InvoiceStatus.ACCOUNTED, pageable).first()
-            val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(it.agreementId)
-            DTOInvoiceTransferInstructionPage(
-                id = it.id.toString(),
-                invoiceId = invokesPaged.id.toString(),
-                agreementId = it.agreementId.toString(),
-                invoiceType = invokesPaged.invoiceType,
-                invoicePeriodFromDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodFromDate).toString(),
-                invoicePeriodToDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodToDate).toString(),
-                invoiceRepaymentDate = tenantDateTime.toTenantDateTime(invokesPaged.invoiceRepaymentDate).toString(),
-                invoiceStatus = invokesPaged.invoiceStatus,
-                invoiceTotalAmount = invokesPaged.invoiceAmount.toPlainString(),
-                invoiceCurrency = loanAgreement?.currency,
-                invoicee = invokesPaged.invoicee.toString(),
-                repaymentStatus = invokesPaged.repaymentStatus,
-                instructionLifecycleStatus = it.moneyTransferInstructionStatus,
-                loanAgreementFromDate = tenantDateTime.toTenantDateTime(invokesPaged.invoicePeriodFromDate).toString()
-            )
+            val invoice = it.referenceId?.let { invoiceId -> invoiceService.getOne(invoiceId)}
+            invoice?.let{ inovice ->
+                val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(it.agreementId)
+                DTOInvoiceTransferInstructionPage(
+                    id = it.id.toString(),
+                    invoiceId = invoice.id.toString(),
+                    agreementId = it.agreementId.toString(),
+                    invoiceType = invoice.invoiceType,
+                    invoicePeriodFromDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate).toString(),
+                    invoicePeriodToDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate).toString(),
+                    invoiceRepaymentDate = tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate).toString(),
+                    invoiceStatus = invoice.invoiceStatus,
+                    invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
+                    invoiceCurrency = loanAgreement?.currency,
+                    invoicee = invoice.invoicee.toString(),
+                    repaymentStatus = invoice.repaymentStatus,
+                    instructionLifecycleStatus = it.moneyTransferInstructionStatus,
+                    loanAgreementFromDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate).toString()
+                )
+            }
         }
         return page
     }
