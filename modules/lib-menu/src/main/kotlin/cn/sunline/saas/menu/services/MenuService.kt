@@ -28,6 +28,8 @@ class MenuService {
         val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig")
         val customerOfferConfig = Menu("customerOfferConfig","businessHandling","","/dashboard/customerOfferConfig")
         val loanAgreementManagementConfig= Menu("loanAgreementManagementConfig","businessHandling","","/dashboard/loanAgreementManagementConfig")
+        val customerLoanConfig= Menu("customerLoan","businessHandling","","/dashboard/customerLoanConfig")
+
 
 
         menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling
@@ -42,7 +44,8 @@ class MenuService {
             ,customerConfig
             ,customerOfferConfig
             ,loanAgreementManagementConfig
-            ,employeeConfig)
+            ,employeeConfig
+            ,customerLoanConfig)
 
     }
 
