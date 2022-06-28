@@ -76,10 +76,11 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
 
     fun retrieveCurrentAccountedInvoices(customerId: Long): List<DTOInvoiceInfoView> {
         val page = invoiceService.retrieveCurrentInvoices(customerId,null)
-        val accountDate = calculateSchedulerTimer.baseDateTime()
+        //val accountDate = calculateSchedulerTimer.baseDateTime()
+        val accountDate = tenantDateTime.now().plusMonths(1)
         val mapPage = page.filter {
             val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate))
-            it.invoiceStatus != InvoiceStatus.FINISHED && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
+            it.invoiceStatus != InvoiceStatus.FINISHED && invoiceRepaymentDate < tenantDateTime.getYearMonthDay(accountDate)
         }.sortedByDescending { it.invoiceRepaymentDate }.map {
                 invoice ->
             val lines = ArrayList<DTOInvoiceLinesView>()
