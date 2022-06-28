@@ -739,7 +739,7 @@ class ConsumerLoanService(
         val invoice = invoiceService.getOne(dtoRepaymentInstruction.referenceId)
             ?: throw InvoiceArrangementNotFoundException("invoice not found")
 
-        repayLoanInvoice(dtoRepaymentInstruction.instructionAmount.toBigDecimal(), invoice, invoice.agreementId)
+        //repayLoanInvoice(dtoRepaymentInstruction.instructionAmount.toBigDecimal(), invoice, invoice.agreementId)
 
         val repaymentAccount = repaymentArrangementService.listRepaymentAccounts(invoice.agreementId)
             .first { it.repaymentAccount == dtoRepaymentInstruction.payerAccount }
