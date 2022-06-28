@@ -26,6 +26,7 @@ class ApiStatisticsService (private val apiStatisticsRepository: ApiStatisticsRe
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),lastDate.year.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),lastDate.monthOfYear.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),lastDate.dayOfMonth.toLong()))
+            predicates.add(criteriaBuilder.equal(root.get<String>("api"),dtoApiStatisticsFindParams.api))
             predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"),dtoApiStatisticsFindParams.frequency))
             predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"),ContextUtil.getTenant().toLong()))
             criteriaBuilder.and(*(predicates.toTypedArray()))

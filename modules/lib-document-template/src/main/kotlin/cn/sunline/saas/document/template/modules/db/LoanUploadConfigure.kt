@@ -1,5 +1,6 @@
 package cn.sunline.saas.document.template.modules.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
         Index(name = "idx_deleted", columnList = "deleted")
     ]
 )
+@EntityListeners(TenantListener::class)
 class LoanUploadConfigure(
     @Id
     var id: Long,

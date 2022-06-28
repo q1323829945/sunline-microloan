@@ -1,6 +1,7 @@
 package cn.sunline.saas.document.template.modules.db
 
 import cn.sunline.saas.document.template.modules.DirectoryType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "document_template_directory")
+@EntityListeners(TenantListener::class)
 class DocumentTemplateDirectory(
     @Id
     var id: Long? = null,
@@ -27,7 +29,7 @@ class DocumentTemplateDirectory(
     var deleted: Boolean = false,
 
     @ManyToOne
-    var parent: DocumentTemplateDirectory?,
+    var parent: DocumentTemplateDirectory? = null,
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

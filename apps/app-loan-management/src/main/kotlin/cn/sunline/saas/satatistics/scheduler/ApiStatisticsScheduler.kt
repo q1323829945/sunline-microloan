@@ -35,44 +35,37 @@ class ApiStatisticsScheduler(
     }
 
     override fun saveYear(dateTime: DateTime){
-        val api = checkApiExist(dateTime, Frequency.Y)
-        api?:run {
-            val endDate = getLocalDate(dateTime)
-            val startDate = endDate.plusYears(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.Y)
-        }
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusYears(-1)
+        schedulerApi(dateTime,startDate.toDate(),endDate.toDate(),Frequency.Y)
     }
 
     override fun saveMonth(dateTime: DateTime){
-        val api = checkApiExist(dateTime, Frequency.M)
-        api?:run {
-            val endDate = getLocalDate(dateTime)
-            val startDate = endDate.plusMonths(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.M)
-        }
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusMonths(-1)
+        schedulerApi(dateTime,startDate.toDate(),endDate.toDate(),Frequency.M)
     }
 
     override fun saveDay(dateTime: DateTime){
-        val api = checkApiExist(dateTime, Frequency.D)
-        api?:run {
-            val endDate = getLocalDate(dateTime)
-            val startDate = endDate.plusDays(-1)
-            schedulerApi(startDate.toDate(),endDate.toDate(),Frequency.D)
-        }
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusDays(-1)
+        schedulerApi(dateTime,startDate.toDate(),endDate.toDate(),Frequency.D)
     }
 
-    private fun checkApiExist(dateTime: DateTime,frequency: Frequency):ApiStatistics?{
-        return apiStatisticsService.findByDate(DTOApiStatisticsFindParams(dateTime,frequency))
+    private fun checkApiExist(api:String,dateTime: DateTime,frequency: Frequency):ApiStatistics?{
+        return apiStatisticsService.findByDate(DTOApiStatisticsFindParams(api,dateTime,frequency))
     }
 
-    private fun schedulerApi(startDate:Date,endDate: Date,frequency: Frequency){
+    private fun schedulerApi(dateTime: DateTime,startDate:Date,endDate: Date,frequency: Frequency){
         val api = apiDetailService.getGroupByApiCount(DTOApiDetailQueryParams(startDate,endDate))
         api.forEach {
+            val checkApi = checkApiExist(it.api,dateTime,frequency)
             apiStatisticsService.saveApiStatistics(DTOApiStatistics(
                 api = it.api,
                 count = it.count,
                 frequency = frequency
             ))
         }
+
     }
 }

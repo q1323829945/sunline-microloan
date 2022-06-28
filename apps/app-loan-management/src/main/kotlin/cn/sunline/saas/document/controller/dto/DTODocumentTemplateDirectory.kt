@@ -6,7 +6,6 @@ import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 data class DTOTemplateDirectoryAdd(
     val name:String,
     val parentId: Long?,
-    val tenantId:Long,
     var parent: DocumentTemplateDirectory?,
     val directoryType: DirectoryType,
 )
@@ -15,7 +14,6 @@ data class DTOTemplateDirectoryListView(
     val id:String,
     val name:String,
     val parentId: Long?,
-    val tenantId:Long,
     val directory: List<DTOTemplateDirectoryListView>?,
     val templates:List<DTODocumentTemplateView>?,
     val directoryPath:String?,
@@ -26,7 +24,6 @@ data class DTOTemplateDirectoryView(
     val id:String,
     val name:String,
     val parentId: Long?,
-    val tenantId:Long,
     val parent: DTOTemplateDirectoryView?,
     val templates:List<DTODocumentTemplateView>?,
     val directoryType: DirectoryType
@@ -35,5 +32,4 @@ data class DTOTemplateDirectoryView(
 data class DTOTemplateDirectoryChange(
     val id:Long,
     val name:String,
-    val tenantId:Long
 )

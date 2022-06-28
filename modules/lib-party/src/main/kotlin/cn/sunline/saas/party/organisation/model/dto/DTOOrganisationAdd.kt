@@ -14,7 +14,6 @@ data class DTOOrganisationAdd(
     val organisationIdentifications:List<DTOOrganisationIdentificationAdd>,
     val organizationInvolvements:List<DTOOrganizationInvolvementAdd>,
     val businessUnits:List<DTOBusinessUnitAdd>,
-    var tenantId: Long?
 
 )
 
@@ -23,7 +22,6 @@ data class DTOOrganisationIdentificationAdd(
     var organisationId:Long?,
     val organisationIdentificationType: OrganisationIdentificationType,
     val organisationIdentification: String,
-    var tenantId: Long?
 )
 
 data class DTOOrganizationInvolvementAdd(
@@ -31,12 +29,10 @@ data class DTOOrganizationInvolvementAdd(
     var organisationId:Long?,
     val organizationInvolvementType: OrganizationInvolvementType,
     val partyId: Long,
-    var tenantId: Long?
 )
 
 data class DTOBusinessUnitAdd(
     var id:Long?,
     var organisationId:Long?,
     val type: BusinessUnitType,
-    var tenantId: Long?
 )

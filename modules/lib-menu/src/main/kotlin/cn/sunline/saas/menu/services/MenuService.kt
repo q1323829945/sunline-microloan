@@ -56,7 +56,7 @@ class MenuService {
         return menuRecursion("", baseMenuSet)!!
     }
 
-    fun menuRecursion(parentName: String,menuSet:HashSet<Menu>):List<ResultMenu>?{
+    private fun menuRecursion(parentName: String,menuSet:HashSet<Menu>):List<ResultMenu>?{
         val children:ArrayList<ResultMenu> = arrayListOf()
         for(menu in menuSet){
             if(menu.parentName == parentName){
@@ -70,7 +70,7 @@ class MenuService {
         return children
     }
 
-    fun getPermissionSelectMenu(menuName:Set<String>):HashSet<Menu>{
+    private fun getPermissionSelectMenu(menuName:Set<String>):HashSet<Menu>{
         //得到选中菜单
         val permissionMenu = menuList.filter {
             menuName.contains(it.name)

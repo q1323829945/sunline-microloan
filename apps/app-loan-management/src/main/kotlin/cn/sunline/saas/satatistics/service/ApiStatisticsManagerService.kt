@@ -17,7 +17,7 @@ class ApiStatisticsManagerService {
 
 
     fun getStatisticsByDate(year:Long,month:Long,day:Long,tenantId:Long): DTOApiStatisticsCount {
-        val statistics = apiStatisticsService.get { root, _, criteriaBuilder ->
+        val count = apiStatisticsService.getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),year))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),month))
@@ -25,9 +25,9 @@ class ApiStatisticsManagerService {
             predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), Frequency.D))
             predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), tenantId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }
+        }, Pageable.unpaged()).sumOf { it.count }
 
-        return DTOApiStatisticsCount(statistics?.count?:0,tenantId)
+        return DTOApiStatisticsCount(count,tenantId)
 
     }
 

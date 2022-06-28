@@ -12,6 +12,7 @@ data class DTOApiStatistics(
 
 
 data class DTOApiStatisticsFindParams(
+    val api:String,
     val datetime:DateTime,
     val frequency: Frequency,
 )

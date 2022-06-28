@@ -8,6 +8,7 @@ import cn.sunline.saas.schedule.impl.EqualInstalmentSchedule
 import cn.sunline.saas.schedule.impl.EqualInstalmentScheduleReset
 import org.assertj.core.api.Assertions
 import org.joda.time.DateTime
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -43,6 +44,7 @@ class EqualInstalmentScheduleTest {
 
 
     @Test
+    @Disabled
     fun `test equal instalment schedules reset`() {
 
 

@@ -2,6 +2,7 @@ package cn.sunline.saas.statistics.modules.db
 
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.statistics.modules.TransactionType
 import java.math.BigDecimal
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull
         Index(name = "idx_business_statistics_unique", columnList = "customer_id,currency,year,month,day,frequency,tenant_id",unique = true)
     ]
 )
+@EntityListeners(TenantListener::class)
 class BusinessStatistics  (
     @Id
     val id: Long? = null,

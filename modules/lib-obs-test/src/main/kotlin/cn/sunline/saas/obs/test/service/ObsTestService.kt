@@ -12,26 +12,22 @@ import org.springframework.stereotype.Service
 @Service
 class ObsTestService: ObsApi {
     override fun createBucket(bucketParams: BucketParams) {
-        TODO("Not yet implemented")
     }
 
     override fun putBucketLifecycleConfiguration(lifecycleParams: LifecycleParams) {
-        TODO("Not yet implemented")
     }
 
     override fun deleteBucket(bucketName: String) {
-        TODO("Not yet implemented")
     }
 
     override fun putObject(putParams: PutParams) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getObject(getParams: GetParams): Any? {
-        TODO("Not yet implemented")
+        return ""
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {
-        TODO("Not yet implemented")
     }
 }

@@ -13,6 +13,8 @@ dependencies {
     api(project(":lib-document"))
     implementation(project(":lib-obs-api"))
     implementation(project(":lib-seq-api"))
+    implementation(project(":lib-multi-tenant"))
+    implementation(project(":lib-global"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

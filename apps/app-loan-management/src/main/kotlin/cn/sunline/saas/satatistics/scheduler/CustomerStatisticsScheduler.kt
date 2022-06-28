@@ -70,7 +70,6 @@ class CustomerStatisticsScheduler(
         customer.forEach {
             customerStatisticsService.saveCustomerStatistics(
                 DTOCustomerStatistics(
-                    tenantId = it.tenantId,
                     partyCount = it.partyCount,
                     personCount = it.personCount,
                     organisationCount = it.organisationCount,

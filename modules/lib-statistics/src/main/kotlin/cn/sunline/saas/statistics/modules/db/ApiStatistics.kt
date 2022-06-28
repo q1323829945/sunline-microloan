@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "api_statistics",
     indexes = [
-        Index(name = "idx_api_statistics_unique", columnList = "year,month,day,frequency,tenant_id",unique = true)
+        Index(name = "idx_api_statistics_unique", columnList = "api,year,month,day,frequency,tenant_id",unique = true)
     ]
 )
 @EntityListeners(TenantListener::class)

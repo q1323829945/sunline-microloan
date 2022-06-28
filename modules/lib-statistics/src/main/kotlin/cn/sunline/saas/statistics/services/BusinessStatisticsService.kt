@@ -39,9 +39,9 @@ class BusinessStatisticsService (
     }
 
 
-    fun saveBusinessStatistics(dtoBusinessStatistics:DTOBusinessStatistics){
+    fun saveBusinessStatistics(dtoBusinessStatistics:DTOBusinessStatistics):BusinessStatistics{
         val lastDateTime = tenantDateTime.now().plusDays(-1)
-        save(
+        return save(
             BusinessStatistics(
                 id = sequence.nextId(),
                 customerId = dtoBusinessStatistics.customerId,

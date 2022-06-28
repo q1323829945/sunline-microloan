@@ -5,7 +5,6 @@ import org.joda.time.DateTime
 
 
 data class DTOCustomerStatistics(
-    val tenantId: Long,
     val personCount:Long,
     val organisationCount:Long,
     val partyCount:Long,

@@ -16,7 +16,6 @@ data class DTOOrganisationIdentificationChange(
     var organisationId:String?,
     val organisationIdentificationType: OrganisationIdentificationType,
     val organisationIdentification: String,
-    var tenantId: Long?
 )
 
 data class DTOOrganizationInvolvementChange(
@@ -24,12 +23,10 @@ data class DTOOrganizationInvolvementChange(
     var organisationId:String?,
     val organizationInvolvementType: OrganizationInvolvementType,
     val partyId: Long,
-    var tenantId: Long?
 )
 
 data class DTOBusinessUnitChange(
     var id:String?,
     var organisationId:String?,
     val type: BusinessUnitType,
-    var tenantId: Long?
 )
