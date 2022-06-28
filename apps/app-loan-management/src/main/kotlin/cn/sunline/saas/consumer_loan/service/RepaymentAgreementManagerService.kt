@@ -4,6 +4,7 @@ import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceLineView
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoicePage
 import cn.sunline.saas.consumer_loan.service.dto.DTOInvoiceTransferInstructionPage
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
@@ -46,25 +47,23 @@ class RepaymentAgreementManagerService(
         val page = repaymentInstructionService.getPage(
             agreementId?.toLong(), customerId?.toLong(),
             MoneyTransferInstructionType.REPAYMENT, null, pageable
-        ).map {
-            val invoice = it.referenceId?.let { invoiceId -> invoiceService.getOne(invoiceId)}
+        ).map { record ->
+            val invoice = record.referenceId?.let { invoiceId -> invoiceService.getOne(invoiceId)}
             invoice?.let{ inovice ->
-                val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(it.agreementId)
+                val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(record.agreementId)
                 DTOInvoiceTransferInstructionPage(
-                    id = it.id.toString(),
+                    id = record.id.toString(),
                     invoiceId = invoice.id.toString(),
-                    agreementId = it.agreementId.toString(),
-                    invoiceType = invoice.invoiceType,
-                    invoicePeriodFromDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate).toString(),
-                    invoicePeriodToDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate).toString(),
+                    agreementId = record.agreementId.toString(),
                     invoiceRepaymentDate = tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate).toString(),
-                    invoiceStatus = invoice.invoiceStatus,
                     invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
                     invoiceCurrency = loanAgreement?.currency,
                     invoicee = invoice.invoicee.toString(),
-                    repaymentStatus = invoice.repaymentStatus,
-                    instructionLifecycleStatus = it.moneyTransferInstructionStatus,
-                    loanAgreementFromDate = tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate).toString()
+                    instructionLifecycleStatus = record.moneyTransferInstructionStatus,
+                    startDateTime = record.startDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
+                    endDateTime = record.endDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
+                    executeDateTime = record.executeDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
+                    operator = record.operator?.let { it }.toString(),
                 )
             }
         }
@@ -113,11 +112,11 @@ class RepaymentAgreementManagerService(
         return PageImpl(list)
     }
 
-    fun finishLoanInvoiceRepayment(instructionId: String) {
-        loanAgreementPublish.loanInvoiceRepaymentFinish(instructionId.toLong())
+    fun fulfillLoanInvoiceRepayment(instructionId: String) {
+        loanAgreementPublish.loanInvoiceRepaymentFulfill(instructionId.toLong())
     }
 
-    fun cancelLoanInvoiceRepayment(instructionId: String) {
-        loanAgreementPublish.loanInvoiceRepaymentCancel(instructionId.toLong())
+    fun failLoanInvoiceRepayment(instructionId: String) {
+        loanAgreementPublish.loanInvoiceRepaymentFail(instructionId.toLong())
     }
 }

@@ -37,7 +37,11 @@ class DisbursementInstructionService(private val moneyTransferInstructionRepo: M
             payerAccount = dtoDisbursementInstruction.payerAccount,
             agreementId = dtoDisbursementInstruction.agreementId,
             businessUnit = dtoDisbursementInstruction.businessUnit,
-            null
+            referenceId = null,
+            startDateTime = null,
+            endDateTime = null,
+            executeDateTime = null,
+            operator = null
         )
 
         val transferInstruction = moneyTransferInstructionRepo.save(moneyTransferInstruction)

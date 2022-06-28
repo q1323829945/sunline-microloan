@@ -128,13 +128,19 @@ class ConsumerLoanController {
         return DTOResponseSuccess(trailView).response()
     }
 
-    @PostMapping("/invoice/finish")
-    fun finishLoanInvoiceRepayment(@RequestBody instructionId:Long){
-        consumerLoanService.finishLoanInvoiceRepayment(instructionId)
+    @PostMapping("/repayment/instruction/fulfill")
+    fun fulfillLoanInvoiceRepayment(@RequestBody instructionId:Long){
+        consumerLoanService.fulfillLoanInvoiceRepayment(instructionId)
     }
 
-    @PostMapping("/invoice/cancel")
-    fun cancelLoanInvoiceRepayment(@RequestBody instructionId:Long){
-        consumerLoanService.cancelLoanInvoiceRepayment(instructionId)
+    @PostMapping("/repayment/instruction/fail")
+    fun failLoanInvoiceRepayment(@RequestBody instructionId:Long){
+        consumerLoanService.failLoanInvoiceRepayment(instructionId)
+    }
+
+    @GetMapping("/repayment/record/{customerId}/retrieve")
+    fun getRepaymentInstructionRecord(@PathVariable("customerId", required = false) customerId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTORepaymentRecordView>>>{
+        val view = consumerLoanService.getRepaymentInstructionRecord(customerId)
+        return DTOResponseSuccess(view).response()
     }
 }

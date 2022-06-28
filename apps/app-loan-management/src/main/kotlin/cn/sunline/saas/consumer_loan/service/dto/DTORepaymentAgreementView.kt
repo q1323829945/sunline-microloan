@@ -46,17 +46,21 @@ data class DTOInvoiceTransferInstructionPage(
     val id: String,
     val invoiceId: String,
     val agreementId: String,
-    val invoiceType: InvoiceType,
-    val invoicePeriodFromDate: String,
-    val invoicePeriodToDate: String,
+//    val invoiceType: InvoiceType,
+//    val invoicePeriodFromDate: String,
+//    val invoicePeriodToDate: String,
     val invoiceRepaymentDate: String,
-    val invoiceStatus: InvoiceStatus,
+//    val invoiceStatus: InvoiceStatus,
     val invoiceTotalAmount: String,
     val invoiceCurrency: CurrencyType?,
     val invoicee: String,
-    val repaymentStatus: RepaymentStatus,
+//    val repaymentStatus: RepaymentStatus,
     val instructionLifecycleStatus: InstructionLifecycleStatus,
-    val loanAgreementFromDate: String
+//    val loanAgreementFromDate: String
+    val startDateTime: String?,
+    val endDateTime: String?,
+    val executeDateTime: String?,
+    val operator: String?
 )
 
 data class DTOInvoicePage(

@@ -2,6 +2,7 @@ package cn.sunline.saas.repayment.instruction.model.dto
 
 import cn.sunline.saas.global.model.CurrencyType
 import java.math.BigDecimal
+import java.util.*
 
 /**
  * @title: DTORepaymentInstruction
@@ -17,7 +18,9 @@ data class DTORepaymentInstructionAdd(
     val payerAccount: String?,
     val agreementId: Long,
     val businessUnit: Long,
-    val referenceId: Long
+    val referenceId: Long,
+    val startDate: Date,
+    val operator: String?
 )
 
 data class DTORepaymentInstruction(

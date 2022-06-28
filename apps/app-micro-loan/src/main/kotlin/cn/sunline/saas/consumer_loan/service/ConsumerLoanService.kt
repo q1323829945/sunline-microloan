@@ -19,7 +19,10 @@ import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
 import cn.sunline.saas.interest.arrangement.exception.BaseRateNullException
 import cn.sunline.saas.interest.component.InterestRateHelper
@@ -40,6 +43,7 @@ import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
+import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.repayment.arrangement.service.RepaymentAccountService
@@ -267,7 +271,9 @@ class ConsumerLoanService(
                 repaymentAccount.repaymentAccount,
                 agreementId,
                 loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
-                invoice.id
+                invoice.id,
+                tenantDateTime.now().toDate(),
+                null
             )
         )
         val invoiceArrangement = invoiceArrangementService.getOne(agreementId)
@@ -502,7 +508,9 @@ class ConsumerLoanService(
                 payerAccount = repaymentAccount.repaymentAccount,
                 agreementId = invoice.agreementId,
                 businessUnit = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
-                referenceId = invoice.id
+                referenceId = invoice.id,
+                startDate = tenantDateTime.now().toDate(),
+                operator = ContextUtil.getUserId()
             )
         )
 
@@ -672,7 +680,9 @@ class ConsumerLoanService(
                 payerAccount = repaymentAccount.repaymentAccount,
                 agreementId = dtoPrepayment.agreementId,
                 businessUnit = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
-                referenceId = invoice.id
+                referenceId = invoice.id,
+                startDate = tenantDateTime.now().toDate(),
+                operator = ContextUtil.getUserId()
             )
         )
 
@@ -766,7 +776,7 @@ class ConsumerLoanService(
         }
     }
 
-    fun finishLoanInvoiceRepayment(instructionId: Long){
+    fun fulfillLoanInvoiceRepayment(instructionId: Long){
 
         // TODO consistency
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
@@ -803,7 +813,7 @@ class ConsumerLoanService(
         repaymentInstructionService.save(repaymentInstruction)
     }
 
-    fun cancelLoanInvoiceRepayment(instructionId: Long){
+    fun failLoanInvoiceRepayment(instructionId: Long){
         // TODO consistency
         
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
@@ -831,5 +841,35 @@ class ConsumerLoanService(
     fun getLoanAgreementInfoByAgreementId(agreementId: Long): DTOLoanAgreementViewInfo? {
         val loanAgreement = loanAgreementService.getOne(agreementId)
         return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
+    }
+
+    fun getRepaymentInstructionRecord(customerId: Long): MutableList<DTORepaymentRecordView> {
+        val repaymentInstructionPage = repaymentInstructionService.getPage(
+            null,
+            customerId,
+            MoneyTransferInstructionType.REPAYMENT,
+            null,
+            Pageable.unpaged()
+        )
+        val list = ArrayList<DTORepaymentRecordView>()
+        repaymentInstructionPage.forEach { record->
+            list.add(
+                DTORepaymentRecordView(
+                    id = record.id.toString(),
+                    repaymentAmount = record.moneyTransferInstructionAmount,
+                    currencyType = record.moneyTransferInstructionCurrency,
+                    status = record.moneyTransferInstructionStatus,
+                    payerAccount = record.payerAccount?.let { it }.toString(),
+                    agreementId = record.agreementId.toString(),
+                    userId = ContextUtil.getUserId(),
+                    customerId = record.businessUnit.toString(),
+                    referenceId = record.referenceId?.let{ it }.toString(),
+                    startDateTime = record.startDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
+                    endDateTime = record.endDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
+                    executeDateTime = record.executeDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString()
+                )
+            )
+        }
+        return list
     }
 }

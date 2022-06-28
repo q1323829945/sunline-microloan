@@ -26,7 +26,7 @@ class RepaymentAgreementController {
     @Autowired
      private lateinit var repaymentAgreementManagerService: RepaymentAgreementManagerService
 
-    @GetMapping("/invoice")
+    @GetMapping("/repayment/instruction")
     fun getPaged(@RequestParam(required = false)agreementId:String? = null,
                  @RequestParam(required = false)customerId: String? = null,
                  pageable: Pageable
@@ -41,15 +41,15 @@ class RepaymentAgreementController {
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
-    @PutMapping("/invoice/FULFILLED/{id}")
-    fun finishLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
-        repaymentAgreementManagerService.finishLoanInvoiceRepayment(id)
+    @PutMapping("/repayment/instruction/FULFILLED/{id}")
+    fun fulfillLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        repaymentAgreementManagerService.fulfillLoanInvoiceRepayment(id)
         return DTOResponseSuccess(Unit).response()
     }
 
-    @PutMapping("/invoice/FAILED/{id}")
-    fun cancelLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
-        repaymentAgreementManagerService.cancelLoanInvoiceRepayment(id)
+    @PutMapping("/repayment/instruction/FAILED/{id}")
+    fun failLoanInvoiceRepayment(@PathVariable(name = "id") id:String):ResponseEntity<DTOResponseSuccess<Unit>>{
+        repaymentAgreementManagerService.failLoanInvoiceRepayment(id)
         return DTOResponseSuccess(Unit).response()
     }
 

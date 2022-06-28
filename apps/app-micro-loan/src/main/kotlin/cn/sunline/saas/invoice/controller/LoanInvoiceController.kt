@@ -29,7 +29,11 @@ class LoanInvoiceController {
         return DTOResponseSuccess(response).response()
     }
 
-    @GetMapping("/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}")
+    @GetMapping(value = [
+        "/retrieve/{customerId}/history/{invoiceStartDate}/{invoiceEndDate}",
+        "/retrieve/{customerId}/history",
+        "/retrieve/{customerId}/history/{invoiceStartDate}"
+    ])
     fun retrieveHistory(@PathVariable("customerId",) customerId: Long,
                        @PathVariable("invoiceStartDate",required = false) invoiceStartDate: String?,
                        @PathVariable("invoiceEndDate",required = false) invoiceEndDate: String?

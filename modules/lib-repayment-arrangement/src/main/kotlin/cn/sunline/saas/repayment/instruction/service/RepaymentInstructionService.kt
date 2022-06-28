@@ -40,7 +40,11 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
             payerAccount = dtoRepaymentInstructionAdd.payerAccount,
             agreementId = dtoRepaymentInstructionAdd.agreementId,
             businessUnit = dtoRepaymentInstructionAdd.businessUnit,
-            referenceId = dtoRepaymentInstructionAdd.referenceId
+            referenceId = dtoRepaymentInstructionAdd.referenceId,
+            startDateTime = dtoRepaymentInstructionAdd.startDate,
+            endDateTime = null,
+            executeDateTime = null,
+            operator = dtoRepaymentInstructionAdd.operator
         )
 
         return moneyTransferInstructionRepo.save(moneyTransferInstruction)

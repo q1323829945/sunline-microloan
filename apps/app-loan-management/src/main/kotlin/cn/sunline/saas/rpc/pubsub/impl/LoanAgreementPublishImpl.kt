@@ -30,19 +30,19 @@ class LoanAgreementPublishImpl:LoanAgreementPublish {
         )
     }
 
-    override fun loanInvoiceRepaymentFinish(instructionId: Long) {
+    override fun loanInvoiceRepaymentFulfill(instructionId: Long) {
         PubSubService.publish(
             pubSubName = APP_MICRO_LOAN_PUB_SUB,
-            topic = LoanAgreementPublishTopic.LOAN_INVOICE_REPAYMENT_FINISH.toString(),
+            topic = LoanAgreementPublishTopic.REPAYMENT_INSTRUCTION_FULFILL.toString(),
             payload = instructionId,
             tenant = ContextUtil.getTenant()
         )
     }
 
-    override fun loanInvoiceRepaymentCancel(instructionId: Long) {
+    override fun loanInvoiceRepaymentFail(instructionId: Long) {
         PubSubService.publish(
             pubSubName = APP_MICRO_LOAN_PUB_SUB,
-            topic = LoanAgreementPublishTopic.LOAN_INVOICE_REPAYMENT_CANCEL.toString(),
+            topic = LoanAgreementPublishTopic.REPAYMENT_INSTRUCTION_FAIL.toString(),
             payload = instructionId,
             tenant = ContextUtil.getTenant()
         )
