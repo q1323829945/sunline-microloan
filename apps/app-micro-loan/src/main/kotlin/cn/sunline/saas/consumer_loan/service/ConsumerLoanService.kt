@@ -810,6 +810,8 @@ class ConsumerLoanService(
         }
 
         repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FULFILLED
+        repaymentInstruction.executeDateTime = tenantDateTime.now().toDate()
+        repaymentInstruction.endDateTime = tenantDateTime.now().toDate()
         repaymentInstructionService.save(repaymentInstruction)
     }
 
@@ -835,6 +837,8 @@ class ConsumerLoanService(
         }
 
         repaymentInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FAILED
+        repaymentInstruction.executeDateTime = tenantDateTime.now().toDate()
+        repaymentInstruction.endDateTime = tenantDateTime.now().toDate()
         repaymentInstructionService.save(repaymentInstruction)
     }
 

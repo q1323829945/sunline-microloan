@@ -94,12 +94,12 @@ class MoneyTransferInstruction(
     @NotNull
     @Column(name = "end_date_time", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    val endDateTime: Date?,
+    var endDateTime: Date?,
 
     @NotNull
     @Column(name = "execute_date_time", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    val executeDateTime: Date?,
+    var executeDateTime: Date?,
 
     @Column(name = "operator", nullable = true, columnDefinition = "varchar(64) null")
     val operator: String?,
