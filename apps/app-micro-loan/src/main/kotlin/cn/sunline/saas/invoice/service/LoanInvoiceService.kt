@@ -82,7 +82,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate))
             //it.invoiceStatus != InvoiceStatus.FINISHED && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
             it.invoiceStatus != InvoiceStatus.FINISHED
-        }.sortedByDescending { it.invoiceRepaymentDate }.first()
+        }.sortedBy { it.invoiceRepaymentDate }.first()
         if (invoice != null) {
             val list = ArrayList<DTOInvoiceInfoView>()
             val lines = ArrayList<DTOInvoiceLinesView>()
