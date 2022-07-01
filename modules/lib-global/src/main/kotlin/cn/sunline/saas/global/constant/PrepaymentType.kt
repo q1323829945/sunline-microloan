@@ -7,5 +7,5 @@ package cn.sunline.saas.global.constant
  * @date 2022/3/11 19:38
  */
 enum class PrepaymentType {
-    PARTIAL_PREPAYMENT, FULL_REDEMPTION, NOT_ALLOWED
+    FULL_REDEMPTION, NOT_ALLOWED
 }

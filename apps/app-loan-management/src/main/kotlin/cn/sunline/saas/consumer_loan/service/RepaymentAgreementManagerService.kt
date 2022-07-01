@@ -63,7 +63,7 @@ class RepaymentAgreementManagerService(
                     startDateTime = record.startDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
                     endDateTime = record.endDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
                     executeDateTime = record.executeDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
-                    operator = record.operator?.let { it }.toString(),
+                    operator = record.operator,
                 )
             }
         }

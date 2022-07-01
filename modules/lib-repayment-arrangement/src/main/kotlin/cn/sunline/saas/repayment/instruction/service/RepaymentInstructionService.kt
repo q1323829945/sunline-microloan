@@ -67,8 +67,8 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
         )
     }
 
-    fun getPage(agreementId: Long?,customerId:
-                Long?,
+    fun getPage(agreementId: Long?,
+                customerId: Long?,
                 moneyTransferInstructionType:MoneyTransferInstructionType,
                 moneyTransferInstructionStatus: InstructionLifecycleStatus?,
                 pageable: Pageable

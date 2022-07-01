@@ -36,6 +36,13 @@ class TermType : Comparable<TermType> {
         }
     }
 
+    fun calDate(startDay: DateTime,times: Int): DateTime {
+        return when (unit) {
+            TermUnit.MONTH -> startDay.plusMonths(num * times)
+            TermUnit.YEAR -> startDay.plusYears(num * times)
+        }
+    }
+
     fun calBetweenMultiple(compareTerm: TermType): Int {
         val compare1 = this.toMonthUnit()
         val compare2 = compareTerm.toMonthUnit()
