@@ -33,7 +33,8 @@ object CalculatePeriod {
     ): MutableList<PeriodDate> {
         return when (repaymentDayType) {
             RepaymentDayType.BASE_LOAN_DAY -> getPeriodDatesByStandard(fromDateTime, toDateTime, frequency)
-            RepaymentDayType.CUSTOM_DAY -> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, withDay!!)
+            RepaymentDayType.MONTH_FIRST_DAY-> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 1)
+            RepaymentDayType.MONTH_LAST_DAY-> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 31)
 
         }
     }
