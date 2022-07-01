@@ -60,23 +60,23 @@ class CalculatePeriodTest {
 
 
     @Test
-    fun `test get period dates ONE_MONTH with custom date`() {
+    fun `test get period dates ONE_MONTH with custom date MONTH_LAST_DAY`() {
 
         val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
         CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.CUSTOM_DAY,31)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_LAST_DAY,31)
     }
 
     @Test
-    fun `test get period dates THREE_MONTHS with custom date`() {
+    fun `test get period dates ONE_MONTH with custom date 1 MONTH_FIRST_DAY`() {
 
         val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
         CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.THREE_MONTHS, RepaymentDayType.CUSTOM_DAY,31)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY,1)
     }
 
     @Test
