@@ -60,11 +60,11 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             "0"
         )
 
-        val prepayment2  = DTOPrepaymentFeatureModalityAdd(
-            LoanTermType.THREE_MONTHS,
-            PrepaymentType.PARTIAL_PREPAYMENT,
-            "1.5"
-        )
+//        val prepayment2  = DTOPrepaymentFeatureModalityAdd(
+//            LoanTermType.THREE_MONTHS,
+//            PrepaymentType.PARTIAL_PREPAYMENT,
+//            "1.5"
+//        )
 
         val prepayment3  = DTOPrepaymentFeatureModalityAdd(
             LoanTermType.SIX_MONTHS,
@@ -73,7 +73,7 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
         )
 
         prepayments.add(prepayment1)
-        prepayments.add(prepayment2)
+//        prepayments.add(prepayment2)
         prepayments.add(prepayment3)
 
         val repaymentFeature = DTORepaymentFeatureAdd(
