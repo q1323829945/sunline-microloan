@@ -881,28 +881,4 @@ class ConsumerLoanService(
         }
         return list
     }
-
-
-    fun addRepaymentAccount(dtoRepaymentAccountAdd: DTORepaymentAccountAdd
-    ): DTORepaymentArrangementView {
-        val loanAgreement = loanAgreementService.getOne(dtoRepaymentAccountAdd.agreementId.toLong())
-            ?: throw LoanAgreementNotFoundException("loan agreement not found")
-        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
-        return loanAgreementService.addRepaymentAccount(
-            dtoRepaymentAccountAdd.agreementId.toLong(),
-            ConsumerLoanAssembly.convertToDTORepaymentAgreementAdd(
-                dtoRepaymentAccountAdd.repaymentAccount,
-                dtoRepaymentAccountAdd.repaymentAccountBank,
-                loanProduct
-            )
-        )
-    }
-
-
-    fun repayEarly(dtoRepayEarly: DTORepayEarly): DTORepayEarly {
-        val loanAgreement = loanAgreementService.getOne(dtoRepayEarly.agreementId.toLong())
-            ?: throw LoanAgreementNotFoundException("loan agreement not found")
-        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
-        return dtoRepayEarly
-    }
 }

@@ -160,24 +160,10 @@ object ConsumerLoanAssembly {
         return dtoLoanInvoice
     }
 
-
-
-    fun convertToDTORepaymentAgreementAdd(
+    fun convertToDTORepaymentAccountAdd(
         repaymentAccount: String,
-        repaymentAccountBank: String,
-        loanProduct: DTOLoanProduct
-    ): DTORepaymentArrangementAdd {
-        val dtoPrepayments = mutableListOf<DTOPrepaymentArrangementAdd>()
-        loanProduct.repaymentFeature.prepayment.forEach {
-            dtoPrepayments.add(
-                DTOPrepaymentArrangementAdd(
-                    term = it.term,
-                    type = it.type,
-                    penaltyRatio = it.penaltyRatio
-                )
-            )
-        }
-
+        repaymentAccountBank: String
+    ): MutableList<DTORepaymentAccount> {
         val dtoRepaymentAccounts = mutableListOf<DTORepaymentAccount>()
         dtoRepaymentAccounts.add(
             DTORepaymentAccount(
@@ -185,16 +171,6 @@ object ConsumerLoanAssembly {
                 repaymentAccountBank = repaymentAccountBank
             )
         )
-
-        val dtoRepaymentArrangementAdd = loanProduct.repaymentFeature.run {
-            DTORepaymentArrangementAdd(
-                paymentMethod = payment.paymentMethod,
-                frequency = payment.frequency,
-                repaymentDayType = payment.repaymentDayType,
-                prepaymentArrangement = dtoPrepayments,
-                repaymentAccount = dtoRepaymentAccounts
-            )
-        }
-        return dtoRepaymentArrangementAdd
+        return dtoRepaymentAccounts
     }
 }
