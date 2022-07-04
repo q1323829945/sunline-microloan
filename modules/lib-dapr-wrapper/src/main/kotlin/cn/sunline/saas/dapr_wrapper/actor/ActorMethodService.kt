@@ -53,7 +53,7 @@ class ActorMethodService {
                     logger.info { "[$actorId] Started Actor Invoke Method request: $requestUrl" }
                     daprClient.request(requestUrl) {
                         HttpMethod.Put
-                        contentType(ContentType.Application.Json)
+//                        contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
                     }
                 }
@@ -86,6 +86,7 @@ class ActorMethodService {
             val responseText = runBlocking { String(httpResponse.readBytes()) }
             val actorId = components[1]
             logger.warn { "[$actorId] SubPub request has encountered an error: $managementCode" }
+            logger.warn { responseText }
 
             return ManagementException(
                 managementCode,

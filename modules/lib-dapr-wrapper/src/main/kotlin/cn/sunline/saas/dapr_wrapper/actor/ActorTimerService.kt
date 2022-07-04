@@ -4,6 +4,9 @@ import cn.sunline.saas.dapr_wrapper.actor.request.ReminderRequest
 import cn.sunline.saas.dapr_wrapper.actor.request.Timer
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -24,6 +27,7 @@ class ActorTimerService {
 
     companion object {
         private var logger = KotlinLogging.logger {}
+        val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         private val daprClient: HttpClient = HttpClient(CIO) {
             engine {
                 threadsCount = 8
@@ -33,7 +37,7 @@ class ActorTimerService {
             HttpResponseValidator {
                 validateResponse {
                     when (it.status.value) {
-                        500 -> throw generateError(it, ManagementExceptionCode.DAPR_ACTOR_REQUEST_FAILED)
+                        500 -> { throw generateError(it, ManagementExceptionCode.DAPR_ACTOR_REQUEST_FAILED) }
                         400 -> throw generateError(
                             it,
                             ManagementExceptionCode.DAPR_ACTOR_NOT_FOUND_OR_MALFORMED_REQUEST
@@ -56,6 +60,7 @@ class ActorTimerService {
 
         private fun makeRequest(actorType: String, actorId: String, name: String, httpMethod: HttpMethod, body: Any?) {
             val requestUrl = "http://localhost:3500/v1.0/actors/$actorType/$actorId/timers/$name"
+
             var exception: Exception? = null
             try {
                 runBlocking(CoroutineName("ACTOR-Timers-$actorType-$actorId-$name-[$httpMethod]")) {
@@ -64,7 +69,7 @@ class ActorTimerService {
                         method = httpMethod
                         contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
-                        setBody(body)
+                        setBody(objectMapper.writeValueAsString(body))
                     }
                 }
             } catch (ex: Exception) {
@@ -85,7 +90,7 @@ class ActorTimerService {
                         )
                     )
                 }
-                logger.error { "[$actorId] Actor Timers request [$actorType] [$actorId] [$name] [$httpMethod] has failed: $requestUrl - $exception" }
+                logger.error { "[$actorId] Actor Timers request [$actorType] [$actorId] [$name] [$httpMethod] has failed: $requestUrl - $exception - ${exception.statusCode}" }
             }
         }
 
@@ -97,6 +102,7 @@ class ActorTimerService {
             val responseText = runBlocking { String(httpResponse.readBytes()) }
             val actorId = components[1]
             logger.warn { "[$actorId] Timers request has encountered an error: $managementCode" }
+            logger.warn { responseText }
 
             return ManagementException(
                 managementCode,

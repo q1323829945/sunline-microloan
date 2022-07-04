@@ -1,4 +1,4 @@
-package cn.sunline.saas.customer_offer.exceptions
+package cn.sunline.saas.customer.offer.exceptions
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException

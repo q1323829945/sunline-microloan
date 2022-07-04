@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.*
  * @date 2022/5/17 9:59
  */
 @RestController
-@RequestMapping("/dapr")
+@RequestMapping
 class ActorUserService(private val daprConfig: DaprConfig) {
 
-    @GetMapping("/config")
-    fun registeredActor(): ResponseEntity<DTOResponseSuccess<DTORegisteredActor>> {
+    @GetMapping("/dapr/config")
+    fun registeredActor(): DTORegisteredActor {
         val actorTypes = ActorContext.getActorTypes()
         val entitiesConfig = mutableListOf<DTOEntitiesConfig>()
         actorTypes.forEach {
@@ -40,7 +40,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
             }
         }
 
-        val dtoRegisteredActor = DTORegisteredActor(
+        return DTORegisteredActor(
             actorTypes,
             daprConfig.actorIdleTimeout,
             daprConfig.actorScanInterval,
@@ -49,7 +49,6 @@ class ActorUserService(private val daprConfig: DaprConfig) {
             DTOReentrancy(daprConfig.reentrancyEnabled, daprConfig.reentrancyMaxStackDepth),
             entitiesConfig
         )
-        return DTOResponseSuccess(dtoRegisteredActor).response()
     }
 
     @PutMapping("/actors/{actorType}/{actorId}/method/{methodName}")

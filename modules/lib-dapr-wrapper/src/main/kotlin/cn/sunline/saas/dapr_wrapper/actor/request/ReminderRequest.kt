@@ -19,6 +19,6 @@ data class Timer(
     val milliseconds: Int = 0
 ) {
     override fun toString(): String {
-        return "${hours.toString()}h${minutes.toString()}m${seconds.toString()}s${milliseconds.toString()}ms"
+        return "${hours}h${minutes}m${seconds}s${milliseconds}ms"
     }
 }

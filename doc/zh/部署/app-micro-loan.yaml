@@ -32,12 +32,11 @@ kind: Service
 metadata:
   name: app-micro-loan-svc
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: app-micro-loan
   ports:
   - port: 8084
     targetPort: 8084
-    nodePort: 30084
         
         

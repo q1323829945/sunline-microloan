@@ -1,10 +1,10 @@
 package cn.sunline.saas.customer_offer.service
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
+import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferProcedure
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.document.template.modules.FileType
@@ -25,14 +25,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
-import java.math.BigDecimal
 
 @Service
 class CustomerOfferProcedureService(
@@ -103,14 +101,11 @@ class CustomerOfferProcedureService(
     fun submit(customerOfferId: Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<CustomerLoanApplyService.DTOFile>){
         val result = customerLoanApplyService.submit(customerOfferId, dtoCustomerOfferLoanAdd, dtoFile)
 
-        val customerOffer = customerOfferService.getOne(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)?:throw CustomerOfferNotFoundException("Invalid customer offer")
 
-        if(customerOffer?.status == ApplyStatus.SUBMIT){
-            initiateUnderwriting(result, customerOffer)
-            //TODO:文件生成,可能不是这一个步骤
-            documentGeneration(result, customerOffer)
-
-        }
+        initiateUnderwriting(result, customerOffer)
+        //TODO:文件生成,可能不是这一个步骤
+        documentGeneration(result, customerOffer)
 
     }
 

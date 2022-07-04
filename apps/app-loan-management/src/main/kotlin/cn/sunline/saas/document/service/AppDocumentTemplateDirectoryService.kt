@@ -45,8 +45,7 @@ class AppDocumentTemplateDirectoryService {
                     objectMapper.convertValue(directory.loanUploadConfigures.filter { !it.deleted })
                 else listOf()
 
-                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!.toString(),directory.name,parentId,
-                    directory.getTenantId()!!,dtoDirectoryList,dtoTemplateList,path,directory.directoryType)
+                val dtoDirectory = DTOTemplateDirectoryListView(directory.id!!.toString(),directory.name,parentId,dtoDirectoryList,dtoTemplateList,path,directory.directoryType)
 
                 responseList.add(dtoDirectory)
 

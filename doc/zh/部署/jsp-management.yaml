@@ -9,11 +9,6 @@ spec:
   selector:
     matchLabels:
       app: jsp-management
-  strategy: 
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate  
   template:
     metadata:
       labels: 
@@ -22,27 +17,18 @@ spec:
       imagePullSecrets:
       - name: huawei-key
       containers:
-        - name: jsp-management
-          env:
-            - name: jsp-management
-          image: swr.ap-southeast-3.myhuaweicloud.com/loansaas/microloan/jsp-management:v1
-          imagePullPolicy: IfNotPresent
-          resources: 
-            limits:
-              cpu: 1
-              memory: 512Mi
-            requests:
-              cpu: 0.4
-              memory: 256Mi         
+      - name: jsp-management
+        image: swr.ap-southeast-3.myhuaweicloud.com/loansaas/microloan/jsp-management:v8
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
 --- 
 apiVersion: v1
 kind: Service
 metadata:
   name: jsp-management-svc
-  annotations:
-    kubernetes.io/elb.id: 032d3c5f-bf42-4d89-82fe-51a09c0149fb
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: jsp-management
   ports:

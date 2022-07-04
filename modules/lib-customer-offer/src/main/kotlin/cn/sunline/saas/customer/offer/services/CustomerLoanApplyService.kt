@@ -4,6 +4,7 @@ import cn.sunline.saas.customer.offer.modules.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.db.CustomerLoanApply
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.repositories.CustomerLoanApplyRepository
+import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
@@ -41,20 +42,15 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
 
     @Transactional
     fun submit(customerOfferId: Long, dtoCustomerOfferLoanAdd: DTOCustomerOfferLoanAdd, dtoFile: List<DTOFile>):DTOCustomerOfferLoanView {
-        val customerOffer = customerOfferService.getOne(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)?:throw CustomerOfferNotFoundException("Invalid customer offer")
 
-        setUploadDocument(customerOfferId, customerOffer!!.customerId, dtoFile, dtoCustomerOfferLoanAdd.uploadDocument)
+
+        setUploadDocument(customerOfferId, customerOffer.customerId, dtoFile, dtoCustomerOfferLoanAdd.uploadDocument)
 
         val data = objectMapper.valueToTree<JsonNode>(dtoCustomerOfferLoanAdd).toPrettyString()
 
         val amount = dtoCustomerOfferLoanAdd.loan?.run {
             BigDecimal(dtoCustomerOfferLoanAdd.loan.amount)
-        }
-
-        //update status
-        dtoCustomerOfferLoanAdd.referenceAccount?.run {
-            customerOffer.status = ApplyStatus.SUBMIT
-            customerOfferService.save(customerOffer)
         }
 
         val customerLoanApply = this.getOne(customerOfferId) ?: CustomerLoanApply(customerOfferId, amount, data)
@@ -63,6 +59,10 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
 
 
         this.save(customerLoanApply)
+
+
+        customerOffer.status = ApplyStatus.SUBMIT
+        customerOfferService.save(customerOffer)
 
         return objectMapper.readValue(customerLoanApply.data)
     }
@@ -113,9 +113,6 @@ class CustomerLoanApplyService(private val customerLoanApplyRepo: CustomerLoanAp
     ) {
         dtoFile.forEach { file ->
             val names = file.originalFilename.split("/")
-
-//            val templateId = 23229161248407552L
-//            val fileName = names[0]
              val templateId = names[0].toLong()
              val fileName = names[1]
             uploadDocumentList?.forEach {
