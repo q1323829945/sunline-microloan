@@ -2,11 +2,16 @@ package cn.sunline.saas.consumer_loan.controllers
 
 import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.consumer_loan.service.dto.*
+import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
+import cn.sunline.saas.consumer_loan.service.dto.DTORepayEarly
+import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentAccountAdd
+import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.invoice.model.dto.DTOInvoiceInfoView
 import cn.sunline.saas.invoice.model.dto.DTOInvoiceRepay
 import cn.sunline.saas.invoice.model.dto.DTOPreRepaymentTrailView
+import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +32,8 @@ class ConsumerLoanController {
         val applicationId: String,
         val status: AgreementStatus
     )
+
+
 
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService

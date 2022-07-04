@@ -1,8 +1,8 @@
 package cn.sunline.saas.config
 
+import cn.sunline.saas.filter.ExternalTuneFilter
 import cn.sunline.saas.filter.PermissionFilter
 import cn.sunline.saas.multi_tenant.filter.TenantDomainFilter
-import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.rbac.filters.AuthenticationFilter
 import cn.sunline.saas.rbac.services.TokenService
 import cn.sunline.saas.rbac.services.UserService
@@ -46,6 +46,7 @@ class SecurityConfiguration (private val tokenService: TokenService,
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(TenantDomainFilter(), UsernamePasswordAuthenticationFilter::class.java)
+                .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterBefore(AuthenticationFilter(tokenService, userService), UsernamePasswordAuthenticationFilter::class.java)
                 .addFilterAfter(PermissionFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }

@@ -42,6 +42,7 @@ import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
+import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
@@ -879,5 +880,29 @@ class ConsumerLoanService(
             )
         }
         return list
+    }
+
+
+    fun addRepaymentAccount(dtoRepaymentAccountAdd: DTORepaymentAccountAdd
+    ): DTORepaymentArrangementView {
+        val loanAgreement = loanAgreementService.getOne(dtoRepaymentAccountAdd.agreementId.toLong())
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+        return loanAgreementService.addRepaymentAccount(
+            dtoRepaymentAccountAdd.agreementId.toLong(),
+            ConsumerLoanAssembly.convertToDTORepaymentAgreementAdd(
+                dtoRepaymentAccountAdd.repaymentAccount,
+                dtoRepaymentAccountAdd.repaymentAccountBank,
+                loanProduct
+            )
+        )
+    }
+
+
+    fun repayEarly(dtoRepayEarly: DTORepayEarly): DTORepayEarly {
+        val loanAgreement = loanAgreementService.getOne(dtoRepayEarly.agreementId.toLong())
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+        return dtoRepayEarly
     }
 }
