@@ -6,6 +6,7 @@ import cn.sunline.saas.formula.CalculatePeriod
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
 import cn.sunline.saas.schedule.Schedule
@@ -14,20 +15,27 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 
-class PayInterestSchedulePrincipalMaturityScheduleReset (
+class PayInterestSchedulePrincipalMaturityScheduleReset(
     remainAmount: BigDecimal,
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
-    repaymentDate: DateTime,
+    repaymentDayType: RepaymentDayType?,
+    baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
-    toDateTime: DateTime,
-    baseYearDays: BaseYearDays
-) : AbstractSchedule(remainAmount, interestRateYear, term, frequency, fromDateTime.toDateTime(), toDateTime.toDateTime()) {
-
-    private val baseYearDaysPara = baseYearDays
-
-    private val repaymentDatePara = repaymentDate
+    toDateTime: DateTime?,
+    repaymentDateTime: DateTime?
+) : AbstractSchedule(
+    remainAmount,
+    interestRateYear,
+    term,
+    frequency,
+    repaymentDayType,
+    baseYearDays,
+    fromDateTime,
+    toDateTime,
+    repaymentDateTime
+)  {
 
     override fun getSchedules(): MutableList<Schedule> {
 
@@ -35,16 +43,16 @@ class PayInterestSchedulePrincipalMaturityScheduleReset (
         val interestRate = CalculateInterestRate(interestRateYear)
         val schedules = mutableListOf<Schedule>()
         var period = 0
-        if (repaymentDatePara != fromDateTime) {
+        if (repaymentDateTime!! != fromDateTime) {
             val advanceInterest = CalculateInterest(amount, interestRate)
-                .getDaysInterest(repaymentDatePara, fromDateTime, baseYearDaysPara)
+                .getDaysInterest(repaymentDateTime, fromDateTime, baseYearDays)
                 .setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 
             period++
 
             schedules.add(
                 Schedule(
-                    repaymentDatePara,
+                    repaymentDateTime,
                     fromDateTime,
                     advanceInterest,
                     BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
@@ -70,7 +78,7 @@ class PayInterestSchedulePrincipalMaturityScheduleReset (
             val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
                 fromDateTime,
                 toDateTime,
-                baseYearDaysPara
+                baseYearDays
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 
             val instalmentAmount = instalmentPrincipal.add(instalmentInterest)

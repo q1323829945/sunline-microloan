@@ -2,6 +2,7 @@ package cn.sunline.saas.schedule
 
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.OneOffRepaymentSchedule
 import org.assertj.core.api.Assertions
@@ -18,7 +19,7 @@ class OneOffRepaymentScheduleTest {
 
         val actual = OneOffRepaymentSchedule(
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.ONE_YEAR,
-            RepaymentFrequency.ONE_MONTH, DateTime.now(),null, BaseYearDays.ACCOUNT_YEAR).getSchedules()
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null).getSchedules()
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("1063875.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("63875.00"))

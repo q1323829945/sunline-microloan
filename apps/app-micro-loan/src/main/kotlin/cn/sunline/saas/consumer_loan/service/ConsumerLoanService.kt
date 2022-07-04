@@ -18,6 +18,7 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CurrencyType
@@ -145,10 +146,11 @@ class ConsumerLoanService(
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
+            loanProduct.repaymentFeature.payment.repaymentDayType,
+            loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
-            loanProduct.interestFeature.interest.baseYearDays,
-            null
+            null,
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
 
         invoiceService.initiateLoanInvoice(
@@ -323,10 +325,11 @@ class ConsumerLoanService(
             interestRate,
             term,
             loanProduct.repaymentFeature.payment.frequency,
+            loanProduct.repaymentFeature.payment.repaymentDayType,
+            loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.now(),
             null,
-            loanProduct.interestFeature.interest.baseYearDays,
-            null,
+            null
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
         return convertToScheduleTrialMapper(schedule)
     }
@@ -573,9 +576,10 @@ class ConsumerLoanService(
             interestRate,
             agreement.term,
             repaymentArrangement.frequency,
+            loanProduct.repaymentFeature.payment.repaymentDayType,
+            loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.toTenantDateTime(agreement.fromDateTime),
             tenantDateTime.toTenantDateTime(agreement.toDateTime),
-            loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.now()
         ).getResetSchedules(repaymentArrangement.paymentMethod)
 

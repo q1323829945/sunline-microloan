@@ -4,6 +4,7 @@ import cn.sunline.saas.formula.*
 import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.AbstractSchedule
 import cn.sunline.saas.schedule.Schedule
@@ -17,13 +18,22 @@ class PayInterestSchedulePrincipalMaturitySchedule(
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
+    repaymentDayType: RepaymentDayType,
+    baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    baseYearDays: BaseYearDays
-) : AbstractSchedule(amount, interestRateYear, term, frequency, fromDateTime, toDateTime) {
-
-    private val baseYearDaysPara = baseYearDays
-
+    repaymentDateTime: DateTime?
+) : AbstractSchedule(
+    amount,
+    interestRateYear,
+    term,
+    frequency,
+    repaymentDayType,
+    baseYearDays,
+    fromDateTime,
+    toDateTime,
+    repaymentDateTime
+)  {
     override fun getSchedules(): MutableList<Schedule> {
 
         val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
@@ -44,7 +54,7 @@ class PayInterestSchedulePrincipalMaturitySchedule(
             val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
                 fromDateTime,
                 toDateTime,
-                baseYearDaysPara
+                baseYearDays
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 
             val instalmentAmount = instalmentPrincipal.add(instalmentInterest)

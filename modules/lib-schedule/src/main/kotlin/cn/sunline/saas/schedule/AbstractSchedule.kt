@@ -1,6 +1,8 @@
 package cn.sunline.saas.schedule
 
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.joda.time.DateTime
 import org.joda.time.Instant
@@ -17,8 +19,11 @@ abstract class AbstractSchedule(
     val interestRateYear: BigDecimal,
     val term: LoanTermType,
     val frequency: RepaymentFrequency,
+    val repaymentDayType: RepaymentDayType?,
+    val baseYearDays: BaseYearDays,
     val fromDateTime: DateTime,
-    toDateTime: DateTime?
+    toDateTime: DateTime?,
+    val repaymentDateTime: DateTime?
 ) {
     var toDateTime: DateTime
 

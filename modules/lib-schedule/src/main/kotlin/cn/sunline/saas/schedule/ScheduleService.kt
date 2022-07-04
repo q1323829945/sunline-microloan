@@ -1,10 +1,7 @@
 package cn.sunline.saas.schedule
 
-import cn.sunline.saas.global.constant.BaseYearDays
-import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.global.constant.PaymentMethodType.*
-import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.*
 
 import org.joda.time.DateTime
@@ -21,9 +18,10 @@ class ScheduleService(
     private val interestRateYear: BigDecimal,
     private val term: LoanTermType,
     private val frequency: RepaymentFrequency,
+    private val repaymentDayType: RepaymentDayType?,
+    private val baseYearDays: BaseYearDays,
     private val fromDateTime: DateTime,
     private val toDateTime: DateTime?,
-    private val baseYearDays: BaseYearDays,
     private val repaymentDateTime: DateTime?
 ) {
     fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
@@ -33,34 +31,44 @@ class ScheduleService(
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDayType!!,
+                baseYearDays,
                 fromDateTime,
-                toDateTime
+                toDateTime,
+                repaymentDateTime
             )
             EQUAL_PRINCIPAL -> EqualPrincipalSchedule(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDayType!!,
+                baseYearDays,
                 fromDateTime,
-                toDateTime
+                toDateTime,
+                repaymentDateTime
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentSchedule(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDayType!!,
+                baseYearDays,
                 fromDateTime,
                 toDateTime,
-                baseYearDays
+                repaymentDateTime
             )
             PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturitySchedule(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
+                repaymentDayType!!,
+                baseYearDays,
                 fromDateTime,
                 toDateTime,
-                baseYearDays
+                repaymentDateTime
             )
         }
         return scheduleMethod.getSchedules()
@@ -73,40 +81,44 @@ class ScheduleService(
                 interestRateYear,
                 term,
                 frequency,
-                repaymentDateTime!!,
+                repaymentDayType,
+                baseYearDays,
                 fromDateTime,
                 toDateTime!!,
-                baseYearDays
+                repaymentDateTime!!,
             )
             EQUAL_PRINCIPAL -> EqualPrincipalScheduleReset(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
-                repaymentDateTime!!,
+                repaymentDayType,
+                baseYearDays,
                 fromDateTime,
                 toDateTime!!,
-                baseYearDays
+                repaymentDateTime!!,
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentScheduleReset(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
-                repaymentDateTime!!,
+                repaymentDayType,
+                baseYearDays,
                 fromDateTime,
                 toDateTime!!,
-                baseYearDays
+                repaymentDateTime!!,
             )
             PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturityScheduleReset(
                 amount,
                 interestRateYear,
                 term,
                 frequency,
-                repaymentDateTime!!,
+                repaymentDayType,
+                baseYearDays,
                 fromDateTime,
                 toDateTime!!,
-                baseYearDays
+                repaymentDateTime!!,
             )
         }
         return scheduleMethod.getSchedules()

@@ -2,6 +2,7 @@ package cn.sunline.saas.schedule
 
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.EqualInstalmentSchedule
 import cn.sunline.saas.schedule.impl.EqualInstalmentScheduleReset
@@ -22,7 +23,7 @@ class EqualInstalmentScheduleTest {
     fun `test equal instalment schedules`() {
 
         val actual = EqualInstalmentSchedule(BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
-            RepaymentFrequency.ONE_MONTH, DateTime.now(),null).getSchedules()
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null).getSchedules()
 
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))
@@ -51,7 +52,7 @@ class EqualInstalmentScheduleTest {
 
 
         val actual = EqualInstalmentScheduleReset(BigDecimal("10000"), BigDecimal("12"), LoanTermType.ONE_YEAR,
-            RepaymentFrequency.ONE_MONTH, repaymentDateTime,fromDateTime,toDateTime, BaseYearDays.ACCOUNT_YEAR).getSchedules()
+            RepaymentFrequency.ONE_MONTH,RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),toDateTime,repaymentDateTime).getSchedules()
 
         //TODO 补充单元
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))

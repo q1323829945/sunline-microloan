@@ -66,7 +66,7 @@ class CalculatePeriodTest {
         CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_LAST_DAY,31)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_LAST_DAY)
     }
 
     @Test
@@ -76,7 +76,7 @@ class CalculatePeriodTest {
         CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY,1)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY)
     }
 
     @Test
@@ -184,6 +184,17 @@ class CalculatePeriodTest {
 
         val startDateTime = DateTime(2022, 4, 25, 0, 0, 0, 0)
         val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 27)
+        val expectedDate = DateTime(2022, 4, 27, 0, 0, 0, 0)
+        Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
+    }
+
+    @Test
+    fun `test get repayment date April2 25 and greater than 25`() {
+
+        val startDateTime = DateTime(2022, 2, 25, 0, 0, 0, 0)
+        val toDateTime = DateTime(2023, 2, 25, 0, 0, 0, 0)
+
+        val repaymentDate = CalculatePeriod.getPeriodDatesByCustom(startDateTime, toDateTime,RepaymentFrequency.ONE_MONTH,25)
         val expectedDate = DateTime(2022, 4, 27, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }

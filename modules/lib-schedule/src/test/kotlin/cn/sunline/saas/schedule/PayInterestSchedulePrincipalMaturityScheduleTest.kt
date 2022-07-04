@@ -2,6 +2,7 @@ package cn.sunline.saas.schedule
 
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.PayInterestSchedulePrincipalMaturitySchedule
 import org.assertj.core.api.Assertions
@@ -17,8 +18,16 @@ class PayInterestSchedulePrincipalMaturityScheduleTest {
     fun `test pay interest schedule principal maturity schedules`() {
 
         val actual = PayInterestSchedulePrincipalMaturitySchedule(
-            BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
-            RepaymentFrequency.ONE_MONTH, DateTime.now(),null, BaseYearDays.ACCOUNT_YEAR).getSchedules()
+            BigDecimal("1000000"),
+            BigDecimal("6.3"),
+            LoanTermType.THREE_MONTHS,
+            RepaymentFrequency.ONE_MONTH,
+            RepaymentDayType.BASE_LOAN_DAY,
+            BaseYearDays.ACCOUNT_YEAR,
+            DateTime.now(),
+            null,
+            null
+        ).getSchedules()
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("16100.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("16100.00"))

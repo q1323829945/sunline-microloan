@@ -14,7 +14,7 @@ import org.joda.time.Instant
  */
 object CalculatePeriod {
 
-    data class PeriodDate(val fromDateTime: DateTime, val toDateTime: DateTime)
+    data class PeriodDate(val fromDateTime: DateTime, val toDateTime: DateTime, val isEnough: Boolean)
 
     /**
      * for now,the term is equaled to an integer multiple of frequency
@@ -33,8 +33,8 @@ object CalculatePeriod {
     ): MutableList<PeriodDate> {
         return when (repaymentDayType) {
             RepaymentDayType.BASE_LOAN_DAY -> getPeriodDatesByStandard(fromDateTime, toDateTime, frequency)
-            RepaymentDayType.MONTH_FIRST_DAY-> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 1)
-            RepaymentDayType.MONTH_LAST_DAY-> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 31)
+            RepaymentDayType.MONTH_FIRST_DAY -> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 1)
+            RepaymentDayType.MONTH_LAST_DAY -> getPeriodDatesByCustom(fromDateTime, toDateTime, frequency, 31)
 
         }
     }
@@ -48,67 +48,127 @@ object CalculatePeriod {
         var lastDate = fromDateTime
         var nextDate = frequency.term.calDate(fromDateTime)
         while (nextDate.isBefore(toDateTime) || nextDate.isEqual(toDateTime)) {
-            periodDates.add(PeriodDate(lastDate, nextDate))
+            periodDates.add(PeriodDate(lastDate, nextDate, true))
             lastDate = nextDate
             nextDate = frequency.term.calDate(nextDate)
         }
         return periodDates
     }
 
-    private fun getPeriodDatesByCustom(
+//    private fun getPeriodDatesByCustom(
+//        fromDateTime: DateTime, toDateTime: DateTime, frequency: RepaymentFrequency, withDay: Int
+//    ): MutableList<PeriodDate> {
+//        val periodDates = mutableListOf<PeriodDate>()
+//        if (fromDateTime.isAfter(toDateTime))
+//            return periodDates
+//        val repaymentDateTime = getRepaymentDateTime(fromDateTime, withDay)
+//        var lastDate = if (repaymentDateTime.isBefore(fromDateTime)) {
+//            val plusMonths = repaymentDateTime.plusMonths(1)
+//            periodDates.add(PeriodDate(fromDateTime, plusMonths, false))
+//            plusMonths
+//        } else if (repaymentDateTime.isAfter(fromDateTime)) {
+//            periodDates.add(PeriodDate(fromDateTime, repaymentDateTime, false))
+//            repaymentDateTime
+//        } else {
+//            repaymentDateTime
+//        }
+//        var times = 1
+//        var nextDate = frequency.term.calDate(lastDate, times)
+//        while ((nextDate.isBefore(toDateTime) || nextDate.isEqual(toDateTime) && !nextDate.isEqual(toDateTime))) {
+//            periodDates.add(PeriodDate(lastDate, nextDate, true))
+//            lastDate = nextDate
+//            times++
+//            nextDate = frequency.term.calDate(repaymentDateTime, times)
+//        }
+//
+//        if (lastDate.isBefore(toDateTime) && !lastDate.isEqual(toDateTime)) {
+//            periodDates.add(PeriodDate(lastDate, toDateTime, false))
+//        }
+//        return periodDates
+//    }
+
+
+    fun getPeriodDatesByCustom(
         fromDateTime: DateTime, toDateTime: DateTime, frequency: RepaymentFrequency, withDay: Int
     ): MutableList<PeriodDate> {
         val periodDates = mutableListOf<PeriodDate>()
         if (fromDateTime.isAfter(toDateTime))
             return periodDates
-        val repaymentDateTime = getRepaymentDateTime(fromDateTime,withDay)
-        var lastDate = if(repaymentDateTime.isBefore(fromDateTime)){
-            val plusMonths = repaymentDateTime.plusMonths(1)
-            periodDates.add(PeriodDate(fromDateTime, plusMonths))
-            plusMonths
-        }else if(repaymentDateTime.isAfter(fromDateTime)){
-            periodDates.add(PeriodDate(fromDateTime, repaymentDateTime))
-            repaymentDateTime
-        }else{
-            repaymentDateTime
-        }
-        var times = 1
-        var nextDate = frequency.term.calDate(lastDate, times)
-        while ((nextDate.isBefore(toDateTime) || nextDate.isEqual(toDateTime) && !nextDate.isEqual(toDateTime))) {
-            periodDates.add(PeriodDate(lastDate, nextDate))
+        var lastDate = fromDateTime
+        var nextDateTemp = frequency.term.calDate(lastDate)
+        var nextDate = adjustRepaymentDateTime(lastDate, nextDateTemp, withDay)
+        var isEnough = fromDateTime.dayOfMonth == withDay//nextDateTemp.isEqual(nextDate)
+        while ((nextDate.isBefore(toDateTime) || nextDate.isEqual(toDateTime))) {
+            periodDates.add(PeriodDate(lastDate, nextDate, isEnough))
             lastDate = nextDate
-            times++
-            nextDate = frequency.term.calDate(repaymentDateTime, times)
+            nextDateTemp = frequency.term.calDate(nextDate)
+            nextDate = adjustRepaymentDateTime(lastDate, nextDateTemp, withDay)
+            isEnough = true//nextDateTemp.isEqual(nextDate)
         }
-
-        if(lastDate.isBefore(toDateTime)&& !lastDate.isEqual(toDateTime)){
-            periodDates.add(PeriodDate(lastDate, toDateTime))
+        if (nextDate.isAfter(toDateTime) && !lastDate.isEqual(toDateTime)) {
+            periodDates.add(PeriodDate(lastDate, toDateTime, false))
         }
         return periodDates
     }
 
-    fun getRepaymentDateTime(fromDateTime: DateTime, repaymentDay: Int): DateTime {
-        val monthOfYear = fromDateTime.monthOfYear
-        val dayOfMonth = fromDateTime.dayOfMonth
-        val monthList = listOf<Int>(4, 6, 9, 11)
-        var repaymentDateTime = fromDateTime
-        if (monthList.contains(monthOfYear)) {
-            repaymentDateTime = if (repaymentDay == 31) {
-                fromDateTime.plusMonths(1).withDayOfMonth(repaymentDay)
+
+    fun adjustRepaymentDateTime(fromDateTime: DateTime, toDateTime: DateTime, repaymentDay: Int): DateTime {
+        val fromDayOfMonth = fromDateTime.dayOfMonth
+        val toDayOfMonth = toDateTime.dayOfMonth
+        val toMonthOfYear = toDateTime.monthOfYear
+        val fromMaxDay = fromDateTime.dayOfMonth().withMaximumValue().dayOfMonth
+        val toMaxDay = toDateTime.dayOfMonth().withMaximumValue().dayOfMonth
+        return if (toDayOfMonth < repaymentDay) {
+
+            if (fromDayOfMonth == fromMaxDay) {
+                if (repaymentDay < toMaxDay) toDateTime.withDayOfMonth(repaymentDay)
+                else toDateTime.withDayOfMonth(toMaxDay)
             } else {
-                fromDateTime.withDayOfMonth(repaymentDay)
+                val lastDate = toDateTime.plusMonths(-1)
+                val lastDateMaxDay = lastDate.dayOfMonth().withMaximumValue().dayOfMonth
+                if (repaymentDay < lastDateMaxDay) lastDate.withDayOfMonth(repaymentDay)
+                else lastDate.withDayOfMonth(lastDateMaxDay)
             }
-        } else if (monthOfYear == 2) {
-            repaymentDateTime = if ((dayOfMonth == 28 && dayOfMonth < repaymentDay)
-                || (dayOfMonth == 29 && dayOfMonth < repaymentDay)
-            ) {
-                fromDateTime.plusMonths(1).withDayOfMonth(repaymentDay)
-            } else {
-                fromDateTime.withDayOfMonth(repaymentDay)
-            }
-        }else{
-            repaymentDateTime = fromDateTime.withDayOfMonth(repaymentDay)
+        } else if (toDayOfMonth > repaymentDay) {
+            toDateTime.withDayOfMonth(repaymentDay)
+        } else {
+            toDateTime
         }
-        return repaymentDateTime
     }
+
+    fun getRepaymentDateTime(fromDateTime: DateTime, repaymentDay: Int): DateTime {
+        val maxDay = fromDateTime.dayOfMonth().withMaximumValue().dayOfMonth
+        val dayOfMonth = fromDateTime.dayOfMonth
+        return if (dayOfMonth < repaymentDay) {
+            if (repaymentDay < maxDay) fromDateTime.withDayOfMonth(repaymentDay)
+            else fromDateTime.withDayOfMonth(maxDay)
+        } else {
+            fromDateTime.withDayOfMonth(repaymentDay)
+        }
+    }
+
+//    fun getRepaymentDateTime(fromDateTime: DateTime, repaymentDay: Int): DateTime {
+//        val monthOfYear = fromDateTime.monthOfYear
+//        val dayOfMonth = fromDateTime.dayOfMonth
+//        val monthList = listOf<Int>(4, 6, 9, 11)
+//        var repaymentDateTime = fromDateTime
+//        if (monthList.contains(monthOfYear)) {
+//            repaymentDateTime = if (repaymentDay == 31) {
+//                fromDateTime.plusMonths(1).withDayOfMonth(repaymentDay)
+//            } else {
+//                fromDateTime.withDayOfMonth(repaymentDay)
+//            }
+//        } else if (monthOfYear == 2) {
+//            repaymentDateTime = if ((dayOfMonth == 28 && dayOfMonth < repaymentDay)
+//                || (dayOfMonth == 29 && dayOfMonth < repaymentDay)
+//            ) {
+//                fromDateTime.plusMonths(1).withDayOfMonth(repaymentDay)
+//            } else {
+//                fromDateTime.withDayOfMonth(repaymentDay)
+//            }
+//        } else {
+//            repaymentDateTime = fromDateTime.withDayOfMonth(repaymentDay)
+//        }
+//        return repaymentDateTime
+//    }
 }

@@ -1,6 +1,8 @@
 package cn.sunline.saas.schedule
 
+import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.schedule.impl.EqualPrincipalSchedule
 import org.assertj.core.api.Assertions
@@ -24,7 +26,9 @@ class EqualPrincipalScheduleTest {
 
         val actual = EqualPrincipalSchedule(
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
-            RepaymentFrequency.THREE_MONTHS, DateTime.now(),null).getSchedules()
+            RepaymentFrequency.THREE_MONTHS, RepaymentDayType.BASE_LOAN_DAY,
+            BaseYearDays.ACCOUNT_YEAR, DateTime.now(), null, null
+        ).getSchedules()
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("1015750.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("15750.00"))
