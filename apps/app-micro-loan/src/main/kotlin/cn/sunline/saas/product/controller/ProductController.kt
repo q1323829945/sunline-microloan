@@ -6,6 +6,8 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProducts
 import com.fasterxml.jackson.module.kotlin.convertValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -31,5 +33,10 @@ class ProductController {
     @GetMapping("{productId}")
     fun findById(@PathVariable productId: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         return  DTOResponseSuccess(productService.findById(productId)).response()
+    }
+
+    @GetMapping
+    fun getProducts(): ResponseEntity<DTOResponseSuccess<List<DTOInvokeLoanProducts>>>{
+        return DTOResponseSuccess(productService.getProducts()).response()
     }
 }

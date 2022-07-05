@@ -8,6 +8,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-global"))
+    implementation(project(":lib-multi-tenant"))
+    implementation(project(":lib-seq-api"))
     api(project(":lib-base-jpa"))
 
 

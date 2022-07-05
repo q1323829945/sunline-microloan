@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.invoke
 
 import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProducts
 
 
 interface ProductInvoke {
@@ -9,4 +10,5 @@ interface ProductInvoke {
 
     fun getProductListByIdentificationCode(identificationCode:String): MutableList<DTOInvokeLoanProduct>
 
+    fun getProductsByStatus(status:String):MutableList<DTOInvokeLoanProducts>
 }

@@ -13,6 +13,20 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/5/5 16:57
  */
+
+data class DTOInvokeLoanProducts(
+    val id:String,
+    val identificationCode: String,
+    val name: String,
+    val description: String,
+    val loanProductType: LoanProductType,
+    val loanPurpose: String,
+    val status: BankingProductStatus,
+    var amountConfiguration: DTOAmountLoanProductConfigurationView,
+    var termConfiguration: DTOTermLoanProductConfigurationView,
+)
+
+
 data class DTOInvokeLoanProduct(
     val id:String,
     val identificationCode: String,
@@ -32,6 +46,7 @@ data class DTOInvokeLoanProduct(
     var feeFeatures:MutableList<DTOFeeFeatureView>,
     var loanUploadConfigureFeatures:MutableList<DTOLoanUploadConfigureView>
 )
+
 data class DTOBusinessUnitView(
     val id:String,
     val type:String

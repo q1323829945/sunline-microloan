@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":lib-schedule"))
     implementation(project(":lib-invoice"))
     implementation(project(":lib-scheduler-job"))
+    implementation(project(":lib-rbac"))
 
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-obs-huaweicloud"))

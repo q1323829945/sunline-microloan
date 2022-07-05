@@ -33,7 +33,9 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.persistence.criteria.JoinType
@@ -178,8 +180,15 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         name: String?,
         loanProductType: LoanProductType?,
         loanPurpose: String?,
+        status:BankingProductStatus?,
         pageable: Pageable
     ): Page<LoanProduct> {
+
+        val newPageable = if(pageable.isUnpaged){
+            pageable
+        } else{
+            PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("id")))
+        }
 
         val page = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
@@ -199,9 +208,9 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                 )
             }
             loanPurpose?.run { predicates.add(criteriaBuilder.like(root.get("loanPurpose"), "$loanPurpose%")) }
+            status?.run { predicates.add(criteriaBuilder.equal(root.get<BankingProductStatus>("status"), status)) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-
+        }, newPageable)
         val newProduct = getMaxVersionProductList(page)
 
         return rePaged(newProduct, pageable)
@@ -439,7 +448,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
 
-    private fun setConfigurationOptions(product: LoanProduct, dtoLoanProduct: DTOLoanProductView) {
+    fun setConfigurationOptions(product: LoanProduct, dtoLoanProduct: DTOLoanProductView) {
         product.configurationOptions.forEach {
             when (ConditionType.valueOf(it.type)) {
                 ConditionType.AMOUNT -> {

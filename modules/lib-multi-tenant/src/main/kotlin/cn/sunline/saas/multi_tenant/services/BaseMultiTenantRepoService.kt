@@ -35,21 +35,26 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
     }
 
     fun rePaged(content:List<T>,pageable: Pageable):Page<T>{
-        val totalSize = content.size
-        val start = if(pageable.pageSize * pageable.pageNumber > totalSize){
-            totalSize
+        if(pageable.isUnpaged){
+            return PageImpl(content)
         } else {
-            pageable.pageSize * pageable.pageNumber
-        }
-        val end = if(pageable.pageSize * (pageable.pageNumber + 1) > totalSize){
-            totalSize
-        } else {
-            pageable.pageSize * (pageable.pageNumber + 1)
-        }
+            val totalSize = content.size
+            val start = if(pageable.pageSize * pageable.pageNumber > totalSize){
+                totalSize
+            } else {
+                pageable.pageSize * pageable.pageNumber
+            }
+            val end = if(pageable.pageSize * (pageable.pageNumber + 1) > totalSize){
+                totalSize
+            } else {
+                pageable.pageSize * (pageable.pageNumber + 1)
+            }
 
 
-        val newContent = content.subList(start,end)
-        return PageImpl(newContent,pageable,totalSize.toLong())
+            val newContent = content.subList(start,end)
+            return PageImpl(newContent,pageable,totalSize.toLong())
+        }
+
     }
 
 }

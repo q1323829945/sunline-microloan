@@ -37,9 +37,10 @@ class LoanProductController {
     fun getPaged(@RequestParam(required = false)name:String? = null,
                  @RequestParam(required = false)loanProductType: LoanProductType? = null,
                  @RequestParam(required = false)loanPurpose: String? = null,
+                 @RequestParam(required = false)status:BankingProductStatus? = null,
                  pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
 
-        val paged = loanProductManagerService.getPaged(name,loanProductType,loanPurpose,pageable)
+        val paged = loanProductManagerService.getPaged(name,loanProductType,loanPurpose,status,pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
     }
 
@@ -98,5 +99,10 @@ class LoanProductController {
     @GetMapping("interestRate/{productId}")
     fun getInterestRate(@PathVariable productId:String):List<LoanTermType>{
         return loanProductManagerService.getInterestRate(productId.toLong())
+    }
+
+    @GetMapping("invoke/list")
+    fun getInvokeProducts(@RequestParam status: BankingProductStatus): List<DTOLoanProductView> {
+        return loanProductManagerService.getInvokeProducts(status)
     }
 }

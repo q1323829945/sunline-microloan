@@ -49,10 +49,16 @@ class LoanProductManagerService(
         name: String?,
         loanProductType: LoanProductType?,
         loanPurpose: String?,
+        status:BankingProductStatus?,
         pageable: Pageable
     ): Page<DTOLoanProductView> {
-        val paged = loanProductService.getLoanProductPaged(name, loanProductType, loanPurpose, pageable)
-        return paged.map { objectMapper.convertValue<DTOLoanProductView>(it) }
+        val paged = loanProductService.getLoanProductPaged(name, loanProductType, loanPurpose,status, pageable)
+
+        return paged.map {
+            val product = objectMapper.convertValue<DTOLoanProductView>(it)
+            loanProductService.setConfigurationOptions(it,product)
+            product
+        }
     }
 
     fun addOne(loanProductData: DTOLoanProduct): DTOLoanProductView {
@@ -247,5 +253,16 @@ class LoanProductManagerService(
         return interestRateList?.map {
             it.period
         }?: mutableListOf()
+    }
+
+
+    fun getInvokeProducts(status:BankingProductStatus):List<DTOLoanProductView>{
+        val products = this.getPaged(null,null,null,status,Pageable.unpaged()).content
+
+        products.forEach {
+            it.amountConfiguration
+        }
+
+        return products
     }
 }

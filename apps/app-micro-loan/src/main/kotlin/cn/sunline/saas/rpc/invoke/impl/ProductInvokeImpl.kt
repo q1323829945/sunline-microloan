@@ -9,6 +9,7 @@ import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.rpc.invoke.ProductInvoke
 import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
+import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProducts
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Service
@@ -48,6 +49,24 @@ class ProductInvokeImpl: ProductInvoke {
         )
         // TODO Throw Exception
         return loanProductResponse?.data!!
+    }
+
+    override fun getProductsByStatus(status: String): MutableList<DTOInvokeLoanProducts> {
+        val products = RPCService.get<MutableList<DTOInvokeLoanProducts>>(
+            serviceName = APP_LOAN_MANAGEMENT,
+            methodName = "LoanProduct/invoke/list",
+            queryParams = mapOf(
+                "status" to status
+            ),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant()
+        )
+
+        // TODO Throw Exception
+        return products!!
     }
 
 }
