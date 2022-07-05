@@ -61,129 +61,137 @@ class CalculatePeriodTest {
 
     @Test
     fun `test get period dates ONE_MONTH with custom date MONTH_LAST_DAY`() {
-
         val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
-        CalculatePeriod.getPeriodDates(
+        val actual = CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_LAST_DAY)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_LAST_DAY
+        )
+        Assertions.assertThat(actual.size).isEqualTo(12)
+        Assertions.assertThat(actual.filter { it.isEnough }.size).isEqualTo(11)
+        Assertions.assertThat(actual.filter { !it.isEnough }.size).isEqualTo(1)
     }
 
     @Test
-    fun `test get period dates ONE_MONTH with custom date 1 MONTH_FIRST_DAY`() {
-
+    fun `test get the frequency ONE_MONTH period dates with custom repayment date MONTH_FIRST_DAY`() {
         val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
-        CalculatePeriod.getPeriodDates(
+        val actual = CalculatePeriod.getPeriodDates(
             startDateTime,
             LoanTermType.ONE_YEAR.term.calDate(startDateTime),
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY)
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY
+        )
+        Assertions.assertThat(actual.size).isEqualTo(13)
+        Assertions.assertThat(actual.filter { it.isEnough }.size).isEqualTo(11)
+        Assertions.assertThat(actual.filter { !it.isEnough }.size).isEqualTo(2)
+
     }
 
     @Test
-    fun `test get repayment date February 28 and greater than 28`() {
-
-        val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 30)
+    fun `test get repayment date when repayment day greater than 28 on february 28th`() {
+        val fromDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 3, 28, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 30)
         val expectedDate = DateTime(2022, 3, 30, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
 
     }
 
     @Test
-    fun `test get repayment date February 29 and greater than 29`() {
+    fun `test get repayment date when repayment day less than 28 on february 28th`() {
+        val fromDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 3, 28, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 22)
+        val expectedDate = DateTime(2022, 3, 22, 0, 0, 0, 0)
+        Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
+    }
 
-        val startDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 30)
+
+    @Test
+    fun `test get repayment date when repayment day equals 28 on february 28th`() {
+        val fromDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 3, 28, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 28)
+        val expectedDate = DateTime(2022, 3, 28, 0, 0, 0, 0)
+        Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
+    }
+
+    @Test
+    fun `test get repayment date when repayment day greater than 29 on february 29th`() {
+        val fromDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
+        val toDateTime = DateTime(2024, 3, 29, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 30)
         val expectedDate = DateTime(2024, 3, 30, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date February 28 and less than 28`() {
-
-        val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 22)
-        val expectedDate = DateTime(2022, 2, 22, 0, 0, 0, 0)
+    fun `test get repayment date when repayment day less than 29 on february 29th`() {
+        val fromDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
+        val toDateTime = DateTime(2024, 3, 29, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 22)
+        val expectedDate = DateTime(2024, 3, 22, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date February 29 and less than 29`() {
-
-        val startDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 22)
-        val expectedDate = DateTime(2024, 2, 22, 0, 0, 0, 0)
+    fun `test get repayment date when repayment day equals 29 on february 29th`() {
+        val fromDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
+        val toDateTime = DateTime(2024, 3, 29, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 29)
+        val expectedDate = DateTime(2024, 3, 29, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date February 28 and equals 28`() {
-
-        val startDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 28)
+    fun `test get repayment date when repayment day equals 31 on January 31st`() {
+        val fromDateTime = DateTime(2022, 1, 31, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 31)
         val expectedDate = DateTime(2022, 2, 28, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date February 29 and equals 29`() {
-
-        val startDateTime = DateTime(2024, 2, 29, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 29)
-        val expectedDate = DateTime(2024, 2, 29, 0, 0, 0, 0)
+    fun `test get repayment date when repayment day less than 31 on January 31st`() {
+        val fromDateTime = DateTime(2022, 1, 31, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 2, 28, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 30)
+        val expectedDate = DateTime(2022, 2, 28, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date January 31 and equals 31`() {
-
-        val startDateTime = DateTime(2022, 1, 31, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 31)
-        val expectedDate = DateTime(2022, 1, 31, 0, 0, 0, 0)
-        Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
-    }
-
-    @Test
-    fun `test get repayment date January 31 and less than 31`() {
-
-        val startDateTime = DateTime(2022, 1, 31, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 30)
-        val expectedDate = DateTime(2022, 1, 30, 0, 0, 0, 0)
-        Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
-    }
-
-    @Test
-    fun `test get repayment date January 25 and greater than 25`() {
-
-        val startDateTime = DateTime(2022, 1, 25, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 27)
+    fun `test get repayment date when repayment day greater than 25 on January 25th`() {
+        val fromDateTime = DateTime(2022, 1, 25, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 2, 25, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 27)
         val expectedDate = DateTime(2022, 1, 27, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date April 30 and equals 30`() {
-
-        val startDateTime = DateTime(2022, 4, 30, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 30)
-        val expectedDate = DateTime(2022, 4, 30, 0, 0, 0, 0)
+    fun `test get repayment date when repayment day equals 30 on April 30th`() {
+        val fromDateTime = DateTime(2022, 4, 30, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 5, 30, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 30)
+        val expectedDate = DateTime(2022, 5, 30, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date April 30 and less than 30`() {
-
-        val startDateTime = DateTime(2022, 4, 30, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 20)
-        val expectedDate = DateTime(2022, 4, 20, 0, 0, 0, 0)
+    fun `test get repayment date when repayment day less than 30 on April 30th`() {
+        val fromDateTime = DateTime(2022, 4, 30, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 5, 30, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 20)
+        val expectedDate = DateTime(2022, 5, 20, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
 
     @Test
-    fun `test get repayment date April 25 and greater than 25`() {
-
-        val startDateTime = DateTime(2022, 4, 25, 0, 0, 0, 0)
-        val repaymentDate = CalculatePeriod.getRepaymentDateTime(startDateTime, 27)
+    fun `test get repayment date when repayment day greater than 25 on April 25th`() {
+        val fromDateTime = DateTime(2022, 4, 25, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 5, 25, 0, 0, 0, 0)
+        val repaymentDate = CalculatePeriod.adjustRepaymentDateTime(fromDateTime, toDateTime, 27)
         val expectedDate = DateTime(2022, 4, 27, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }
@@ -194,7 +202,8 @@ class CalculatePeriodTest {
         val startDateTime = DateTime(2022, 2, 25, 0, 0, 0, 0)
         val toDateTime = DateTime(2023, 2, 25, 0, 0, 0, 0)
 
-        val repaymentDate = CalculatePeriod.getPeriodDatesByCustom(startDateTime, toDateTime,RepaymentFrequency.ONE_MONTH,25)
+        val repaymentDate =
+            CalculatePeriod.getPeriodDatesByCustom(startDateTime, toDateTime, RepaymentFrequency.ONE_MONTH, 25)
         val expectedDate = DateTime(2022, 4, 27, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }

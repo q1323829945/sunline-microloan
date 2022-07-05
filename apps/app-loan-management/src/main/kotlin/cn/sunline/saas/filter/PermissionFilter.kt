@@ -26,7 +26,7 @@ class PermissionFilter : GenericFilterBean() {
         }
 
         fun searchForSuitablePermission(accessResource: String, requestMethod: String, authentication: Authentication) {
-            val a = authentication.authorities.firstOrNull {
+            authentication.authorities.firstOrNull {
                 val permission = PermissionConfig.valueOf(it.authority)
                 permissionRegexMap.value["${permission.name}_${requestMethod}"]?.containsMatchIn(accessResource)?: false
             } ?: throw ManagementException(ManagementExceptionCode.REQUEST_RESOURCE_ACCESS_DENIED)

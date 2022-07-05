@@ -90,7 +90,7 @@ class ConsumerLoanController {
 
     @PostMapping("/repay")
     fun prepayment(@RequestBody dtoPrepayment: DTOPrepayment){
-        val result = consumerLoanService.prepayment(dtoPrepayment)
+        consumerLoanService.prepayment(dtoPrepayment)
     }
 
     @GetMapping("/LoanAgreement/detail/{agreementId}/retrieve")

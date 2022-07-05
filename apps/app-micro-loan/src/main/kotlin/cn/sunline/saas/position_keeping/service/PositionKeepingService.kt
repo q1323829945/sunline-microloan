@@ -42,7 +42,7 @@ class PositionKeepingService(
 
     fun initialPositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
         val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)
-        val dealAccount = runBlocking(CoroutineName("POSITION-KEEPING-ACCOUNT")) {
+        runBlocking(CoroutineName("POSITION-KEEPING-ACCOUNT")) {
             entryPositionKeepingAccount(bankingTransaction)
         }
     }
@@ -80,7 +80,7 @@ class PositionKeepingService(
 
     fun reducePositionKeeping(dtoBankingTransaction: DTOBankingTransaction) {
         val bankingTransaction = bankingTransactionService.initiate(dtoBankingTransaction)
-        val dealAccount = runBlocking(CoroutineName("POSITION-KEEPING-REDUCE")) {
+        runBlocking(CoroutineName("POSITION-KEEPING-REDUCE")) {
             reducePositionKeepingAccount(bankingTransaction)
         }
     }

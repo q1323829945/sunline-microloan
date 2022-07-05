@@ -54,7 +54,7 @@ class EqualInstalmentScheduleTest {
 
 
         val actual = EqualInstalmentScheduleReset(BigDecimal("10000"), BigDecimal("12"), LoanTermType.ONE_YEAR,
-            RepaymentFrequency.ONE_MONTH,RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),toDateTime,repaymentDateTime).getSchedules()
+            RepaymentFrequency.ONE_MONTH,RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,fromDateTime,toDateTime,repaymentDateTime).getSchedules()
 
         //TODO 补充单元
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))

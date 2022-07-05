@@ -49,7 +49,7 @@ class RepaymentAgreementManagerService(
             MoneyTransferInstructionType.REPAYMENT, null, pageable
         ).map { record ->
             val invoice = record.referenceId?.let { invoiceId -> invoiceService.getOne(invoiceId)}
-            invoice?.let{ inovice ->
+            invoice?.let{ _ ->
                 val loanAgreement = customerOfferInvoke.getLoanAgreementInfoByAgreementId(record.agreementId)
                 DTOInvoiceTransferInstructionPage(
                     id = record.id.toString(),
@@ -95,16 +95,16 @@ class RepaymentAgreementManagerService(
     fun getInvoiceDetail(invoiceId: Long, pageable: Pageable): Page<DTOInvoiceLineView> {
         val invoice = invoiceService.getOne(invoiceId)
         val list = ArrayList<DTOInvoiceLineView>()
-        invoice?.let { invoice ->
-            invoice.invoiceLines.forEach {
+        invoice?.let {
+            it.invoiceLines.forEach { line ->
                 list.add(
                     DTOInvoiceLineView(
-                        Id = it.id.toString(),
+                        Id = line.id.toString(),
                         invoiceId = invoiceId.toString(),
-                        invoiceAmountType = it.invoiceAmountType,
-                        invoiceAmount = it.invoiceAmount.toPlainString(),
-                        repaymentAmount = it.repaymentAmount.toPlainString(),
-                        repaymentStatus = it.repaymentStatus
+                        invoiceAmountType = line.invoiceAmountType,
+                        invoiceAmount = line.invoiceAmount.toPlainString(),
+                        repaymentAmount = line.repaymentAmount.toPlainString(),
+                        repaymentStatus = line.repaymentStatus
                     )
                 )
             }

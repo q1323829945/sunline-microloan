@@ -125,7 +125,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             )
         }
 
-        val repaymentFeature = loanProductData.repaymentFeature?.run {
+        val repaymentFeature = loanProductData.repaymentFeature.run {
             repaymentProductFeatureService.register(
                 newProductId,
                 objectMapper.convertValue(this)

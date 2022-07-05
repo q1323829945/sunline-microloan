@@ -76,7 +76,7 @@ class LoanProductManagerService(
             )
         }
 
-        loanProductData.repaymentFeature?.prepaymentFeatureModality?.groupBy { it.term }?.map { it ->
+        loanProductData.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map { it ->
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(
@@ -124,7 +124,7 @@ class LoanProductManagerService(
             BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange)
         )
 
-        dtoLoanProduct.repaymentFeature?.prepaymentFeatureModality?.groupBy { it.term }?.map { it ->
+        dtoLoanProduct.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map { it ->
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(

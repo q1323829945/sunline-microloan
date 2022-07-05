@@ -11,7 +11,9 @@ import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstructionAd
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
@@ -109,7 +111,7 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
                 )
             }
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, pageable)
+        }, PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("startDateTime"))))
     }
 
     fun getPageByInvoiceId(invoiceId: Long,pageable: Pageable

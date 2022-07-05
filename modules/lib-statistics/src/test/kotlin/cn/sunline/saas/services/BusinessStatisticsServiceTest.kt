@@ -24,7 +24,7 @@ class BusinessStatisticsServiceTest(@Autowired val businessStatisticsService: Bu
     fun `init`(){
         ContextUtil.setTimeZone(DateTimeZone.UTC)
         ContextUtil.setTenant("12344566")
-        val b= businessStatisticsService.saveBusinessStatistics(DTOBusinessStatistics(
+        businessStatisticsService.saveBusinessStatistics(DTOBusinessStatistics(
             customerId = 1,
             paymentAmount = BigDecimal(10000),
             repaymentAmount = BigDecimal(500),

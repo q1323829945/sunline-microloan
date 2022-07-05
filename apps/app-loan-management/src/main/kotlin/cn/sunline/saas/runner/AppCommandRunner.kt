@@ -47,7 +47,7 @@ class AppCommandRunner(
         val permissions = permissionService.getPaged(pageable = Pageable.unpaged()).toSet()
         adminRole.permissions.clear()
         adminRole.permissions.addAll(permissions)
-        val addedAdminRole = roleService.save(adminRole)
+        roleService.save(adminRole)
     }
 
     private fun reloadPermissions() {
@@ -58,7 +58,7 @@ class AppCommandRunner(
                 .map { PermissionConfig.valueOf(it) }
                 .map { Permission(name = it.name, tag = it.permissionGroup, remark = it.remark) }
                 .toList()
-        val addedPermissionConfigs = permissionService.save(missingPermissionConfigs)
+        permissionService.save(missingPermissionConfigs)
     }
 
     private fun validatePermissionConfig(name: String): Boolean {

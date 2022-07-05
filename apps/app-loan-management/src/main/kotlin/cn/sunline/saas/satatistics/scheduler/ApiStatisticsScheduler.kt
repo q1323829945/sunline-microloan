@@ -59,7 +59,7 @@ class ApiStatisticsScheduler(
     private fun schedulerApi(dateTime: DateTime,startDate:Date,endDate: Date,frequency: Frequency){
         val api = apiDetailService.getGroupByApiCount(DTOApiDetailQueryParams(startDate,endDate))
         api.forEach {
-            val checkApi = checkApiExist(it.api,dateTime,frequency)
+            checkApiExist(it.api,dateTime,frequency)
             apiStatisticsService.saveApiStatistics(DTOApiStatistics(
                 api = it.api,
                 count = it.count,

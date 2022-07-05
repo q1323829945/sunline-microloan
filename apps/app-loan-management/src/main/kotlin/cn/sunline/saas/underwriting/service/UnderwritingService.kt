@@ -88,6 +88,6 @@ class UnderwritingService(
 
 
     fun getId(){
-        val underwriting = underwritingInvoke.getPartnerIntegrated()
+        underwritingInvoke.getPartnerIntegrated()
     }
 }
