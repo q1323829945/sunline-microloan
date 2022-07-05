@@ -64,7 +64,7 @@ class InvoiceFactory(
             invoicePeriodToDate = tenantDateTime.toTenantDateTime(dtoLoanInvoice.invoicePeriodToDate).toDate(),
             invoiceAssignedDocument = document,
             invoiceAmount = invoiceAmount,
-            invoiceStatus = InvoiceStatus.INITIATE,
+            invoiceStatus = dtoLoanInvoice.invoiceStatus ?: InvoiceStatus.INITIATE,
             invoicee = dtoLoanInvoice.invoicee,
             invoiceLines = invoiceLine,
             agreementId = dtoLoanInvoice.agreementId

@@ -19,7 +19,8 @@ data class DTOLoanInvoice(
     val principal: BigDecimal,
     val interest: BigDecimal,
     val fee: BigDecimal?,
-    val agreementId:Long
+    val agreementId:Long,
+    val invoiceStatus: InvoiceStatus?,
 )
 
 data class DTOInvoiceTrailView (

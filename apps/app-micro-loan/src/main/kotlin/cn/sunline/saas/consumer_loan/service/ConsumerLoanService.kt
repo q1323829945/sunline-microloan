@@ -643,7 +643,7 @@ class ConsumerLoanService(
             dtoPrepayment.agreementId, null, MoneyTransferInstructionType.REPAYMENT, null,
             Pageable.unpaged()
         ).filter {
-            it.moneyTransferInstructionStatus != InstructionLifecycleStatus.FULFILLED ||
+            it.moneyTransferInstructionStatus != InstructionLifecycleStatus.FULFILLED &&
                     it.moneyTransferInstructionStatus != InstructionLifecycleStatus.FAILED
         }
         if (!preRepaymentInstruction.isEmpty) {
@@ -671,7 +671,8 @@ class ConsumerLoanService(
                 principal = dtoPrepayment.principal.toBigDecimal(),
                 interest = dtoPrepayment.interest.toBigDecimal(),
                 fee = dtoPrepayment.fee.toBigDecimal(),
-                agreementId = dtoPrepayment.agreementId
+                agreementId = dtoPrepayment.agreementId,
+                invoiceStatus = InvoiceStatus.TEMP
             )
         )
         val invoice = invoiceService.initiateLoanInvoice(dtoLoanInvoice).first()

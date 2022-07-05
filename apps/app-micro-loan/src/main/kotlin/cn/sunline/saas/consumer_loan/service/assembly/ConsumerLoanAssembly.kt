@@ -153,7 +153,8 @@ object ConsumerLoanAssembly {
                     it.principal,
                     it.interest,
                     null,
-                    dtoLoanAgreement.loanAgreement.id
+                    dtoLoanAgreement.loanAgreement.id,
+                    null
                 )
             )
         }

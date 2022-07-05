@@ -69,13 +69,19 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
         )
     }
 
-    fun getPage(agreementId: Long?,
-                customerId: Long?,
-                moneyTransferInstructionType:MoneyTransferInstructionType,
-                moneyTransferInstructionStatus: InstructionLifecycleStatus?,
-                pageable: Pageable
+    fun getPage(
+        agreementId: Long?,
+        customerId: Long?,
+        moneyTransferInstructionType: MoneyTransferInstructionType,
+        moneyTransferInstructionStatus: InstructionLifecycleStatus?,
+        pageable: Pageable
     ): Page<MoneyTransferInstruction> {
-       return getPageWithTenant({ root, _, criteriaBuilder ->
+        val pageSort = if (pageable == Pageable.unpaged()) pageable else PageRequest.of(
+            pageable.pageNumber,
+            pageable.pageSize,
+            Sort.by(Sort.Order.desc("startDateTime"))
+        )
+        return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             agreementId?.run {
                 predicates.add(
@@ -111,10 +117,11 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
                 )
             }
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("startDateTime"))))
+        }, pageSort)
     }
 
-    fun getPageByInvoiceId(invoiceId: Long,pageable: Pageable
+    fun getPageByInvoiceId(
+        invoiceId: Long, pageable: Pageable
     ): Page<MoneyTransferInstruction> {
         return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
