@@ -1,5 +1,8 @@
 package cn.sunline.saas.invoice.model.dto
 
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
@@ -19,11 +22,11 @@ data class DTOLoanInvoice(
     val principal: BigDecimal,
     val interest: BigDecimal,
     val fee: BigDecimal?,
-    val agreementId:Long,
+    val agreementId: Long,
     val invoiceStatus: InvoiceStatus?,
 )
 
-data class DTOInvoiceTrailView (
+data class DTOInvoiceTrailView(
     val invoicee: String,
     val invoiceId: String,
     val invoiceTotalAmount: BigDecimal,
@@ -31,7 +34,7 @@ data class DTOInvoiceTrailView (
     val invoiceLines: List<DTOInvoiceLinesView>?,
 )
 
-data class DTOInvoiceInfoView (
+data class DTOInvoiceInfoView(
     val invoicee: String,
     val invoiceId: String,
     val invoiceDueDate: String,
@@ -52,14 +55,14 @@ data class DTOInvoiceLinesView(
     val invoiceAmount: String
 )
 
-data class DTOPreRepaymentTrailView (
+data class DTOPreRepaymentTrailView(
     val agreementId: String,
     val totalAmount: String,
     val prepaymentLines: List<DTOInvoiceLinesView>,
 )
 
 
-data class DTOInvoiceRepay (
+data class DTOInvoiceRepay(
     val repaymentAccountId: String,
     val repaymentAccount: String,
     val amount: String,
@@ -67,10 +70,21 @@ data class DTOInvoiceRepay (
     val currency: CurrencyType
 )
 
-//data class DTOInvoiceRepayDetails (
-//    val repaymentAccountId: String,
-//    val repaymentAccount: String,
-//    val amount: String,
-//    val invoiceId: String
-//)
+data class DTOInvoiceScheduleView(
+    val agreementId: String,
+    val repaymentFrequency: RepaymentFrequency,
+    val repaymentDayType: RepaymentDayType,
+    val paymentMethodType: PaymentMethodType,
+    val totalInstalment: BigDecimal,
+    val totalInterest: BigDecimal,
+    val scheduleLines: MutableList<DTOInvoiceScheduleLineView>
+)
 
+data class DTOInvoiceScheduleLineView(
+    val invoiceId: String,
+    val invoiceInstalment: BigDecimal,
+    val invoicePrincipal: BigDecimal,
+    val invoiceInterest: BigDecimal,
+    val invoicePeriodFromDate: String,
+    val invoicePeriodToDate: String
+)

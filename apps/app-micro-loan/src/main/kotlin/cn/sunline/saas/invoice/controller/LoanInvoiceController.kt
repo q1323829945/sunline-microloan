@@ -1,6 +1,7 @@
 package cn.sunline.saas.invoice.controller
 
 import cn.sunline.saas.invoice.model.dto.DTOInvoiceInfoView
+import cn.sunline.saas.invoice.model.dto.DTOInvoiceScheduleView
 import cn.sunline.saas.invoice.model.dto.DTOInvoiceTrailView
 import cn.sunline.saas.invoice.service.LoanInvoiceService
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -45,6 +46,12 @@ class LoanInvoiceController {
     @GetMapping("/retrieve/{customerId}/current")
     fun retrieveCurrent(@PathVariable customerId: Long): ResponseEntity<DTOResponseSuccess<List<DTOInvoiceInfoView>>>{
         val response = loanInvoiceService.retrieveCurrentAccountedInvoices(customerId)
+        return DTOResponseSuccess(response).response()
+    }
+
+    @GetMapping("/schedule/{agreementId}/retrieve")
+    fun getInstalmentSchedule(@PathVariable agreementId: Long): ResponseEntity<DTOResponseSuccess<DTOInvoiceScheduleView>>{
+        val response = loanInvoiceService.getInstalmentSchedule(agreementId)
         return DTOResponseSuccess(response).response()
     }
 

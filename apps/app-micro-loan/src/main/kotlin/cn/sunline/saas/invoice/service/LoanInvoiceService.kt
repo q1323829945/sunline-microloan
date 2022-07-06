@@ -1,15 +1,19 @@
 package cn.sunline.saas.invoice.service
 
+import cn.sunline.saas.global.constant.PaymentMethodType
+import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.invoice.exception.LoanInvoiceBusinessException
+import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.dto.DTOInvoiceInfoView
-import cn.sunline.saas.invoice.model.dto.DTOInvoiceLinesView
-import cn.sunline.saas.invoice.model.dto.DTOInvoiceTrailView
+import cn.sunline.saas.invoice.model.dto.*
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.job.component.CalculateSchedulerTimer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 
 @Service
@@ -108,6 +112,32 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             )
         }
         return mapPage
+    }
+
+    fun getInstalmentSchedule(agreementId: Long): DTOInvoiceScheduleView {
+        val scheduleLines = ArrayList<DTOInvoiceScheduleLineView>()
+        val loanAgreement = loanAgreementService.retrieve(agreementId)
+        invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged()).map {
+            scheduleLines.add(
+                DTOInvoiceScheduleLineView(
+                    invoiceId = it.id.toString(),
+                    invoiceInstalment = it.invoiceAmount,
+                    invoicePrincipal = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.PRINCIPAL }.invoiceAmount,
+                    invoiceInterest = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.INTEREST }.invoiceAmount,
+                    invoicePeriodFromDate = it.invoicePeriodFromDate.toString(),
+                    invoicePeriodToDate = it.invoicePeriodToDate.toString()
+                )
+            )
+        }
+        return DTOInvoiceScheduleView(
+            agreementId = agreementId.toString(),
+            repaymentFrequency = loanAgreement.repaymentArrangement.frequency,
+            repaymentDayType = loanAgreement.repaymentArrangement.repaymentDayType,
+            paymentMethodType = loanAgreement.repaymentArrangement.paymentMethod,
+            totalInstalment = scheduleLines.sumOf { it.invoiceInstalment },
+            totalInterest = scheduleLines.sumOf { it.invoiceInterest },
+            scheduleLines = scheduleLines
+        )
     }
 
 }
