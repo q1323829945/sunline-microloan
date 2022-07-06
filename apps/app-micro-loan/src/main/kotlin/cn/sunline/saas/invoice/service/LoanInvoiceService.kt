@@ -41,7 +41,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         return DTOInvoiceTrailView(
             invoicee = invoice.invoicee.toString(),
             invoiceId = invoiceId.toString(),
-            invoiceTotalAmount = invoiceTotalAmount,
+            invoiceTotalAmount = invoiceTotalAmount.toPlainString(),
             repaymentStatus = invoice.repaymentStatus,
             invoiceLines = lines
         )
@@ -68,7 +68,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
                 invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
                 invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                invoiceTotalAmount =  invoice.invoiceAmount,
+                invoiceTotalAmount =  invoice.invoiceAmount.toPlainString(),
                 invoiceCurrency = agreement.currency,
                 invoiceStatus = invoice.invoiceStatus,
                 invoiceRepaymentDate = invoice.invoiceRepaymentDate.toString(),
@@ -101,7 +101,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
                 invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
                 invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                invoiceTotalAmount =  invoice.invoiceAmount,
+                invoiceTotalAmount =  invoice.invoiceAmount.toPlainString(),
                 invoiceCurrency = agreement.currency,
                 invoiceStatus = invoice.invoiceStatus,
                 repaymentStatus = invoice.repaymentStatus,
@@ -121,9 +121,9 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             scheduleLines.add(
                 DTOInvoiceScheduleLineView(
                     invoiceId = it.id.toString(),
-                    invoiceInstalment = it.invoiceAmount,
-                    invoicePrincipal = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.PRINCIPAL }.invoiceAmount,
-                    invoiceInterest = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.INTEREST }.invoiceAmount,
+                    invoiceInstalment = it.invoiceAmount.toPlainString(),
+                    invoicePrincipal = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.PRINCIPAL }.invoiceAmount.toPlainString(),
+                    invoiceInterest = it.invoiceLines.first { lines -> lines.invoiceAmountType == InvoiceAmountType.INTEREST }.invoiceAmount.toPlainString(),
                     invoicePeriodFromDate = it.invoicePeriodFromDate.toString(),
                     invoicePeriodToDate = it.invoicePeriodToDate.toString()
                 )
@@ -134,8 +134,8 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             repaymentFrequency = loanAgreement.repaymentArrangement.frequency,
             repaymentDayType = loanAgreement.repaymentArrangement.repaymentDayType,
             paymentMethodType = loanAgreement.repaymentArrangement.paymentMethod,
-            totalInstalment = scheduleLines.sumOf { it.invoiceInstalment },
-            totalInterest = scheduleLines.sumOf { it.invoiceInterest },
+            totalInstalment = scheduleLines.sumOf { it.invoiceInstalment.toBigDecimal() }.toPlainString(),
+            totalInterest = scheduleLines.sumOf { it.invoiceInterest.toBigDecimal() }.toPlainString(),
             scheduleLines = scheduleLines
         )
     }

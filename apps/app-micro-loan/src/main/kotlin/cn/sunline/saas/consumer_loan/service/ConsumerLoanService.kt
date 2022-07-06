@@ -545,7 +545,7 @@ class ConsumerLoanService(
             invoiceDueDate = invoice.invoiceRepaymentDate.toString(),
             invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
             invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-            invoiceTotalAmount = invoice.invoiceAmount,
+            invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
             invoiceCurrency = loanAgreement.currency,
             invoiceStatus = invoice.invoiceStatus,
             invoiceLines = lines

@@ -29,7 +29,7 @@ data class DTOLoanInvoice(
 data class DTOInvoiceTrailView(
     val invoicee: String,
     val invoiceId: String,
-    val invoiceTotalAmount: BigDecimal,
+    val invoiceTotalAmount: String,
     val repaymentStatus: RepaymentStatus,
     val invoiceLines: List<DTOInvoiceLinesView>?,
 )
@@ -40,7 +40,7 @@ data class DTOInvoiceInfoView(
     val invoiceDueDate: String,
     val invoicePeriodFromDate: String,
     val invoicePeriodToDate: String,
-    val invoiceTotalAmount: BigDecimal,
+    val invoiceTotalAmount: String,
     val invoiceCurrency: CurrencyType,
     val invoiceStatus: InvoiceStatus,
     val repaymentStatus: RepaymentStatus? = null,
@@ -75,16 +75,16 @@ data class DTOInvoiceScheduleView(
     val repaymentFrequency: RepaymentFrequency,
     val repaymentDayType: RepaymentDayType,
     val paymentMethodType: PaymentMethodType,
-    val totalInstalment: BigDecimal,
-    val totalInterest: BigDecimal,
+    val totalInstalment: String,
+    val totalInterest: String,
     val scheduleLines: MutableList<DTOInvoiceScheduleLineView>
 )
 
 data class DTOInvoiceScheduleLineView(
     val invoiceId: String,
-    val invoiceInstalment: BigDecimal,
-    val invoicePrincipal: BigDecimal,
-    val invoiceInterest: BigDecimal,
+    val invoiceInstalment: String,
+    val invoicePrincipal: String,
+    val invoiceInterest: String,
     val invoicePeriodFromDate: String,
     val invoicePeriodToDate: String
 )
