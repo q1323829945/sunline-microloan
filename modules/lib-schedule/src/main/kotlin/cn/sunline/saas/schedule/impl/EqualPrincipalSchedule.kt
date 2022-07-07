@@ -34,33 +34,35 @@ class EqualPrincipalSchedule(
     fromDateTime,
     toDateTime,
     repaymentDateTime
-)  {
+) {
     override fun getSchedules(): MutableList<Schedule> {
 
-        var periods = CalculatePeriod.calculatePeriods(term, frequency)
-        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
+        val periods = CalculatePeriod.calculatePeriods(term, frequency)
+        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency, repaymentDayType!!)
         val interestRate = CalculateInterestRate(interestRateYear)
         var instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount, periods)
-
+        var firstInterest = BigDecimal.ZERO
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
         var period = 0
         for ((index, it) in periodDates.withIndex()) {
             val instalmentInterest: BigDecimal
             if (!periodDates[index].isEnough) {
-                instalmentPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-                instalmentInterest = CalculateInterest(remainingPrincipal, interestRate).getDaysInterest(
-                    fromDateTime,
-                    toDateTime,
+                val principal = if(index == 0) instalmentPrincipal else remainingPrincipal
+                instalmentInterest = CalculateInterest(principal, interestRate).getDaysInterest(
+                    it.fromDateTime,
+                    it.toDateTime,
                     baseYearDays
                 ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                firstInterest = instalmentInterest
+                if(index == 0) continue
             } else {
                 instalmentInterest = CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
                     frequency.term.toMonthUnit().num
-                ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-                remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
+                ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP).add(firstInterest)
             }
 
+            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
             if (index == periodDates.size - 1 && instalmentPrincipal != BigDecimal.ZERO) {
                 instalmentPrincipal = instalmentPrincipal.add(remainingPrincipal)
                 remainingPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
@@ -81,6 +83,7 @@ class EqualPrincipalSchedule(
                     interestRateYear
                 )
             )
+            firstInterest = BigDecimal.ZERO
         }
         return schedules
     }

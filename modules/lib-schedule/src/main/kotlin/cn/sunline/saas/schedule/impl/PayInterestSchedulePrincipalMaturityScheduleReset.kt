@@ -76,8 +76,8 @@ class PayInterestSchedulePrincipalMaturityScheduleReset(
                 instalmentPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
             val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
-                fromDateTime,
-                toDateTime,
+                it.fromDateTime,
+                it.toDateTime,
                 baseYearDays
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 

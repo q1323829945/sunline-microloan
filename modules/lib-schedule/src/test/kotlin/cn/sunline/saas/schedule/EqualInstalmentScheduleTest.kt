@@ -42,6 +42,29 @@ class EqualInstalmentScheduleTest {
 
     }
 
+    @Test
+    fun `test equal instalment schedules with base fisrt month`() {
+
+        val actual = EqualInstalmentSchedule(BigDecimal("11000"), BigDecimal("12.0"), LoanTermType.ONE_YEAR,
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null).getSchedules()
+
+
+        Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))
+        Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("5250.00"))
+        Assertions.assertThat(actual[0].principal).isEqualTo(BigDecimal("331589.44"))
+        Assertions.assertThat(actual[0].remainingPrincipal).isEqualTo(BigDecimal("668410.56"))
+
+        Assertions.assertThat(actual[1].interest).isEqualTo(BigDecimal("3509.16"))
+        Assertions.assertThat(actual[1].principal).isEqualTo(BigDecimal("333330.28"))
+        Assertions.assertThat(actual[1].remainingPrincipal).isEqualTo(BigDecimal("335080.28"))
+
+        Assertions.assertThat(actual[2].interest).isEqualTo(BigDecimal("1759.16"))
+        Assertions.assertThat(actual[2].principal).isEqualTo(BigDecimal("335080.28"))
+        Assertions.assertThat(actual[2].remainingPrincipal).isEqualTo(BigDecimal("0.00"))
+
+    }
+
+
 
     @Test
     @Disabled

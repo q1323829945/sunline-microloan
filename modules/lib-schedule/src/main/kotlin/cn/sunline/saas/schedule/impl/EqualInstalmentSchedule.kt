@@ -23,7 +23,7 @@ class EqualInstalmentSchedule(
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
-    repaymentDayType: RepaymentDayType,
+    repaymentDayType: RepaymentDayType = RepaymentDayType.BASE_LOAN_DAY,
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
@@ -41,51 +41,54 @@ class EqualInstalmentSchedule(
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
-        var periods = CalculatePeriod.calculatePeriods(term, frequency)
-        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
-//        if ((repaymentDayType == RepaymentDayType.MONTH_FIRST_DAY && fromDateTime.dayOfMonth != fromDateTime.dayOfMonth()
-//                .withMinimumValue().dayOfMonth) ||
-//            (repaymentDayType == RepaymentDayType.MONTH_LAST_DAY && fromDateTime.dayOfMonth != fromDateTime.dayOfMonth()
-//                .withMaximumValue().dayOfMonth)
-//        ) {
-//            periods -= 2
-//        }
+        val periods = CalculatePeriod.calculatePeriods(term, frequency)
+        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency, repaymentDayType!!)
         val interestRate = CalculateInterestRate(interestRateYear)
         val instalmentAmount = CalculateEqualInstalment.getInstalment(amount, interestRateYear, periods)
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
         var period = 0
+        var firstInterest = BigDecimal.ZERO
+        var firstPrincipal = BigDecimal.ZERO
         for ((index, it) in periodDates.withIndex()) {
-            val instalmentPrincipal: BigDecimal
-            val instalmentInterest: BigDecimal
-            if (!periodDates[index].isEnough) {
-                instalmentPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-                instalmentInterest = CalculateInterest(remainingPrincipal, interestRate).getDaysInterest(
-                    fromDateTime,
-                    toDateTime,
-                    baseYearDays
-                ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+            var instalmentPrincipal : BigDecimal
+            var instalmentInterest: BigDecimal
+            if (index == periodDates.size - 1) {
+                instalmentPrincipal =  remainingPrincipal.add(firstPrincipal)
+                instalmentInterest = instalmentAmount.subtract(instalmentPrincipal)
             } else {
-                if (index == periodDates.size - 1) {
-                    instalmentPrincipal = remainingPrincipal
-                    instalmentInterest = instalmentAmount.subtract(instalmentPrincipal)
-                } else {
-                    instalmentInterest =
-                        CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
-                            frequency.term.toMonthUnit().num
-                        ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-
-                    instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
+                instalmentInterest = if(!it.isEnough){
+                    CalculateInterest(remainingPrincipal, interestRate).getDaysInterest(
+                        it.fromDateTime,
+                        it.toDateTime,
+                        baseYearDays
+                    ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                }else {
+                    CalculateInterest(remainingPrincipal, interestRate).getMonthInterest(
+                        frequency.term.toMonthUnit().num
+                    ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
                 }
             }
-            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
+            instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
+            if(index == 0){
+                firstPrincipal = instalmentPrincipal
+                firstInterest = instalmentInterest
+                remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
+                continue
+            }
+            if (index == 1 && firstInterest != BigDecimal.ZERO){
+                instalmentInterest =  instalmentInterest.add(firstInterest)
+                instalmentPrincipal = instalmentPrincipal.subtract(firstInterest)
+            }
+            remainingPrincipal = if(remainingPrincipal <= BigDecimal.ZERO) BigDecimal.ZERO else remainingPrincipal.subtract(instalmentPrincipal)
+
             period++
 
             schedules.add(
                 Schedule(
-                    it.fromDateTime,
+                    if(index == 1 && firstInterest != BigDecimal.ZERO) fromDateTime else it.fromDateTime,
                     it.toDateTime,
-                    instalment = if(!periodDates[index].isEnough) instalmentPrincipal.add(instalmentInterest) else instalmentAmount,
+                    instalment = instalmentAmount,
                     instalmentPrincipal,
                     instalmentInterest,
                     remainingPrincipal,
@@ -97,6 +100,4 @@ class EqualInstalmentSchedule(
         }
         return schedules
     }
-
-
 }

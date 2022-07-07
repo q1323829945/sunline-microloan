@@ -33,11 +33,15 @@ class PayInterestSchedulePrincipalMaturitySchedule(
     fromDateTime,
     toDateTime,
     repaymentDateTime
-)  {
+) {
     override fun getSchedules(): MutableList<Schedule> {
-
-        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
+        val periods = CalculatePeriod.calculatePeriods(term, frequency)
+        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency, repaymentDayType!!)
         val interestRate = CalculateInterestRate(interestRateYear)
+        val firstInterest = CalculateInterest(amount, interestRate).getFirstInterest(periods, periodDates, baseYearDays)
+        if (periods != periodDates.size) {
+            periodDates.removeFirst()
+        }
 
         val schedules = mutableListOf<Schedule>()
         var period = 0
@@ -51,17 +55,18 @@ class PayInterestSchedulePrincipalMaturitySchedule(
                 remainingPrincipal = amount.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
                 instalmentPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
             }
-            val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
-                fromDateTime,
-                toDateTime,
+            var instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
+                it.fromDateTime,
+                it.toDateTime,
                 baseYearDays
             ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+            instalmentInterest = if(index == 0) instalmentInterest.add(firstInterest) else instalmentInterest
 
             val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
             period++
             schedules.add(
                 Schedule(
-                    it.fromDateTime,
+                    if(index == 0) fromDateTime else it.fromDateTime,
                     it.toDateTime,
                     instalmentAmount,
                     instalmentPrincipal,

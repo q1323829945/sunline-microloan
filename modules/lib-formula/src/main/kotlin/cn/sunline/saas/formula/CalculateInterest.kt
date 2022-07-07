@@ -37,4 +37,20 @@ class CalculateInterest(private val principal: BigDecimal, private val interestR
         return principal.multiply(interestRate).multiply(BigDecimal(num)).setScale(CalculatePrecision.INTEREST, RoundingMode.HALF_UP)
     }
 
+    fun getFirstInterest(
+        periods: Int,
+        periodDates: MutableList<CalculatePeriod.PeriodDate>,
+        baseYearDays: BaseYearDays
+    ): BigDecimal {
+        var firstInterest = BigDecimal.ZERO
+        if (periods != periodDates.size) {
+            val periodDate = periodDates.first()
+            firstInterest = CalculateInterest(principal, interestRateYear).getDaysInterest(
+                periodDate.fromDateTime,
+                periodDate.toDateTime,
+                baseYearDays
+            ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+        }
+        return firstInterest
+    }
 }
