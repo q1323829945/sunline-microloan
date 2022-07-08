@@ -63,8 +63,8 @@ data class DTOAmountLoanProductConfigurationView(
 
 data class DTOTermLoanProductConfigurationView(
         val id: String,
-        var maxValueRange: LoanTermType,
-        var minValueRange: LoanTermType,
+        var maxValueRange: LoanTermType?,
+        var minValueRange: LoanTermType?,
 )
 
 data class DTOInterestFeatureView(

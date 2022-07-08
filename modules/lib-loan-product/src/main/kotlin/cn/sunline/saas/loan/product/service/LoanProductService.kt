@@ -470,8 +470,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
     }
 
-    private fun getValueRange(value: BigDecimal): LoanTermType {
-        return LoanTermType.values().single { it.term == TermType(value.toInt()) }
+    private fun getValueRange(value: BigDecimal): LoanTermType? {
+        return LoanTermType.values().singleOrNull { it.term == TermType(value.toInt()) }
     }
 
 

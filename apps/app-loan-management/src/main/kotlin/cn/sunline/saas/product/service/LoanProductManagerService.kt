@@ -269,10 +269,13 @@ class LoanProductManagerService(
 
 
         interestFeature.termConfiguration?.run {
+            val minValueRange = this.minValueRange
+            val maxValueRange = this.maxValueRange
             interestRateList?.sortedBy { it.period.term }?.forEach {
-                if(it.period in this.minValueRange .. this.maxValueRange){
+                if(minValueRange != null && maxValueRange != null && it.period in minValueRange .. maxValueRange){
                     interestRates.add(it.period)
                 }
+
             }
         }
 

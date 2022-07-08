@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct
 @Configuration
 class JobCommandRunner {
     @PostConstruct
-     fun run(vararg args: String?) {
+     fun run() {
         LoanAgreementSchedulerTask().registerActor()
         InvoiceAccountJob().registerActor()
         LoanAutoRepaymentJob().registerActor()
