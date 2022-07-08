@@ -63,6 +63,7 @@ class LoanProductManagerService(
 
     fun addOne(loanProductData: DTOLoanProduct): DTOLoanProductView {
         checkTermConditions(
+            loanProductData.interestFeature.ratePlanId,
             loanProductData.termConfiguration.maxValueRange.term,
             loanProductData.termConfiguration.minValueRange.term
         )
@@ -122,6 +123,7 @@ class LoanProductManagerService(
     ): DTOLoanProductView {
         checkProductStatus(id, false)
         checkTermConditions(
+            dtoLoanProduct.interestFeature.ratePlanId,
             dtoLoanProduct.termConfiguration.maxValueRange.term,
             dtoLoanProduct.termConfiguration.minValueRange.term
         )
@@ -178,12 +180,25 @@ class LoanProductManagerService(
         return loanProductService.getLoanProductListByStatus(status, pageable)
     }
 
-    private fun checkTermConditions(termMaxValueRange: TermType, termMinValueRange: TermType) {
+    private fun checkTermConditions(ratePlanId:String,termMaxValueRange: TermType, termMinValueRange: TermType) {
         if (termMaxValueRange < termMinValueRange) {
             throw LoanProductBusinessException(
                 "The term's config of product was error",
                 ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
             )
+        }
+
+        val termTypes = interestRateService.findByRatePlanId(ratePlanId.toLong())?.map {
+            it.period.term
+        }
+
+        termTypes?.run {
+            if(!this.contains(termMaxValueRange) || !this.contains(termMinValueRange)){
+                throw LoanProductBusinessException(
+                    "The term's config of product was error",
+                    ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                )
+            }
         }
     }
 
@@ -250,9 +265,19 @@ class LoanProductManagerService(
 
         val interestRateList = interestRateService.findByRatePlanId(ratePlanId.toLong())
 
-        return interestRateList?.map {
-            it.period
-        }?: mutableListOf()
+        val interestRates = mutableListOf<LoanTermType>()
+
+
+        interestFeature.termConfiguration?.run {
+            interestRateList?.sortedBy { it.period.term }?.forEach {
+                if(it.period in this.minValueRange .. this.maxValueRange){
+                    interestRates.add(it.period)
+                }
+            }
+        }
+
+
+        return interestRates
     }
 
 

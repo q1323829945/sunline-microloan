@@ -57,14 +57,14 @@ data class DocumentTemplateView(
 
 data class DTOAmountLoanProductConfigurationView(
         val id: String,
-        var maxValueRange: String?,
-        var minValueRange: String?,
+        var maxValueRange: String,
+        var minValueRange: String,
 )
 
 data class DTOTermLoanProductConfigurationView(
         val id: String,
-        var maxValueRange: LoanTermType?,
-        var minValueRange: LoanTermType?,
+        var maxValueRange: LoanTermType,
+        var minValueRange: LoanTermType,
 )
 
 data class DTOInterestFeatureView(

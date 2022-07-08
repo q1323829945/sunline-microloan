@@ -1,5 +1,6 @@
 package cn.sunline.saas.product.service
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.rpc.invoke.ProductInvoke
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -26,6 +27,10 @@ class ProductService(private val productInvoke: ProductInvoke)  {
 
     fun getProducts():List<DTOInvokeLoanProducts>{
         return productInvoke.getProductsByStatus("INITIATED")
+    }
+
+    fun getInterestRateByProductId(productId: String):List<LoanTermType>{
+        return productInvoke.getInterestRate(productId.toLong())
     }
 
 }

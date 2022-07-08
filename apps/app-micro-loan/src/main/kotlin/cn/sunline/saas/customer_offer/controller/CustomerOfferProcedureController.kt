@@ -4,7 +4,6 @@ import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer_offer.service.CustomerOfferProcedureService
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
-import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -57,13 +56,6 @@ class CustomerOfferProcedureController {
     fun getLoanUploadTemplate(@PathVariable productId:String):ResponseEntity<DTOResponseSuccess<List<DTOProductUploadConfig>>>{
         return DTOResponseSuccess(customerOfferProductService.getProductUploadConfig(productId)).response()
     }
-
-
-    @GetMapping("interestRate/{productId}")
-    fun getInterestRate(@PathVariable productId: String):ResponseEntity<DTOResponseSuccess<List<LoanTermType>>>{
-        return DTOResponseSuccess(customerOfferProductService.getInterestRateByProductId(productId)).response()
-    }
-
 
     @GetMapping("loan/{customerId}/list")
     fun getPaged(@PathVariable("customerId")customerId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{

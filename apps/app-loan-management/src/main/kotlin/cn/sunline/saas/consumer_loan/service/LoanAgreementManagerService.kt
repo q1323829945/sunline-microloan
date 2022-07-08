@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class LoanAgreementManagerService(
-    val tenantDateTime: TenantDateTime,
-    val loanAgreementPublish: LoanAgreementPublish
+    private val tenantDateTime: TenantDateTime,
+    private val loanAgreementPublish: LoanAgreementPublish
 ) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

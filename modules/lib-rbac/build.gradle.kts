@@ -1,4 +1,5 @@
 val jjwtVersion: String by rootProject.extra
+val jodaVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -15,4 +16,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.h2database:h2:1.4.200")
+    testImplementation("joda-time:joda-time:${jodaVersion}")
+    testImplementation(project(":lib-seq-test"))
 }

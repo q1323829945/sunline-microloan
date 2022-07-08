@@ -15,9 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApiDetailServiceTest(@Autowired val apiDetailService: ApiDetailService, @Autowired  val tenantDateTime: TenantDateTime) {
-
-
-
     @BeforeAll
     fun `init`(){
         ContextUtil.setTimeZone(DateTimeZone.UTC)
@@ -34,8 +31,4 @@ class ApiDetailServiceTest(@Autowired val apiDetailService: ApiDetailService, @A
         Assertions.assertThat(count[0].api).isEqualTo("menus/")
         Assertions.assertThat(count[0].count).isEqualTo(1L)
     }
-}
-
-fun main() {
-    println(11111)
 }

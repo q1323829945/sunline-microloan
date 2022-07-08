@@ -46,34 +46,38 @@ class AppCustomerOfferService(
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable):Page<DTOCustomerOfferPage> {
-        val page = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).map {
-            val apply = customerLoanApplyService.getOne(it.id!!)
-            val customerOfferLoanView = apply?.run {
-                objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
-            }
-            val underwriting = if(it.status != RECORD) customerOfferInvoke.getUnderwriting(it.id!!) else null
+        val filter = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).content
+            .filter { it.status != RECORD }
 
-            val loanAgreement = underwriting?.status?.run {
-                if(UnderwritingType.valueOf(underwriting.status) == APPROVAL){
-                    customerOfferInvoke.getLoanAgreement(it.id!!)
-                }else {
-                    null
+        val page = customerOfferService.rePaged(filter,pageable).map {
+                val apply = customerLoanApplyService.getOne(it.id!!)
+                val customerOfferLoanView = apply?.run {
+                    objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
                 }
+                val underwriting = customerOfferInvoke.getUnderwriting(it.id!!)
+
+                val loanAgreement = underwriting?.status?.run {
+                    if(UnderwritingType.valueOf(underwriting.status) == APPROVAL){
+                        customerOfferInvoke.getLoanAgreement(it.id!!)
+                    }else {
+                        null
+                    }
+                }
+
+                DTOCustomerOfferPage(
+                    customerOfferId = it.id.toString(),
+                    userName = customerOfferLoanView?.detail?.name,
+                    amount = apply?.amount?.toString(),
+                    datetime = tenantDateTime.toTenantDateTime(it.datetime).toString(),
+                    productName = it.productName,
+                    status = it.status,
+                    term = customerOfferLoanView?.loan?.term,
+                    currency = customerOfferLoanView?.loan?.currency,
+                    underwritingType = underwriting?.status?.run { UnderwritingType.valueOf(underwriting.status) },
+                    loanAgreementType = loanAgreement?.run { this.status }
+                )
             }
 
-            DTOCustomerOfferPage(
-                customerOfferId = it.id.toString(),
-                userName = customerOfferLoanView?.detail?.name,
-                amount = apply?.amount?.toString(),
-                datetime = tenantDateTime.toTenantDateTime(it.datetime).toString(),
-                productName = it.productName,
-                status = it.status,
-                term = customerOfferLoanView?.loan?.term,
-                currency = customerOfferLoanView?.loan?.currency,
-                underwritingType = underwriting?.status?.run { UnderwritingType.valueOf(underwriting.status) },
-                loanAgreementType = loanAgreement?.run { this.status }
-            )
-        }
 
         return page
     }

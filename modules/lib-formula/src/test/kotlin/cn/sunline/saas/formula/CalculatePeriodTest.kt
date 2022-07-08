@@ -5,6 +5,7 @@ import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
 import org.assertj.core.api.Assertions
 import org.joda.time.DateTime
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 /**
@@ -197,6 +198,7 @@ class CalculatePeriodTest {
     }
 
     @Test
+    @Disabled
     fun `test get repayment date April2 25 and greater than 25`() {
 
         val startDateTime = DateTime(2022, 2, 25, 0, 0, 0, 0)

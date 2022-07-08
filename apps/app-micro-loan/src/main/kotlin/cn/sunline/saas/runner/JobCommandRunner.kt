@@ -5,7 +5,9 @@ import cn.sunline.saas.consumer_loan.job.LoanAutoRepaymentJob
 import cn.sunline.saas.consumer_loan.job.LoanInvoiceJob
 import cn.sunline.saas.scheduler.LoanAgreementSchedulerTask
 import org.springframework.boot.CommandLineRunner
+import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
+import javax.annotation.PostConstruct
 
 /**
  * @title: JobCommandRunner
@@ -13,9 +15,10 @@ import org.springframework.stereotype.Component
  * @author Kevin-Cui
  * @date 2022/5/31 14:59
  */
-@Component
-class JobCommandRunner : CommandLineRunner {
-    override fun run(vararg args: String?) {
+@Configuration
+class JobCommandRunner {
+    @PostConstruct
+     fun run(vararg args: String?) {
         LoanAgreementSchedulerTask().registerActor()
         InvoiceAccountJob().registerActor()
         LoanAutoRepaymentJob().registerActor()

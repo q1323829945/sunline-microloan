@@ -1,6 +1,7 @@
 package cn.sunline.saas.product.controller
 
 import cn.sunline.saas.customer.offer.modules.dto.DTOProductView
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.product.service.ProductService
@@ -33,6 +34,11 @@ class ProductController {
     @GetMapping("{productId}")
     fun findById(@PathVariable productId: Long): ResponseEntity<DTOResponseSuccess<DTOLoanProductView>> {
         return  DTOResponseSuccess(productService.findById(productId)).response()
+    }
+
+    @GetMapping("interestRate/{productId}")
+    fun getInterestRate(@PathVariable productId: String):ResponseEntity<DTOResponseSuccess<List<LoanTermType>>>{
+        return DTOResponseSuccess(productService.getInterestRateByProductId(productId)).response()
     }
 
     @GetMapping

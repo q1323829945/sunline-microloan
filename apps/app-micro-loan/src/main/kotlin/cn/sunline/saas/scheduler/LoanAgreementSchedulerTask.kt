@@ -3,7 +3,7 @@ package cn.sunline.saas.scheduler
 import cn.sunline.saas.consumer_loan.job.InvoiceAccountJob
 import cn.sunline.saas.consumer_loan.job.LoanAutoRepaymentJob
 import cn.sunline.saas.consumer_loan.job.LoanInvoiceJob
-import cn.sunline.saas.dapr_wrapper.actor.ActorTimerService
+import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.dapr_wrapper.actor.request.Timer
@@ -76,7 +76,7 @@ class LoanAgreementSchedulerTask(
 
 
         if (invoiceAccountJob.prerequisites(accountDate, invoices)) {
-            createTimerJob(
+            createReminderJob(
                 invoiceAccountJob.actorType, agreementId.toString(), accountDate.plusMinutes(
                     LoanSchedulerJobOrder.INVOICE_ACCOUNT.order * interval
                 ), accountDate, taskId
@@ -84,14 +84,14 @@ class LoanAgreementSchedulerTask(
         }
 
         if (agreementAggregate.repaymentArrangement.autoRepayment && loanAutoRepaymentJob.prerequisites(invoices)) {
-            createTimerJob(
+            createReminderJob(
                 loanAutoRepaymentJob.actorType, agreementId.toString(), accountDate.plusMinutes(
                     LoanSchedulerJobOrder.AUTO_REPAY.order * interval
                 ), accountDate, taskId
             )
         }
         if (loanInvoiceJob.prerequisites(accountDate,invoices)) {
-            createTimerJob(
+            createReminderJob(
                 loanInvoiceJob.actorType, agreementId.toString(), accountDate.plusMinutes(
                     LoanSchedulerJobOrder.INVOICE_JOB.order * interval
                 ), accountDate, taskId
@@ -100,7 +100,7 @@ class LoanAgreementSchedulerTask(
     }
 
 
-    private fun createTimerJob(
+    private fun createReminderJob(
         actorType: String, actorId: String, targetDateTime: DateTime, accountDate: DateTime, taskId: String
     ) {
         val jobId = seq.nextId()
@@ -125,7 +125,7 @@ class LoanAgreementSchedulerTask(
             timeDate.millis
         )
 
-        ActorTimerService.createTimer(actorType, actorId, jobId.toString(), dueTime, null)
+        ActorReminderService.createReminders(actorType, actorId, jobId.toString(), dueTime, null)
     }
 
 }

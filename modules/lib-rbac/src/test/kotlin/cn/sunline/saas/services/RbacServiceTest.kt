@@ -71,11 +71,9 @@ class RbacServiceTest {
             name = "TEST_GET2",
             remark = "test2"
         ))
-        val newOne = Role(null,"testRole2","", mutableListOf(newPermission))
+        val newOne = Role(null,"testRole","", mutableListOf(newPermission))
         val role = roleService.updateOne(oldOne,newOne)
 
-
-        Assertions.assertThat(role.name).isEqualTo("testRole2")
         Assertions.assertThat(role.remark).isEqualTo("")
         Assertions.assertThat(role.permissions[0].name).isEqualTo("TEST_GET2")
     }
@@ -94,7 +92,7 @@ class RbacServiceTest {
         val newRole = roleService.save(Role(
             id = null,
             name = "testRole2",
-            remark = "test2",
+            remark = "",
         ))
 
         val newUser = User(

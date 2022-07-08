@@ -88,4 +88,13 @@ class ActorUserService(private val daprConfig: DaprConfig) {
     fun healthCheck(): ResponseEntity<DTOResponseSuccess<Unit>> {
         return DTOResponseSuccess(Unit).response()
     }
+
+
+    @DeleteMapping("/actors/{actorType}/{actorId}")
+    fun deleteActor(
+        @PathVariable(name = "actorType") actorType: String,
+        @PathVariable(name = "actorId") actorId: String,
+    ): ResponseEntity<DTOResponseSuccess<Unit>> {
+        return DTOResponseSuccess(Unit).response()
+    }
 }
