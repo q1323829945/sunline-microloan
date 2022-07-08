@@ -862,7 +862,7 @@ class ConsumerLoanService(
             Pageable.unpaged()
         )
         val list = ArrayList<DTORepaymentRecordView>()
-        repaymentInstructionPage.forEach { record->
+        repaymentInstructionPage.sortedByDescending { i -> i.startDateTime }.forEach { record->
             list.add(
                 DTORepaymentRecordView(
                     id = record.id.toString(),

@@ -3,6 +3,7 @@ package cn.sunline.saas.invoice.service
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.invoice.exception.LoanInvoiceBusinessException
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
@@ -80,18 +81,15 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
 
     fun retrieveCurrentAccountedInvoices(customerId: Long): List<DTOInvoiceInfoView> {
         val page = invoiceService.retrieveCurrentInvoices(customerId,null)
-        //val accountDate = calculateSchedulerTimer.baseDateTime()
-        val accountDate = tenantDateTime.now().plusMonths(1)
-        val mapPage = page.filter {
-            val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.invoiceRepaymentDate))
-            it.invoiceStatus != InvoiceStatus.FINISHED && it.invoiceStatus != InvoiceStatus.CANCEL && it.invoiceStatus != InvoiceStatus.TEMP  && invoiceRepaymentDate <= tenantDateTime.getYearMonthDay(accountDate)
-        }.sortedByDescending { it.invoiceRepaymentDate }.map {
-                invoice ->
+        val list = page.groupBy { it.agreementId  }.map{
+            val invoice = it.value.sortedBy { i -> i.invoiceRepaymentDate }.first { invoice ->
+                invoice.invoiceStatus == InvoiceStatus.INITIATE || invoice.invoiceStatus == InvoiceStatus.ACCOUNTED
+            }
             val lines = ArrayList<DTOInvoiceLinesView>()
-            invoice?.invoiceLines?.forEach{
+            invoice.invoiceLines.forEach{ invoiceLine ->
                 lines += DTOInvoiceLinesView(
-                    invoiceAmountType = it.invoiceAmountType,
-                    invoiceAmount = it.invoiceAmount.toPlainString()
+                    invoiceAmountType = invoiceLine.invoiceAmountType,
+                    invoiceAmount = invoiceLine.invoiceAmount.toPlainString()
                 )
             }
             val agreement = loanAgreementService.getOne(invoice.agreementId) ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")
@@ -101,7 +99,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
                 invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
                 invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                invoiceTotalAmount =  invoice.invoiceAmount.toPlainString(),
+                invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
                 invoiceCurrency = agreement.currency,
                 invoiceStatus = invoice.invoiceStatus,
                 repaymentStatus = invoice.repaymentStatus,
@@ -111,7 +109,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 invoiceLines = lines
             )
         }
-        return mapPage
+        return list
     }
 
     fun getInstalmentSchedule(agreementId: Long): DTOInvoiceScheduleView {

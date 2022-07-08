@@ -45,9 +45,8 @@ class EqualInstalmentScheduleTest {
     @Test
     fun `test equal instalment schedules with base fisrt month`() {
 
-        val actual = EqualInstalmentSchedule(BigDecimal("11000"), BigDecimal("12.0"), LoanTermType.ONE_YEAR,
+        val actual = EqualInstalmentSchedule(BigDecimal("12529"), BigDecimal("2"), LoanTermType.THREE_MONTHS,
             RepaymentFrequency.ONE_MONTH, RepaymentDayType.MONTH_FIRST_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null).getSchedules()
-
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("336839.44"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("5250.00"))
