@@ -123,4 +123,54 @@ class ScheduleService(
         }
         return scheduleMethod.getSchedules()
     }
+
+    fun getPrepaymentSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule>{
+        val scheduleMethod = when (paymentMethodType) {
+            EQUAL_INSTALLMENT -> EqualInstalmentSchedulePrepayment(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDayType,
+                baseYearDays,
+                fromDateTime,
+                toDateTime!!,
+                repaymentDateTime!!,
+            )
+            EQUAL_PRINCIPAL -> EqualPrincipalScheduleReset(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDayType,
+                baseYearDays,
+                fromDateTime,
+                toDateTime!!,
+                repaymentDateTime!!,
+            )
+            ONE_OFF_REPAYMENT -> OneOffRepaymentScheduleReset(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDayType,
+                baseYearDays,
+                fromDateTime,
+                toDateTime!!,
+                repaymentDateTime!!,
+            )
+            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturityScheduleReset(
+                amount,
+                interestRateYear,
+                term,
+                frequency,
+                repaymentDayType,
+                baseYearDays,
+                fromDateTime,
+                toDateTime!!,
+                repaymentDateTime!!,
+            )
+        }
+        return scheduleMethod.getSchedules()
+    }
 }
