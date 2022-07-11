@@ -489,9 +489,13 @@ class ConsumerLoanService(
 
     fun repayment(dtoInvoiceRepay: DTOInvoiceRepay): DTOInvoiceInfoView {
 
-        val preRepaymentInstruction = repaymentInstructionService.getPageByInvoiceId(dtoInvoiceRepay.invoiceId.toLong(),Pageable.unpaged())
+        val preRepaymentInstruction =
+            repaymentInstructionService.getPageByInvoiceId(dtoInvoiceRepay.invoiceId.toLong(), Pageable.unpaged())
         if (!preRepaymentInstruction.isEmpty) {
-            throw LoanInvoiceBusinessException("repayment instruction already exists",ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR)
+            throw LoanInvoiceBusinessException(
+                "repayment instruction already exists",
+                ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR
+            )
         }
 
         val invoice = invoiceService.getOne(dtoInvoiceRepay.invoiceId.toLong())
@@ -569,9 +573,13 @@ class ConsumerLoanService(
             }
         }
 
+        val invoice = invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged())
+            .filter { it.invoiceStatus == InvoiceStatus.INITIATE }.minByOrNull { it.invoicePeriodFromDate }!!
+
         val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
+        val interestRate =
+            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -579,10 +587,10 @@ class ConsumerLoanService(
             repaymentArrangement.frequency,
             loanProduct.repaymentFeature.payment.repaymentDayType,
             loanProduct.interestFeature.interest.baseYearDays,
-            tenantDateTime.toTenantDateTime(agreement.fromDateTime),
+            tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate),
             tenantDateTime.toTenantDateTime(agreement.toDateTime),
             tenantDateTime.now()
-        ).getResetSchedules(repaymentArrangement.paymentMethod)
+        ).getPrepaymentSchedules(repaymentArrangement.paymentMethod)
 
         val prepaymentLines = convertToInvoiceLines(schedule)
         return DTOPreRepaymentTrailView(
@@ -592,7 +600,7 @@ class ConsumerLoanService(
         )
     }
 
-    private fun convertToInvoiceLines(schedule: MutableList<Schedule>): ArrayList<DTOInvoiceLinesView>{
+    private fun convertToInvoiceLines(schedule: MutableList<Schedule>): ArrayList<DTOInvoiceLinesView> {
         var totalPrincipal = BigDecimal.ZERO
         var totalInterest = BigDecimal.ZERO
         val totalFee = BigDecimal.ZERO
@@ -621,7 +629,8 @@ class ConsumerLoanService(
             } else if (InvoiceAmountType.PENALTY_INTEREST == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = InvoiceAmountType.PENALTY_INTEREST, invoiceAmount = totalFine.toPlainString()
+                        invoiceAmountType = InvoiceAmountType.PENALTY_INTEREST,
+                        invoiceAmount = totalFine.toPlainString()
                     )
                 )
             } else if (InvoiceAmountType.FEE == it) {
@@ -647,7 +656,10 @@ class ConsumerLoanService(
                     it.moneyTransferInstructionStatus != InstructionLifecycleStatus.FAILED
         }
         if (!preRepaymentInstruction.isEmpty) {
-            throw LoanInvoiceBusinessException("repayment instruction already exists",ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR)
+            throw LoanInvoiceBusinessException(
+                "repayment instruction already exists",
+                ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR
+            )
         }
 
         val loanAgreement = loanAgreementService.getOne(dtoPrepayment.agreementId)
@@ -663,8 +675,10 @@ class ConsumerLoanService(
 
         val dtoLoanInvoice = mutableListOf<DTOLoanInvoice>()
         val repaymentDate = tenantDateTime.now().toString()
+        // TODO Confirm period value
         dtoLoanInvoice.add(
             DTOLoanInvoice(
+                period = 0,
                 invoicePeriodFromDate = repaymentDate,
                 invoicePeriodToDate = repaymentDate,
                 invoicee = loanAgreement.involvements.first { involvement -> LoanAgreementInvolvementType.LOAN_BORROWER == involvement.involvementType }.partyId,
@@ -727,14 +741,14 @@ class ConsumerLoanService(
     fun callBackPrepayment(instructionId: Long) {
         val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
         callBackRepayLoanInvoice(repaymentInstruction)
-        cancelInitLoanInvoice(repaymentInstruction.agreementId,repaymentInstruction.referenceId)
+        cancelInitLoanInvoice(repaymentInstruction.agreementId, repaymentInstruction.referenceId)
         // TODO InstructionLifecycleStatus Change
     }
 
-    private fun cancelInitLoanInvoice(agreementId: Long,invoiceId: Long){
+    private fun cancelInitLoanInvoice(agreementId: Long, invoiceId: Long) {
         val invoiceList = invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged())
             .toMutableList()
-        invoiceList.filter { it.invoiceStatus != InvoiceStatus.FINISHED || it.id != invoiceId}
+        invoiceList.filter { it.invoiceStatus != InvoiceStatus.FINISHED || it.id != invoiceId }
             .forEach {
                 it.invoiceStatus = InvoiceStatus.CANCEL
                 invoiceService.save(it)
@@ -757,11 +771,11 @@ class ConsumerLoanService(
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
         val actualRepayAmount = invoiceService.repayInvoice(
-                dtoRepaymentInstruction.instructionAmount.toBigDecimal(),
-                invoice,
-                invoiceArrangement.graceDays ?: 0,
-                tenantDateTime.now()
-            )
+            dtoRepaymentInstruction.instructionAmount.toBigDecimal(),
+            invoice,
+            invoiceArrangement.graceDays ?: 0,
+            tenantDateTime.now()
+        )
         actualRepayAmount[InvoiceAmountType.PRINCIPAL]?.run {
             if (this > BigDecimal.ZERO) {
                 consumerLoanPublish.reducePositionKeeping(
@@ -782,14 +796,17 @@ class ConsumerLoanService(
         }
     }
 
-    fun fulfillLoanInvoiceRepayment(instructionId: Long){
+    fun fulfillLoanInvoiceRepayment(instructionId: Long) {
 
         // TODO consistency
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
             ?: throw LoanInvoiceBusinessException("repayment instruction not found")
 
-        if(InstructionLifecycleStatus.FULFILLED == repaymentInstruction.moneyTransferInstructionStatus){
-            throw LoanInvoiceBusinessException("repayment instruction  was FULFILLED,non-supported update",ManagementExceptionCode.REPAYMENT_INSTRUCTION_STATUS_ERROR)
+        if (InstructionLifecycleStatus.FULFILLED == repaymentInstruction.moneyTransferInstructionStatus) {
+            throw LoanInvoiceBusinessException(
+                "repayment instruction  was FULFILLED,non-supported update",
+                ManagementExceptionCode.REPAYMENT_INSTRUCTION_STATUS_ERROR
+            )
         }
 
         val invoice = repaymentInstruction.referenceId?.let { invoiceService.getOne(it) }
@@ -808,10 +825,13 @@ class ConsumerLoanService(
         )
         callBackRepayLoanInvoice(dtoRepaymentInstruction)
 
-        val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
-        val invoicePeriodFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
-        val invoicePeriodToDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
-        if(invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate){
+        val invoiceRepaymentDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
+        val invoicePeriodFromDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
+        val invoicePeriodToDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
+        if (invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate) {
             cancelInitLoanInvoice(repaymentInstruction.agreementId, repaymentInstruction.referenceId!!)
         }
 
@@ -821,23 +841,29 @@ class ConsumerLoanService(
         repaymentInstructionService.save(repaymentInstruction)
     }
 
-    fun failLoanInvoiceRepayment(instructionId: Long){
+    fun failLoanInvoiceRepayment(instructionId: Long) {
         // TODO consistency
-        
+
         val repaymentInstruction = repaymentInstructionService.getOne(instructionId)
             ?: throw LoanInvoiceBusinessException("repayment instruction not found")
 
-        if(InstructionLifecycleStatus.FAILED == repaymentInstruction.moneyTransferInstructionStatus){
-            throw LoanInvoiceBusinessException("repayment instruction  was FAILED,non-supported update",ManagementExceptionCode.REPAYMENT_INSTRUCTION_STATUS_ERROR)
+        if (InstructionLifecycleStatus.FAILED == repaymentInstruction.moneyTransferInstructionStatus) {
+            throw LoanInvoiceBusinessException(
+                "repayment instruction  was FAILED,non-supported update",
+                ManagementExceptionCode.REPAYMENT_INSTRUCTION_STATUS_ERROR
+            )
         }
 
         val invoice = repaymentInstruction.referenceId?.let { invoiceService.getOne(it) }
             ?: throw InvoiceArrangementNotFoundException("invoice not found")
 
-        val invoiceRepaymentDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
-        val invoicePeriodFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
-        val invoicePeriodToDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
-        if(invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate){
+        val invoiceRepaymentDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoiceRepaymentDate))
+        val invoicePeriodFromDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate))
+        val invoicePeriodToDate =
+            tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(invoice.invoicePeriodToDate))
+        if (invoiceRepaymentDate == invoicePeriodFromDate && invoiceRepaymentDate == invoicePeriodToDate) {
             invoice.invoiceStatus = InvoiceStatus.CANCEL
             invoiceService.save(invoice)
         }
@@ -862,7 +888,7 @@ class ConsumerLoanService(
             Pageable.unpaged()
         )
         val list = ArrayList<DTORepaymentRecordView>()
-        repaymentInstructionPage.sortedByDescending { i -> i.startDateTime }.forEach { record->
+        repaymentInstructionPage.sortedByDescending { i -> i.startDateTime }.forEach { record ->
             list.add(
                 DTORepaymentRecordView(
                     id = record.id.toString(),
@@ -873,7 +899,7 @@ class ConsumerLoanService(
                     agreementId = record.agreementId.toString(),
                     userId = ContextUtil.getUserId(),
                     customerId = record.businessUnit.toString(),
-                    referenceId = record.referenceId?.let{ it }.toString(),
+                    referenceId = record.referenceId?.let { it }.toString(),
                     startDateTime = record.startDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
                     endDateTime = record.endDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString(),
                     executeDateTime = record.executeDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString()

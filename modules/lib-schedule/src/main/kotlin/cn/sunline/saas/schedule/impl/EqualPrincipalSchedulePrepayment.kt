@@ -16,7 +16,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 class EqualPrincipalSchedulePrepayment(
-    remainAmount: BigDecimal,
+    amount: BigDecimal,
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
@@ -26,7 +26,7 @@ class EqualPrincipalSchedulePrepayment(
     toDateTime: DateTime?,
     repaymentDateTime: DateTime?
 ) : AbstractSchedule(
-    remainAmount,
+    amount,
     interestRateYear,
     term,
     frequency,
@@ -39,47 +39,48 @@ class EqualPrincipalSchedulePrepayment(
 
     override fun getSchedules(): MutableList<Schedule> {
 
-        var remainingPrincipal = amount
+        val oldSchedules = PayInterestSchedulePrincipalMaturitySchedule(
+            amount,
+            interestRateYear,
+            term,
+            frequency,
+            repaymentDayType!!,
+            baseYearDays,
+            fromDateTime,
+            toDateTime,
+            repaymentDateTime
+        ).getSchedules()
+
         val interestRate = CalculateInterestRate(interestRateYear)
-        val schedules = mutableListOf<Schedule>()
-        var period = 0
-        val periodDates = CalculatePeriod.getPeriodDates(fromDateTime, toDateTime, frequency)
-        var instalmentPrincipal = CalculateEqualPrincipal.getPrincipal(amount, periodDates.size)
-
-        for ((index, it) in periodDates.withIndex()) {
-            val instalmentInterest =
-                if (period == 0)
-                    CalculateInterest(amount, interestRate).getDaysInterest(
-                        fromDateTime,
-                        repaymentDateTime!!,
-                        baseYearDays
-                    ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-                else
-                    BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-
-            remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
-
-            if (index == periodDates.size - 1 && instalmentPrincipal != BigDecimal.ZERO) {
-                instalmentPrincipal = instalmentPrincipal.add(remainingPrincipal)
-                remainingPrincipal = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-            }
-
-            val instalmentAmount = instalmentPrincipal.add(instalmentInterest)
-            period++
-
-            schedules.add(
-                Schedule(
-                    it.fromDateTime,
-                    it.toDateTime,
-                    instalmentAmount,
-                    instalmentPrincipal,
-                    instalmentInterest,
-                    remainingPrincipal,
-                    period,
-                    interestRateYear
+        var calcInterestFlag = true
+        val newSchedules = mutableListOf<Schedule>()
+        oldSchedules.forEach {
+            if (repaymentDateTime!! > it.fromDate) {
+                val instalmentInterest =
+                    if (calcInterestFlag) {
+                        calcInterestFlag = false
+                        CalculateInterest(amount, interestRate).getDaysInterest(
+                            fromDateTime,
+                            repaymentDateTime,
+                            baseYearDays
+                        ).setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                    } else {
+                        BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+                    }
+                newSchedules.add(
+                    Schedule(
+                        it.fromDate,
+                        it.dueDate,
+                        it.principal.add(instalmentInterest),
+                        it.principal,
+                        instalmentInterest,
+                        it.remainingPrincipal,
+                        it.period,
+                        it.interestRate
+                    )
                 )
-            )
+            }
         }
-        return schedules
+        return newSchedules
     }
 }

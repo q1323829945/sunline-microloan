@@ -7,6 +7,6 @@ package cn.sunline.saas.invoice.model
  * @date 2022/4/25 16:53
  */
 enum class InvoiceAmountType(val order: Int) {
-    PRINCIPAL(3), INTEREST(2), FEE(4), PENALTY_INTEREST(1)
+    PRINCIPAL(3), INTEREST(2), FEE(4), PENALTY_INTEREST(1),INSTALMENT(5)
 
 }

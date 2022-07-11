@@ -75,7 +75,11 @@ class Invoice(
 
     @NotNull
     @Column(name = "repayment_amount",nullable = false,scale = 19,precision = 2,columnDefinition = "decimal(19,2) not null")
-    var repaymentAmount: BigDecimal = BigDecimal.ZERO
+    var repaymentAmount: BigDecimal = BigDecimal.ZERO,
+
+    @NotNull
+    @Column(name = "period", nullable = false, columnDefinition = "bigint not null")
+    val period: Int,
 
 ) : MultiTenant {
 

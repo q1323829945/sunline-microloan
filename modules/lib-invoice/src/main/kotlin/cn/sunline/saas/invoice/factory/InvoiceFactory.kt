@@ -67,7 +67,8 @@ class InvoiceFactory(
             invoiceStatus = dtoLoanInvoice.invoiceStatus ?: InvoiceStatus.INITIATE,
             invoicee = dtoLoanInvoice.invoicee,
             invoiceLines = invoiceLine,
-            agreementId = dtoLoanInvoice.agreementId
+            agreementId = dtoLoanInvoice.agreementId,
+            period = dtoLoanInvoice.period
         )
     }
 }

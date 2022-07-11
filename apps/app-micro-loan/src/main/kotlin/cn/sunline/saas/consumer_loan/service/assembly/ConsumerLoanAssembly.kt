@@ -147,6 +147,7 @@ object ConsumerLoanAssembly {
         schedule.forEach {
             dtoLoanInvoice.add(
                 DTOLoanInvoice(
+                    it.period,
                     it.fromDate.toString(),
                     it.dueDate.toString(),
                     dtoLoanAgreement.loanAgreement.involvements.first { involvement -> LoanAgreementInvolvementType.LOAN_BORROWER == involvement.involvementType }.partyId,

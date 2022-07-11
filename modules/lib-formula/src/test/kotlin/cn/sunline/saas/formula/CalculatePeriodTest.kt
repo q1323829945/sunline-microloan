@@ -198,14 +198,13 @@ class CalculatePeriodTest {
     }
 
     @Test
-    @Disabled
     fun `test get repayment date April2 25 and greater than 25`() {
 
-        val startDateTime = DateTime(2022, 2, 25, 0, 0, 0, 0)
-        val toDateTime = DateTime(2023, 2, 25, 0, 0, 0, 0)
+        val startDateTime = DateTime(2022, 3, 1, 0, 0, 0, 0)
+        val toDateTime = DateTime(2022, 4, 5, 0, 0, 0, 0)
 
         val repaymentDate =
-            CalculatePeriod.getPeriodDatesByCustom(startDateTime, toDateTime, RepaymentFrequency.ONE_MONTH, 25)
+            CalculatePeriod.getPeriodDatesByCustom(startDateTime, toDateTime, RepaymentFrequency.ONE_MONTH, 1)
         val expectedDate = DateTime(2022, 4, 27, 0, 0, 0, 0)
         Assertions.assertThat(repaymentDate).isEqualTo(expectedDate)
     }

@@ -137,7 +137,7 @@ class ScheduleService(
                 toDateTime!!,
                 repaymentDateTime!!,
             )
-            EQUAL_PRINCIPAL -> EqualPrincipalScheduleReset(
+            EQUAL_PRINCIPAL -> EqualPrincipalSchedulePrepayment(
                 amount,
                 interestRateYear,
                 term,
@@ -148,7 +148,7 @@ class ScheduleService(
                 toDateTime!!,
                 repaymentDateTime!!,
             )
-            ONE_OFF_REPAYMENT -> OneOffRepaymentScheduleReset(
+            ONE_OFF_REPAYMENT -> OneOffRepaymentSchedulePrepayment(
                 amount,
                 interestRateYear,
                 term,
@@ -159,7 +159,7 @@ class ScheduleService(
                 toDateTime!!,
                 repaymentDateTime!!,
             )
-            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturityScheduleReset(
+            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturitySchedulePrepayment(
                 amount,
                 interestRateYear,
                 term,

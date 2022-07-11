@@ -16,6 +16,7 @@ import java.math.BigDecimal
  * @date 2022/4/25 17:05
  */
 data class DTOLoanInvoice(
+    val period :Int,
     val invoicePeriodFromDate: String,
     val invoicePeriodToDate: String,
     val invoicee: Long,
@@ -31,7 +32,7 @@ data class DTOInvoiceTrailView(
     val invoiceId: String,
     val invoiceTotalAmount: String,
     val repaymentStatus: RepaymentStatus,
-    val invoiceLines: List<DTOInvoiceLinesView>?,
+    val invoiceLines: MutableList<DTOInvoiceLinesView>?,
 )
 
 data class DTOInvoiceInfoView(
@@ -47,7 +48,7 @@ data class DTOInvoiceInfoView(
     val agreementId: String? = null,
     val loanAgreementFromDate: String? = null,
     val invoiceRepaymentDate: String? = null,
-    val invoiceLines: List<DTOInvoiceLinesView>
+    val invoiceLines: MutableList<DTOInvoiceLinesView>
 )
 
 data class DTOInvoiceLinesView(
@@ -58,7 +59,7 @@ data class DTOInvoiceLinesView(
 data class DTOPreRepaymentTrailView(
     val agreementId: String,
     val totalAmount: String,
-    val prepaymentLines: List<DTOInvoiceLinesView>,
+    val prepaymentLines: MutableList<DTOInvoiceLinesView>,
 )
 
 
@@ -75,16 +76,18 @@ data class DTOInvoiceScheduleView(
     val repaymentFrequency: RepaymentFrequency,
     val repaymentDayType: RepaymentDayType,
     val paymentMethodType: PaymentMethodType,
-    val totalInstalment: String,
-    val totalInterest: String,
+    val fromDate: String,
+    val endDate: String,
+    val totalInstalmentLines: MutableList<DTOInvoiceLinesView>,
     val scheduleLines: MutableList<DTOInvoiceScheduleLineView>
 )
 
 data class DTOInvoiceScheduleLineView(
+    val period :Int,
     val invoiceId: String,
     val invoiceInstalment: String,
-    val invoicePrincipal: String,
-    val invoiceInterest: String,
     val invoicePeriodFromDate: String,
-    val invoicePeriodToDate: String
+    val invoicePeriodToDate: String,
+    val invoiceRepaymentDate: String,
+    val invoiceLines: MutableList<DTOInvoiceLinesView>,
 )

@@ -15,7 +15,7 @@ import java.math.RoundingMode
 
 
 class OneOffRepaymentSchedulePrepayment (
-    remainAmount: BigDecimal,
+    amount: BigDecimal,
     interestRateYear: BigDecimal,
     term: LoanTermType,
     frequency: RepaymentFrequency,
@@ -25,7 +25,7 @@ class OneOffRepaymentSchedulePrepayment (
     toDateTime: DateTime?,
     repaymentDateTime: DateTime?
 ) : AbstractSchedule(
-    remainAmount,
+    amount,
     interestRateYear,
     term,
     frequency,
@@ -37,8 +37,6 @@ class OneOffRepaymentSchedulePrepayment (
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
-
-        val remainingPrincipal = amount
         val interestRate = CalculateInterestRate(interestRateYear)
         val schedules = mutableListOf<Schedule>()
         var period = 0
@@ -60,7 +58,6 @@ class OneOffRepaymentSchedulePrepayment (
                 interestRateYear
             )
         )
-
         return schedules
     }
 }
