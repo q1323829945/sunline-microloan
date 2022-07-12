@@ -121,7 +121,6 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
 
     fun getInstalmentSchedule(agreementId: Long): DTOInvoiceScheduleView {
         val scheduleLines = ArrayList<DTOInvoiceScheduleLineView>()
-        val totalInstalmentLines = ArrayList<DTOInvoiceLinesView>()
 
         val loanAgreement = loanAgreementService.retrieve(agreementId)
         var totalInterest = BigDecimal.ZERO
@@ -139,46 +138,64 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 )
             )
         }
-        scheduleLines.forEach{
-            view -> view.invoiceLines.forEach{
-                if(it.invoiceAmountType == InvoiceAmountType.FEE){
-                    totalFee = totalFee.add(it.invoiceAmount.toBigDecimal())
-                }else if(it.invoiceAmountType == InvoiceAmountType.INTEREST) {
-                    totalInterest = totalInterest.add(it.invoiceAmount.toBigDecimal())
-                }else{
-
+        scheduleLines.forEach { view ->
+            view.invoiceLines.forEach {
+                when (it.invoiceAmountType) {
+                    InvoiceAmountType.FEE -> {
+                        totalFee = totalFee.add(it.invoiceAmount.toBigDecimal())
+                    }
+                    InvoiceAmountType.INTEREST -> {
+                        totalInterest = totalInterest.add(it.invoiceAmount.toBigDecimal())
+                    }
+                    else -> {}
                 }
             }
         }
-
-        totalInstalmentLines.add(DTOInvoiceLinesView(
-            InvoiceAmountType.FEE,
-            totalInterest.toPlainString()
-        ))
-
-        totalInstalmentLines.add(DTOInvoiceLinesView(
-            InvoiceAmountType.INTEREST,
-            totalFee.toPlainString()
-        ))
-
-        totalInstalmentLines.add(DTOInvoiceLinesView(
-            InvoiceAmountType.INSTALMENT,
-            scheduleLines.sumOf { it.invoiceInstalment.toBigDecimal() }.toPlainString()
-        ))
+        val totalInstalment = scheduleLines.sumOf { it.invoiceInstalment.toBigDecimal() }
 
         return DTOInvoiceScheduleView(
             agreementId = agreementId.toString(),
             repaymentFrequency = loanAgreement.repaymentArrangement.frequency,// RepaymentFrequency.ONE_MONTH,// loanAgreement.repaymentArrangement.frequency,
             repaymentDayType = loanAgreement.repaymentArrangement.repaymentDayType,//RepaymentDayType.MONTH_FIRST_DAY,// loanAgreement.repaymentArrangement.repaymentDayType,
             paymentMethodType = loanAgreement.repaymentArrangement.paymentMethod,//PaymentMethodType.ONE_OFF_REPAYMENT,// loanAgreement.repaymentArrangement.paymentMethod,
-//            totalInstalment = scheduleLines.sumOf { it.invoiceInstalment.toBigDecimal() }.toPlainString(),
-//            totalInterest = scheduleLines.sumOf{ it.invoiceLines.forEach { lines -> lines.invoiceAmountType == InvoiceAmountType.INTEREST }.invoiceAmount }
-//            totalFee = scheduleLines.sumOf { it.invoiceInterest.toBigDecimal() }.toPlainString(),
             fromDate = loanAgreement.loanAgreement.fromDateTime.toString(),
             endDate = loanAgreement.loanAgreement.toDateTime.toString(),
-            totalInstalmentLines = totalInstalmentLines.toMutableList(),
+            totalInstalmentLines = getInstalmentLines(totalInstalment,totalInterest,totalFee),
             scheduleLines = scheduleLines
         )
     }
 
+    private fun getInstalmentLines(instalment: BigDecimal,totalInterest: BigDecimal,totalFee: BigDecimal) :MutableList<DTOInvoiceLinesView>{
+        val totalInstalmentLines = ArrayList<DTOInvoiceLinesView>()
+        InvoiceAmountType.values().forEach {
+            when (it) {
+                InvoiceAmountType.FEE -> {
+                    totalInstalmentLines.add(
+                        DTOInvoiceLinesView(
+                            InvoiceAmountType.FEE,
+                            totalFee.toPlainString()
+                        )
+                    )
+                }
+                InvoiceAmountType.INTEREST -> {
+                    totalInstalmentLines.add(
+                        DTOInvoiceLinesView(
+                            InvoiceAmountType.INTEREST,
+                            totalInterest.toPlainString()
+                        )
+                    )
+                }
+                InvoiceAmountType.INSTALMENT -> {
+                    totalInstalmentLines.add(
+                        DTOInvoiceLinesView(
+                            InvoiceAmountType.INSTALMENT,
+                            instalment.toPlainString()
+                        )
+                    )
+                }
+                else -> {}
+            }
+        }
+        return totalInstalmentLines
+    }
 }
