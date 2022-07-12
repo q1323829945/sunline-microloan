@@ -20,6 +20,7 @@ import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
@@ -576,17 +577,17 @@ class ConsumerLoanService(
         val invoice = invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged())
             .filter { it.invoiceStatus == InvoiceStatus.INITIATE }.minByOrNull { it.invoicePeriodFromDate }!!
 
-        val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
-        val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val interestRate =
-            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
+        //val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
+//        val ratePlanId = loanProduct.interestFeature.ratePlanId
+//        val interestRate =
+//            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
         val schedule = ScheduleService(
             amount,
-            interestRate,
+            BigDecimal(5.0),
             agreement.term,
             repaymentArrangement.frequency,
-            loanProduct.repaymentFeature.payment.repaymentDayType,
-            loanProduct.interestFeature.interest.baseYearDays,
+            RepaymentDayType.MONTH_FIRST_DAY,//loanProduct.repaymentFeature.payment.repaymentDayType,
+            BaseYearDays.ACCOUNT_YEAR,//loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate),
             tenantDateTime.toTenantDateTime(agreement.toDateTime),
             tenantDateTime.now()
@@ -617,30 +618,30 @@ class ConsumerLoanService(
             if (InvoiceAmountType.PRINCIPAL == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = InvoiceAmountType.PRINCIPAL, invoiceAmount = totalPrincipal.toPlainString()
+                        invoiceAmountType = it, invoiceAmount = totalPrincipal.toPlainString()
                     )
                 )
             } else if (InvoiceAmountType.INTEREST == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = InvoiceAmountType.INTEREST, invoiceAmount = totalInterest.toPlainString()
+                        invoiceAmountType = it, invoiceAmount = totalInterest.toPlainString()
                     )
                 )
             } else if (InvoiceAmountType.PENALTY_INTEREST == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = InvoiceAmountType.PENALTY_INTEREST,
+                        invoiceAmountType = it,
                         invoiceAmount = totalFine.toPlainString()
                     )
                 )
             } else if (InvoiceAmountType.FEE == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = InvoiceAmountType.FEE, invoiceAmount = totalFee.toPlainString()
+                        invoiceAmountType = it, invoiceAmount = totalFee.toPlainString()
                     )
                 )
             } else {
-                throw LoanInvoiceBusinessException("InvoiceAmount Type Not Found")
+//                throw LoanInvoiceBusinessException("InvoiceAmount Type Not Found")
             }
         }
         return prepaymentLines

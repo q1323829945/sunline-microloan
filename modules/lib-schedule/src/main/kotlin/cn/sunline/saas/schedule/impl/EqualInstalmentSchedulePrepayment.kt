@@ -37,7 +37,7 @@ class EqualInstalmentSchedulePrepayment(
 
     override fun getSchedules(): MutableList<Schedule> {
 
-        val oldSchedules = PayInterestSchedulePrincipalMaturitySchedule(
+        val oldSchedules = EqualInstalmentSchedule(
             amount,
             interestRateYear,
             term,
@@ -53,7 +53,7 @@ class EqualInstalmentSchedulePrepayment(
         var calcInterestFlag = true
         val newSchedules = mutableListOf<Schedule>()
         oldSchedules.forEach {
-            if (repaymentDateTime!! > it.fromDate) {
+            if (repaymentDateTime!! < it.dueDate) {
                 val instalmentInterest =
                     if (calcInterestFlag) {
                         calcInterestFlag = false
