@@ -9,5 +9,9 @@ dependencies {
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-money-transfer-instruction"))
+
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.h2database:h2:1.4.200")
+    testImplementation(project(":lib-seq-test"))
 }

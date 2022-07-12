@@ -2,6 +2,7 @@ package cn.sunline.saas.repayment.model.db
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PrepaymentType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "prepayment_feature_modality",
 )
+@EntityListeners(TenantListener::class)
 class PrepaymentFeatureModality(
     @Id
     val id: Long,

@@ -1,5 +1,6 @@
 package cn.sunline.saas.interest.model
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "rate_plan",
 )
+@EntityListeners(TenantListener::class)
 class RatePlan(
     @Id
     var id: Long? = null,

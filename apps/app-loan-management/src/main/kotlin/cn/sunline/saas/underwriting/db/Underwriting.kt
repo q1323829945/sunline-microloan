@@ -1,6 +1,7 @@
 package cn.sunline.saas.underwriting.db
 
 import cn.sunline.saas.global.constant.UnderwritingType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import com.vladmihalcea.hibernate.type.json.JsonStringType
 import org.hibernate.annotations.CreationTimestamp
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull
     name = "underwriting",
 )
 @TypeDef(name = "json", typeClass = JsonStringType::class)
+@EntityListeners(TenantListener::class)
 class Underwriting(
 
     @Id

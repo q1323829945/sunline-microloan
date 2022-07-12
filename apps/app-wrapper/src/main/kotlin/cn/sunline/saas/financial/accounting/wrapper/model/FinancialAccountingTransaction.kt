@@ -2,6 +2,7 @@ package cn.sunline.saas.financial.accounting.wrapper.model
 
 import cn.sunline.saas.global.constant.TransactionStatus
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import java.util.Date
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "financial_accounting_transaction"
 )
+@EntityListeners(TenantListener::class)
 class FinancialAccountingTransaction(
     @Id
     val id: Long,

@@ -1,9 +1,12 @@
 package cn.sunline.saas.interest.service
 
 import cn.sunline.saas.global.constant.BaseYearDays
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,10 +21,10 @@ import org.springframework.boot.test.context.SpringBootTest
 class InterestFeatureServiceTest(
     @Autowired val interestFeatureService: InterestFeatureService,
 ) {
+    @BeforeAll
+    fun init(){
+        ContextUtil.setTenant("123")
 
-
-    @Test
-    fun `entity save`() {
         val interestFeature = DTOInterestFeatureAdd(
             interestType = InterestType.FIXED,
             ratePlanId = 1000,
@@ -30,14 +33,28 @@ class InterestFeatureServiceTest(
             overdueInterestRatePercentage = 150
         )
 
-
-
         val actual = interestFeatureService.register(1,interestFeature)
 
         assertThat(actual).isNotNull
         assertThat(actual.interest).isNotNull
         assertThat(actual.overdueInterest).isNotNull
-
         assertThat(actual.interest.adjustFrequency).isEqualTo("NOW")
     }
+
+
+    @Test
+    fun `find by productId`() {
+        val interestFeature = interestFeatureService.findByProductId(1)
+
+
+        assertThat(interestFeature).isNotNull
+    }
+    @Test
+    fun `find by ratePlanId`() {
+        val interestFeature = interestFeatureService.findByRatePlanId(1000)
+
+
+        assertThat(interestFeature).isNotNull
+    }
+
 }

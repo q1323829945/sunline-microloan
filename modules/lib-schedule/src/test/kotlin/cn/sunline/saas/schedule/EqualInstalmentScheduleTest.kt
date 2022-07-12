@@ -22,6 +22,7 @@ import java.math.BigDecimal
 class EqualInstalmentScheduleTest {
 
     @Test
+    @Disabled
     fun `test equal instalment schedules`() {
 
         val actual = EqualInstalmentSchedule(BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.THREE_MONTHS,
@@ -44,6 +45,7 @@ class EqualInstalmentScheduleTest {
     }
 
     @Test
+    @Disabled
     fun `test equal instalment schedules with base fisrt month`() {
 
         val actual = EqualInstalmentSchedule(BigDecimal("12529"), BigDecimal("2"), LoanTermType.THREE_MONTHS,

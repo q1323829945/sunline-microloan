@@ -3,6 +3,7 @@ package cn.sunline.saas.repayment.arrangement.model.db
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "repayment_arrangement"
 )
+@EntityListeners(TenantListener::class)
 class RepaymentArrangement(
     @Id
     val id: Long,

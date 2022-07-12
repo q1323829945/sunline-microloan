@@ -1,5 +1,6 @@
 package cn.sunline.saas.interest.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "overdue_interest_feature_modality",
 )
+@EntityListeners(TenantListener::class)
 class OverdueInterestFeatureModality(
     @Id
     val id: Long,

@@ -1,6 +1,7 @@
 package cn.sunline.saas.interest.model
 
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull
     name = "interest_rate",
     indexes = [Index(name = "idx_interest_rate_plan_id", columnList = "rate_plan_id")]
 )
+@EntityListeners(TenantListener::class)
 class InterestRate(
     @Id
     var id: Long? = null,

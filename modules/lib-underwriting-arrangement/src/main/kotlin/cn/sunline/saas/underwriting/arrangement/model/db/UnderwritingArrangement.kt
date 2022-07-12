@@ -1,5 +1,6 @@
 package cn.sunline.saas.underwriting.arrangement.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.underwriting.arrangement.model.ArrangementLifecycleStatus
 import java.util.Date
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "underwriting_arrangement"
 )
+@EntityListeners(TenantListener::class)
 class UnderwritingArrangement(
     @Id
     val id: Long,

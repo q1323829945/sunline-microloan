@@ -185,7 +185,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     ): Page<LoanProduct> {
 
         val newPageable = if(pageable.isUnpaged){
-            pageable
+            Pageable.unpaged()
         } else{
             PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("id")))
         }

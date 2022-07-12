@@ -1,6 +1,7 @@
 package cn.sunline.saas.interest.model.db
 
 import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull
     name = "interest_feature",
     indexes = [Index(name = "idx_interest_feature_product_id", columnList = "product_id")]
 )
+@EntityListeners(TenantListener::class)
 class InterestFeature(
     @Id
     val id: Long,

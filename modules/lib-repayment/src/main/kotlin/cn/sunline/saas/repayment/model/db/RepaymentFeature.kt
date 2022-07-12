@@ -1,5 +1,6 @@
 package cn.sunline.saas.repayment.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
     name = "repayment_feature",
     indexes = [Index(name = "idx_repayment_feature_product_id", columnList = "product_id")]
 )
+@EntityListeners(TenantListener::class)
 class RepaymentFeature(
     @Id val id: Long,
 

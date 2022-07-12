@@ -2,6 +2,7 @@ package cn.sunline.saas.interest.arrangement.model.db
 
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "interest_arrangement",
 )
+@EntityListeners(TenantListener::class)
 class InterestArrangement(
 
     @Id

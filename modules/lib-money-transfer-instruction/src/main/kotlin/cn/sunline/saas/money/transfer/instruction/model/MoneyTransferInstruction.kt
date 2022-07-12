@@ -1,6 +1,7 @@
 package cn.sunline.saas.money.transfer.instruction.model
 
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import java.util.*
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(name = "money_transfer_instruction")
+@EntityListeners(TenantListener::class)
 class MoneyTransferInstruction(
     @Id
     val id: Long,

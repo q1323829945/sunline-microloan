@@ -2,6 +2,7 @@ package cn.sunline.saas.invoice.model.db
 
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(name = "invoice_line")
+@EntityListeners(TenantListener::class)
 class InvoiceLine(
     @Id
     val id: Long,

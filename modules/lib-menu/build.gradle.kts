@@ -8,4 +8,6 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
     implementation(project(":lib-exceptions"))
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.h2database:h2:1.4.200")
 }

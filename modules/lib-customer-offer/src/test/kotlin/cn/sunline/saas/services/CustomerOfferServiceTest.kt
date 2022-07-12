@@ -244,4 +244,12 @@ class CustomerOfferServiceTest(
         )
     }
 
+
+    @Test
+    fun `download`(){
+        val file = customerLoanApplyService.download("src\\test\\resources\\file\\123.JPG")
+
+        Assertions.assertThat(file).isNotNull
+    }
+
 }

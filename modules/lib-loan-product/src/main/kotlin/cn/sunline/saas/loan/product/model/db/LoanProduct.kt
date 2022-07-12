@@ -4,6 +4,7 @@ import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.loan.product.model.LoanProductType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.rule.engine.model.Condition
 import javax.persistence.*
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "loan_product",
 )
+@EntityListeners(TenantListener::class)
 class LoanProduct(
     @Id
     val id: Long,

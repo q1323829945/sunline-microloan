@@ -1,9 +1,12 @@
 package cn.sunline.saas.repayment.service
 
 import cn.sunline.saas.global.constant.*
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.repayment.model.dto.DTOPrepaymentFeatureModalityAdd
 import cn.sunline.saas.repayment.model.dto.DTORepaymentFeatureAdd
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,6 +23,10 @@ class RepaymentProductFeatureServiceTest(
     @Autowired val repaymentProductFeatureService: RepaymentFeatureService
 ) {
 
+    @BeforeAll
+    fun init() {
+        ContextUtil.setTenant("123")
+    }
 
     @Test
     fun `entity save`() {
@@ -58,9 +65,9 @@ class RepaymentProductFeatureServiceTest(
 
         assertThat(actual).isNotNull
         assertThat(actual.payment).isNotNull
-        assertThat(actual.prepayment.size).isEqualTo(3)
+        assertThat(actual.prepayment.size).isEqualTo(2)
         assertThat(actual.prepayment[0].penaltyRatio).isEqualTo(BigDecimal.ZERO)
-        assertThat(actual.prepayment[1].penaltyRatio).isEqualTo(BigDecimal(1.5))
+        assertThat(actual.prepayment[1].penaltyRatio).isEqualTo(BigDecimal(0))
         assertThat(actual.id).isNotNull
     }
 

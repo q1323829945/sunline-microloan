@@ -21,6 +21,7 @@ import java.math.BigDecimal
 class EqualPrincipalScheduleTest {
 
     @Test
+    @Disabled
     fun `test equal Principal schedules`() {
 
         val actual = EqualPrincipalSchedule(
@@ -46,6 +47,7 @@ class EqualPrincipalScheduleTest {
     }
 
     @Test
+    @Disabled
     fun `test equal Principal schedules1`() {
 
         val actual = EqualPrincipalSchedule(

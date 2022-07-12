@@ -1,6 +1,7 @@
 package cn.sunline.saas.repayment.arrangement.model.db
 
 import cn.sunline.saas.global.constant.YesOrNo
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(name = "repayment_account")
+@EntityListeners(TenantListener::class)
 class RepaymentAccount(
     @Id val id: Long,
 

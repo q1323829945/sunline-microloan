@@ -2,6 +2,8 @@ package cn.sunline.saas.obs.test.service
 
 import cn.sunline.saas.obs.api.*
 import org.springframework.stereotype.Service
+import java.io.File
+import java.io.FileInputStream
 
 /**
  * @title: ObsTestService
@@ -25,7 +27,8 @@ class ObsTestService: ObsApi {
     }
 
     override fun getObject(getParams: GetParams): Any? {
-        return ""
+
+        return FileInputStream(getParams.key)
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {

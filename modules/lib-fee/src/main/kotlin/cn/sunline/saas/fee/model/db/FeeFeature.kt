@@ -3,6 +3,7 @@ package cn.sunline.saas.fee.model.db
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.LoanFeeType
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.math.BigDecimal
 import javax.persistence.*
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull
     name = "fee_feature",
     indexes = [Index(name = "idx_fee_feature_product_id", columnList = "product_id")]
 )
+@EntityListeners(TenantListener::class)
 class FeeFeature(
     @Id
     val id: Long,

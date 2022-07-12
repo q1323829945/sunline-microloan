@@ -8,10 +8,12 @@ import cn.sunline.saas.huaweicloud.apig.exception.CertificateBindingException
 import cn.sunline.saas.huaweicloud.apig.exception.DomainBindingException
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import org.springframework.stereotype.Service
 
 const val DOMAIN_HASH_MAP = "domain_hash_map"
 const val CERTIFICATE_HASH_MAP = "certificate_hash_map"
 
+@Service
 class HuaweiCloudApigDomainService:GatewayDomain,HuaweiCloudApig() {
 
     /**

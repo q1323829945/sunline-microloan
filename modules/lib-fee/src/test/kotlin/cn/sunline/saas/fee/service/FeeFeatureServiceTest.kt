@@ -4,7 +4,10 @@ import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.fee.model.dto.DTOFeeFeatureAdd
 import cn.sunline.saas.global.constant.LoanFeeType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,6 +21,11 @@ import java.math.BigDecimal
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FeeFeatureServiceTest(@Autowired private val feeFeatureService: FeeFeatureService) {
+
+    @BeforeAll
+    fun init(){
+        ContextUtil.setTenant("123")
+    }
 
     @Test
     fun `entity save`() {

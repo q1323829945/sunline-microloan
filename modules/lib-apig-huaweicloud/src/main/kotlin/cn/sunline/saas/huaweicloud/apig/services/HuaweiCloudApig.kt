@@ -62,5 +62,3 @@ class HuaweiCloudApig {
         return httpConfig.getResponseBody(response)
     }
 }
-
-val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

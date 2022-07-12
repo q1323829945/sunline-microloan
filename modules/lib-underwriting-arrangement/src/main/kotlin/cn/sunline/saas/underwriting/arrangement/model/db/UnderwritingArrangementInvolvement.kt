@@ -1,5 +1,6 @@
 package cn.sunline.saas.underwriting.arrangement.model.db
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.underwriting.arrangement.model.UnderwriterInvolvementType
 import javax.persistence.*
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "underwriting_arrangement_involvement"
 )
+@EntityListeners(TenantListener::class)
 class UnderwritingArrangementInvolvement(
     @Id
     val id: Long,
@@ -25,7 +27,7 @@ class UnderwritingArrangementInvolvement(
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "involvement_type", length = 16, columnDefinition = "varchar(16) not null")
+    @Column(name = "involvement_type", length = 64, columnDefinition = "varchar(64) not null")
     val involvementType: UnderwriterInvolvementType = UnderwriterInvolvementType.UNDERWRITER_PARTY,
 
     @NotNull

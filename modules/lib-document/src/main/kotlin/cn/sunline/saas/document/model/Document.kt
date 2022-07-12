@@ -1,5 +1,6 @@
 package cn.sunline.saas.document.model
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull
         Index(name = "idx_document_directory_id", columnList = "directory_id")
     ]
 )
+@EntityListeners(TenantListener::class)
 class Document(
     @Id
     @Column(name = "document_id", nullable = false, columnDefinition = "bigint not null")
