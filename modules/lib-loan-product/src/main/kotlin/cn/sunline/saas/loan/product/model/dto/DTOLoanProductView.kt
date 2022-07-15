@@ -2,7 +2,7 @@ package cn.sunline.saas.loan.product.model.dto
 
 import cn.sunline.saas.document.model.DocumentType
 import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.document.template.modules.LanguageType
+import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
@@ -47,12 +47,12 @@ data class LoanUploadConfigureView(
 )
 
 data class DocumentTemplateView(
-        val id:String,
-        val name:String,
-        val documentStoreReference:String,
-        val fileType: FileType,
-        val languageType: LanguageType,
-        val documentType: DocumentType
+    val id:String,
+    val name:String,
+    val documentStoreReference:String,
+    val fileType: FileType,
+    val languageType: LanguageType,
+    val documentType: DocumentType
 )
 
 data class DTOAmountLoanProductConfigurationView(

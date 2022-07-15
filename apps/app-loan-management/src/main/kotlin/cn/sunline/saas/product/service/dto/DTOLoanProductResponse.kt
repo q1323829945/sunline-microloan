@@ -2,7 +2,7 @@ package cn.sunline.saas.product.service.dto
 
 import cn.sunline.saas.document.model.DocumentType
 import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.document.template.modules.LanguageType
+import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*

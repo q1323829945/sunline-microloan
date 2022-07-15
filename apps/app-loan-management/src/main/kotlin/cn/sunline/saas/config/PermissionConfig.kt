@@ -100,6 +100,13 @@ enum class PermissionConfig (
     LOAN_AGREEMENT_MANAGEMENT_PAID("LoanAgreement", "LoanAgreement/paid/[0-9]+\$", RequestMethod.PUT, "LoanAgreement paid"),
     LOAN_AGREEMENT_MANAGEMENT_SIGNED("LoanAgreement", "LoanAgreement/signed/[0-9]+\$", RequestMethod.PUT, "LoanAgreement signed"),
 
+    PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),
+    PDPA_ADD("pdpa","pdpa\$", RequestMethod.POST,"add pdpa information"),
+    PDPA_LIST("pdpa","pdpa(\\?.*|\$)", RequestMethod.GET,"get pdpa information list"),
+    PDPA_MODIFY("pdpa","pdpa/[0-9]+\$", RequestMethod.PUT,"put pdpa information"),
+    PDPA_GET_ONE("pdpa","pdpa/[0-9]+\$", RequestMethod.GET,"get pdpa information"),
+    PDPA_AUTHORIZATION_GET_ONE("pdpa","pdpa/authorization\$", RequestMethod.GET,"get pdpa authorization information"),
+    PDPA_AUTHORIZATION_UPDATE("pdpa","pdpa/authorization\$", RequestMethod.PUT,"update pdpa authorization information"),
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
@@ -116,9 +123,11 @@ enum class PermissionConfig (
     CUSTOMER_OFFER_MENU("menu","customerOfferConfig", RequestMethod.GET,"View formal customerOfferConfig menu"),
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
     REPAYMENT_MANAGEMENT_MENU("menu","repaymentManagementConfig", RequestMethod.GET,"View formal repaymentManagementConfig menu"),
+    PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
+    PDPA_AUTHORIZATION_MENU("menu","pdpaAuthorizationConfig", RequestMethod.GET,"View pdpaAuthorizationConfig menu"),
 
 
-    PDPA_INFORMATION("pdpa","pdpa/(.*?)/retrieve", RequestMethod.GET,"View pdpa information"),
+
 
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/repayment/instruction(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),

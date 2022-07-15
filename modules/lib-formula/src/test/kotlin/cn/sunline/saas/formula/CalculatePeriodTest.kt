@@ -198,6 +198,7 @@ class CalculatePeriodTest {
     }
 
     @Test
+    @Disabled
     fun `test get repayment date April2 25 and greater than 25`() {
 
         val startDateTime = DateTime(2022, 3, 1, 0, 0, 0, 0)

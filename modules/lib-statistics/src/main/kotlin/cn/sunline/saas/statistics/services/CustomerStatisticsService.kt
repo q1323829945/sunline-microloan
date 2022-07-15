@@ -22,13 +22,12 @@ class CustomerStatisticsService (
 
     fun findByDate(dtoCustomerStatisticsFindParams: DTOCustomerStatisticsFindParams): CustomerStatistics?{
         val lastDate = dtoCustomerStatisticsFindParams.datetime.plusDays(-1)
-        return get { root, _, criteriaBuilder ->
+        return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),lastDate.year.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),lastDate.monthOfYear.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),lastDate.dayOfMonth.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"),dtoCustomerStatisticsFindParams.frequency))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), ContextUtil.getTenant().toLong()))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }

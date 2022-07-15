@@ -12,14 +12,14 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "customer",
     indexes = [
-        Index(name = "idx_user_id", columnList = "user_id",unique = true),
+        Index(name = "idx_user_id", columnList = "user_id,tenant_id",unique = true),
     ]
 )
 
 @EntityListeners(TenantListener::class)
 class Customer (
     @Id
-    var id: Long? = null,
+    var id: Long,
 
     @Column(length = 64, columnDefinition = "varchar(64) default null")
     var username: String? = null,

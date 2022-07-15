@@ -2,7 +2,7 @@ package cn.sunline.saas.services
 
 import cn.sunline.saas.document.model.DocumentType
 import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.document.template.modules.LanguageType
+import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.modules.db.DocumentTemplateDirectory
 import cn.sunline.saas.document.template.modules.db.LoanUploadConfigure

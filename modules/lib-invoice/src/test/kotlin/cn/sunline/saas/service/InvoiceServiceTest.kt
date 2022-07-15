@@ -44,6 +44,7 @@ class InvoiceServiceTest {
         val invoice = invoiceService.initiateLoanInvoice(
             dtoLoanInvoices = mutableListOf(
                 DTOLoanInvoice(
+                    period = 1,
                     invoicePeriodFromDate = "20220611",
                     invoicePeriodToDate = "20220612",
                     invoicee = 1,
@@ -52,8 +53,10 @@ class InvoiceServiceTest {
                     fee = BigDecimal(1.5),
                     agreementId = 1,
                     invoiceStatus = InvoiceStatus.INITIATE,
+
                 ),
                 DTOLoanInvoice(
+                    period = 1,
                     invoicePeriodFromDate = "20220611",
                     invoicePeriodToDate = "20220612",
                     invoicee = 1,

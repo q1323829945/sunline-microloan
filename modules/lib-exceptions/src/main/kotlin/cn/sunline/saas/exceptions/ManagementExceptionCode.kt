@@ -39,6 +39,7 @@ enum class ManagementExceptionCode(val code: Int) {
     USER_NOT_FOUND(2005),
     ROLE_NOT_FOUND(2006),
     PERSON_ALREADY_BINDING(2007),
+    CUSTOMER_NOT_FOUND(2008),
 
     // Tenant 3000 - 3999
     TENANT_DATA_SOURCE_INVALID(3000),
@@ -120,4 +121,10 @@ enum class ManagementExceptionCode(val code: Int) {
     //invoice 5640-5649
     ACCOUNT_NOT_FOUND(5640),
     ACCOUNT_BALANCE_NEGATE(5641),
+
+    //pdpa 5650-5659
+    PDPA_ALREADY_EXIST(5650),
+    PDPA_NOT_FOUND(5651),
+    CUSTOMER_PDPA_INFORMATION_NOT_FOUND(5652),
+    PDPA_AUTHORITY_NOT_FOUND(5651),
 }
