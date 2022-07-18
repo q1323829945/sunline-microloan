@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull
 @EntityListeners(TenantListener::class)
 class CustomerPdpaInformation(
     @Id
-    @Column(name="customer_id",updatable = false,  columnDefinition = "bigint null")
+    @Column(name="customer_id",updatable = false,  columnDefinition = "bigint not null")
     val customerId: Long,
 
     @Column(name="pdpa_id", columnDefinition = "bigint null")

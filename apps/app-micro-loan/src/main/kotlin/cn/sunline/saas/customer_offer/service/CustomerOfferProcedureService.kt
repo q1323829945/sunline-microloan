@@ -15,7 +15,6 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
-import cn.sunline.saas.pdpa.dto.PDPAInformation
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.rpc.invoke.CustomerOfferProcedureInvoke
@@ -79,10 +78,6 @@ class CustomerOfferProcedureService(
             //add product info
             val loanProduct = getProduct(dtoCustomerOffer.product.productId)
             dtoCustomerOfferLoanView.product = objectMapper.convertValue<DTOProductView>(loanProduct)
-
-            //add pdpa info
-            val pdpa = getPDPA(countryCode)
-            dtoCustomerOfferLoanView.pdpa = objectMapper.convertValue<PDPAInformationView>(pdpa)
         }
 
         return dtoCustomerOfferLoanView
@@ -122,10 +117,6 @@ class CustomerOfferProcedureService(
         val key = "$customerId/signature/$pdpaTemplateId/$originalFilename"
         obsApi.putObject(PutParams(key,inputStream))
         return key
-    }
-
-    private fun getPDPA(countryCode:String): PDPAInformation {
-        return pdpaMicroService.retrieve(countryCode)
     }
 
     private fun initiateUnderwriting(result:DTOCustomerOfferLoanView,customerOffer: CustomerOffer){
