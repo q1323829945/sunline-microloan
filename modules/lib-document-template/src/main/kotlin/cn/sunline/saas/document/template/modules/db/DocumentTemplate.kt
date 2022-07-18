@@ -2,7 +2,7 @@ package cn.sunline.saas.document.template.modules.db
 
 import cn.sunline.saas.document.model.DocumentType
 import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.document.template.modules.LanguageType
+import cn.sunline.saas.global.constant.LanguageType
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 

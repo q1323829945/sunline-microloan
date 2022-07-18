@@ -13,6 +13,8 @@ import java.io.FileInputStream
  */
 @Service
 class ObsTestService: ObsApi {
+    private var map:MutableMap<String,Any> = mutableMapOf()
+
     override fun createBucket(bucketParams: BucketParams) {
     }
 
@@ -23,12 +25,12 @@ class ObsTestService: ObsApi {
     }
 
     override fun putObject(putParams: PutParams) {
-
+        this.map[putParams.key] = putParams.body
     }
 
     override fun getObject(getParams: GetParams): Any? {
 
-        return FileInputStream(getParams.key)
+        return map[getParams.key]
     }
 
     override fun deleteObject(deleteParams: DeleteParams) {

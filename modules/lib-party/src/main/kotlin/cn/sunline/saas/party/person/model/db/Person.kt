@@ -38,6 +38,7 @@ class Person(
     val birthDate: Date,
 
     @NotNull
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "nationality", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var nationality: CountryType,
 

@@ -1,6 +1,8 @@
 package cn.sunline.saas.pdpa.controller
 
-import cn.sunline.saas.pdpa.dto.PDPAInformation
+import cn.sunline.saas.customer.offer.modules.dto.DTOPdpaView
+import cn.sunline.saas.global.constant.LanguageType
+import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -18,9 +20,9 @@ class PDPAController {
     @Autowired
     private lateinit var pdpaMicroService: PDPAMicroService
 
-    @GetMapping("{countryCode}/retrieve")
-    fun getPDPAInformation(@PathVariable countryCode: String): ResponseEntity<DTOResponseSuccess<PDPAInformation>> {
-        return DTOResponseSuccess(pdpaMicroService.retrieve(countryCode)).response()
+    @GetMapping("{country}/{language}/retrieve")
+    fun getPDPAInformation(@PathVariable country: CountryType, @PathVariable language: LanguageType): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
+        return DTOResponseSuccess(pdpaMicroService.retrieve(country, language)).response()
     }
 
 }

@@ -25,7 +25,7 @@ class BusinessStatisticsService (
 
     fun findByDate(dtoBusinessStatisticsFindParams: DTOBusinessStatisticsFindParams): BusinessStatistics?{
         val lastDate = dtoBusinessStatisticsFindParams.datetime.plusDays(-1)
-        return get { root, _, criteriaBuilder ->
+        return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),dtoBusinessStatisticsFindParams.customerId))
             predicates.add(criteriaBuilder.equal(root.get<CurrencyType>("currency"),dtoBusinessStatisticsFindParams.currencyType))
@@ -33,7 +33,6 @@ class BusinessStatisticsService (
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),lastDate.monthOfYear.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),lastDate.dayOfMonth.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"),dtoBusinessStatisticsFindParams.frequency))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), ContextUtil.getTenant().toLong()))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }

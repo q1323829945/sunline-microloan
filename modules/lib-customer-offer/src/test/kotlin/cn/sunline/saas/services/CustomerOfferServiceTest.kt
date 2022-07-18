@@ -16,7 +16,10 @@ import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService.DTOFile
+import cn.sunline.saas.obs.api.ObsApi
+import cn.sunline.saas.obs.api.PutParams
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
@@ -27,7 +30,8 @@ import java.io.FileInputStream
 class CustomerOfferServiceTest(
     @Autowired val customerOfferService: CustomerOfferService,
     @Autowired val customerLoanApplyService: CustomerLoanApplyService,
-    @Autowired val tenantService: TenantService
+    @Autowired val tenantService: TenantService,
+    @Autowired val obsApi: ObsApi
 ) {
     var customerOfferId = 0L
 
@@ -246,8 +250,9 @@ class CustomerOfferServiceTest(
 
 
     @Test
-    fun `download`(){
-        val file = customerLoanApplyService.download("src\\test\\resources\\file\\123.JPG")
+    fun download(){
+        obsApi.putObject(PutParams("key",FileInputStream(File("src\\test\\resources\\file\\123.JPG"))))
+        val file = customerLoanApplyService.download("key")
 
         Assertions.assertThat(file).isNotNull
     }

@@ -9,6 +9,7 @@ import cn.sunline.saas.obs.api.*
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.io.ByteArrayInputStream
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URLEncoder
@@ -95,7 +96,7 @@ class HuaweiCloudObsService:ObsApi {
 
         //body
         val entity = when(val body = putParams.body){
-            is String -> httpConfig.setRequestBody(FileInputStream(body).readBytes())
+            is String -> httpConfig.setRequestBody(body.toByteArray())
             is InputStream -> httpConfig.setRequestBody(body.readBytes())
             is ByteArray -> httpConfig.setRequestBody(body)
             else -> throw ObsBodyTypeException("body type error", ManagementExceptionCode.BODY_TYPE_ERROR)

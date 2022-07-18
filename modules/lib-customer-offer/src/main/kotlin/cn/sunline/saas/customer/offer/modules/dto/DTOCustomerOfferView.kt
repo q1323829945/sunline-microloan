@@ -1,7 +1,9 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
 import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.model.CountryType
 
 data class DTOCustomerOfferView(
         val customerOfferProcedure: CustomerOfferProcedureView,
@@ -26,7 +28,7 @@ data class ProductView(
 
 data class DTOCustomerOfferLoanView (
         var customerOfferProcedure:DTOCustomerOfferProcedureView? = null,
-        var pdpa:PDPAInformationView? = null,
+        var pdpa:DTOPdpaView? = null,
         var product:DTOProductView? = null,
         val loan:DTOLoan? = null,
         val company:DTOCompany? = null,
@@ -70,20 +72,17 @@ data class DTOTermConfigurationView(
 )
 
 
-data class PDPAInformationView (
-        val personalInformation:List<PersonalInformationView>,
-        val corporateInformation:List<CorporateInformationView>,
-        val pdpaTemplateId:String
+data class DTOPdpaView (
+        val id:String,
+        var pdpaInformation:List<DTOPdpaItemView>? = null
 )
 
+data class DTOPdpaItemView(
+        val item:String,
+        val information: List<DTOPdpaInformationView>
+)
 
-data class PersonalInformationView(
+data class DTOPdpaInformationView(
         val key:String,
         val name:String
 )
-
-data class CorporateInformationView(
-        val key: String,
-        val name: String
-)
-

@@ -24,14 +24,21 @@ abstract class BaseMultiTenantRepoService<T, ID : Serializable>(
     BaseRepoService<T, ID>(baseRepository) {
 
     fun getPageWithTenant(specification: Specification<T>? = null, pageable: Pageable): Page<T> {
-        val tenantSpecification: Specification<T> = Specification { root: Root<T>, _, criteriaBuilder ->
+        val tenantSpecification = addTenantSpecification(specification)
+        return getPaged(tenantSpecification, pageable)
+    }
+
+    fun getOneWithTenant(specification: Specification<T>? = null):T?{
+        val tenantSpecification = addTenantSpecification(specification)
+        return get(tenantSpecification)
+    }
+
+    private fun addTenantSpecification(specification: Specification<T>? = null): Specification<T>{
+        return Specification { root: Root<T>, _, criteriaBuilder ->
             val path: Expression<Long> = root.get("tenantId")
             val predicate = criteriaBuilder.equal(path, ContextUtil.getTenant())
-
             criteriaBuilder.and(predicate)
         }.and(specification)
-
-        return getPaged(tenantSpecification, pageable)
     }
 
     fun rePaged(content:List<T>,pageable: Pageable):Page<T>{
