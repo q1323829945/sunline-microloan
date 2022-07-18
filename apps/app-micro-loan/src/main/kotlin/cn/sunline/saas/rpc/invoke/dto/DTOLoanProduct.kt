@@ -43,7 +43,7 @@ data class DTOInvokeLoanProduct(
     var termConfiguration: DTOTermLoanProductConfigurationView,
     var interestFeature: DTOInterestFeatureView,
     var repaymentFeature: DTORepaymentFeatureView,
-    var feeFeatures:MutableList<DTOFeeFeatureView>,
+    var feeFeatures:MutableList<DTOFeeFeatureView>?,
     var loanUploadConfigureFeatures:MutableList<DTOLoanUploadConfigureView>
 )
 

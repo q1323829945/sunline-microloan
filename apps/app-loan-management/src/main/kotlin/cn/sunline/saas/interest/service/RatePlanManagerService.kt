@@ -39,7 +39,7 @@ class RatePlanManagerService {
 
     fun addOne(dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
-        val typeRatePlan = ratePlanService.findByType(ratePlan.type)
+        val typeRatePlan = ratePlanService.findByType(RatePlanType.STANDARD)
         if(typeRatePlan != null && ratePlan.type == RatePlanType.STANDARD){
             throw RatePlanBusinessException("The standard type of rate plan has exist，Only one is allowed", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }

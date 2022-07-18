@@ -5,5 +5,8 @@ dependencies {
 
     implementation(project(":lib-global"))
 
+    implementation(project(":lib-fee-util"))
+
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

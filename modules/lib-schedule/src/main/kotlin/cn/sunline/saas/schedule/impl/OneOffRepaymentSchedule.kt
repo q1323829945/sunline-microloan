@@ -22,7 +22,8 @@ class OneOffRepaymentSchedule(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     amount,
     interestRateYear,
@@ -32,14 +33,15 @@ class OneOffRepaymentSchedule(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
 
         val interestRate = CalculateInterestRate(interestRateYear)
         val schedules = mutableListOf<Schedule>()
-
+        var fee = feeAmount
         val instalmentPrincipal = amount.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
         val instalmentInterest = CalculateInterest(amount, interestRate).getDaysInterest(
             fromDateTime,
@@ -52,12 +54,13 @@ class OneOffRepaymentSchedule(
             Schedule(
                 fromDateTime,
                 toDateTime,
-                instalmentAmount,
+                instalmentAmount.add(fee),
                 instalmentPrincipal,
                 instalmentInterest,
                 BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                 period,
-                interestRateYear
+                interestRateYear,
+                fee
             )
         )
         return schedules

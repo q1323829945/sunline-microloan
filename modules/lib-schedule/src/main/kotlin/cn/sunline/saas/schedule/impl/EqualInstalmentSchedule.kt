@@ -27,7 +27,8 @@ class EqualInstalmentSchedule(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     amount,
     interestRateYear,
@@ -37,7 +38,8 @@ class EqualInstalmentSchedule(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
@@ -50,6 +52,7 @@ class EqualInstalmentSchedule(
         var period = 0
         var firstInterest = BigDecimal.ZERO
         var firstPrincipal = BigDecimal.ZERO
+        var fee = feeAmount
         for ((index, it) in periodDates.withIndex()) {
             var instalmentPrincipal : BigDecimal
             var instalmentInterest: BigDecimal
@@ -70,7 +73,7 @@ class EqualInstalmentSchedule(
                 }
             }
             instalmentPrincipal = instalmentAmount.subtract(instalmentInterest)
-            if(index == 0){
+            if(index == 0 && !it.isEnough){
                 firstPrincipal = instalmentPrincipal
                 firstInterest = instalmentInterest
                 remainingPrincipal = remainingPrincipal.subtract(instalmentPrincipal)
@@ -88,15 +91,16 @@ class EqualInstalmentSchedule(
                 Schedule(
                     if(index == 1 && firstInterest != BigDecimal.ZERO) fromDateTime else it.fromDateTime,
                     it.toDateTime,
-                    instalment = instalmentAmount,
+                    instalmentAmount.add(fee),
                     instalmentPrincipal,
                     instalmentInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    fee
                 )
             )
-
+            fee = BigDecimal.ZERO
         }
         return schedules
     }

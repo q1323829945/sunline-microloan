@@ -23,7 +23,8 @@ class OneOffRepaymentScheduleReset(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     remainAmount,
     interestRateYear,
@@ -33,7 +34,8 @@ class OneOffRepaymentScheduleReset(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
@@ -58,7 +60,8 @@ class OneOffRepaymentScheduleReset(
                     advanceInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    feeAmount
                 )
             )
 
@@ -78,7 +81,8 @@ class OneOffRepaymentScheduleReset(
                 instalmentInterest,
                 BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                 period++,
-                interestRateYear
+                interestRateYear,
+                feeAmount
             )
         )
 

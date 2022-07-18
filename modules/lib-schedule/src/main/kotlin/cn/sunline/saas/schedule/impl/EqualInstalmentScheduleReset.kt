@@ -25,7 +25,8 @@ class EqualInstalmentScheduleReset(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     remainAmount,
     interestRateYear,
@@ -35,7 +36,8 @@ class EqualInstalmentScheduleReset(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 )  {
 
     override fun getSchedules(): MutableList<Schedule> {
@@ -60,7 +62,8 @@ class EqualInstalmentScheduleReset(
                     advanceInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    feeAmount
                 )
             )
         }
@@ -91,7 +94,8 @@ class EqualInstalmentScheduleReset(
                     instalmentInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    feeAmount
                 )
             )
         }

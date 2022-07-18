@@ -24,7 +24,8 @@ class EqualPrincipalSchedulePrepayment(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     amount,
     interestRateYear,
@@ -34,11 +35,13 @@ class EqualPrincipalSchedulePrepayment(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
 
     override fun getSchedules(): MutableList<Schedule> {
 
+        var fee = feeAmount
         val oldSchedules = EqualPrincipalSchedule(
             amount,
             interestRateYear,
@@ -48,7 +51,8 @@ class EqualPrincipalSchedulePrepayment(
             baseYearDays,
             fromDateTime,
             toDateTime,
-            repaymentDateTime
+            repaymentDateTime,
+            fee
         ).getSchedules()
 
         val interestRate = CalculateInterestRate(interestRateYear)
@@ -71,14 +75,16 @@ class EqualPrincipalSchedulePrepayment(
                     Schedule(
                         it.fromDate,
                         it.dueDate,
-                        it.principal.add(instalmentInterest),
+                        it.principal.add(instalmentInterest).add(fee),
                         it.principal,
                         instalmentInterest,
                         it.remainingPrincipal,
                         it.period,
-                        it.interestRate
+                        it.interestRate,
+                        fee
                     )
                 )
+                fee = BigDecimal.ZERO
             }
         }
         return newSchedules

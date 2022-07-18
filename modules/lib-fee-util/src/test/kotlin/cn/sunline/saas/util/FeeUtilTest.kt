@@ -18,10 +18,10 @@ class FeeUtilTest {
 
     @Test
     fun `calculate fee amount`() {
-        val actual1 = FeeUtil.calFeeAmount(BigDecimal("100"), BigDecimal("50"))
+        val actual1 = FeeUtil.calFeeAmount(BigDecimal("100"), BigDecimal("50"),FeeMethodType.FIX_AMOUNT)
         assertThat(actual1).isEqualTo(BigDecimal("50"))
 
-        val actual2 = FeeUtil.calFeeAmount(BigDecimal("100"), BigDecimal("2.5"))
+        val actual2 = FeeUtil.calFeeAmount(BigDecimal("100"), BigDecimal("2.5"),FeeMethodType.FEE_RATIO)
         assertThat(actual2).isEqualTo(BigDecimal("2.5"))
     }
 

@@ -1,5 +1,7 @@
 package cn.sunline.saas.invoice.service
 
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
+import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.constant.RepaymentDayType
 import cn.sunline.saas.global.constant.RepaymentFrequency
@@ -32,18 +34,37 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
     @Autowired
     private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
 
+    @Autowired
+    private lateinit var feeArrangementService: FeeArrangementService
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun calculate(invoiceId: Long): DTOInvoiceTrailView {
         val invoice = invoiceService.getOne(invoiceId) ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
         val lines = ArrayList<DTOInvoiceLinesView>()
-        invoice.invoiceLines.forEach {
-            lines += DTOInvoiceLinesView(
-                invoiceAmountType = it.invoiceAmountType,
-                invoiceAmount = it.invoiceAmount.toPlainString()
+
+        val invoiceTotalAmount = invoiceService.calculateRepaymentAmountById(invoiceId)
+        val feeArrangements = feeArrangementService.listByAgreementId(invoice.agreementId)
+        val feeArrangement = feeArrangements.run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
             )
         }
-        val invoiceTotalAmount = invoiceService.calculateRepaymentAmountById(invoiceId)
+        val feeItem = feeArrangementService.getOverdueFeeItem(feeArrangement, invoiceTotalAmount)
+
+        invoice.invoiceLines.forEach {
+            lines += if(it.invoiceAmountType == InvoiceAmountType.FEE){
+                DTOInvoiceLinesView(
+                    invoiceAmountType = it.invoiceAmountType,
+                    invoiceAmount = it.invoiceAmount.add(feeItem.immediateFee).toPlainString()
+                )
+            }else {
+                DTOInvoiceLinesView(
+                    invoiceAmountType = it.invoiceAmountType,
+                    invoiceAmount = it.invoiceAmount.toPlainString()
+                )
+            }
+        }
         return DTOInvoiceTrailView(
             invoicee = invoice.invoicee.toString(),
             invoiceId = invoiceId.toString(),

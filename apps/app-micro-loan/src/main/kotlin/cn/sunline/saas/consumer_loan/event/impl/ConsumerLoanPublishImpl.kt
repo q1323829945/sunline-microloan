@@ -44,4 +44,8 @@ class ConsumerLoanPublishImpl: ConsumerLoanPublish {
 
     override fun prepayment(dtoRepaymentInstruction: DTORepaymentInstruction) {
     }
+
+    override fun feePayment(dtoRepaymentInstruction: DTORepaymentInstruction){
+
+    }
 }

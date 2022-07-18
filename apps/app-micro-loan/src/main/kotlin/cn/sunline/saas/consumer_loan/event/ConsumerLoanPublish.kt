@@ -28,4 +28,5 @@ interface ConsumerLoanPublish {
 
     fun prepayment(dtoRepaymentInstruction: DTORepaymentInstruction)
 
+    fun feePayment(dtoRepaymentInstruction: DTORepaymentInstruction)
 }

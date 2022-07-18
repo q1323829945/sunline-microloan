@@ -15,8 +15,20 @@ import java.math.RoundingMode
 object FeeUtil {
     private val mc = MathContext(2, RoundingMode.HALF_UP)
 
-    fun calFeeAmount(baseAmount: BigDecimal, feeRatio: BigDecimal): BigDecimal {
-        return baseAmount.multiply(feeRatio).divide(BigDecimal(100), mc)
+    data class FeeItem(val iImmediateFee: BigDecimal,val scheduleFee:BigDecimal)
+
+    fun calFeeAmount(baseAmount: BigDecimal, feeRatio: BigDecimal, feeMethodType: FeeMethodType): BigDecimal {
+        return when (feeMethodType) {
+            FeeMethodType.FEE_RATIO -> {
+                baseAmount.multiply(feeRatio).divide(BigDecimal(100), mc)
+            }
+            FeeMethodType.FIX_AMOUNT -> {
+                baseAmount
+            }
+            else -> {
+                BigDecimal.ZERO
+            }
+        }
     }
 
     fun validFeeConfig(feeMethodType: FeeMethodType, feeAmount: BigDecimal?, feeRate: BigDecimal?) {

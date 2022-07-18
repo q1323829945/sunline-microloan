@@ -70,7 +70,7 @@ class LoanAgreementServiceTest {
         )
         val feeArrangement = mutableListOf<DTOFeeArrangementAdd>()
         val dtoFeeArrangementAdd = DTOFeeArrangementAdd(
-            "test", FeeMethodType.FIX_AMOUNT, BigDecimal("100"), null,
+            LoanFeeType.DISBURSEMENT, FeeMethodType.FIX_AMOUNT, BigDecimal("100"), null,
             FeeDeductType.IMMEDIATE
         )
         feeArrangement.add(dtoFeeArrangementAdd)

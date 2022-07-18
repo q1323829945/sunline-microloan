@@ -16,12 +16,11 @@ import java.math.BigDecimal
 class OneOffRepaymentScheduleTest {
 
     @Test
-    @Disabled
     fun `test One Off Repayment schedules`() {
 
         val actual = OneOffRepaymentSchedule(
             BigDecimal("1000000"), BigDecimal("6.3"), LoanTermType.ONE_YEAR,
-            RepaymentFrequency.ONE_MONTH, RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null).getSchedules()
+            RepaymentFrequency.ONE_MONTH, RepaymentDayType.BASE_LOAN_DAY,BaseYearDays.ACCOUNT_YEAR,DateTime.now(),null,null,BigDecimal.ZERO).getSchedules()
 
         Assertions.assertThat(actual[0].instalment).isEqualTo(BigDecimal("1063875.00"))
         Assertions.assertThat(actual[0].interest).isEqualTo(BigDecimal("63875.00"))

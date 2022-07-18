@@ -15,12 +15,16 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.fee.arrangement.model.db.FeeArrangement
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
+import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
+import cn.sunline.saas.fee.constant.FeeDeductType
+import cn.sunline.saas.fee.constant.FeeMethodType
+import cn.sunline.saas.fee.util.FeeUtil
 import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.constant.CalculatePrecision
-import cn.sunline.saas.global.constant.AgreementStatus
-import cn.sunline.saas.global.constant.BaseYearDays
-import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.constant.RepaymentDayType
+import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
@@ -49,6 +53,7 @@ import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStat
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.repayment.arrangement.service.RepaymentAccountService
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
@@ -122,6 +127,12 @@ class ConsumerLoanService(
     @Autowired
     private lateinit var loanAccountService: LoanAccountService
 
+    @Autowired
+    private lateinit var feeArrangementService: FeeArrangementService
+
+    @Autowired
+    private lateinit var loanProductSerivce: ProductService
+
 
     fun createLoanAgreement(applicationId: Long) {
         val customerOffer = consumerLoanInvoke.retrieveCustomerOffer(applicationId)
@@ -141,10 +152,21 @@ class ConsumerLoanService(
                 )
             )
         }
+
+        val feeArrangement = loanAgreementAggregate.feeArrangement?.run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
+            )
+        }
+        val feeItem = feeArrangementService.getDisbursementFeeItem(
+            feeArrangement,
+            customerOffer.amount.toBigDecimal()
+        )
+
         // Calculate Repayment Schedule and create invoices
         val interestRate = loanAgreementAggregate.interestArrangement.getExecutionRate()
         val schedules = ScheduleService(
-            BigDecimal(customerOffer.amount),
+            customerOffer.amount.toBigDecimal(),
             interestRate,
             customerOffer.term,
             loanProduct.repaymentFeature.payment.frequency,
@@ -153,7 +175,10 @@ class ConsumerLoanService(
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
             null,
+            feeItem.scheduleFee
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
+
+
 
         invoiceService.initiateLoanInvoice(
             ConsumerLoanAssembly.convertToDTOLoanInvoice(
@@ -200,6 +225,16 @@ class ConsumerLoanService(
 
         val disbursementInstruction = disbursementInstructionService.registered(dtoDisbursementInstruction)
 
+        val feeArrangement = feeArrangementService.listByAgreementId(loanAgreement.id).run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
+            )
+        }
+        val feeItem = feeArrangementService.getDisbursementFeeItem(
+            feeArrangement,
+            loanAgreement.amount
+        )
+
         consumerLoanPublish.initiatePositionKeeping(
             DTOBankingTransaction(
                 name = disbursementArrangement.disbursementAccountBank,
@@ -209,11 +244,12 @@ class ConsumerLoanService(
                 currency = loanAgreement.currency,
                 amount = loanAgreement.amount,
                 businessUnit = disbursementInstruction.businessUnit,
-                appliedFee = null,
+                appliedFee = feeItem.immediateFee,
                 appliedRate = null,
                 customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
             )
         )
+        // TODO reduce fee to financialAccount And how record the fee Item
         consumerLoanPublish.financialAccounting(disbursementInstruction)
     }
 
@@ -319,7 +355,14 @@ class ConsumerLoanService(
     }
 
     fun calculateSchedule(productId: Long, amount: BigDecimal, term: LoanTermType): DTORepaymentScheduleTrialView {
+
         val loanProduct = productInvokeImpl.getProductInfoByProductId(productId)
+        val feeArrangement = loanProduct.feeFeatures?.run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
+            )
+        }
+        val feeItem = feeArrangementService.getDisbursementFeeItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
         val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong())
         val schedule = ScheduleService(
@@ -331,9 +374,10 @@ class ConsumerLoanService(
             loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.now(),
             null,
-            null
+            null,
+            feeItem.scheduleFee
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-        return convertToScheduleTrialMapper(schedule)
+        return convertToScheduleTrialMapper(schedule,feeItem.immediateFee)
     }
 
     private fun convertToInterestRate(list: List<DTOInvokeRates>, ratePlanId: Long): MutableList<InterestRate> {
@@ -368,7 +412,10 @@ class ConsumerLoanService(
         return executionRate
     }
 
-    private fun convertToScheduleTrialMapper(dtoSchedule: MutableList<Schedule>): DTORepaymentScheduleTrialView {
+    private fun convertToScheduleTrialMapper(
+        dtoSchedule: MutableList<Schedule>,
+        immediateFee: BigDecimal
+    ): DTORepaymentScheduleTrialView {
         val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
 
         val interestRate = dtoSchedule.first().interestRate
@@ -382,11 +429,15 @@ class ConsumerLoanService(
                 installment = schedule.instalment,
                 principal = schedule.principal,
                 interest = schedule.interest,
-                repaymentDate = schedule.dueDate.toString()
+                repaymentDate = schedule.dueDate.toString(),
+                fee = schedule.fee
             )
         }
         return DTORepaymentScheduleTrialView(
-            installment = installment, interestRate = interestRate, schedule = dtoRepaymentScheduleDetailTrialView
+            installment = installment,
+            fee = immediateFee,
+            interestRate = interestRate,
+            schedule = dtoRepaymentScheduleDetailTrialView
         )
     }
 
@@ -577,20 +628,28 @@ class ConsumerLoanService(
         val invoice = invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged())
             .filter { it.invoiceStatus == InvoiceStatus.INITIATE }.minByOrNull { it.invoicePeriodFromDate }!!
 
-        //val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
-//        val ratePlanId = loanProduct.interestFeature.ratePlanId
-//        val interestRate =
-//            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
+        val feeArrangements = feeArrangementService.listByAgreementId(agreementId)
+        val feeArrangement = feeArrangements.run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
+            )
+        }
+        val feeItem = feeArrangementService.getPrepaymentFeeItem(feeArrangement, amount)
+
+        val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
+        val ratePlanId = loanProduct.interestFeature.ratePlanId
+        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
         val schedule = ScheduleService(
             amount,
-            BigDecimal(5.0),
+            interestRate,
             agreement.term,
             repaymentArrangement.frequency,
-            RepaymentDayType.MONTH_FIRST_DAY,//loanProduct.repaymentFeature.payment.repaymentDayType,
-            BaseYearDays.ACCOUNT_YEAR,//loanProduct.interestFeature.interest.baseYearDays,
+            loanProduct.repaymentFeature.payment.repaymentDayType,
+            loanProduct.interestFeature.interest.baseYearDays,
             tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate),
             tenantDateTime.toTenantDateTime(agreement.toDateTime),
-            tenantDateTime.now()
+            tenantDateTime.now(),
+            invoice.invoiceLines.filter { it.invoiceAmountType == InvoiceAmountType.FEE }.sumOf { it.invoiceAmount }.add(feeItem.immediateFee)
         ).getPrepaymentSchedules(repaymentArrangement.paymentMethod)
 
         val prepaymentLines = convertToInvoiceLines(schedule)
@@ -604,13 +663,14 @@ class ConsumerLoanService(
     private fun convertToInvoiceLines(schedule: MutableList<Schedule>): ArrayList<DTOInvoiceLinesView> {
         var totalPrincipal = BigDecimal.ZERO
         var totalInterest = BigDecimal.ZERO
-        val totalFee = BigDecimal.ZERO
+        var totalFee = BigDecimal.ZERO
         val totalFine = BigDecimal.ZERO
 
         val prepaymentLines = ArrayList<DTOInvoiceLinesView>()
         schedule.forEach {
             totalPrincipal = totalPrincipal.add(it.principal)
             totalInterest = totalInterest.add(it.interest)
+            totalFee = totalFee.add(it.fee)
         }
 
         // TODO Calculate Prepayment Penalty Fee
@@ -908,5 +968,17 @@ class ConsumerLoanService(
             )
         }
         return list
+    }
+
+    fun callBackFinancialAccountingFeePayment(instructionId: Long) {
+        val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
+        consumerLoanPublish.feePayment(repaymentInstruction)
+    }
+
+    fun callBackFeePayment(instructionId: Long) {
+        val repaymentInstruction = repaymentInstructionService.retrieve(instructionId)
+        callBackRepayLoanInvoice(repaymentInstruction)
+        cancelInitLoanInvoice(repaymentInstruction.agreementId, repaymentInstruction.referenceId)
+        // TODO InstructionLifecycleStatus Change
     }
 }

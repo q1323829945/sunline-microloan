@@ -24,7 +24,8 @@ class PayInterestSchedulePrincipalMaturityScheduleReset(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     remainAmount,
     interestRateYear,
@@ -34,7 +35,8 @@ class PayInterestSchedulePrincipalMaturityScheduleReset(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 )  {
 
     override fun getSchedules(): MutableList<Schedule> {
@@ -59,7 +61,8 @@ class PayInterestSchedulePrincipalMaturityScheduleReset(
                     advanceInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    feeAmount
                 )
             )
 
@@ -92,7 +95,8 @@ class PayInterestSchedulePrincipalMaturityScheduleReset(
                     instalmentInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    feeAmount
                 )
             )
         }

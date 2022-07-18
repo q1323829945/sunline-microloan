@@ -23,6 +23,7 @@ import cn.sunline.saas.underwriting.arrangement.model.dto.DTOUnderwritingArrange
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import java.math.BigDecimal
 
 /**
  * @title: ConsumerLoanAssembly
@@ -143,6 +144,7 @@ object ConsumerLoanAssembly {
         schedule: MutableList<Schedule>,
         dtoLoanAgreement: DTOLoanAgreementView
     ): MutableList<DTOLoanInvoice> {
+        var feeFlag = true
         val dtoLoanInvoice = mutableListOf<DTOLoanInvoice>()
         schedule.forEach {
             dtoLoanInvoice.add(
@@ -153,11 +155,12 @@ object ConsumerLoanAssembly {
                     dtoLoanAgreement.loanAgreement.involvements.first { involvement -> LoanAgreementInvolvementType.LOAN_BORROWER == involvement.involvementType }.partyId,
                     it.principal,
                     it.interest,
-                    null,
+                    it.fee,
                     dtoLoanAgreement.loanAgreement.id,
                     null
                 )
             )
+            feeFlag = false
         }
         return dtoLoanInvoice
     }

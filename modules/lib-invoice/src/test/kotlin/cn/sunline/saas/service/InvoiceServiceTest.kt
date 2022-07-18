@@ -52,6 +52,7 @@ class InvoiceServiceTest {
                     fee = BigDecimal(1.5),
                     agreementId = 1,
                     invoiceStatus = InvoiceStatus.INITIATE,
+                    period = 1
                 ),
                 DTOLoanInvoice(
                     invoicePeriodFromDate = "20220611",
@@ -62,6 +63,7 @@ class InvoiceServiceTest {
                     fee = BigDecimal(1.5),
                     agreementId = 1,
                     invoiceStatus = InvoiceStatus.FINISHED,
+                    period = 2
                 )
             )
         )

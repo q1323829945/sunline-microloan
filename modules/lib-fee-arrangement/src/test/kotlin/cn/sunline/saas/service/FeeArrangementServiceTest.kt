@@ -4,6 +4,7 @@ import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
+import cn.sunline.saas.global.constant.LoanFeeType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import org.assertj.core.api.Assertions
@@ -30,14 +31,14 @@ class FeeArrangementServiceTest {
             agreementId = agreementId,
             dtoFeeArrangements = mutableListOf(
                 DTOFeeArrangementAdd(
-                    feeType = "",
+                    feeType = LoanFeeType.PREPAYMENT,
                     feeMethodType = FeeMethodType.FEE_RATIO,
                     feeAmount = BigDecimal(500),
                     feeRate = BigDecimal(1.5),
                     feeDeductType = FeeDeductType.IMMEDIATE,
                 ),
                 DTOFeeArrangementAdd(
-                    feeType = "",
+                    feeType = LoanFeeType.OVERDUE,
                     feeMethodType = FeeMethodType.FEE_RATIO,
                     feeAmount = BigDecimal(600),
                     feeRate = BigDecimal(1.5),

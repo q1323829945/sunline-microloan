@@ -23,7 +23,8 @@ class EqualPrincipalSchedule(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     amount,
     interestRateYear,
@@ -33,7 +34,8 @@ class EqualPrincipalSchedule(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
     override fun getSchedules(): MutableList<Schedule> {
 
@@ -45,6 +47,7 @@ class EqualPrincipalSchedule(
         val schedules = mutableListOf<Schedule>()
         var remainingPrincipal = amount
         var period = 0
+        var fee = feeAmount
         for ((index, it) in periodDates.withIndex()) {
             val instalmentInterest: BigDecimal
             if (!periodDates[index].isEnough) {
@@ -75,15 +78,17 @@ class EqualPrincipalSchedule(
                 Schedule(
                     it.fromDateTime,
                     it.toDateTime,
-                    instalmentAmount,
+                    instalmentAmount.add(fee),
                     instalmentPrincipal,
                     instalmentInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    fee
                 )
             )
             firstInterest = BigDecimal.ZERO
+            fee = BigDecimal.ZERO
         }
         return schedules
     }

@@ -22,7 +22,8 @@ class PayInterestSchedulePrincipalMaturitySchedule(
     baseYearDays: BaseYearDays,
     fromDateTime: DateTime,
     toDateTime: DateTime?,
-    repaymentDateTime: DateTime?
+    repaymentDateTime: DateTime?,
+    feeAmount: BigDecimal
 ) : AbstractSchedule(
     amount,
     interestRateYear,
@@ -32,7 +33,8 @@ class PayInterestSchedulePrincipalMaturitySchedule(
     baseYearDays,
     fromDateTime,
     toDateTime,
-    repaymentDateTime
+    repaymentDateTime,
+    feeAmount
 ) {
     override fun getSchedules(): MutableList<Schedule> {
         val periods = CalculatePeriod.calculatePeriods(term, frequency)
@@ -42,7 +44,7 @@ class PayInterestSchedulePrincipalMaturitySchedule(
         if (periods != periodDates.size) {
             periodDates.removeFirst()
         }
-
+        var fee = feeAmount
         val schedules = mutableListOf<Schedule>()
         var period = 0
         for ((index, it) in periodDates.withIndex()) {
@@ -68,14 +70,16 @@ class PayInterestSchedulePrincipalMaturitySchedule(
                 Schedule(
                     if(index == 0) fromDateTime else it.fromDateTime,
                     it.toDateTime,
-                    instalmentAmount,
+                    instalmentAmount.add(fee),
                     instalmentPrincipal,
                     instalmentInterest,
                     remainingPrincipal,
                     period,
-                    interestRateYear
+                    interestRateYear,
+                    fee
                 )
             )
+            fee = BigDecimal.ZERO
         }
         return schedules
     }

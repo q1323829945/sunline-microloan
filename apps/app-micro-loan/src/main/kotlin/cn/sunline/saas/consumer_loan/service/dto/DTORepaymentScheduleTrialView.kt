@@ -4,6 +4,7 @@ import java.math.BigDecimal
 
 data class DTORepaymentScheduleTrialView(
     val installment: BigDecimal? = null,
+    val fee: BigDecimal,
     val interestRate: BigDecimal,
     val schedule: MutableList<DTORepaymentScheduleDetailTrialView>
 )
@@ -14,5 +15,6 @@ data class DTORepaymentScheduleDetailTrialView(
     val installment: BigDecimal,
     val principal: BigDecimal,
     val interest: BigDecimal,
+    val fee: BigDecimal
 )
 

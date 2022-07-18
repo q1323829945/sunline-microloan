@@ -23,7 +23,8 @@ abstract class AbstractSchedule(
     val baseYearDays: BaseYearDays,
     val fromDateTime: DateTime,
     toDateTime: DateTime?,
-    val repaymentDateTime: DateTime?
+    val repaymentDateTime: DateTime?,
+    val feeAmount: BigDecimal
 ) {
     var toDateTime: DateTime
 

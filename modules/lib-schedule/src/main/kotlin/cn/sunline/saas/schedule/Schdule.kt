@@ -17,5 +17,6 @@ data class Schedule(
     val interest: BigDecimal,
     val remainingPrincipal: BigDecimal,
     val period: Int,
-    val interestRate: BigDecimal
+    val interestRate: BigDecimal,
+    val fee: BigDecimal
 )

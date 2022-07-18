@@ -22,7 +22,8 @@ class ScheduleService(
     private val baseYearDays: BaseYearDays,
     private val fromDateTime: DateTime,
     private val toDateTime: DateTime?,
-    private val repaymentDateTime: DateTime?
+    private val repaymentDateTime: DateTime?,
+    private val feeAmount: BigDecimal
 ) {
     fun getSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
         val scheduleMethod = when (paymentMethodType) {
@@ -35,7 +36,8 @@ class ScheduleService(
                 baseYearDays,
                 fromDateTime,
                 toDateTime,
-                repaymentDateTime
+                repaymentDateTime,
+                feeAmount
             )
             EQUAL_PRINCIPAL -> EqualPrincipalSchedule(
                 amount,
@@ -46,7 +48,8 @@ class ScheduleService(
                 baseYearDays,
                 fromDateTime,
                 toDateTime,
-                repaymentDateTime
+                repaymentDateTime,
+                feeAmount
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentSchedule(
                 amount,
@@ -57,7 +60,8 @@ class ScheduleService(
                 baseYearDays,
                 fromDateTime,
                 toDateTime,
-                repaymentDateTime
+                repaymentDateTime,
+                feeAmount
             )
             PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturitySchedule(
                 amount,
@@ -68,57 +72,8 @@ class ScheduleService(
                 baseYearDays,
                 fromDateTime,
                 toDateTime,
-                repaymentDateTime
-            )
-        }
-        return scheduleMethod.getSchedules()
-    }
-
-    fun getResetSchedules(paymentMethodType: PaymentMethodType): MutableList<Schedule> {
-        val scheduleMethod = when (paymentMethodType) {
-            EQUAL_INSTALLMENT -> EqualInstalmentScheduleReset(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                repaymentDayType,
-                baseYearDays,
-                fromDateTime,
-                toDateTime!!,
-                repaymentDateTime!!,
-            )
-            EQUAL_PRINCIPAL -> EqualPrincipalScheduleReset(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                repaymentDayType,
-                baseYearDays,
-                fromDateTime,
-                toDateTime!!,
-                repaymentDateTime!!,
-            )
-            ONE_OFF_REPAYMENT -> OneOffRepaymentScheduleReset(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                repaymentDayType,
-                baseYearDays,
-                fromDateTime,
-                toDateTime!!,
-                repaymentDateTime!!,
-            )
-            PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturityScheduleReset(
-                amount,
-                interestRateYear,
-                term,
-                frequency,
-                repaymentDayType,
-                baseYearDays,
-                fromDateTime,
-                toDateTime!!,
-                repaymentDateTime!!,
+                repaymentDateTime,
+                feeAmount
             )
         }
         return scheduleMethod.getSchedules()
@@ -136,6 +91,7 @@ class ScheduleService(
                 fromDateTime,
                 toDateTime!!,
                 repaymentDateTime!!,
+                feeAmount
             )
             EQUAL_PRINCIPAL -> EqualPrincipalSchedulePrepayment(
                 amount,
@@ -147,6 +103,7 @@ class ScheduleService(
                 fromDateTime,
                 toDateTime!!,
                 repaymentDateTime!!,
+                feeAmount
             )
             ONE_OFF_REPAYMENT -> OneOffRepaymentSchedulePrepayment(
                 amount,
@@ -158,6 +115,7 @@ class ScheduleService(
                 fromDateTime,
                 toDateTime!!,
                 repaymentDateTime!!,
+                feeAmount
             )
             PAY_INTEREST_SCHEDULE_PRINCIPAL_MATURITY -> PayInterestSchedulePrincipalMaturitySchedulePrepayment(
                 amount,
@@ -169,6 +127,7 @@ class ScheduleService(
                 fromDateTime,
                 toDateTime!!,
                 repaymentDateTime!!,
+                feeAmount
             )
         }
         return scheduleMethod.getSchedules()
