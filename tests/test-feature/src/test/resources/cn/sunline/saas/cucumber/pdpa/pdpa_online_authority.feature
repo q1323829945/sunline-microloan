@@ -12,7 +12,7 @@ Feature: PDPA online authority mode configuration
 
 
     Examples:
-      |                 authorityWay                    |                answerAuthorityWay                  |
+      |                    authorityWay                     |                  answerAuthorityWay                    |
       |                electronicSignature                  |                 electronicSignature                    |
       |                  faceRecognition                    |                    faceRecognition                     |
       |                    fingerprint                      |                     fingerprint                        |

@@ -105,8 +105,8 @@ enum class PermissionConfig (
     PDPA_LIST("pdpa","pdpa(\\?.*|\$)", RequestMethod.GET,"get pdpa information list"),
     PDPA_MODIFY("pdpa","pdpa/[0-9]+\$", RequestMethod.PUT,"put pdpa information"),
     PDPA_GET_ONE("pdpa","pdpa/[0-9]+\$", RequestMethod.GET,"get pdpa information"),
-    PDPA_AUTHORIZATION_GET_ONE("pdpa","pdpa/authorization\$", RequestMethod.GET,"get pdpa authorization information"),
-    PDPA_AUTHORIZATION_UPDATE("pdpa","pdpa/authorization\$", RequestMethod.PUT,"update pdpa authorization information"),
+    PDPA_AUTHORITY_GET_ONE("pdpa","pdpa/authority\$", RequestMethod.GET,"get pdpa authority information"),
+    PDPA_AUTHORITY_UPDATE("pdpa","pdpa/authority\$", RequestMethod.PUT,"update pdpa authority information"),
 
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
     USER_MENU("menu","userConfig", RequestMethod.GET,"View user menu"),
@@ -124,7 +124,7 @@ enum class PermissionConfig (
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
     REPAYMENT_MANAGEMENT_MENU("menu","repaymentManagementConfig", RequestMethod.GET,"View formal repaymentManagementConfig menu"),
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
-    PDPA_AUTHORIZATION_MENU("menu","pdpaAuthorizationConfig", RequestMethod.GET,"View pdpaAuthorizationConfig menu"),
+    PDPA_AUTHORITY_MENU("menu","pdpaAuthorityConfig", RequestMethod.GET,"View pdpaAuthorityConfig menu"),
 
 
 

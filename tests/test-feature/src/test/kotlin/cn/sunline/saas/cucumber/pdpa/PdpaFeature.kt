@@ -1,30 +1,18 @@
-package cn.sunline.saas.pdpa
+package cn.sunline.saas.cucumber.pdpa
 
-import cn.sunline.saas.CucumberApplication
 import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.model.CountryType
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAdd
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaItem
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaView
 import cn.sunline.saas.pdpa.services.PdpaService
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.cucumber.java.Before
 import io.cucumber.java.en.And
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import io.cucumber.junit.Cucumber
-import io.cucumber.spring.CucumberContextConfiguration
 import org.junit.jupiter.api.Assertions
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 
-@RunWith(Cucumber::class)
-@SpringBootTest(classes = [CucumberApplication::class])
 class PdpaFeature {
 
     @Autowired

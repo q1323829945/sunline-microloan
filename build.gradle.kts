@@ -30,6 +30,8 @@ val logVersion by extra { "2.1.21" }
 val hibernatetypeVersion by extra {"2.15.1"}
 val log4jdbcVersion by extra {"1.2"}
 val ktorVersion by extra {"2.0.1"}
+val cucumberVersion by extra{"7.3.3"}
+val junitJupiterVersion by extra{"5.8.2"}
 
 subprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")

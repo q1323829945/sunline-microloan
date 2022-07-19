@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class CucumberApplication {
+class TestFeatureApplication {
     fun main(args: Array<String>) {
-        runApplication<CucumberApplication>(*args)
+        runApplication<TestFeatureApplication>(*args)
     }
 }
