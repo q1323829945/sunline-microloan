@@ -3,6 +3,7 @@ package cn.sunline.saas.pdpa.controllers
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAuthority
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.response.response
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -24,12 +25,12 @@ class PdpaAuthorityController {
     @GetMapping
     fun getOne():ResponseEntity<DTOResponseSuccess<DTOPdpaAuthority>>{
         val authority = pdpaAuthorityService.getOne()
-        return objectMapper.convertValue(authority)
+        return DTOResponseSuccess(objectMapper.convertValue<DTOPdpaAuthority>(authority)).response()
     }
 
     @PutMapping
     fun updateOne(@RequestBody dtoPdpaauthority: DTOPdpaAuthority):ResponseEntity<DTOResponseSuccess<DTOPdpaAuthority>>{
         val authority = pdpaAuthorityService.updateOne(dtoPdpaauthority)
-        return objectMapper.convertValue(authority)
+        return DTOResponseSuccess(objectMapper.convertValue<DTOPdpaAuthority>(authority)).response()
     }
 }

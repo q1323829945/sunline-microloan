@@ -36,6 +36,7 @@ class EqualPrincipalScheduleTest {
     }
 
     @Test
+    @Disabled
     fun `test equal Principal schedules1`() {
 
         val actual = EqualPrincipalSchedule(

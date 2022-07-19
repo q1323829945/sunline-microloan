@@ -5,7 +5,8 @@ data class Menu (
         val name:String,
         val parentName:String,
         val icon:String,
-        val path:String
+        val path:String,
+        val sort:Int,
 )
 
 

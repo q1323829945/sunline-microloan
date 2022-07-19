@@ -32,6 +32,7 @@ val log4jdbcVersion by extra {"1.2"}
 val ktorVersion by extra {"2.0.1"}
 val cucumberVersion by extra{"7.3.3"}
 val junitJupiterVersion by extra{"5.8.2"}
+val restAssuredVersion by extra{"5.1.1"}
 
 subprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")

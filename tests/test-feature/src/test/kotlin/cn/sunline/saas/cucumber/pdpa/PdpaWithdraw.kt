@@ -6,9 +6,6 @@ import cn.sunline.saas.pdpa.services.CustomerPdpaInformationService
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import io.restassured.RestAssured.given
-import io.restassured.config.RestAssuredConfig
-import io.restassured.config.SSLConfig
 import org.junit.jupiter.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -28,15 +25,8 @@ class PdpaWithdraw {
                 electronicSignature = "path"
             )
         )
-
         this.customerId = customerId
 
-        val a = given()
-            .config(RestAssuredConfig.config().sslConfig(SSLConfig().relaxedHTTPSValidation()))
-            .get("https://www.baidu.com")
-            .then()
-            .statusCode(200)
-        println(a.toString())
     }
 
     @When("select withdraw")

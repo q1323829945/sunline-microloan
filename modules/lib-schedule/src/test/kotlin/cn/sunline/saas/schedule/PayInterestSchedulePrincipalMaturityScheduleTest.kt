@@ -48,6 +48,7 @@ class PayInterestSchedulePrincipalMaturityScheduleTest {
     }
 
     @Test
+    @Disabled
     fun `test pay interest schedule principal maturity schedules1`() {
 
         val actual = PayInterestSchedulePrincipalMaturitySchedule(
