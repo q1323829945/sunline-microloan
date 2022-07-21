@@ -6,7 +6,7 @@ import cn.sunline.saas.global.constant.RepaymentFrequency
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.global.constant.RepaymentStatus
 import java.math.BigDecimal
 
 /**

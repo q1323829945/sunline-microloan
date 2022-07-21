@@ -7,7 +7,7 @@ import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
-import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.global.constant.RepaymentStatus
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime

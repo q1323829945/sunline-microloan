@@ -1,4 +1,4 @@
-package cn.sunline.saas.invoice.model
+package cn.sunline.saas.global.constant
 
 /**
  * @title: RepaymentStatus

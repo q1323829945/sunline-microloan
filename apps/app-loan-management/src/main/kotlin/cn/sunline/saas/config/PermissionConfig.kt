@@ -126,13 +126,20 @@ enum class PermissionConfig (
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
     PDPA_AUTHORIZATION_MENU("menu","pdpaAuthorizationConfig", RequestMethod.GET,"View pdpaAuthorizationConfig menu"),
 
-
-
-
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/repayment/instruction(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
     CUSTOMER_LOAN_INVOICE_FINISH("ConsumerLoan","ConsumerLoan/invoice/finish/[0-9]+\$",RequestMethod.PUT,"finish invoice"),
     CUSTOMER_LOAN_INVOICE_CANCEL("ConsumerLoan","ConsumerLoan/invoice/cancel/[0-9]+\$",RequestMethod.PUT,"cancel invoice"),
     CUSTOMER_LOAN_INVOICE_MODIFY("ConsumerLoan", "ConsumerLoan/repayment/instruction/(FAILED|FULFILLED)/[0-9]+\$", RequestMethod.PUT, "Modify invoice"),
-    CUSTOMER_LOAN_INVOICE_DETAIL("ConsumerLoan","ConsumerLoan/invoice/detail/(.*?)/retrieve",RequestMethod.GET,"View invoice details")
+    CUSTOMER_LOAN_INVOICE_DETAIL("ConsumerLoan","ConsumerLoan/invoice/detail/(.*?)/retrieve",RequestMethod.GET,"View invoice details"),
+
+
+    LOAN_BUSINESS_GET_LIST("LoanBusiness","LoanBusiness/(\\?.*|\$)",RequestMethod.GET,"View loan information"),
+    LOAN_BUSINESS_APPLICATION_RETRIEVE("LoanBusiness","LoanBusiness/application/{applicationId}/retrieve",RequestMethod.GET,"View loan application information"),
+    LOAN_BUSINESS_FEE_RETRIEVE("LoanBusiness","LoanBusiness/fee/{applicationId}/retrieve",RequestMethod.GET,"view loan fee information"),
+    LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/{applicationId}/retrieve",RequestMethod.GET,"view loan history event record"),
+    LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/{agreementId}/retrieve", RequestMethod.GET, "view repayment record"),
+    LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/{agreementId}/retrieve", RequestMethod.GET, "view disbursement disbursement")
+
 }
+

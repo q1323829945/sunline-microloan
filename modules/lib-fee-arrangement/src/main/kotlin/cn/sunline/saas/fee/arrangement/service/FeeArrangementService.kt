@@ -28,7 +28,7 @@ import javax.persistence.criteria.Root
 class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepository) :
     BaseMultiTenantRepoService<FeeArrangement, Long>(feeArrangementRepos) {
 
-    data class FeeItem(val immediateFee: BigDecimal, val scheduleFee: BigDecimal)
+    data class FeeDeductItem(val immediateFee: BigDecimal, val scheduleFee: BigDecimal)
 
     @Autowired
     private lateinit var seq: Sequence
@@ -67,7 +67,7 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
     }
 
 
-    fun getDisbursementFeeItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeItem {
+    fun getDisbursementFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
         var feeImmediateAmount = BigDecimal.ZERO
         var feeScheduleAmount = BigDecimal.ZERO
         feeArrangement?.filter {
@@ -102,10 +102,10 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
             }
         }
 
-        return FeeItem(feeImmediateAmount, feeScheduleAmount)
+        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
     }
 
-    fun getPrepaymentFeeItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeItem {
+    fun getPrepaymentFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
         var feeImmediateAmount = BigDecimal.ZERO
         val feeScheduleAmount = BigDecimal.ZERO
         feeArrangement?.filter {
@@ -124,10 +124,10 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
             }
         }
 
-        return FeeItem(feeImmediateAmount, feeScheduleAmount)
+        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
     }
 
-    fun getOverdueFeeItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeItem {
+    fun getOverdueFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
         var feeImmediateAmount = BigDecimal.ZERO
         var feeScheduleAmount = BigDecimal.ZERO
         feeArrangement?.filter {
@@ -162,6 +162,6 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
             }
         }
 
-        return FeeItem(feeImmediateAmount, feeScheduleAmount)
+        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
     }
 }

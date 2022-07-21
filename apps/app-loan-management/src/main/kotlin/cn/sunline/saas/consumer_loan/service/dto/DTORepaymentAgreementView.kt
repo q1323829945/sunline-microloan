@@ -4,7 +4,7 @@ import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.InvoiceType
-import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.global.constant.RepaymentStatus
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 
 data class DTOInvoiceTransferInstructionPage(

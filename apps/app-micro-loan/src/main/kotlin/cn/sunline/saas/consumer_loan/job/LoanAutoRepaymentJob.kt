@@ -4,7 +4,7 @@ import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.invoice.model.InvoiceStatus
-import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.global.constant.RepaymentStatus
 import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime

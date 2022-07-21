@@ -65,7 +65,6 @@ class EqualInstalmentScheduleTest {
 
 
     @Test
-    @Disabled
     fun `test equal instalment schedules reset`() {
 
 
@@ -92,7 +91,6 @@ class EqualInstalmentScheduleTest {
 
 
     @Test
-    @Disabled
     fun `test equal instalment schedules prepayment`() {
 
 

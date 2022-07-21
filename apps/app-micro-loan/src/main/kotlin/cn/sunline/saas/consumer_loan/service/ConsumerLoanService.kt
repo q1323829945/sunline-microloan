@@ -16,9 +16,11 @@ import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruc
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.arrangement.model.db.FeeArrangement
+import cn.sunline.saas.fee.arrangement.model.db.FeeItem
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
+import cn.sunline.saas.fee.arrangement.service.FeeItemService
 import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.fee.util.FeeUtil
@@ -131,7 +133,7 @@ class ConsumerLoanService(
     private lateinit var feeArrangementService: FeeArrangementService
 
     @Autowired
-    private lateinit var loanProductSerivce: ProductService
+    private lateinit var feeItemService: FeeItemService
 
 
     fun createLoanAgreement(applicationId: Long) {
@@ -158,7 +160,7 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeItem = feeArrangementService.getDisbursementFeeItem(
+        val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(
             feeArrangement,
             customerOffer.amount.toBigDecimal()
         )
@@ -175,7 +177,7 @@ class ConsumerLoanService(
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime),
             tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime),
             null,
-            feeItem.scheduleFee
+            feeDeductItem.scheduleFee
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
 
 
@@ -230,7 +232,7 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeItem = feeArrangementService.getDisbursementFeeItem(
+        val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(
             feeArrangement,
             loanAgreement.amount
         )
@@ -244,7 +246,7 @@ class ConsumerLoanService(
                 currency = loanAgreement.currency,
                 amount = loanAgreement.amount,
                 businessUnit = disbursementInstruction.businessUnit,
-                appliedFee = feeItem.immediateFee,
+                appliedFee = feeDeductItem.immediateFee,
                 appliedRate = null,
                 customerId = loanAgreement.involvements.first { it.involvementType == LoanAgreementInvolvementType.LOAN_BORROWER }.partyId,
             )
@@ -362,7 +364,7 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeItem = feeArrangementService.getDisbursementFeeItem(feeArrangement, amount)
+        val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
         val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong())
         val schedule = ScheduleService(
@@ -375,9 +377,9 @@ class ConsumerLoanService(
             tenantDateTime.now(),
             null,
             null,
-            feeItem.scheduleFee
+            feeDeductItem.scheduleFee
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-        return convertToScheduleTrialMapper(schedule,feeItem.immediateFee)
+        return convertToScheduleTrialMapper(schedule, feeDeductItem.immediateFee)
     }
 
     private fun convertToInterestRate(list: List<DTOInvokeRates>, ratePlanId: Long): MutableList<InterestRate> {
@@ -634,11 +636,12 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeItem = feeArrangementService.getPrepaymentFeeItem(feeArrangement, amount)
+        val feeDeductItem = feeArrangementService.getPrepaymentFeeDeductItem(feeArrangement, amount)
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
+        val interestRate =
+            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -649,7 +652,8 @@ class ConsumerLoanService(
             tenantDateTime.toTenantDateTime(invoice.invoicePeriodFromDate),
             tenantDateTime.toTenantDateTime(agreement.toDateTime),
             tenantDateTime.now(),
-            invoice.invoiceLines.filter { it.invoiceAmountType == InvoiceAmountType.FEE }.sumOf { it.invoiceAmount }.add(feeItem.immediateFee)
+            invoice.invoiceLines.filter { it.invoiceAmountType == InvoiceAmountType.FEE }.sumOf { it.invoiceAmount }
+                .add(feeDeductItem.immediateFee)
         ).getPrepaymentSchedules(repaymentArrangement.paymentMethod)
 
         val prepaymentLines = convertToInvoiceLines(schedule)
@@ -936,8 +940,33 @@ class ConsumerLoanService(
     }
 
     fun getLoanAgreementInfoByAgreementId(agreementId: Long): DTOLoanAgreementViewInfo? {
-        val loanAgreement = loanAgreementService.getOne(agreementId)
-        return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
+        val loanAgreement =
+            loanAgreementService.getOne(agreementId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+
+        val repaymentArrangement = repaymentArrangementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("repayment arrangement not found")
+
+        val disbursementArrangement = disbursementArrangementService.getOne(agreementId)
+            ?: throw LoanAgreementNotFoundException("disbursement arrangement not found")
+
+        return DTOLoanAgreementViewInfo(
+            id = agreementId.toString(),
+            applicationId = loanAgreement.applicationId.toString(),
+            productId = loanProduct.id,
+            productName = loanProduct.name,
+            amount = loanAgreement.amount.toPlainString(),
+            term = loanAgreement.term,
+            disbursementAccountBank = disbursementArrangement.disbursementAccountBank,
+            disbursementAccount = disbursementArrangement.disbursementAccount,
+            purpose = loanAgreement.purpose,
+            paymentMethod = repaymentArrangement.paymentMethod,
+            currency = loanAgreement.currency,
+            fromDateTime = loanAgreement.fromDateTime.toString(),
+            toDateTime = loanAgreement.toDateTime.toString(),
+            signedDate = loanAgreement.signedDate.toString(),
+        )
     }
 
     fun getRepaymentInstructionRecord(customerId: Long): MutableList<DTORepaymentRecordView> {
@@ -980,5 +1009,20 @@ class ConsumerLoanService(
         callBackRepayLoanInvoice(repaymentInstruction)
         cancelInitLoanInvoice(repaymentInstruction.agreementId, repaymentInstruction.referenceId)
         // TODO InstructionLifecycleStatus Change
+    }
+
+    fun getFeeItemListByAgreementId(agreementId: Long): MutableList<DTOFeeItemView> {
+        return feeItemService.listByAgreementId(agreementId).map {
+            val feeArrangement = feeArrangementService.getOne(it.feeArrangementId)
+                ?: throw LoanAgreementNotFoundException("fee arrangement not found")
+            DTOFeeItemView(
+                agreementId = agreementId.toString(),
+                loanFeeType = feeArrangement.feeType,
+                loanFeeTypeName = feeArrangement.feeType.name,
+                currency = it.currency,
+                feeAmountOrRatio = it.feeAmount.toPlainString(),
+                nonPaymentAmount = it.feeAmount.subtract(it.repaymentAmount).toPlainString()
+            )
+        }.toMutableList()
     }
 }

@@ -1,6 +1,7 @@
 package cn.sunline.saas.rpc.invoke
 
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
+import cn.sunline.saas.rpc.invoke.dto.DTOFeeItemView
 import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementView
 import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementViewInfo
 import cn.sunline.saas.rpc.invoke.dto.DTOUnderwriting
@@ -15,4 +16,6 @@ interface CustomerOfferInvoke {
     fun getLoanAgreementInfo(applicationId:Long): DTOLoanAgreementViewInfo?
 
     fun getLoanAgreementInfoByAgreementId(agreementId:Long): DTOLoanAgreementViewInfo?
+
+    fun getFeeItemListByAgreementId(agreementId:Long): MutableList<DTOFeeItemView>?
 }

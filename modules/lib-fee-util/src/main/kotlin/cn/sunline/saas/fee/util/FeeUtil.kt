@@ -15,7 +15,7 @@ import java.math.RoundingMode
 object FeeUtil {
     private val mc = MathContext(2, RoundingMode.HALF_UP)
 
-    data class FeeItem(val iImmediateFee: BigDecimal,val scheduleFee:BigDecimal)
+    data class FeeDeductItem(val iImmediateFee: BigDecimal,val scheduleFee:BigDecimal)
 
     fun calFeeAmount(baseAmount: BigDecimal, feeRatio: BigDecimal, feeMethodType: FeeMethodType): BigDecimal {
         return when (feeMethodType) {

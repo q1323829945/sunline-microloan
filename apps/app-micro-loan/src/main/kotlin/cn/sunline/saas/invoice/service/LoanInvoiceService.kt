@@ -50,13 +50,13 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 this
             )
         }
-        val feeItem = feeArrangementService.getOverdueFeeItem(feeArrangement, invoiceTotalAmount)
+        val feeDeductItem = feeArrangementService.getOverdueFeeDeductItem(feeArrangement, invoiceTotalAmount)
 
         invoice.invoiceLines.forEach {
             lines += if(it.invoiceAmountType == InvoiceAmountType.FEE){
                 DTOInvoiceLinesView(
                     invoiceAmountType = it.invoiceAmountType,
-                    invoiceAmount = it.invoiceAmount.add(feeItem.immediateFee).toPlainString()
+                    invoiceAmount = it.invoiceAmount.add(feeDeductItem.immediateFee).toPlainString()
                 )
             }else {
                 DTOInvoiceLinesView(

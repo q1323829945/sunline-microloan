@@ -10,6 +10,7 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
+import cn.sunline.saas.rpc.invoke.dto.DTOFeeItemView
 import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementView
 import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementViewInfo
 import cn.sunline.saas.rpc.invoke.dto.DTOUnderwriting
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.GetMapping
 
 @Component
 class CustomerOfferInvokeImpl: CustomerOfferInvoke {
@@ -83,6 +85,19 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
         return RPCService.get<DTOLoanAgreementViewInfo>(
             serviceName = APP_MICRO_LOAN,
             methodName = "ConsumerLoan/LoanAgreement/Info/$agreementId/retrieve",
+            queryParams = mapOf(),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant()
+        )
+    }
+
+    override fun getFeeItemListByAgreementId(agreementId:Long): MutableList<DTOFeeItemView>?{
+        return RPCService.get<MutableList<DTOFeeItemView>>(
+            serviceName = APP_MICRO_LOAN,
+            methodName = "ConsumerLoan/fee/item/$agreementId/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),

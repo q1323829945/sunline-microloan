@@ -5,7 +5,7 @@ import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
 import cn.sunline.saas.invoice.model.dto.DTOLoanInvoice
-import cn.sunline.saas.invoice.model.RepaymentStatus
+import cn.sunline.saas.global.constant.RepaymentStatus
 import cn.sunline.saas.invoice.repository.InvoiceRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime

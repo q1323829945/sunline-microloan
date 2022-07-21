@@ -31,8 +31,6 @@ class ConsumerLoanController {
         val status: AgreementStatus
     )
 
-
-
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
 
@@ -146,6 +144,12 @@ class ConsumerLoanController {
     @GetMapping("/repayment/record/{customerId}/retrieve")
     fun getRepaymentInstructionRecord(@PathVariable("customerId", required = false) customerId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTORepaymentRecordView>>>{
         val view = consumerLoanService.getRepaymentInstructionRecord(customerId)
+        return DTOResponseSuccess(view).response()
+    }
+
+    @GetMapping("/fee/item/{agreementId}/retrieve")
+    fun getFeeItemListByAgreementId(agreementId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTOFeeItemView>>> {
+        val view = consumerLoanService.getFeeItemListByAgreementId(agreementId)
         return DTOResponseSuccess(view).response()
     }
 }

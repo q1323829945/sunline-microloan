@@ -72,7 +72,7 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
     fun getPage(
         agreementId: Long?,
         customerId: Long?,
-        moneyTransferInstructionType: MoneyTransferInstructionType,
+        moneyTransferInstructionType: MoneyTransferInstructionType?,
         moneyTransferInstructionStatus: InstructionLifecycleStatus?,
         pageable: Pageable
     ): Page<MoneyTransferInstruction> {
@@ -99,7 +99,7 @@ class RepaymentInstructionService(private val moneyTransferInstructionRepo: Mone
                     )
                 )
             }
-            moneyTransferInstructionType.run {
+            moneyTransferInstructionType?.run {
                 predicates.add(
                     criteriaBuilder.equal(
                         root.get<MoneyTransferInstructionType>("moneyTransferInstructionType"),
