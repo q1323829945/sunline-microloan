@@ -1,28 +1,18 @@
-package cn.sunline.saas.pdpa
+package cn.sunline.saas.cucumber.pdpa
 
-import cn.sunline.saas.CucumberApplication
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.pdpa.modules.db.PdpaAuthority
-import cn.sunline.saas.pdpa.modules.dto.DTOCustomerPdpaInformation
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAuthority
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
-import io.cucumber.java.Before
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
-import io.cucumber.junit.Cucumber
 import org.junit.jupiter.api.Assertions
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 
 const val ELECTRONIC_SIGNATURE = "electronicSignature"
 const val FACE_RECOGNITION = "faceRecognition"
 const val FINGERPRINT = "fingerprint"
 
-@RunWith(Cucumber::class)
-@SpringBootTest(classes = [CucumberApplication::class])
 class PdpaOnlineAuthority {
     @Autowired
     private lateinit var pdpaAuthorityService: PdpaAuthorityService
