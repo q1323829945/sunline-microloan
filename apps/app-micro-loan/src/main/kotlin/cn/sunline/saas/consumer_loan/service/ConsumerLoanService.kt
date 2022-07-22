@@ -966,6 +966,8 @@ class ConsumerLoanService(
             fromDateTime = loanAgreement.fromDateTime.toString(),
             toDateTime = loanAgreement.toDateTime.toString(),
             signedDate = loanAgreement.signedDate.toString(),
+            loanProductType = loanProduct.loanProductType,
+            agreementStatus = loanAgreement.status
         )
     }
 

@@ -5,6 +5,7 @@ import cn.sunline.saas.global.constant.LoanFeeType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.PaymentMethodType
 import cn.sunline.saas.global.model.CurrencyType
+import cn.sunline.saas.loan.product.model.LoanProductType
 import java.math.BigDecimal
 
 data class DTOLoanAgreementView (
@@ -27,7 +28,9 @@ data class DTOLoanAgreementViewInfo(
     val disbursementAccountBank: String,
     val disbursementAccount: String,
     val paymentMethod: PaymentMethodType,
-    val userId: String?
+    val userId: String?,
+    val loanProductType: LoanProductType,
+    val agreementStatus: AgreementStatus
 )
 
 data class DTOFeeItemView(

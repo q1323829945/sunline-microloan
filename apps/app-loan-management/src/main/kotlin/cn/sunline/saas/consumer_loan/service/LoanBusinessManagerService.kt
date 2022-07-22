@@ -17,6 +17,7 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.loan.product.model.LoanProductType
+import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.person.model.PersonIdentificationType
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.aspectj.apache.bcel.generic.Instruction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -66,16 +68,37 @@ class LoanBusinessManagerService(
         pageable: Pageable
     ): Page<DTOLoanBusinessView> {
 
-//        val person = personService.findByIdentification(identificationNo, identificationType)
-//
-//        customerOfferService.getCustomerOfferPaged(customerId, null, null, pageable)
-////        return interestRateService.getPaged({ root, _, criteriaBuilder ->
-////            val predicates = mutableListOf<Predicate>()
-////            predicates.add(criteriaBuilder.equal(root.get<Long>("ratePlanId"), ratePlanId))
-////            criteriaBuilder.and(*(predicates.toTypedArray()))
-////        }, pageable)
-        return Page.empty()
+        val person = personService.findByIdentification(identificationNo, identificationType)
+            ?: throw LoanBusinessException("Invalid Person", ManagementExceptionCode.DATA_NOT_FOUND)
+        val customerOfferPaged = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable)
 
+        return customerOfferPaged.map {
+            val agreementViewInfo = it.id?.let { it1 -> customerOfferInvoke.getLoanAgreementInfoByAgreementId(it1) }
+            var repaymentAmount = BigDecimal.ZERO
+            if (agreementViewInfo?.id != null) {
+                val repaymentInstruction = repaymentInstructionService.getPage(
+                    agreementViewInfo.id.toLong(),
+                    null,
+                    MoneyTransferInstructionType.REPAYMENT,
+                    InstructionLifecycleStatus.FULFILLED,
+                    Pageable.unpaged()
+                )
+                repaymentAmount = repaymentInstruction.sumOf {  instruction -> instruction.moneyTransferInstructionAmount }
+            }
+            DTOLoanBusinessView(
+                agreementId = agreementViewInfo?.id,
+                applicationId = it.id.toString(),
+                disbursementAccount = agreementViewInfo?.disbursementAccount,
+                loanProductType = agreementViewInfo?.loanProductType,
+                currency = agreementViewInfo?.currency,
+                loanAmount = agreementViewInfo?.amount,
+                disbursementAmount = agreementViewInfo?.amount,
+                repaymentAmount = repaymentAmount.toPlainString(),
+                isSyndicatedLoan = YesOrNo.N,
+                isRevolvingLoan = YesOrNo.N,
+                status = agreementViewInfo?.agreementStatus
+            )
+        }
     }
 
     fun getLoanApplicationPaged(applicationId: String, pageable: Pageable): Page<DTOApplicationLoanView> {
@@ -97,7 +120,7 @@ class LoanBusinessManagerService(
         content.add(
             DTOLoanDisbursementView(
                 agreementId = agreementId,
-                applicationId = agreementViewInfo.applicationId.toString(),
+                applicationId = agreementViewInfo.applicationId,
                 disbursementAccount = agreementViewInfo.disbursementAccount,
                 disbursementAccountBank = agreementViewInfo.disbursementAccountBank,
                 currency = agreementViewInfo.currency,
@@ -125,7 +148,7 @@ class LoanBusinessManagerService(
                 agreementId = agreementId,
                 eventName = it.moneyTransferInstructionType.name,
                 eventDate = it.executeDateTime?.let { date -> tenantDateTime.toTenantDateTime(date) }.toString(),
-                totalLoanAmount = agreementViewInfo.amount,
+                loanAmount = agreementViewInfo.amount,
                 disbursementAmount = it.moneyTransferInstructionAmount.toPlainString(),
                 repaidAmount = if (it.moneyTransferInstructionType == MoneyTransferInstructionType.DISBURSEMENT) BigDecimal.ZERO.toPlainString()
                 else it.moneyTransferInstructionAmount.toPlainString()

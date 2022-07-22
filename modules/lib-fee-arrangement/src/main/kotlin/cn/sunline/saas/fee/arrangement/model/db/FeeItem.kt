@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(
-    name = "fee_item",
-    indexes = [Index(name = "idx_fee_item_id", columnList = "fee_item_id")]
+    name = "fee_item"
 )
 @EntityListeners(TenantListener::class)
 class FeeItem(

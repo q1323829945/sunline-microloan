@@ -135,11 +135,11 @@ enum class PermissionConfig (
 
 
     LOAN_BUSINESS_GET_LIST("LoanBusiness","LoanBusiness/(\\?.*|\$)",RequestMethod.GET,"View loan information"),
-    LOAN_BUSINESS_APPLICATION_RETRIEVE("LoanBusiness","LoanBusiness/application/{applicationId}/retrieve",RequestMethod.GET,"View loan application information"),
-    LOAN_BUSINESS_FEE_RETRIEVE("LoanBusiness","LoanBusiness/fee/{applicationId}/retrieve",RequestMethod.GET,"view loan fee information"),
-    LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/{applicationId}/retrieve",RequestMethod.GET,"view loan history event record"),
-    LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/{agreementId}/retrieve", RequestMethod.GET, "view repayment record"),
-    LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/{agreementId}/retrieve", RequestMethod.GET, "view disbursement disbursement")
+    LOAN_BUSINESS_APPLICATION_RETRIEVE("LoanBusiness","LoanBusiness/application/(.*?)/retrieve",RequestMethod.GET,"View loan application information"),
+    LOAN_BUSINESS_FEE_RETRIEVE("LoanBusiness","LoanBusiness/fee/(.*?)/retrieve",RequestMethod.GET,"view loan fee information"),
+    LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/(.*?)/retrieve",RequestMethod.GET,"view loan history event record"),
+    LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/(.*?)/retrieve", RequestMethod.GET, "view repayment record"),
+    LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/(.*?)/retrieve", RequestMethod.GET, "view disbursement disbursement")
 
 }
 
