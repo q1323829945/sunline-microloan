@@ -73,7 +73,7 @@ class LoanBusinessManagerService(
         val customerOfferPaged = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable)
 
         return customerOfferPaged.map {
-            val agreementViewInfo = it.id?.let { it1 -> customerOfferInvoke.getLoanAgreementInfoByAgreementId(it1) }
+            val agreementViewInfo = it.id?.let { it1 -> customerOfferInvoke.getLoanAgreementInfo(it1) }
             var repaymentAmount = BigDecimal.ZERO
             if (agreementViewInfo?.id != null) {
                 val repaymentInstruction = repaymentInstructionService.getPage(
@@ -83,7 +83,10 @@ class LoanBusinessManagerService(
                     InstructionLifecycleStatus.FULFILLED,
                     Pageable.unpaged()
                 )
-                repaymentAmount = repaymentInstruction.sumOf {  instruction -> instruction.moneyTransferInstructionAmount }
+                if (repaymentInstruction.size > 0) {
+                    repaymentAmount =
+                        repaymentInstruction.sumOf { instruction -> instruction.moneyTransferInstructionAmount }
+                }
             }
             DTOLoanBusinessView(
                 agreementId = agreementViewInfo?.id,

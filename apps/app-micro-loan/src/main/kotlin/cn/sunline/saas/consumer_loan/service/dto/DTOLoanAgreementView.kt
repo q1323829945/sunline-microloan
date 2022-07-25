@@ -13,7 +13,7 @@ data class DTOLoanAgreementView(
     val status: AgreementStatus
 )
 
-data class DTOLoanAgreementViewInfo(
+data class DTOLoanAgreementViewInfo (
     val id: String,
     val productName: String,
     val term: LoanTermType,

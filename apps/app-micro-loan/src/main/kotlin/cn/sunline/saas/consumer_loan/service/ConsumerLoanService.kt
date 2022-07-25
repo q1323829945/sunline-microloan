@@ -276,7 +276,35 @@ class ConsumerLoanService(
 
     fun getLoanAgreementInfoByApplicationId(applicationId: Long): DTOLoanAgreementViewInfo? {
         val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
-        return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
+            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+
+        val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
+
+        val repaymentArrangement = repaymentArrangementService.getOne(loanAgreement.id)
+            ?: throw LoanAgreementNotFoundException("repayment arrangement not found")
+
+        val disbursementArrangement = disbursementArrangementService.getOne(loanAgreement.id)
+            ?: throw LoanAgreementNotFoundException("disbursement arrangement not found")
+
+        return DTOLoanAgreementViewInfo(
+            id = loanAgreement.id.toString(),
+            applicationId = loanAgreement.applicationId.toString(),
+            productId = loanProduct.id,
+            productName = loanProduct.name,
+            amount = loanAgreement.amount.toPlainString(),
+            term = loanAgreement.term,
+            disbursementAccountBank = disbursementArrangement.disbursementAccountBank,
+            disbursementAccount = disbursementArrangement.disbursementAccount,
+            purpose = loanAgreement.purpose,
+            paymentMethod = repaymentArrangement.paymentMethod,
+            currency = loanAgreement.currency,
+            fromDateTime = loanAgreement.fromDateTime.toString(),
+            toDateTime = loanAgreement.toDateTime.toString(),
+            signedDate = loanAgreement.signedDate.toString(),
+            loanProductType = loanProduct.loanProductType,
+            agreementStatus = loanAgreement.status
+        )
+//        return loanAgreement?.run { objectMapper.convertValue(loanAgreement) }
     }
 
     fun signedLoanAgreement(applicationId: Long) {

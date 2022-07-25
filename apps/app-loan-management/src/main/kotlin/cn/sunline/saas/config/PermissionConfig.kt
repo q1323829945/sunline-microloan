@@ -134,7 +134,7 @@ enum class PermissionConfig (
     CUSTOMER_LOAN_INVOICE_DETAIL("ConsumerLoan","ConsumerLoan/invoice/detail/(.*?)/retrieve",RequestMethod.GET,"View invoice details"),
 
 
-    LOAN_BUSINESS_GET_LIST("LoanBusiness","LoanBusiness/(\\?.*|\$)",RequestMethod.GET,"View loan information"),
+    LOAN_BUSINESS_GET_LIST("LoanBusiness","LoanBusiness(\\?.*|\$)",RequestMethod.GET,"View loan information"),
     LOAN_BUSINESS_APPLICATION_RETRIEVE("LoanBusiness","LoanBusiness/application/(.*?)/retrieve",RequestMethod.GET,"View loan application information"),
     LOAN_BUSINESS_FEE_RETRIEVE("LoanBusiness","LoanBusiness/fee/(.*?)/retrieve",RequestMethod.GET,"view loan fee information"),
     LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/(.*?)/retrieve",RequestMethod.GET,"view loan history event record"),
