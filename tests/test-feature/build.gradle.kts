@@ -18,13 +18,11 @@ dependencies {
     testImplementation("io.rest-assured:json-path:${restAssuredVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 
 
 
     testImplementation("com.h2database:h2:1.4.200")
     testImplementation(project(":lib-global"))
-    testImplementation(project(":lib-pdpa"))
     testImplementation(project(":lib-obs-test"))
     testImplementation(project(":lib-seq-test"))
     testImplementation(project(":lib-multi-tenant"))

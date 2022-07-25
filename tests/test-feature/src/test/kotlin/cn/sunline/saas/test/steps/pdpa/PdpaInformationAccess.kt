@@ -1,13 +1,14 @@
-package cn.sunline.saas.cucumber.pdpa
+package cn.sunline.saas.test.steps.pdpa
 
 import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.model.CountryType
-import cn.sunline.saas.pdpa.modules.dto.DTOCustomerPdpaInformation
-import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAdd
-import cn.sunline.saas.pdpa.modules.dto.DTOPdpaItem
-import cn.sunline.saas.pdpa.services.CustomerPdpaInformationService
-import cn.sunline.saas.pdpa.services.PdpaService
+import cn.sunline.saas.test.steps.config.RestAssuredConfig
+import cn.sunline.saas.test.steps.dto.DTOCustomerPdpaInformationChange
+import cn.sunline.saas.test.steps.dto.DTOPdpaAdd
+import cn.sunline.saas.test.steps.dto.DTOPdpaChange
+import cn.sunline.saas.test.steps.dto.DTOPdpaItem
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.cucumber.java.en.Given
@@ -15,13 +16,12 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.jupiter.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.LinkedList
 
 class PdpaInformationAccess {
 
     @Autowired
-    private lateinit var customerPdpaInformationService: CustomerPdpaInformationService
-    @Autowired
-    private lateinit var pdpaService: PdpaService
+    private lateinit var restAssuredConfig: RestAssuredConfig
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -29,42 +29,60 @@ class PdpaInformationAccess {
     private lateinit var customerId:String
     private lateinit var pdpaInformationView:List<DTOPdpaItem>
 
+    private val country = CountryType.CHN
+    private val language = LanguageType.ENGLISH
+
+
+
     @Given("init pdpa")
     fun `init pdpa`() {
-        val pdpa = pdpaService.addOne(
-            DTOPdpaAdd(
-                country = CountryType.CHN,
-                language = LanguageType.CHINESE,
-                pdpaInformation = items()
-            )
-        )
+        val checkExist = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/${country}/${language}/retrieve"))
+        if(checkExist.statusCode != 200){
+            val response = restAssuredConfig.post(
+                restAssuredConfig.setManagementUrl("pdpa"),
+                DTOPdpaAdd(
+                    country,
+                    language,
+                    items()
+                ),)
+            val id = response.jsonPath().get<String>("data.id")
+            this.pdpaId = id
+        } else {
+            val id = checkExist.jsonPath().get<String>("data.id")
+            this.pdpaId = id
 
-        this.pdpaId = pdpa.id
+            val getItems = checkExist.jsonPath().get<ArrayList<*>>("data.pdpaInformation")
+
+            if(items() != objectMapper.convertValue<List<DTOPdpaItem>>(getItems)){
+                restAssuredConfig.put(restAssuredConfig.setManagementUrl("pdpa/$id"), DTOPdpaChange(items()))
+            }
+        }
     }
 
     @Given("there are customer {string} already confirm PDPA authorization")
     fun `there are customer {string} already confirm PDPA authorization`(customerId:String){
-        customerPdpaInformationService.getAndRegisterCustomerPdpaInformation(
-            DTOCustomerPdpaInformation(
-                customerId = customerId,
-                pdpaId = pdpaId,
-                electronicSignature = "6666",
-                faceRecognition = "6666",
-                fingerprint = "6666",
-            )
-        )
-
         this.customerId = customerId
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val data = response.jsonPath().get<LinkedHashMap<String,*>?>("data")
+        //TODO:正常流程是申请的时候把权限加上去。
+        if(data == null){
+            restAssuredConfig.post(
+                restAssuredConfig.setManagementUrl("customer/pdpa/confirm"),
+                DTOCustomerPdpaInformationChange(
+                    customerId,
+                    pdpaId,
+                    "11111"
+                )
+            )
+        }
+
     }
 
     @When("access PDPA information")
     fun `access PDPA information`(){
-        val customerInformation = customerPdpaInformationService.getAndRegisterCustomerPdpaInformation(DTOCustomerPdpaInformation(customerId))
-        customerInformation.pdpaId?.run {
-            val pdpa = pdpaService.getDTOPdpaView(this)
-
-            pdpaInformationView = pdpa.pdpaInformation!!
-        }
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val pdpaInformation = response.jsonPath().get<ArrayList<*>>("data.pdpaInformation")
+        pdpaInformationView = objectMapper.convertValue(pdpaInformation)
     }
 
     @Then("obtain PDPA authorization information")
@@ -81,55 +99,55 @@ class PdpaInformationAccess {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"name\",\n" +
+                "                        \"label\": \"name\",\n" +
                 "                        \"name\": \"name\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias\",\n" +
+                "                        \"label\": \"alias\",\n" +
                 "                        \"name\": \"alias\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"name pinyin\",\n" +
+                "                        \"label\": \"name pinyin\",\n" +
                 "                        \"name\": \"name pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias pinyin\",\n" +
+                "                        \"label\": \"alias pinyin\",\n" +
                 "                        \"name\": \"alias pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"gender\",\n" +
+                "                        \"label\": \"gender\",\n" +
                 "                        \"name\": \"gender\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"birth\",\n" +
+                "                        \"label\": \"birth\",\n" +
                 "                        \"name\": \"birth\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"internationgal\",\n" +
+                "                        \"label\": \"internationgal\",\n" +
                 "                        \"name\": \"internationgal\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"register address\",\n" +
+                "                        \"label\": \"register address\",\n" +
                 "                        \"name\": \"register address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"hdb type\",\n" +
+                "                        \"label\": \"hdb type\",\n" +
                 "                        \"name\": \"hdb type\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"notice\",\n" +
+                "                        \"label\": \"notice\",\n" +
                 "                        \"name\": \"notice\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"mobile phone\",\n" +
+                "                        \"label\": \"mobile phone\",\n" +
                 "                        \"name\": \"mobile phone\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"email\",\n" +
+                "                        \"label\": \"email\",\n" +
                 "                        \"name\": \"email\"\n" +
                 "                    }\n" +
                 "                ]\n" +
@@ -139,35 +157,35 @@ class PdpaInformationAccess {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"outline\",\n" +
+                "                        \"label\": \"outline\",\n" +
                 "                        \"name\": \"outline\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"compangy\",\n" +
+                "                        \"label\": \"compangy\",\n" +
                 "                        \"name\": \"compangy\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"uens\",\n" +
+                "                        \"label\": \"uens\",\n" +
                 "                        \"name\": \"uens\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"finance\",\n" +
+                "                        \"label\": \"finance\",\n" +
                 "                        \"name\": \"finance\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"capital\",\n" +
+                "                        \"label\": \"capital\",\n" +
                 "                        \"name\": \"capital\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"leader\",\n" +
+                "                        \"label\": \"leader\",\n" +
                 "                        \"name\": \"leader\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"shareholder\",\n" +
+                "                        \"label\": \"shareholder\",\n" +
                 "                        \"name\": \"shareholder\"\n" +
                 "                    }\n" +
                 "                ]\n" +

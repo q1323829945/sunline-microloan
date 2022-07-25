@@ -83,6 +83,6 @@ data class DTOPdpaItemView(
 )
 
 data class DTOPdpaInformationView(
-        val key:String,
+        val label:String,
         val name:String
 )

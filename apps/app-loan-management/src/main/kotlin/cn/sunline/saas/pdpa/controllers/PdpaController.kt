@@ -24,7 +24,7 @@ import javax.websocket.server.PathParam
 
 @RestController
 @RequestMapping("pdpa")
-class PDPAController {
+class PdpaController {
     @Autowired
     private lateinit var pdpaService: PdpaService
 

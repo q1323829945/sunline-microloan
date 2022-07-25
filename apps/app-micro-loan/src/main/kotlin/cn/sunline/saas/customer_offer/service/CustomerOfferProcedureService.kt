@@ -13,14 +13,6 @@ import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
-import cn.sunline.saas.party.person.model.PersonIdentificationType
-import cn.sunline.saas.party.person.model.ResidentialStatus
-import cn.sunline.saas.party.person.model.RoleType
-import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
-import cn.sunline.saas.party.person.model.dto.DTOPersonIdentificationAdd
-import cn.sunline.saas.party.person.model.dto.DTOPersonNameAdd
-import cn.sunline.saas.party.person.model.dto.DTOPersonRoleAdd
-import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.rpc.invoke.CustomerOfferProcedureInvoke
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
@@ -45,7 +37,7 @@ class CustomerOfferProcedureService(
     private val customerOfferProcedureInvoke: CustomerOfferProcedureInvoke,
     private val obsApi: ObsApi) {
     @Autowired
-    private lateinit var pdpaMicroService: PDPAMicroService
+    private lateinit var pdpaMicroService: PdpaMicroService
 
     @Autowired
     private lateinit var productService: ProductService

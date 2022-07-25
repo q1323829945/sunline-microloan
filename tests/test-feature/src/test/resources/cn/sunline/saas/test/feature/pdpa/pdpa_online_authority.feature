@@ -1,9 +1,9 @@
+@PdpaOnlineAuthority
 Feature: PDPA online authority mode configuration
   It can support different online authority methods to meet different user needs
 
   Background:
     Given init tenant
-    Given init pdpa authority way
 
   Scenario Outline: Configure single online authority way
     Given the authority way is "<authorityWay>"

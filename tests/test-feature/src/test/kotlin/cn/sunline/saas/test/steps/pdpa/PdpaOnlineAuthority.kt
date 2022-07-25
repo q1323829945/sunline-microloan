@@ -1,8 +1,10 @@
-package cn.sunline.saas.cucumber.pdpa
+package cn.sunline.saas.test.steps.pdpa
 
-import cn.sunline.saas.pdpa.modules.db.PdpaAuthority
-import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAuthority
-import cn.sunline.saas.pdpa.services.PdpaAuthorityService
+import cn.sunline.saas.test.steps.config.RestAssuredConfig
+import cn.sunline.saas.test.steps.dto.DTOPdpaAuthority
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -15,28 +17,26 @@ const val FINGERPRINT = "fingerprint"
 
 class PdpaOnlineAuthority {
     @Autowired
-    private lateinit var pdpaAuthorityService: PdpaAuthorityService
+    private lateinit var restAssuredConfig: RestAssuredConfig
 
+    private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     private var isElectronicSignature = false
     private var isFaceRecognition = false
     private var isFingerprint = false
-    private lateinit var pdpaAuthority:PdpaAuthority
+    private lateinit var pdpaAuthority:DTOPdpaAuthority
 
     private var answerAuthorityWayElectronicSignature:String? = null
     private var answerAuthorityWayFaceRecognition:String? = null
     private var answerAuthorityWayFingerprint:String? = null
 
-    @Given("init pdpa authority way")
-    fun `init pdpa authority way `() {
-        pdpaAuthorityService.register()
-    }
-
     @Given("the authority way is {string}")
     fun `the authority way is {string}`(authorityWay:String) {
         val authorityWays = authorityWay.split(",")
         authorityWayConvert(authorityWays)
-        pdpaAuthorityService.updateOne(
+
+        restAssuredConfig.put(
+            restAssuredConfig.setManagementUrl("pdpa/authority"),
             DTOPdpaAuthority(
                 isElectronicSignature = isElectronicSignature,
                 isFaceRecognition = isFaceRecognition,
@@ -47,8 +47,11 @@ class PdpaOnlineAuthority {
 
     @When("query the authority way")
     fun `query the authority way`() {
-        val pdpaAuthority = pdpaAuthorityService.getOne()
-        this.pdpaAuthority = pdpaAuthority
+        val response = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/authority"))
+
+        val data = response.jsonPath().get<LinkedHashMap<String,*>>("data")
+
+        this.pdpaAuthority = objectMapper.convertValue(data)
     }
 
     @Then("the customer PDPA authority way is {string}")

@@ -14,18 +14,21 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomerPdpaInformationService (
-    private val customerPdpaInformationRepository: CustomerPdpaInformationRepository,
-    private val sequence: Sequence
+    private val customerPdpaInformationRepository: CustomerPdpaInformationRepository
 ): BaseMultiTenantRepoService<CustomerPdpaInformation, Long>(customerPdpaInformationRepository) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 
-    fun getAndRegisterCustomerPdpaInformation(dtoCustomerPdpaInformation: DTOCustomerPdpaInformation):CustomerPdpaInformation{
-        var customerPdpaInformation = getOne(dtoCustomerPdpaInformation.customerId.toLong())
+    fun getAndRegisterCustomerPdpaInformation(id:Long):CustomerPdpaInformation{
+        var customerPdpaInformation = getOne(id)
 
         if(customerPdpaInformation == null){
-            customerPdpaInformation = createCustomerPdpaInformation(dtoCustomerPdpaInformation)
+            customerPdpaInformation = createCustomerPdpaInformation(
+                DTOCustomerPdpaInformation(
+                    id.toString()
+                )
+            )
         }
 
         return customerPdpaInformation
@@ -41,7 +44,7 @@ class CustomerPdpaInformationService (
     }
 
     fun withdraw(id:Long):CustomerPdpaInformation{
-        return confirmAndWithdraw(id,DTOCustomerPdpaInformationChange())
+        return confirmAndWithdraw(id,DTOCustomerPdpaInformationChange(id.toString()))
     }
 
     private fun confirmAndWithdraw(id:Long,dtoCustomerPdpaInformationChange: DTOCustomerPdpaInformationChange):CustomerPdpaInformation{

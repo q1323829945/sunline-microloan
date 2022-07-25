@@ -1,3 +1,4 @@
+@PdpaInformationAccess
 Feature: PDPA access
   Data subjects access collected information items
 
@@ -16,55 +17,55 @@ Feature: PDPA access
                 "information":
                 [
                     {
-                        "key": "name",
+                        "label": "name",
                         "name": "name"
                     },
                     {
-                        "key": "alias",
+                        "label": "alias",
                         "name": "alias"
                     },
                     {
-                        "key": "name pinyin",
+                        "label": "name pinyin",
                         "name": "name pinyin"
                     },
                     {
-                        "key": "alias pinyin",
+                        "label": "alias pinyin",
                         "name": "alias pinyin"
                     },
                     {
-                        "key": "gender",
+                        "label": "gender",
                         "name": "gender"
                     },
                     {
-                        "key": "birth",
+                        "label": "birth",
                         "name": "birth"
                     },
                     {
-                        "key": "internationgal",
+                        "label": "internationgal",
                         "name": "internationgal"
                     },
                     {
-                        "key": "register address",
+                        "label": "register address",
                         "name": "register address"
                     },
                     {
-                        "key": "hdb type",
+                        "label": "hdb type",
                         "name": "hdb type"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "notice",
+                        "label": "notice",
                         "name": "notice"
                     },
                     {
-                        "key": "mobile phone",
+                        "label": "mobile phone",
                         "name": "mobile phone"
                     },
                     {
-                        "key": "email",
+                        "label": "email",
                         "name": "email"
                     }
                 ]
@@ -74,35 +75,35 @@ Feature: PDPA access
                 "information":
                 [
                     {
-                        "key": "outline",
+                        "label": "outline",
                         "name": "outline"
                     },
                     {
-                        "key": "compangy",
+                        "label": "compangy",
                         "name": "compangy"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "uens",
+                        "label": "uens",
                         "name": "uens"
                     },
                     {
-                        "key": "finance",
+                        "label": "finance",
                         "name": "finance"
                     },
                     {
-                        "key": "capital",
+                        "label": "capital",
                         "name": "capital"
                     },
                     {
-                        "key": "leader",
+                        "label": "leader",
                         "name": "leader"
                     },
                     {
-                        "key": "shareholder",
+                        "label": "shareholder",
                         "name": "shareholder"
                     }
                 ]

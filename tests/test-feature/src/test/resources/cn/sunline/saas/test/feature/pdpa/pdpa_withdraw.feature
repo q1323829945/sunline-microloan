@@ -1,3 +1,4 @@
+@PdpaWithdarw
 Feature: PDPA agrees to withdraw the configuration
   It can support the withdrawal of PDPA consent authorization and remind the possible consequences of withdrawal
 

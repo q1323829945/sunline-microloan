@@ -27,7 +27,8 @@ class SecurityConfiguration (private val tokenService: TokenService,
             "/LoanProduct/invoke/[0-9]+","/LoanProduct/uploadConfig/[0-9]+","/LoanProduct/interestRate/[0-9]+",
             "/pdpa/(.+)/(.+)/retrieve","/LoanProduct/(.+)/retrieve","/RatePlan/invokeAll/(\\?.*|\$)","/PartnerIntegrated/Retrieve",
             "/RatePlan/[0-9]+","/RatePlan/all(\\?.*|\$)","/ApiStatistics(\\?.*|\$)","/BusinessStatistics(\\?.*|\$)",
-            "/CustomerStatistics(\\?.*|\$)","/LoanProduct/invoke/list(\\?.*|\$)"
+            "/CustomerStatistics(\\?.*|\$)","/LoanProduct/invoke/list(\\?.*|\$)","/customer/pdpa/[0-9]+","/customer/pdpa/confirm",
+            "/customer/pdpa/withdraw","/pdpa/authority","/pdpa/[0-9]+"
         ).regexMatchers( //pub-sub
             "/CustomerOffer/rejected","/BusinessStatistics","/CustomerStatistics","/CustomerOffer/approval",
             "/ConsumerLoan/LoanAgreement/Initiate","/PositionKeeping","/Underwriting/Initiate",

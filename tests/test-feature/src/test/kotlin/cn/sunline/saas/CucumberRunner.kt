@@ -12,8 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
         "html:build/cucumber-report/html/cucumber.html",
         "json:build/cucumber-report/json/cucumber.json",
         "junit:build/cucumber-report/junit/cucumber.xml"],
-    features = ["src/test/resources/cn/sunline/saas/cucumber"],
-    glue = ["cn.sunline.saas.cucumber"],
+    features = ["src/test/resources/cn/sunline/saas/test/feature"],
+    glue = ["cn.sunline.saas.test.steps"],
     publish = true,
     monochrome = true,
 )

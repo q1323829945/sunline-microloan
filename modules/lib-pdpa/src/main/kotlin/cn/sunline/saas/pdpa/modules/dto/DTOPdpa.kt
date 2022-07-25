@@ -27,6 +27,6 @@ data class DTOPdpaItem(
 )
 
 data class DTOPdpaInformation(
-    val key:String,
+    val label:String,
     val name:String
 )

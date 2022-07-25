@@ -9,6 +9,7 @@ data class DTOCustomerPdpaInformation(
 )
 
 data class DTOCustomerPdpaInformationChange(
+    val customerId: String,
     val pdpaId:String? = null,
     val electronicSignature:String? = null,
     val faceRecognition:String? = null,

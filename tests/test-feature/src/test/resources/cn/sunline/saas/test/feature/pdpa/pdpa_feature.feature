@@ -1,3 +1,4 @@
+@PdpaFeature
 Feature: Configure PDPA authorization information items in different countries
   It can support the configuration of PDPA authorization information items to meet the requirements of PDPA regulations in different countries
 
@@ -15,55 +16,55 @@ Feature: Configure PDPA authorization information items in different countries
                 "information":
                 [
                     {
-                        "key": "name",
+                        "label": "name",
                         "name": "name"
                     },
                     {
-                        "key": "alias",
+                        "label": "alias",
                         "name": "alias"
                     },
                     {
-                        "key": "name pinyin",
+                        "label": "name pinyin",
                         "name": "name pinyin"
                     },
                     {
-                        "key": "alias pinyin",
+                        "label": "alias pinyin",
                         "name": "alias pinyin"
                     },
                     {
-                        "key": "gender",
+                        "label": "gender",
                         "name": "gender"
                     },
                     {
-                        "key": "birth",
+                        "label": "birth",
                         "name": "birth"
                     },
                     {
-                        "key": "internationgal",
+                        "label": "internationgal",
                         "name": "internationgal"
                     },
                     {
-                        "key": "register address",
+                        "label": "register address",
                         "name": "register address"
                     },
                     {
-                        "key": "hdb type",
+                        "label": "hdb type",
                         "name": "hdb type"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "notice",
+                        "label": "notice",
                         "name": "notice"
                     },
                     {
-                        "key": "mobile phone",
+                        "label": "mobile phone",
                         "name": "mobile phone"
                     },
                     {
-                        "key": "email",
+                        "label": "email",
                         "name": "email"
                     }
                 ]
@@ -73,35 +74,35 @@ Feature: Configure PDPA authorization information items in different countries
                 "information":
                 [
                     {
-                        "key": "outline",
+                        "label": "outline",
                         "name": "outline"
                     },
                     {
-                        "key": "compangy",
+                        "label": "compangy",
                         "name": "compangy"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "uens",
+                        "label": "uens",
                         "name": "uens"
                     },
                     {
-                        "key": "finance",
+                        "label": "finance",
                         "name": "finance"
                     },
                     {
-                        "key": "capital",
+                        "label": "capital",
                         "name": "capital"
                     },
                     {
-                        "key": "leader",
+                        "label": "leader",
                         "name": "leader"
                     },
                     {
-                        "key": "shareholder",
+                        "label": "shareholder",
                         "name": "shareholder"
                     }
                 ]
@@ -118,55 +119,55 @@ Feature: Configure PDPA authorization information items in different countries
                 "information":
                 [
                     {
-                        "key": "name",
+                        "label": "name",
                         "name": "name"
                     },
                     {
-                        "key": "alias",
+                        "label": "alias",
                         "name": "alias"
                     },
                     {
-                        "key": "name pinyin",
+                        "label": "name pinyin",
                         "name": "name pinyin"
                     },
                     {
-                        "key": "alias pinyin",
+                        "label": "alias pinyin",
                         "name": "alias pinyin"
                     },
                     {
-                        "key": "gender",
+                        "label": "gender",
                         "name": "gender"
                     },
                     {
-                        "key": "birth",
+                        "label": "birth",
                         "name": "birth"
                     },
                     {
-                        "key": "internationgal",
+                        "label": "internationgal",
                         "name": "internationgal"
                     },
                     {
-                        "key": "register address",
+                        "label": "register address",
                         "name": "register address"
                     },
                     {
-                        "key": "hdb type",
+                        "label": "hdb type",
                         "name": "hdb type"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "notice",
+                        "label": "notice",
                         "name": "notice"
                     },
                     {
-                        "key": "mobile phone",
+                        "label": "mobile phone",
                         "name": "mobile phone"
                     },
                     {
-                        "key": "email",
+                        "label": "email",
                         "name": "email"
                     }
                 ]
@@ -176,35 +177,35 @@ Feature: Configure PDPA authorization information items in different countries
                 "information":
                 [
                     {
-                        "key": "outline",
+                        "label": "outline",
                         "name": "outline"
                     },
                     {
-                        "key": "compangy",
+                        "label": "compangy",
                         "name": "compangy"
                     },
                     {
-                        "key": "address",
+                        "label": "address",
                         "name": "address"
                     },
                     {
-                        "key": "uens",
+                        "label": "uens",
                         "name": "uens"
                     },
                     {
-                        "key": "finance",
+                        "label": "finance",
                         "name": "finance"
                     },
                     {
-                        "key": "capital",
+                        "label": "capital",
                         "name": "capital"
                     },
                     {
-                        "key": "leader",
+                        "label": "leader",
                         "name": "leader"
                     },
                     {
-                        "key": "shareholder",
+                        "label": "shareholder",
                         "name": "shareholder"
                     }
                 ]
@@ -228,19 +229,19 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "company type",
+                      "label": "company type",
                       "name": "company type"
                   },
                   {
-                      "key": "Juristic name",
+                      "label": "Juristic name",
                       "name": "Juristic name"
                   },
                   {
-                      "key": "Juristic ID",
+                      "label": "Juristic ID",
                       "name": "Juristic ID"
                   },
                   {
-                      "key": "Register Date",
+                      "label": "Register Date",
                       "name": "Register Date"
                   }
               ]
@@ -250,43 +251,43 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "Mr./Mrs./Ms./Otiher",
+                      "label": "Mr./Mrs./Ms./Otiher",
                       "name": "Mr./Mrs./Ms./Otiher"
                   },
                   {
-                      "key": "Contact perpon",
+                      "label": "Contact perpon",
                       "name": "Contact perpon"
                   },
                   {
-                      "key": "Address",
+                      "label": "Address",
                       "name": "Address"
                   },
                   {
-                      "key": "Road",
+                      "label": "Road",
                       "name": "Road"
                   },
                   {
-                      "key": "Sub district",
+                      "label": "Sub district",
                       "name": "Sub district"
                   },
                   {
-                      "key": "District",
+                      "label": "District",
                       "name": "District"
                   },
                   {
-                      "key": "Province",
+                      "label": "Province",
                       "name": "Province"
                   },
                   {
-                      "key": "Postal code",
+                      "label": "Postal code",
                       "name": "Postal code"
                   },
                   {
-                      "key": "Telphone No.",
+                      "label": "Telphone No.",
                       "name": "Telphone No."
                   },
                   {
-                      "key": "fax No",
+                      "label": "fax No",
                       "name": "fax No"
                   }
               ]
@@ -296,19 +297,19 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "businesstype",
+                      "label": "businesstype",
                       "name": "businesstype"
                   },
                   {
-                      "key": "average revenue",
+                      "label": "average revenue",
                       "name": "average revenue"
                   },
                   {
-                      "key": "anerage revenue per year",
+                      "label": "anerage revenue per year",
                       "name": "anerage revenue per year"
                   },
                   {
-                      "key": "No.of Employees",
+                      "label": "No.of Employees",
                       "name": "No.of Employees"
                   }
               ]
@@ -318,27 +319,27 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "what is your purpose",
+                      "label": "what is your purpose",
                       "name": "what is your purpose"
                   },
                   {
-                      "key": "requlred loan amount",
+                      "label": "requlred loan amount",
                       "name": "requlred loan amount"
                   },
                   {
-                      "key": "loan type",
+                      "label": "loan type",
                       "name": "loan type"
                   },
                   {
-                      "key": "other required products/services",
+                      "label": "other required products/services",
                       "name": "other required products/services"
                   },
                   {
-                      "key": "negative financial record",
+                      "label": "negative financial record",
                       "name": "negative financial record"
                   },
                   {
-                      "key": "convenient time to call",
+                      "label": "convenient time to call",
                       "name": "convenient time to call"
                   }
               ]
@@ -348,11 +349,11 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "select province",
+                      "label": "select province",
                       "name": "select province"
                   },
                   {
-                      "key": "select branch",
+                      "label": "select branch",
                       "name": "select branch"
                   }
               ]
@@ -369,19 +370,19 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "company type",
+                      "label": "company type",
                       "name": "company type"
                   },
                   {
-                      "key": "Juristic name",
+                      "label": "Juristic name",
                       "name": "Juristic name"
                   },
                   {
-                      "key": "Juristic ID",
+                      "label": "Juristic ID",
                       "name": "Juristic ID"
                   },
                   {
-                      "key": "Register Date",
+                      "label": "Register Date",
                       "name": "Register Date"
                   }
               ]
@@ -391,43 +392,43 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "Mr./Mrs./Ms./Otiher",
+                      "label": "Mr./Mrs./Ms./Otiher",
                       "name": "Mr./Mrs./Ms./Otiher"
                   },
                   {
-                      "key": "Contact perpon",
+                      "label": "Contact perpon",
                       "name": "Contact perpon"
                   },
                   {
-                      "key": "Address",
+                      "label": "Address",
                       "name": "Address"
                   },
                   {
-                      "key": "Road",
+                      "label": "Road",
                       "name": "Road"
                   },
                   {
-                      "key": "Sub district",
+                      "label": "Sub district",
                       "name": "Sub district"
                   },
                   {
-                      "key": "District",
+                      "label": "District",
                       "name": "District"
                   },
                   {
-                      "key": "Province",
+                      "label": "Province",
                       "name": "Province"
                   },
                   {
-                      "key": "Postal code",
+                      "label": "Postal code",
                       "name": "Postal code"
                   },
                   {
-                      "key": "Telphone No.",
+                      "label": "Telphone No.",
                       "name": "Telphone No."
                   },
                   {
-                      "key": "fax No",
+                      "label": "fax No",
                       "name": "fax No"
                   }
               ]
@@ -437,19 +438,19 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "businesstype",
+                      "label": "businesstype",
                       "name": "businesstype"
                   },
                   {
-                      "key": "average revenue",
+                      "label": "average revenue",
                       "name": "average revenue"
                   },
                   {
-                      "key": "anerage revenue per year",
+                      "label": "anerage revenue per year",
                       "name": "anerage revenue per year"
                   },
                   {
-                      "key": "No.of Employees",
+                      "label": "No.of Employees",
                       "name": "No.of Employees"
                   }
               ]
@@ -459,27 +460,27 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "what is your purpose",
+                      "label": "what is your purpose",
                       "name": "what is your purpose"
                   },
                   {
-                      "key": "requlred loan amount",
+                      "label": "requlred loan amount",
                       "name": "requlred loan amount"
                   },
                   {
-                      "key": "loan type",
+                      "label": "loan type",
                       "name": "loan type"
                   },
                   {
-                      "key": "other required products/services",
+                      "label": "other required products/services",
                       "name": "other required products/services"
                   },
                   {
-                      "key": "negative financial record",
+                      "label": "negative financial record",
                       "name": "negative financial record"
                   },
                   {
-                      "key": "convenient time to call",
+                      "label": "convenient time to call",
                       "name": "convenient time to call"
                   }
               ]
@@ -489,11 +490,11 @@ Feature: Configure PDPA authorization information items in different countries
               "information":
               [
                   {
-                      "key": "select province",
+                      "label": "select province",
                       "name": "select province"
                   },
                   {
-                      "key": "select branch",
+                      "label": "select branch",
                       "name": "select branch"
                   }
               ]

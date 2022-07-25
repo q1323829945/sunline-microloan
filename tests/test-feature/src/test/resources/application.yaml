@@ -1,38 +1,9 @@
 spring:
   application:
     name: saas-test
-
   profiles:
     active: default
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    generate-ddl: false
-    database-platform: org.hibernate.dialect.H2Dialect
-
-  datasource:
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    initialization-mode: always
-
-huawei:
-  cloud:
-    obs:
-      accessKey: "MBP2MCNEYM4S016MIVWS"
-      securityKey: "DBWVHqLdiC2WU4BoaHlK5w5nYeJwGHMkBwZcwoBh"
-      region: "ap-southeast-3"
-      bucketName: "test-saas-micro-loan"
-    iam:
-      domainUserName: "qq1323829945"
-      username: "q1323829945"
-      password: "300348sunline"
-      projectId: "a7bbc97fa36648d4a9f4fea6d1534ab8"
-    apig:
-      groupName: "loan_management"
-      environmentName: "dev"
-      appName: "loan_management"
-      ip: "139.9.123.142:8083"
-      #todo
-      domainUrl:
+rest-assured:
+  managementUrl: http://localhost:8083
+  microLoanUrl: http://localhost:8084

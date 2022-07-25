@@ -5,6 +5,7 @@ import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.model.TenantPermission
 import cn.sunline.saas.multi_tenant.services.TenantPermissionService
 import cn.sunline.saas.multi_tenant.services.TenantService
+import cn.sunline.saas.multi_tenant.util.TenantUtil
 import cn.sunline.saas.tenant.service.dto.DTOTenant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -49,6 +50,8 @@ class TenantManagerService(
             enabled = true,
             permissions = tenantPermissions
         )
+
+        TenantUtil.setTenant(tenant.id,tenant)
 
         tenantService.save(tenant)
     }
