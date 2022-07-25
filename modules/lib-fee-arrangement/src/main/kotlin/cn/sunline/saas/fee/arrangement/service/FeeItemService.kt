@@ -1,6 +1,7 @@
 package cn.sunline.saas.fee.arrangement.service
 
 import cn.sunline.saas.fee.arrangement.model.db.FeeItem
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeItemAdd
 import cn.sunline.saas.fee.arrangement.repository.FeeItemRepository
 import cn.sunline.saas.global.constant.RepaymentStatus
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
@@ -22,7 +23,7 @@ class FeeItemService(private val feeItemRepos: FeeItemRepository) :
     private lateinit var seq: Sequence
 
     fun registered(
-        agreementId: Long, dtoFeeItems: MutableList<FeeItem>
+        agreementId: Long, dtoFeeItems: MutableList<DTOFeeItemAdd>
     ): MutableList<FeeItem> {
         val feeItems = mutableListOf<FeeItem>()
         dtoFeeItems.forEach {
@@ -34,15 +35,15 @@ class FeeItemService(private val feeItemRepos: FeeItemRepository) :
                     feeAmount = it.feeAmount,
                     repaymentAmount = BigDecimal.ZERO,
                     feeRepaymentDate = it.feeRepaymentDate,
-                    feeFromDate = it.feeRepaymentDate,
+                    feeFromDate = it.feeFromDate,
                     feeToDate = it.feeToDate,
                     feeUser = it.feeUser,
-                    currency = it.currency,
+                    currencyType = it.currencyType,
                     repaymentStatus = RepaymentStatus.UNDO
                 )
             )
         }
-        return save(dtoFeeItems).toMutableList()
+        return save(feeItems).toMutableList()
     }
 
     fun listByAgreementId(agreementId: Long): MutableList<FeeItem> {

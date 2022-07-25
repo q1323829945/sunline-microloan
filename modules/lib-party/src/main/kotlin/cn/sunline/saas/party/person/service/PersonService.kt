@@ -33,7 +33,7 @@ class PersonService(private val personRepository: PersonRepository,
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun register(dtoPersonAdd: DTOPersonAdd):DTOPersonView{
-        val id = sequence.nextId()
+        val id = dtoPersonAdd.id
         dtoPersonAdd.personName.id = id
         val person = Person(
             id = id,

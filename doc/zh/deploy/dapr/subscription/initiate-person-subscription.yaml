@@ -1,0 +1,11 @@
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: INITIATE_PERSON
+spec:
+  topic: INITIATE_PERSON
+  route: /Person
+  pubsubname: app-loan-management-pub-sub
+scopes:
+  - app-loan-management
+

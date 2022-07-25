@@ -10,6 +10,7 @@ import cn.sunline.saas.party.person.model.ResidentialStatus
 import cn.sunline.saas.party.person.model.RoleType
 import cn.sunline.saas.party.person.model.dto.*
 import cn.sunline.saas.party.person.service.PersonService
+import cn.sunline.saas.seq.Sequence
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional
 class PersonServiceTest(@Autowired val tenantService: TenantService) {
     @Autowired
     private lateinit var personService: PersonService
+    @Autowired
+    private lateinit var sequence: Sequence
 
     var id:Long = 0
 
@@ -38,6 +41,7 @@ class PersonServiceTest(@Autowired val tenantService: TenantService) {
 
         val person = personService.register(
             DTOPersonAdd(
+                id = sequence.nextId(),
                 personName = DTOPersonNameAdd(
                     id = null,
                     firstName = "firstName",

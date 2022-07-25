@@ -6,6 +6,7 @@ import cn.sunline.saas.party.person.model.ResidentialStatus
 import cn.sunline.saas.party.person.model.RoleType
 
 data class DTOPersonAdd(
+    val id: Long,
     val personName:DTOPersonNameAdd,
     val residentialStatus: ResidentialStatus,
     val birthDate:String,

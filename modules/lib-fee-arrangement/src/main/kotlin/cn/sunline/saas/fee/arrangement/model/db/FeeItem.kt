@@ -34,7 +34,7 @@ class FeeItem(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 3, columnDefinition = "varchar(3) not null")
-    val currency: CurrencyType,
+    val currencyType: CurrencyType,
 
     @NotNull
     @Column(name = "repayment_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null" )
@@ -43,21 +43,21 @@ class FeeItem(
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "invoice_repayment_date")
-    val feeRepaymentDate: Date,
+    var feeRepaymentDate: Date?,
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fee_from_date")
-    val feeFromDate: Date,
+    val feeFromDate: Date?,
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fee_to_date")
-    val feeToDate: Date,
+    val feeToDate: Date?,
 
     @NotNull
     @Column(name = "fee_user", nullable = false, columnDefinition = "bigint not null")
-    val feeUser: Long,
+    val feeUser: String?,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

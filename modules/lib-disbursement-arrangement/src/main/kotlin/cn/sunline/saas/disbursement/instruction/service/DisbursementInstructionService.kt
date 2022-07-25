@@ -69,7 +69,7 @@ class DisbursementInstructionService(private val moneyTransferInstructionRepo: M
             payeeAccount = transferInstruction.payeeAccount,
             payerAccount = transferInstruction.payerAccount,
             agreementId = transferInstruction.agreementId,
-            businessUnit = transferInstruction.businessUnit
+            businessUnit = transferInstruction.businessUnit,
         )
     }
 

@@ -1,24 +1,32 @@
 package cn.sunline.saas.customer_offer.service
 
+import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer.offer.modules.db.CustomerOffer
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferProcedure
 import cn.sunline.saas.customer_offer.service.dto.DTOProductUploadConfig
 import cn.sunline.saas.document.template.modules.FileType
-import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
-import cn.sunline.saas.rpc.pubsub.dto.DTODetail
-import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
+import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
+import cn.sunline.saas.party.person.model.PersonIdentificationType
+import cn.sunline.saas.party.person.model.ResidentialStatus
+import cn.sunline.saas.party.person.model.RoleType
+import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
+import cn.sunline.saas.party.person.model.dto.DTOPersonIdentificationAdd
+import cn.sunline.saas.party.person.model.dto.DTOPersonNameAdd
+import cn.sunline.saas.party.person.model.dto.DTOPersonRoleAdd
 import cn.sunline.saas.pdpa.service.PDPAMicroService
 import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.rpc.invoke.CustomerOfferProcedureInvoke
+import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
+import cn.sunline.saas.rpc.pubsub.dto.DTODetail
 import cn.sunline.saas.rpc.pubsub.dto.DTODocumentGeneration
+import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationData
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -100,6 +108,37 @@ class CustomerOfferProcedureService(
         initiateUnderwriting(result, customerOffer)
         //TODO:文件生成,可能不是这一个步骤
         documentGeneration(result, customerOffer)
+
+        customerOfferPublish.registeredPerson(
+            DTOPersonAdd(
+            id = customerOffer.customerId,
+            personName = DTOPersonNameAdd(
+                id = null,
+                firstName = dtoCustomerOfferLoanAdd.contact!!.contacts,
+                familyName = "familyName",
+                givenName = "givenName"
+            ),
+            residentialStatus = ResidentialStatus.NON_PERMANENT,
+            birthDate = "19991111",
+            nationality = CountryType.CHN,
+            ethnicity ="ethnicity",
+            personIdentifications = mutableListOf(
+                DTOPersonIdentificationAdd(
+                    id = null,
+                    personId =  customerOffer.customerId,
+                    personIdentificationType = PersonIdentificationType.PASSPORT_NUMBER,
+                    personIdentification = dtoCustomerOfferLoanAdd.contact!!.contactNRIC
+                )
+            ),
+            personRoles = listOf(
+                DTOPersonRoleAdd(
+                    id = null,
+                    personId =  customerOffer.customerId,
+                    type = RoleType.OUTER,
+                )
+            )
+        )
+        )
 
     }
 

@@ -71,7 +71,7 @@ class LoanBusinessManagerService(
         val person = personService.findByIdentification(identificationNo, identificationType)
             ?: throw LoanBusinessException("Invalid Person", ManagementExceptionCode.DATA_NOT_FOUND)
         val filter = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable).content
-            .filter { it.status != ApplyStatus.RECORD }
+            .filter { it.status != ApplyStatus.RECORD  && it.status != ApplyStatus.SUBMIT}
 
         return customerOfferService.rePaged(filter, pageable).map {
             var repaymentAmount = BigDecimal.ZERO
