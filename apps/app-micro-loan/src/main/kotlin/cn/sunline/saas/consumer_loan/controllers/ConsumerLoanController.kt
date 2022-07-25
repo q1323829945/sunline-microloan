@@ -148,7 +148,7 @@ class ConsumerLoanController {
     }
 
     @GetMapping("/fee/item/{agreementId}/retrieve")
-    fun getFeeItemListByAgreementId(agreementId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTOFeeItemView>>> {
+    fun getFeeItemListByAgreementId(@PathVariable("agreementId") agreementId: Long): ResponseEntity<DTOResponseSuccess<MutableList<DTOFeeItemView>>> {
         val view = consumerLoanService.getFeeItemListByAgreementId(agreementId)
         return DTOResponseSuccess(view).response()
     }
