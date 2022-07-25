@@ -5,5 +5,5 @@ spring:
     active: default
 
 rest-assured:
-  managementUrl: http://localhost:8083
-  microLoanUrl: http://localhost:8084
+  managementPath: https://quickloan-management-demo.finline.app
+  microLoanPath: https://quickloan-app-demo.finline.app

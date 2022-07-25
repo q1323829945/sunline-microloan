@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "rest-assured")
 class RestAssuredConfig(
-    var managementUrl:String = "http://localhost:8083",
-    var microLoanUrl:String = "http://localhost:8084",
+    var managementPath:String = "http://localhost:8083",
+    var microLoanPath:String = "http://localhost:8084",
+    var flag:Boolean = false
 ) {
     private val headers = mutableMapOf(
         "X-Authorization-Tenant" to "0",
@@ -22,11 +23,11 @@ class RestAssuredConfig(
     private val cookies = mutableMapOf<String,String>()
 
     fun setManagementUrl(path:String):String{
-        return "$managementUrl/$path"
+        return "$managementPath/$path"
     }
 
     fun setMicroLoanUrl(path:String):String{
-        return "$microLoanUrl/$path"
+        return "$microLoanPath/$path"
     }
 
     private fun given(): RequestSpecification {

@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
     glue = ["cn.sunline.saas.test.steps"],
     publish = true,
     monochrome = true,
+    tags = "@Test"
 )
 class CucumberRunner {
 }
