@@ -6,17 +6,17 @@ import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 
 data class DTOLoanBusinessView(
-    val agreementId: String?,
+    val agreementId: String? = null,
     val applicationId: String,
-    val disbursementAccount: String?,
-    val loanProductType: LoanProductType?,
-    val currency: CurrencyType?,
-    val loanAmount: String?,
-    val disbursementAmount: String?,
-    val repaymentAmount: String?,
+    val disbursementAccount: String? = null,
+    val loanProductType: LoanProductType? = null,
+    val currency: CurrencyType? = null,
+    val loanAmount: String? = null,
+    val disbursementAmount: String? = null,
+    val repaymentAmount: String? = null,
     val isSyndicatedLoan: YesOrNo,
     val isRevolvingLoan: YesOrNo,
-    val status: AgreementStatus?
+    val status: AgreementStatus? = null
 )
 
 data class DTOApplicationLoanView(

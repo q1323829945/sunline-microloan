@@ -70,37 +70,45 @@ class LoanBusinessManagerService(
 
         val person = personService.findByIdentification(identificationNo, identificationType)
             ?: throw LoanBusinessException("Invalid Person", ManagementExceptionCode.DATA_NOT_FOUND)
-        val customerOfferPaged = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable)
+        val filter = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable).content
+            .filter { it.status != ApplyStatus.RECORD }
 
-        return customerOfferPaged.map {
-            val agreementViewInfo = it.id?.let { it1 -> customerOfferInvoke.getLoanAgreementInfo(it1) }
+        return customerOfferService.rePaged(filter, pageable).map {
             var repaymentAmount = BigDecimal.ZERO
-            if (agreementViewInfo?.id != null) {
-                val repaymentInstruction = repaymentInstructionService.getPage(
-                    agreementViewInfo.id.toLong(),
-                    null,
-                    MoneyTransferInstructionType.REPAYMENT,
-                    InstructionLifecycleStatus.FULFILLED,
-                    Pageable.unpaged()
+            val agreementViewInfo = it.id?.let { it1 -> customerOfferInvoke.getLoanAgreementInfo(it1) }
+            if (agreementViewInfo == null) {
+                DTOLoanBusinessView(
+                    applicationId = it.id.toString(),
+                    repaymentAmount = repaymentAmount.toPlainString(),
+                    isSyndicatedLoan = YesOrNo.N,
+                    isRevolvingLoan = YesOrNo.N
                 )
-                if (repaymentInstruction.size > 0) {
-                    repaymentAmount =
-                        repaymentInstruction.sumOf { instruction -> instruction.moneyTransferInstructionAmount }
-                }
+            } else {
+                    val repaymentInstruction = repaymentInstructionService.getPage(
+                        agreementViewInfo.id.toLong(),
+                        null,
+                        MoneyTransferInstructionType.REPAYMENT,
+                        InstructionLifecycleStatus.FULFILLED,
+                        Pageable.unpaged()
+                    )
+                    if (repaymentInstruction.size > 0) {
+                        repaymentAmount =
+                            repaymentInstruction.sumOf { instruction -> instruction.moneyTransferInstructionAmount }
+                    }
+                DTOLoanBusinessView(
+                    agreementId = agreementViewInfo.id,
+                    applicationId = it.id.toString(),
+                    disbursementAccount = agreementViewInfo.disbursementAccount,
+                    loanProductType = agreementViewInfo.loanProductType,
+                    currency = agreementViewInfo.currency,
+                    loanAmount = agreementViewInfo.amount,
+                    disbursementAmount = agreementViewInfo.amount,
+                    repaymentAmount = repaymentAmount.toPlainString(),
+                    isSyndicatedLoan = YesOrNo.N,
+                    isRevolvingLoan = YesOrNo.N,
+                    status = agreementViewInfo.agreementStatus
+                )
             }
-            DTOLoanBusinessView(
-                agreementId = agreementViewInfo?.id,
-                applicationId = it.id.toString(),
-                disbursementAccount = agreementViewInfo?.disbursementAccount,
-                loanProductType = agreementViewInfo?.loanProductType,
-                currency = agreementViewInfo?.currency,
-                loanAmount = agreementViewInfo?.amount,
-                disbursementAmount = agreementViewInfo?.amount,
-                repaymentAmount = repaymentAmount.toPlainString(),
-                isSyndicatedLoan = YesOrNo.N,
-                isRevolvingLoan = YesOrNo.N,
-                status = agreementViewInfo?.agreementStatus
-            )
         }
     }
 

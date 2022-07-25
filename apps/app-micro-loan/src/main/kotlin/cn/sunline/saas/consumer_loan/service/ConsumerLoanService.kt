@@ -275,8 +275,7 @@ class ConsumerLoanService(
     }
 
     fun getLoanAgreementInfoByApplicationId(applicationId: Long): DTOLoanAgreementViewInfo? {
-        val loanAgreement = loanAgreementService.findByApplicationId(applicationId)
-            ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanAgreement = loanAgreementService.findByApplicationId(applicationId) ?: return null
 
         val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
 
@@ -968,8 +967,7 @@ class ConsumerLoanService(
     }
 
     fun getLoanAgreementInfoByAgreementId(agreementId: Long): DTOLoanAgreementViewInfo? {
-        val loanAgreement =
-            loanAgreementService.getOne(agreementId) ?: throw LoanAgreementNotFoundException("loan agreement not found")
+        val loanAgreement = loanAgreementService.getOne(agreementId) ?: return null
 
         val loanProduct = consumerLoanInvoke.retrieveLoanProduct(loanAgreement.productId)
 
