@@ -38,7 +38,7 @@ class FeeItemService(private val feeItemRepos: FeeItemRepository) :
                     feeFromDate = it.feeFromDate,
                     feeToDate = it.feeToDate,
                     feeUser = it.feeUser,
-                    currencyType = it.currencyType,
+                    currency = it.currencyType,
                     repaymentStatus = RepaymentStatus.UNDO
                 )
             )

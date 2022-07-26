@@ -1101,7 +1101,7 @@ class ConsumerLoanService(
                 agreementId = agreementId.toString(),
                 loanFeeType = feeArrangement.feeType,
                 loanFeeTypeName = feeArrangement.feeType.name,
-                currencyType = it.currencyType,
+                currency = it.currency,
                 feeAmountOrRatio = it.feeAmount.toPlainString(),
                 nonPaymentAmount = it.feeAmount.subtract(it.repaymentAmount).toPlainString()
             )

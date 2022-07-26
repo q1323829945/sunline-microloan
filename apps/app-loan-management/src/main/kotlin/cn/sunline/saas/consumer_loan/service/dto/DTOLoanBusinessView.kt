@@ -39,7 +39,7 @@ data class DTOFeeItemView(
     val applicationId: String,
     val loanFeeType: LoanFeeType,
     val loanFeeTypeName: String,
-    val currencyType: CurrencyType,
+    val currency: CurrencyType,
     val feeAmountOrRatio: String,
     val nonPaymentAmount: String
 )

@@ -34,7 +34,7 @@ class FeeItem(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 3, columnDefinition = "varchar(3) not null")
-    val currencyType: CurrencyType,
+    val currency: CurrencyType,
 
     @NotNull
     @Column(name = "repayment_amount", nullable = false, scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null" )

@@ -29,14 +29,15 @@ data class DTOLoanAgreementViewInfo (
     val disbursementAccount: String,
     val paymentMethod: PaymentMethodType,
     val loanProductType: LoanProductType,
-    val agreementStatus: AgreementStatus
+    val agreementStatus: AgreementStatus,
+    val userId: String? = null
 )
 
 data class DTOFeeItemView(
     val agreementId: String,
     val loanFeeType: LoanFeeType,
     val loanFeeTypeName: String,
-    val currencyType: CurrencyType,
+    val currency: CurrencyType,
     val feeAmountOrRatio: String,
     val nonPaymentAmount: String
 )
