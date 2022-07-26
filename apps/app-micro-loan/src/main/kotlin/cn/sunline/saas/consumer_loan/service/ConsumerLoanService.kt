@@ -1093,7 +1093,7 @@ class ConsumerLoanService(
         return list
     }
     
-    fun getFeeItemListByAgreementId(agreementId: Long): MutableList<DTOFeeItemView> {
+    fun getFeeItemListByAgreementId(agreementId: Long): List<DTOFeeItemView> {
         return feeItemService.listByAgreementId(agreementId).map {
             val feeArrangement = feeArrangementService.getOne(it.feeArrangementId)
                 ?: throw LoanAgreementNotFoundException("fee arrangement not found")
@@ -1105,6 +1105,6 @@ class ConsumerLoanService(
                 feeAmountOrRatio = it.feeAmount.toPlainString(),
                 nonPaymentAmount = it.feeAmount.subtract(it.repaymentAmount).toPlainString()
             )
-        }.toMutableList()
+        }
     }
 }

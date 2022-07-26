@@ -17,5 +17,5 @@ interface CustomerOfferInvoke {
 
     fun getLoanAgreementInfoByAgreementId(agreementId:Long): DTOLoanAgreementViewInfo?
 
-    fun getFeeItemListByAgreementId(agreementId:Long): MutableList<DTOFeeItemView>?
+    fun getFeeItemListByAgreementId(agreementId:Long): List<DTOFeeItemView>?
 }

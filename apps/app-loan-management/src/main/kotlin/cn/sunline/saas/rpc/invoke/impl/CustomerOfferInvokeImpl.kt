@@ -94,7 +94,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
         )
     }
 
-    override fun getFeeItemListByAgreementId(agreementId:Long): MutableList<DTOFeeItemView>?{
+    override fun getFeeItemListByAgreementId(agreementId:Long): List<DTOFeeItemView>?{
         return RPCService.get<MutableList<DTOFeeItemView>>(
             serviceName = APP_MICRO_LOAN,
             methodName = "ConsumerLoan/fee/item/$agreementId/retrieve",
