@@ -120,8 +120,23 @@ class LoanBusinessManagerService(
         val loanAgreement = customerOfferInvoke.getLoanAgreement(applicationId.toLong())
             ?: throw LoanBusinessException("Invalid loan agreement", ManagementExceptionCode.DATA_NOT_FOUND)
         val dtoFeeItemViews = customerOfferInvoke.getFeeItemListByAgreementId(loanAgreement.id.toLong())
-        val content = dtoFeeItemViews?.let { objectMapper.convertValue<List<DTOFeeItemView>>(it) }
-        return if (content == null) Page.empty() else PageInvokeImpl<DTOFeeItemView>().rePaged(content, pageable)
+        val content = ArrayList<DTOFeeItemView>()
+        dtoFeeItemViews?.let { it ->
+            it.forEach {
+                content.add(
+                    DTOFeeItemView(
+                        agreementId = loanAgreement.id,
+                        applicationId = applicationId,
+                        loanFeeType = it.loanFeeType ,
+                        loanFeeTypeName = it.loanFeeTypeName,
+                        currency = it.currency,
+                        feeAmountOrRatio = it.feeAmountOrRatio,
+                        nonPaymentAmount =it.nonPaymentAmount
+                    )
+                )
+            }
+        }
+        return PageInvokeImpl<DTOFeeItemView>().rePaged(content, pageable)
     }
 
     fun getLoanDisbursementPaged(agreementId: String, pageable: Pageable): Page<DTOLoanDisbursementView> {
