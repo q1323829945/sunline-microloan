@@ -52,6 +52,7 @@ import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
 import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
+import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
@@ -330,9 +331,9 @@ class ConsumerLoanService(
             purpose = loanAgreement.purpose,
             paymentMethod = repaymentArrangement.paymentMethod,
             currency = loanAgreement.currency,
-            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime.toString()).toString(),
-            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime.toString()).toString(),
-            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate.toString()).toString(),
+            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime).toString(),
+            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime).toString(),
+            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate).toString(),
             loanProductType = loanProduct.loanProductType,
             agreementStatus = loanAgreement.status
         )
@@ -1055,9 +1056,9 @@ class ConsumerLoanService(
             purpose = loanAgreement.purpose,
             paymentMethod = repaymentArrangement.paymentMethod,
             currency = loanAgreement.currency,
-            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime.toString()).toString(),
-            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime.toString()).toString(),
-            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate.toString()).toString(),
+            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime).toString(),
+            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime).toString(),
+            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate).toString(),
             loanProductType = loanProduct.loanProductType,
             agreementStatus = loanAgreement.status
         )
