@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 class RestAssuredConfig(
     var managementPath:String = "http://localhost:8083",
     var microLoanPath:String = "http://localhost:8084",
-    var flag:Boolean = false
 ) {
     private val headers = mutableMapOf(
         "X-Authorization-Tenant" to "0",

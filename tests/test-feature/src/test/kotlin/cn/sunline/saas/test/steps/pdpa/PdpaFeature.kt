@@ -1,7 +1,5 @@
 package cn.sunline.saas.test.steps.pdpa
 
-import cn.sunline.saas.global.constant.LanguageType
-import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.test.steps.config.RestAssuredConfig
 import cn.sunline.saas.test.steps.dto.DTOPdpaAdd
 import cn.sunline.saas.test.steps.dto.DTOPdpaChange
@@ -53,8 +51,8 @@ class PdpaFeature {
             val response = restAssuredConfig.post(
                 restAssuredConfig.setManagementUrl("pdpa"),
                 DTOPdpaAdd(
-                    CountryType.valueOf(country),
-                    LanguageType.valueOf(language),
+                    country,
+                    language,
                     items
                 ),)
             val id = response.jsonPath().get<String>("data.id")
@@ -83,8 +81,8 @@ class PdpaFeature {
 
     @Then("the {string} PDPA language is {string} configure is items")
     fun `the {string} PDPA language is {string} configure is items`(country: String, language: String, items: List<DTOPdpaItem>) {
-        Assertions.assertEquals(pdpaView.country.name, country)
-        Assertions.assertEquals(pdpaView.language.name, language)
+        Assertions.assertEquals(pdpaView.country, country)
+        Assertions.assertEquals(pdpaView.language, language)
         Assertions.assertEquals(pdpaView.pdpaInformation, items)
     }
 

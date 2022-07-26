@@ -12,8 +12,8 @@ class TestFeature {
     fun test(string:String){
         println(string)
         val body = "{\n" +
-                "    \"username\":\"test\",\n" +
-                "    \"password\":\"test\"\n" +
+                "    \"username\":\"admin\",\n" +
+                "    \"password\":\"admin\"\n" +
                 "}"
 
         val response = restAssuredConfig.post(restAssuredConfig.setManagementUrl("auth/login"), body)

@@ -1,7 +1,5 @@
 package cn.sunline.saas.test.steps.pdpa
 
-import cn.sunline.saas.global.constant.LanguageType
-import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.test.steps.config.RestAssuredConfig
 import cn.sunline.saas.test.steps.dto.DTOCustomerPdpaInformationChange
 import cn.sunline.saas.test.steps.dto.DTOPdpaAdd
@@ -16,7 +14,6 @@ import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.jupiter.api.Assertions
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.LinkedList
 
 class PdpaInformationAccess {
 
@@ -29,8 +26,8 @@ class PdpaInformationAccess {
     private lateinit var customerId:String
     private lateinit var pdpaInformationView:List<DTOPdpaItem>
 
-    private val country = CountryType.CHN
-    private val language = LanguageType.ENGLISH
+    private val country = "CHN"
+    private val language = "ENGLISH"
 
 
 

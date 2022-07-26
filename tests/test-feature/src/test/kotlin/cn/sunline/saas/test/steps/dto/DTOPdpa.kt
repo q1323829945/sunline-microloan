@@ -1,7 +1,5 @@
 package cn.sunline.saas.test.steps.dto
 
-import cn.sunline.saas.global.constant.LanguageType
-import cn.sunline.saas.global.model.CountryType
 
 data class DTOCustomerPdpaInformation(
     val customerId:String,
@@ -20,8 +18,8 @@ data class DTOCustomerPdpaInformationChange(
 )
 
 data class DTOPdpaAdd (
-    val country: CountryType,
-    val language: LanguageType,
+    val country: String,
+    val language: String,
     val pdpaInformation:List<DTOPdpaItem>
 )
 
@@ -31,8 +29,8 @@ data class DTOPdpaChange (
 
 data class DTOPdpaView (
     val id:String,
-    val country: CountryType,
-    val language: LanguageType,
+    val country: String,
+    val language: String,
     var pdpaInformation:List<DTOPdpaItem>? = null
 )
 

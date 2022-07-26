@@ -20,21 +20,23 @@ class CustomerPdpaInformationServiceTest {
     @BeforeAll
     fun init() {
         ContextUtil.setTenant("12344566")
-        customerPdpaInformationService.getAndRegisterCustomerPdpaInformation(DTOCustomerPdpaInformation("10086"))
+        customerPdpaInformationService.getAndRegisterCustomerPdpaInformation(10086)
     }
 
     @Test
     fun `get customer information`(){
         val information = customerPdpaInformationService.getAndRegisterCustomerPdpaInformation(
-            DTOCustomerPdpaInformation("10086")
+            10086
         )
         Assertions.assertThat(information).isNotNull
     }
 
     @Test
     fun confirm(){
-        val information = customerPdpaInformationService.confirm(10086,
+        val information = customerPdpaInformationService.confirm(
+            10086,
             DTOCustomerPdpaInformationChange(
+                customerId = "10086",
                 pdpaId = "10086",
                 electronicSignature = "8888888"
             )

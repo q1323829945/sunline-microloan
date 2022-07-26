@@ -82,55 +82,55 @@ class PdpaServiceTest {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"name\",\n" +
+                "                        \"label\": \"name\",\n" +
                 "                        \"name\": \"name\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias\",\n" +
+                "                        \"label\": \"alias\",\n" +
                 "                        \"name\": \"alias\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"name pinyin\",\n" +
+                "                        \"label\": \"name pinyin\",\n" +
                 "                        \"name\": \"name pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias pinyin\",\n" +
+                "                        \"label\": \"alias pinyin\",\n" +
                 "                        \"name\": \"alias pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"gender\",\n" +
+                "                        \"label\": \"gender\",\n" +
                 "                        \"name\": \"gender\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"birth\",\n" +
+                "                        \"label\": \"birth\",\n" +
                 "                        \"name\": \"birth\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"internationgal\",\n" +
+                "                        \"label\": \"internationgal\",\n" +
                 "                        \"name\": \"internationgal\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"register address\",\n" +
+                "                        \"label\": \"register address\",\n" +
                 "                        \"name\": \"register address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"hdb type\",\n" +
+                "                        \"label\": \"hdb type\",\n" +
                 "                        \"name\": \"hdb type\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"notice\",\n" +
+                "                        \"label\": \"notice\",\n" +
                 "                        \"name\": \"notice\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"mobile phone\",\n" +
+                "                        \"label\": \"mobile phone\",\n" +
                 "                        \"name\": \"mobile phone\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"email\",\n" +
+                "                        \"label\": \"email\",\n" +
                 "                        \"name\": \"email\"\n" +
                 "                    }\n" +
                 "                ]\n" +
@@ -140,35 +140,35 @@ class PdpaServiceTest {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"outline\",\n" +
+                "                        \"label\": \"outline\",\n" +
                 "                        \"name\": \"outline\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"compangy\",\n" +
+                "                        \"label\": \"compangy\",\n" +
                 "                        \"name\": \"compangy\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"uens\",\n" +
+                "                        \"label\": \"uens\",\n" +
                 "                        \"name\": \"uens\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"finance\",\n" +
+                "                        \"label\": \"finance\",\n" +
                 "                        \"name\": \"finance\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"capital\",\n" +
+                "                        \"label\": \"capital\",\n" +
                 "                        \"name\": \"capital\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"leader\",\n" +
+                "                        \"label\": \"leader\",\n" +
                 "                        \"name\": \"leader\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"shareholder\",\n" +
+                "                        \"label\": \"shareholder\",\n" +
                 "                        \"name\": \"shareholder\"\n" +
                 "                    }\n" +
                 "                ]\n" +
@@ -185,55 +185,55 @@ class PdpaServiceTest {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"name\",\n" +
+                "                        \"label\": \"name\",\n" +
                 "                        \"name\": \"name\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias\",\n" +
+                "                        \"label\": \"alias\",\n" +
                 "                        \"name\": \"alias\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"name pinyin\",\n" +
+                "                        \"label\": \"name pinyin\",\n" +
                 "                        \"name\": \"name pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"alias pinyin\",\n" +
+                "                        \"label\": \"alias pinyin\",\n" +
                 "                        \"name\": \"alias pinyin\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"gender\",\n" +
+                "                        \"label\": \"gender\",\n" +
                 "                        \"name\": \"gender\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"birth\",\n" +
+                "                        \"label\": \"birth\",\n" +
                 "                        \"name\": \"birth\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"internationgal\",\n" +
+                "                        \"label\": \"internationgal\",\n" +
                 "                        \"name\": \"internationgal\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"register address\",\n" +
+                "                        \"label\": \"register address\",\n" +
                 "                        \"name\": \"register address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"hdb type\",\n" +
+                "                        \"label\": \"hdb type\",\n" +
                 "                        \"name\": \"hdb type\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"notice\",\n" +
+                "                        \"label\": \"notice\",\n" +
                 "                        \"name\": \"notice\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"mobile phone\",\n" +
+                "                        \"label\": \"mobile phone\",\n" +
                 "                        \"name\": \"mobile phone\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"email\",\n" +
+                "                        \"label\": \"email\",\n" +
                 "                        \"name\": \"email\"\n" +
                 "                    }\n" +
                 "                ]\n" +
@@ -243,31 +243,31 @@ class PdpaServiceTest {
                 "                \"information\":\n" +
                 "                [\n" +
                 "                    {\n" +
-                "                        \"key\": \"outline\",\n" +
+                "                        \"label\": \"outline\",\n" +
                 "                        \"name\": \"outline\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"compangy\",\n" +
+                "                        \"label\": \"compangy\",\n" +
                 "                        \"name\": \"compangy\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"address\",\n" +
+                "                        \"label\": \"address\",\n" +
                 "                        \"name\": \"address\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"uens\",\n" +
+                "                        \"label\": \"uens\",\n" +
                 "                        \"name\": \"uens\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"finance\",\n" +
+                "                        \"label\": \"finance\",\n" +
                 "                        \"name\": \"finance\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"capital\",\n" +
+                "                        \"label\": \"capital\",\n" +
                 "                        \"name\": \"capital\"\n" +
                 "                    },\n" +
                 "                    {\n" +
-                "                        \"key\": \"leader\",\n" +
+                "                        \"label\": \"leader\",\n" +
                 "                        \"name\": \"leader\"\n" +
                 "                    }\n" +
                 "                ]\n" +

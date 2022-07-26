@@ -1,4 +1,4 @@
-package cn.sunline.saas
+package cn.sunline.saas.test
 
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions

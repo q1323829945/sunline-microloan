@@ -1,5 +1,6 @@
 package cn.sunline.saas.test.steps.config
 
+import cn.sunline.saas.test.CucumberRunner
 import cn.sunline.saas.test.steps.dto.DTOPdpaItem
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -10,7 +11,7 @@ import io.cucumber.spring.CucumberContextConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+@SpringBootTest(classes = [CucumberRunner::class])
 @CucumberContextConfiguration
 class CucumberConfig {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -27,8 +28,8 @@ class CucumberConfig {
     fun initTenant(){
         if(restAssuredConfig.getHeader("X-Authorization") == null){
             val body = "{\n" +
-                    "    \"username\":\"test\",\n" +
-                    "    \"password\":\"test\"\n" +
+                    "    \"username\":\"admin\",\n" +
+                    "    \"password\":\"admin\"\n" +
                     "}"
 
             val response = restAssuredConfig.post(restAssuredConfig.setManagementUrl("auth/login"), body)
