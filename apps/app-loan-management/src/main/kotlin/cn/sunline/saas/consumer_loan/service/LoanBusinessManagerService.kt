@@ -150,7 +150,7 @@ class LoanBusinessManagerService(
                 disbursementAccount = agreementViewInfo.disbursementAccount,
                 disbursementAccountBank = agreementViewInfo.disbursementAccountBank,
                 currency = agreementViewInfo.currency,
-                fromDateTime = agreementViewInfo.fromDateTime,
+                fromDateTime = tenantDateTime.toTenantDateTime(agreementViewInfo.fromDateTime).toString(),
                 toDateTime = agreementViewInfo.toDateTime,
                 signedDate = agreementViewInfo.signedDate,
                 disbursementAmount = agreementViewInfo.amount,

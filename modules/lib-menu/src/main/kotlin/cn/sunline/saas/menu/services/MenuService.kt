@@ -31,6 +31,7 @@ class MenuService {
         val repaymentManagementConfig = Menu("repaymentManagementConfig","businessHandling","","/dashboard/repaymentManagementLoanConfig")
         val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig")
         val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig")
+        val loanRetrieveManagementConfig = Menu("loanRetrieveManagementConfig","businessHandling","","/dashboard/loanRetrieveManagementConfig")
 
 
         menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling
@@ -48,7 +49,8 @@ class MenuService {
             ,employeeConfig
             ,repaymentManagementConfig
             ,pdpaConfig
-            ,pdpaAuthorityConfig)
+            ,pdpaAuthorityConfig,
+            loanRetrieveManagementConfig)
 
     }
 

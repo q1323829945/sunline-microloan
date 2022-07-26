@@ -23,15 +23,19 @@ class PersonManagerService(
     private lateinit var personService: PersonService
 
     fun register(dtoPersonAdd: DTOPersonAdd): DTOPersonView {
-        val person = personService.register(dtoPersonAdd)
+        val person = personService.getOne(dtoPersonAdd.id)
+        return if(person == null){
+            val personView = personService.register(dtoPersonAdd)
 
-        partyPublish.addCustomerDetail(
-            DTOCustomerDetail(
-                partyId = person.id.toLong(),
-                partyType = PartyType.PERSON
+            partyPublish.addCustomerDetail(
+                DTOCustomerDetail(
+                    partyId = personView.id.toLong(),
+                    partyType = PartyType.PERSON
+                )
             )
-        )
-
-        return person
+            personView
+        }else{
+            personService.getDTOPersonView(person)
+        }
     }
 }

@@ -125,6 +125,7 @@ enum class PermissionConfig (
     REPAYMENT_MANAGEMENT_MENU("menu","repaymentManagementConfig", RequestMethod.GET,"View formal repaymentManagementConfig menu"),
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
     PDPA_AUTHORITY_MENU("menu","pdpaAuthorityConfig", RequestMethod.GET,"View pdpaAuthorityConfig menu"),
+    LOAN_RETRIEVE_MANAGEMENT_MENU("menu","loanRetrieveManagementConfig", RequestMethod.GET,"View formal loanRetrieveManagementConfig menu"),
 
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/repayment/instruction(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
@@ -140,6 +141,5 @@ enum class PermissionConfig (
     LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/(.*?)/retrieve",RequestMethod.GET,"view loan history event record"),
     LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/(.*?)/retrieve", RequestMethod.GET, "view repayment record"),
     LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/(.*?)/retrieve", RequestMethod.GET, "view disbursement disbursement")
-
 }
 

@@ -330,9 +330,9 @@ class ConsumerLoanService(
             purpose = loanAgreement.purpose,
             paymentMethod = repaymentArrangement.paymentMethod,
             currency = loanAgreement.currency,
-            fromDateTime = loanAgreement.fromDateTime.toString(),
-            toDateTime = loanAgreement.toDateTime.toString(),
-            signedDate = loanAgreement.signedDate.toString(),
+            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime.toString()).toString(),
+            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime.toString()).toString(),
+            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate.toString()).toString(),
             loanProductType = loanProduct.loanProductType,
             agreementStatus = loanAgreement.status
         )
@@ -1055,9 +1055,9 @@ class ConsumerLoanService(
             purpose = loanAgreement.purpose,
             paymentMethod = repaymentArrangement.paymentMethod,
             currency = loanAgreement.currency,
-            fromDateTime = loanAgreement.fromDateTime.toString(),
-            toDateTime = loanAgreement.toDateTime.toString(),
-            signedDate = loanAgreement.signedDate.toString(),
+            fromDateTime = tenantDateTime.toTenantDateTime(loanAgreement.fromDateTime.toString()).toString(),
+            toDateTime = tenantDateTime.toTenantDateTime(loanAgreement.toDateTime.toString()).toString(),
+            signedDate = tenantDateTime.toTenantDateTime(loanAgreement.signedDate.toString()).toString(),
             loanProductType = loanProduct.loanProductType,
             agreementStatus = loanAgreement.status
         )

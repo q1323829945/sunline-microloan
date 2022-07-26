@@ -2,6 +2,8 @@ package cn.sunline.saas.rpc.pubsub.impl
 
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT_PUB_SUB
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.party.person.model.dto.DTOPersonAdd
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublish
 import cn.sunline.saas.rpc.pubsub.CustomerOfferPublishTopic
@@ -27,9 +29,10 @@ class CustomerOfferPublishImpl: CustomerOfferPublish {
 
     override fun registeredPerson(dtoPersonAdd: DTOPersonAdd) {
         PubSubService.publish(
-            APP_LOAN_MANAGEMENT_PUB_SUB,
-            CustomerOfferPublishTopic.INITIATE_PERSON.toString(),
-            dtoPersonAdd
+            pubSubName = APP_LOAN_MANAGEMENT_PUB_SUB,
+            topic = CustomerOfferPublishTopic.INITIATE_PERSON.toString(),
+            payload = dtoPersonAdd,
+            tenant = ContextUtil.getTenant().toString()
         )
     }
 

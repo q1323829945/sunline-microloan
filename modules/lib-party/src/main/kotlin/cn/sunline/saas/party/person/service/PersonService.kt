@@ -129,7 +129,7 @@ class PersonService(private val personRepository: PersonRepository,
         }
     }
 
-    private fun getDTOPersonView(person: Person):DTOPersonView{
+    fun getDTOPersonView(person: Person):DTOPersonView{
 
         return DTOPersonView(
             id = person.id.toString(),
