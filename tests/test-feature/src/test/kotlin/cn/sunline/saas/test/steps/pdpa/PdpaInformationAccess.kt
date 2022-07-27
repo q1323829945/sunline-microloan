@@ -33,10 +33,10 @@ class PdpaInformationAccess {
 
     @Given("init pdpa")
     fun `init pdpa`() {
-        val checkExist = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/${country}/${language}/retrieve"))
+        val checkExist = restAssuredConfig.get(restAssuredConfig.setManagementUrl("/pdpa/${country}/${language}/retrieve"))
         if(checkExist.statusCode != 200){
             val response = restAssuredConfig.post(
-                restAssuredConfig.setManagementUrl("pdpa"),
+                restAssuredConfig.setManagementUrl("/pdpa"),
                 DTOPdpaAdd(
                     country,
                     language,
@@ -51,7 +51,7 @@ class PdpaInformationAccess {
             val getItems = checkExist.jsonPath().get<ArrayList<*>>("data.pdpaInformation")
 
             if(items() != objectMapper.convertValue<List<DTOPdpaItem>>(getItems)){
-                restAssuredConfig.put(restAssuredConfig.setManagementUrl("pdpa/$id"), DTOPdpaChange(items()))
+                restAssuredConfig.put(restAssuredConfig.setManagementUrl("/pdpa/$id"), DTOPdpaChange(items()))
             }
         }
     }
@@ -59,12 +59,12 @@ class PdpaInformationAccess {
     @Given("there are customer {string} already confirm PDPA authorization")
     fun `there are customer {string} already confirm PDPA authorization`(customerId:String){
         this.customerId = customerId
-        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("/pdpa/customer/$customerId"))
         val data = response.jsonPath().get<LinkedHashMap<String,*>?>("data")
         //TODO:正常流程是申请的时候把权限加上去。
         if(data == null){
             restAssuredConfig.post(
-                restAssuredConfig.setManagementUrl("customer/pdpa/confirm"),
+                restAssuredConfig.setManagementUrl("/customer/pdpa/confirm"),
                 DTOCustomerPdpaInformationChange(
                     customerId,
                     pdpaId,
@@ -77,7 +77,7 @@ class PdpaInformationAccess {
 
     @When("access PDPA information")
     fun `access PDPA information`(){
-        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("/pdpa/customer/$customerId"))
         val pdpaInformation = response.jsonPath().get<ArrayList<*>>("data.pdpaInformation")
         pdpaInformationView = objectMapper.convertValue(pdpaInformation)
     }

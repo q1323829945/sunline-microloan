@@ -6,4 +6,11 @@ spring:
 
 rest-assured:
   managementPath: https://quickloan-management-demo.finline.app
+  managementPrefix: /management
   microLoanPath: https://quickloan-app-demo.finline.app
+  microLoanPrefix: /micro
+
+cucumber-config:
+  loginPath: https://quickloan-management-demo.finline.app
+  username: test
+  password: test

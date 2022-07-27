@@ -52,7 +52,7 @@ task cucumber() {
                     '-g',
                     'cn.sunline.saas.test.steps',
                     '-t',
-                    '@Test'
+                    'not @Test'
             ]
         }
     }

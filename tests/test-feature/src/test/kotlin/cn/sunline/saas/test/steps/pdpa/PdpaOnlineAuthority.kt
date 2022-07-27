@@ -36,7 +36,7 @@ class PdpaOnlineAuthority {
         authorityWayConvert(authorityWays)
 
         restAssuredConfig.put(
-            restAssuredConfig.setManagementUrl("pdpa/authority"),
+            restAssuredConfig.setManagementUrl("/pdpa/authority"),
             DTOPdpaAuthority(
                 isElectronicSignature = isElectronicSignature,
                 isFaceRecognition = isFaceRecognition,
@@ -47,7 +47,7 @@ class PdpaOnlineAuthority {
 
     @When("query the authority way")
     fun `query the authority way`() {
-        val response = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/authority"))
+        val response = restAssuredConfig.get(restAssuredConfig.setManagementUrl("/pdpa/authority"))
 
         val data = response.jsonPath().get<LinkedHashMap<String,*>>("data")
 

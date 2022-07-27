@@ -46,10 +46,10 @@ class PdpaFeature {
 
     @When("add PDPA information")
     fun `add PDPA information`() {
-        val checkExist = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/${country}/${language}/retrieve"))
+        val checkExist = restAssuredConfig.get(restAssuredConfig.setManagementUrl("/pdpa/${country}/${language}/retrieve"))
         if(checkExist.statusCode != 200){
             val response = restAssuredConfig.post(
-                restAssuredConfig.setManagementUrl("pdpa"),
+                restAssuredConfig.setManagementUrl("/pdpa"),
                 DTOPdpaAdd(
                     country,
                     language,
@@ -65,7 +65,7 @@ class PdpaFeature {
             val getItems = checkExist.jsonPath().get<ArrayList<*>>("data.pdpaInformation")
 
             if(items != objectMapper.convertValue<List<DTOPdpaItem>>(getItems)){
-                restAssuredConfig.put(restAssuredConfig.setManagementUrl("pdpa/$id"), DTOPdpaChange(items))
+                restAssuredConfig.put(restAssuredConfig.setManagementUrl("/pdpa/$id"), DTOPdpaChange(items))
             }
         }
 
@@ -73,7 +73,7 @@ class PdpaFeature {
 
     @And("get PDPA information")
     fun `get PDPA information`() {
-        val response = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/$id"))
+        val response = restAssuredConfig.get(restAssuredConfig.setManagementUrl("/pdpa/$id"))
 
         val data = response.jsonPath().get<LinkedHashMap<String,*>>("data")
         pdpaView = objectMapper.convertValue(data)

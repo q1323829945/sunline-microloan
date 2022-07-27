@@ -23,14 +23,14 @@ class PdpaWithdraw {
     fun `There are customer {string} PDPA authorization and consent records`(customerId:String) {
 
         this.customerId = customerId
-        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("/pdpa/customer/$customerId"))
         val data = response.jsonPath().get<LinkedHashMap<String,*>?>("data")
         //TODO:正常流程是申请的时候把权限加上去。
         if(data == null){
-            val pdpaResponse = restAssuredConfig.get(restAssuredConfig.setManagementUrl("pdpa/CHN/ENGLISH/retrieve"))
+            val pdpaResponse = restAssuredConfig.get(restAssuredConfig.setManagementUrl("/pdpa/CHN/ENGLISH/retrieve"))
 
             restAssuredConfig.post(
-                restAssuredConfig.setManagementUrl("customer/pdpa/confirm"),
+                restAssuredConfig.setManagementUrl("/customer/pdpa/confirm"),
                 DTOCustomerPdpaInformationChange(
                     customerId,
                     pdpaResponse.jsonPath().get<String>("data.id"),
@@ -43,9 +43,9 @@ class PdpaWithdraw {
 
     @When("select withdraw")
     fun `select withdraw`(){
-        restAssuredConfig.put(restAssuredConfig.setMicroLoanUrl("pdpa/customer/withdraw/$customerId"),null)
+        restAssuredConfig.put(restAssuredConfig.setMicroLoanUrl("/pdpa/customer/withdraw/$customerId"),null)
         Thread.sleep(3000)
-        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("pdpa/customer/$customerId"))
+        val response = restAssuredConfig.get(restAssuredConfig.setMicroLoanUrl("/pdpa/customer/$customerId"))
         val authority = response.jsonPath().get<String?>("data")
         this.authority = authority
     }
