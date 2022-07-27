@@ -16,7 +16,7 @@ class TestFeature {
                 "    \"password\":\"admin\"\n" +
                 "}"
 
-        val response = restAssuredConfig.post(restAssuredConfig.setManagementUrl("auth/login"), body)
+        val response = restAssuredConfig.post("https://quickloan-management-demo.finline.app/auth/login", body)
         response.print()
     }
 }
