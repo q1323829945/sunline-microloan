@@ -80,8 +80,8 @@ class LoanBusinessManagerService(
                 DTOLoanBusinessView(
                     applicationId = it.id.toString(),
                     repaymentAmount = repaymentAmount.toPlainString(),
-                    isSyndicatedLoan = YesOrNo.N,
-                    isRevolvingLoan = YesOrNo.N
+                    syndicatedLoan = YesOrNo.N,
+                    revolvingLoan = YesOrNo.N
                 )
             } else {
                     val repaymentInstruction = repaymentInstructionService.getPage(
@@ -104,8 +104,8 @@ class LoanBusinessManagerService(
                     loanAmount = agreementViewInfo.amount,
                     disbursementAmount = agreementViewInfo.amount,
                     repaymentAmount = repaymentAmount.toPlainString(),
-                    isSyndicatedLoan = YesOrNo.N,
-                    isRevolvingLoan = YesOrNo.N,
+                    syndicatedLoan = YesOrNo.N,
+                    revolvingLoan = YesOrNo.N,
                     status = agreementViewInfo.agreementStatus
                 )
             }

@@ -288,7 +288,7 @@ class ConsumerLoanService(
     }
 
     fun callBackDisbursement(instructionId: Long) {
-        val disbursementInstruction = disbursementInstructionService.retrieve(instructionId)
+        val disbursementInstruction = disbursementInstructionService.getOne(instructionId)!!
         val loanAgreement = loanAgreementService.getOne(disbursementInstruction.agreementId)
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
 
@@ -301,6 +301,12 @@ class ConsumerLoanService(
 
         loanAgreement.status = AgreementStatus.PAID
         loanAgreementService.save(loanAgreement)
+
+        disbursementInstruction.moneyTransferInstructionStatus = InstructionLifecycleStatus.FULFILLED
+        disbursementInstruction.executeDateTime = tenantDateTime.now().toDate()
+        disbursementInstruction.endDateTime = tenantDateTime.now().toDate()
+        disbursementInstructionService.save(disbursementInstruction)
+
     }
 
     fun getLoanAgreementByApplicationId(applicationId: Long): DTOLoanAgreementView? {

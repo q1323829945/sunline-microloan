@@ -14,8 +14,8 @@ data class DTOLoanBusinessView(
     val loanAmount: String? = null,
     val disbursementAmount: String? = null,
     val repaymentAmount: String? = null,
-    val isSyndicatedLoan: YesOrNo,
-    val isRevolvingLoan: YesOrNo,
+    val syndicatedLoan: YesOrNo,
+    val revolvingLoan: YesOrNo,
     val status: AgreementStatus? = null
 )
 
@@ -29,8 +29,8 @@ data class DTOApplicationLoanView(
     val totalLoanAmount: String,
     val totalRepayment: String,
     val totalAccountBalance: String,
-    val isSyndicatedLoan: YesOrNo,
-    val isRevolvingLoan: YesOrNo,
+    val syndicatedLoan: YesOrNo,
+    val revolvingLoan: YesOrNo,
     val status: AgreementStatus
 )
 

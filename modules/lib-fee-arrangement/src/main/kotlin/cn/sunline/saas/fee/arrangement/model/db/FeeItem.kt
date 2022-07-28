@@ -56,7 +56,7 @@ class FeeItem(
     val feeToDate: Date?,
 
     @NotNull
-    @Column(name = "fee_user", nullable = false, columnDefinition = "bigint not null")
+    @Column(name = "fee_user", nullable = false, columnDefinition = "varchar(32) null")
     val feeUser: String?,
 
     @NotNull
