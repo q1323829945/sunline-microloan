@@ -11,30 +11,33 @@ class MenuService {
 
 
     init {
-        val businessConfig = Menu("businessConfig","","","",1)
-        val sysConfig = Menu("sysConfig","","","",2)
+        val sysConfig = Menu("sysConfig","","","",1)
+        val businessConfig = Menu("businessConfig","","","",2)
         val enterpriseConfig = Menu("enterpriseConfig","","","",3)
         val businessHandling= Menu("businessHandling","","","",4)
+        val businessQuery = Menu("businessQuery","","","",5)
 
-        val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role",5)
-        val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions",6)
-        val userConfig = Menu("userConfig","sysConfig","","/dashboard/user",7)
-        val ratePlanConfig = Menu("ratePlanConfig","businessConfig","","/dashboard/ratePlan",8)
-        val documentTemplateConfig = Menu("documentTemplateConfig","businessConfig","","/dashboard/documentTemplate",9)
-        val loanProductConfig = Menu("loanProductConfig","businessConfig","","/dashboard/loanProduct",10)
-        val riskControlRuleConfig = Menu("riskControlRuleConfig","businessConfig","","/dashboard/riskControlRule",11)
-        val organisationConfig = Menu("organisationConfig","enterpriseConfig","","/dashboard/organisationConfig",12)
-        val employeeConfig = Menu("employeeConfig","enterpriseConfig","","/dashboard/employeeConfig",13)
-        val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig",14)
-        val customerOfferConfig = Menu("customerOfferConfig","businessHandling","","/dashboard/customerOfferConfig",15)
-        val loanAgreementManagementConfig = Menu("loanAgreementManagementConfig","businessHandling","","/dashboard/loanAgreementManagementConfig",16)
-        val repaymentManagementConfig = Menu("repaymentManagementConfig","businessHandling","","/dashboard/repaymentManagementLoanConfig",17)
-        val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",18)
-        val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",19)
-        val loanRetrieveManagementConfig = Menu("loanRetrieveManagementConfig","businessHandling","","/dashboard/loanRetrieveManagementConfig",20)
+        val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role",1)
+        val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions",2)
+        val userConfig = Menu("userConfig","sysConfig","","/dashboard/user",3)
+        val ratePlanConfig = Menu("ratePlanConfig","businessConfig","","/dashboard/ratePlan",4)
+        val documentTemplateConfig = Menu("documentTemplateConfig","businessConfig","","/dashboard/documentTemplate",5)
+        val loanProductConfig = Menu("loanProductConfig","businessConfig","","/dashboard/loanProduct",6)
+        val riskControlRuleConfig = Menu("riskControlRuleConfig","businessConfig","","/dashboard/riskControlRule",7)
+        val organisationConfig = Menu("organisationConfig","enterpriseConfig","","/dashboard/organisationConfig",8)
+        val employeeConfig = Menu("employeeConfig","enterpriseConfig","","/dashboard/employeeConfig",9)
+        val customerConfig = Menu("customerConfig","businessConfig","","/dashboard/customerConfig",10)
+        val customerOfferConfig = Menu("customerOfferConfig","businessHandling","","/dashboard/customerOfferConfig",11)
+        val loanAgreementManagementConfig = Menu("loanAgreementManagementConfig","businessHandling","","/dashboard/loanAgreementManagementConfig",12)
+        val repaymentManagementConfig = Menu("repaymentManagementConfig","businessHandling","","/dashboard/repaymentManagementLoanConfig",13)
+        val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",14)
+        val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",15)
+        val loanRetrieveManagementConfig = Menu("loanRetrieveManagementConfig","businessHandling","","/dashboard/loanRetrieveManagementConfig",16)
+        val loanQuery = Menu("loanQuery","businessQuery","","/dashboard/businessQuery",17)
 
 
-        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling
+
+        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling,businessQuery
             ,roleConfig
             ,permissionConfig
             ,userConfig
@@ -49,8 +52,9 @@ class MenuService {
             ,employeeConfig
             ,repaymentManagementConfig
             ,pdpaConfig
-            ,pdpaAuthorityConfig,
-            loanRetrieveManagementConfig)
+            ,pdpaAuthorityConfig
+            ,loanRetrieveManagementConfig
+            ,loanQuery)
 
     }
 
@@ -58,14 +62,14 @@ class MenuService {
     fun getPermissionMenu(menuName: Set<String>): List<ResultMenu> {
         val baseMenuSet = getPermissionSelectMenu(menuName)
 
-        return menuRecursion("", baseMenuSet)!!
+        return menuRecursion("", baseMenuSet)!!.sortedBy { it.sort }
     }
 
     private fun menuRecursion(parentName: String,menuSet:HashSet<Menu>):List<ResultMenu>?{
         val children:ArrayList<ResultMenu> = arrayListOf()
         for(menu in menuSet){
             if(menu.parentName == parentName){
-                children.add(ResultMenu(menu.name,menu.parentName,menu.icon,menu.path,menuRecursion(menu.name,menuSet)))
+                children.add(ResultMenu(menu.name,menu.parentName,menu.icon,menu.path,menuRecursion(menu.name,menuSet)?.sortedBy { it.sort },menu.sort))
             }
         }
 

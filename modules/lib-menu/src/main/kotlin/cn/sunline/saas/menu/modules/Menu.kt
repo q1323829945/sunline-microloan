@@ -15,5 +15,6 @@ data class ResultMenu(
         val parentName:String,
         val icon:String,
         val path:String,
-        val children:List<ResultMenu>?
+        val children:List<ResultMenu>?,
+        val sort:Int,
 )
