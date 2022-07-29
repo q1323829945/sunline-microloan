@@ -490,9 +490,9 @@ class ConsumerLoanService(
         val interestRate = dtoSchedule.first().interestRate
         var installment = dtoSchedule.first().instalment
         for (schedule in dtoSchedule) {
-            if (installment != schedule.instalment) {
-                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-            }
+//            if (installment != schedule.instalment) {
+//                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
+//            }
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
                 period = schedule.period,
                 installment = schedule.instalment,

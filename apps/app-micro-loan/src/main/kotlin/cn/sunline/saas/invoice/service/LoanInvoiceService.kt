@@ -53,12 +53,12 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         val feeDeductItem = feeArrangementService.getOverdueFeeDeductItem(feeArrangement, invoiceTotalAmount)
 
         invoice.invoiceLines.forEach {
-            lines += if(it.invoiceAmountType == InvoiceAmountType.FEE){
+            lines += if (it.invoiceAmountType == InvoiceAmountType.FEE) {
                 DTOInvoiceLinesView(
                     invoiceAmountType = it.invoiceAmountType,
                     invoiceAmount = it.invoiceAmount.add(feeDeductItem.immediateFee).toPlainString()
                 )
-            }else {
+            } else {
                 DTOInvoiceLinesView(
                     invoiceAmountType = it.invoiceAmountType,
                     invoiceAmount = it.invoiceAmount.toPlainString()
@@ -108,35 +108,36 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
 
     fun retrieveCurrentAccountedInvoices(customerId: Long): List<DTOInvoiceInfoView> {
         val page = invoiceService.retrieveCurrentInvoices(customerId, null)
-        val list = page.groupBy { it.agreementId }.map {
-            val invoice = it.value.sortedBy { i -> i.invoiceRepaymentDate }.first { invoice ->
-                invoice.invoiceStatus == InvoiceStatus.INITIATE || invoice.invoiceStatus == InvoiceStatus.ACCOUNTED
-            }
-            val lines = ArrayList<DTOInvoiceLinesView>()
-            invoice.invoiceLines.forEach { invoiceLine ->
-                lines += DTOInvoiceLinesView(
-                    invoiceAmountType = invoiceLine.invoiceAmountType,
-                    invoiceAmount = invoiceLine.invoiceAmount.toPlainString()
-                )
-            }
-            val agreement = loanAgreementService.getOne(invoice.agreementId)
-                ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")
-            DTOInvoiceInfoView(
-                invoicee = invoice.invoicee.toString(),
-                invoiceId = invoice.id.toString(),
-                invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
-                invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
-                invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
-                invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
-                invoiceCurrency = agreement.currency,
-                invoiceStatus = invoice.invoiceStatus,
-                repaymentStatus = invoice.repaymentStatus,
-                agreementId = invoice.agreementId.toString(),
-                loanAgreementFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(agreement.fromDateTime)),
-                invoiceRepaymentDate = invoice.invoiceRepaymentDate.toString(),
-                invoiceLines = lines
-            )
-        }
+        val list =
+            page.filter { it.invoiceStatus == InvoiceStatus.INITIATE || it.invoiceStatus == InvoiceStatus.ACCOUNTED }
+                .groupBy { it.agreementId }
+                .map {
+                    val invoice = it.value.sortedBy { i -> i.invoiceRepaymentDate }.first()
+                    val lines = ArrayList<DTOInvoiceLinesView>()
+                    invoice.invoiceLines.forEach { invoiceLine ->
+                        lines += DTOInvoiceLinesView(
+                            invoiceAmountType = invoiceLine.invoiceAmountType,
+                            invoiceAmount = invoiceLine.invoiceAmount.toPlainString()
+                        )
+                    }
+                    val agreement = loanAgreementService.getOne(invoice.agreementId)
+                        ?: throw LoanInvoiceBusinessException("Loan Agreement Not Found")
+                    DTOInvoiceInfoView(
+                        invoicee = invoice.invoicee.toString(),
+                        invoiceId = invoice.id.toString(),
+                        invoiceDueDate = invoice.invoiceRepaymentDate.toString(),//tenantDateTime.toString(),
+                        invoicePeriodFromDate = invoice.invoicePeriodFromDate.toString(),
+                        invoicePeriodToDate = invoice.invoicePeriodToDate.toString(),
+                        invoiceTotalAmount = invoice.invoiceAmount.toPlainString(),
+                        invoiceCurrency = agreement.currency,
+                        invoiceStatus = invoice.invoiceStatus,
+                        repaymentStatus = invoice.repaymentStatus,
+                        agreementId = invoice.agreementId.toString(),
+                        loanAgreementFromDate = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(agreement.fromDateTime)),
+                        invoiceRepaymentDate = invoice.invoiceRepaymentDate.toString(),
+                        invoiceLines = lines
+                    )
+                }
         return list
     }
 
@@ -181,12 +182,16 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
             paymentMethodType = loanAgreement.repaymentArrangement.paymentMethod,//PaymentMethodType.ONE_OFF_REPAYMENT,// loanAgreement.repaymentArrangement.paymentMethod,
             fromDate = loanAgreement.loanAgreement.fromDateTime.toString(),
             endDate = loanAgreement.loanAgreement.toDateTime.toString(),
-            totalInstalmentLines = getInstalmentLines(totalInstalment,totalInterest,totalFee),
+            totalInstalmentLines = getInstalmentLines(totalInstalment, totalInterest, totalFee),
             scheduleLines = scheduleLines
         )
     }
 
-    private fun getInstalmentLines(instalment: BigDecimal,totalInterest: BigDecimal,totalFee: BigDecimal) :MutableList<DTOInvoiceLinesView>{
+    private fun getInstalmentLines(
+        instalment: BigDecimal,
+        totalInterest: BigDecimal,
+        totalFee: BigDecimal
+    ): MutableList<DTOInvoiceLinesView> {
         val totalInstalmentLines = ArrayList<DTOInvoiceLinesView>()
         InvoiceAmountType.values().forEach {
             when (it) {
