@@ -1,7 +1,7 @@
 package cn.sunline.saas.customer_offer.service
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.customer.offer.modules.ApplyStatus.*
+import cn.sunline.saas.global.constant.ApplyStatus
+import cn.sunline.saas.global.constant.ApplyStatus.*
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
@@ -101,7 +101,7 @@ class AppCustomerOfferService(
         customerOfferService.save(customerOffer)
     }
 
-    private fun checkStatus(oldStatus:ApplyStatus,newStatus:ApplyStatus){
+    private fun checkStatus(oldStatus: ApplyStatus, newStatus: ApplyStatus){
         when(oldStatus){
             SUBMIT -> if(newStatus != APPROVALED && newStatus != ApplyStatus.REJECTED) throw CustomerOfferStatusException("status can not be update")
             else -> throw CustomerOfferStatusException("status can not be update")

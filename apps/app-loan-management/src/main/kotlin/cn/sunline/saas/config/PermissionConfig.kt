@@ -141,6 +141,13 @@ enum class PermissionConfig (
     LOAN_BUSINESS_FEE_RETRIEVE("LoanBusiness","LoanBusiness/fee/(.*?)/retrieve",RequestMethod.GET,"view loan fee information"),
     LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/(.*?)/retrieve",RequestMethod.GET,"view loan history event record"),
     LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/(.*?)/retrieve", RequestMethod.GET, "view repayment record"),
-    LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/(.*?)/retrieve", RequestMethod.GET, "view disbursement disbursement")
+    LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/(.*?)/retrieve", RequestMethod.GET, "view disbursement disbursement"),
+
+
+    LOAN_APPLICATION_STATISTICS_GET_LIST("LoanApplicationStatistics","LoanApplicationStatistics(\\?.*|\$)",RequestMethod.GET,"View loan application statistics"),
+    LOAN_APPLICATION_DETAIL_ADD("LoanApplicationStatistics", "LoanApplicationStatistics/addLoanApplicationDetail\$", RequestMethod.POST, "Add loan application detail"),
+    LOAN_APPLICATION_STATISTICS_ADD("LoanApplicationStatistics", "LoanApplicationStatistics/addLoanApplicationStatistics\$", RequestMethod.POST, "Add loan application statistics"),
+
+
 }
 

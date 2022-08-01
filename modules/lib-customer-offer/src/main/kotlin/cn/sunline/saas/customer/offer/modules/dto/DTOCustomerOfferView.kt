@@ -1,9 +1,7 @@
 package cn.sunline.saas.customer.offer.modules.dto
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.global.constant.LanguageType
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.LoanTermType
-import cn.sunline.saas.global.model.CountryType
 
 data class DTOCustomerOfferView(
         val customerOfferProcedure: CustomerOfferProcedureView,

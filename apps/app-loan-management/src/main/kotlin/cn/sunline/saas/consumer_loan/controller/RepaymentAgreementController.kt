@@ -1,22 +1,15 @@
 package cn.sunline.saas.consumer_loan.controller
 
 import cn.sunline.saas.consumer_loan.service.RepaymentAgreementManagerService
-import cn.sunline.saas.consumer_loan.service.dto.DTOInvoicePage
-import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
-import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
-import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.servlet.http.HttpServletResponse
-import javax.websocket.server.PathParam
 
 
 @RestController

@@ -1,0 +1,90 @@
+package cn.sunline.saas.satatistics.scheduler
+
+import cn.sunline.saas.global.constant.Frequency
+import cn.sunline.saas.multi_tenant.services.TenantService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.statistics.modules.db.LoanApplicationStatistics
+import cn.sunline.saas.statistics.modules.dto.DTOLoanApplicationDetailQueryParams
+import cn.sunline.saas.statistics.modules.dto.DTOLoanApplicationStatistics
+import cn.sunline.saas.statistics.modules.dto.DTOLoanApplicationStatisticsFindParams
+import cn.sunline.saas.statistics.services.LoanApplicationDetailService
+import cn.sunline.saas.statistics.services.LoanApplicationStatisticsService
+import org.joda.time.DateTime
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
+import java.util.*
+
+@Component
+//@EnableScheduling
+class LoanApplicationStatisticsScheduler(
+    private val tenantDateTime: TenantDateTime,
+    private val tenantService: TenantService
+) : BaseScheduler(tenantDateTime, tenantService) {
+    @Autowired
+    private lateinit var loanApplicationDetailService: LoanApplicationDetailService
+
+    @Autowired
+    private lateinit var loanApplicationStatisticsService: LoanApplicationStatisticsService
+
+    //每小时调度一次
+    @Scheduled(cron = "0 0 * * * ?")
+    fun runLoanApplicationScheduler() {
+        runScheduler()
+    }
+
+    override fun saveYear(dateTime: DateTime) {
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusYears(-1)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(), Frequency.Y)
+    }
+
+    override fun saveMonth(dateTime: DateTime) {
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusMonths(-1)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.M)
+    }
+
+    override fun saveDay(dateTime: DateTime) {
+        val endDate = getLocalDate(dateTime)
+        val startDate = endDate.plusDays(-1)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.D)
+    }
+
+    private fun schedulerLoanApplication(dateTime: DateTime, startDate: Date, endDate: Date, frequency: Frequency) {
+        val loanApplication =
+            loanApplicationDetailService.getGroupByStatusCount(DTOLoanApplicationDetailQueryParams(startDate, endDate))
+        loanApplication.forEach {
+            val business = checkLoanApplicationExist(it.channel, it.productId, dateTime, frequency)
+            business ?: run {
+                loanApplicationStatisticsService.saveLoanApplicationStatistics(
+                    DTOLoanApplicationStatistics(
+                        channel = it.channel,
+                        productId = it.productId,
+                        productName = it.productName,
+                        amount = it.amount,
+                        applyCount = it.applyCount,
+                        approvalCount = it.approvalCount,
+                        frequency = frequency
+                    )
+                )
+            }
+        }
+    }
+
+    private fun checkLoanApplicationExist(
+        channel: String,
+        productId: Long,
+        dateTime: DateTime,
+        frequency: Frequency
+    ): LoanApplicationStatistics? {
+        return loanApplicationStatisticsService.findByDate(
+            DTOLoanApplicationStatisticsFindParams(
+                channel = channel,
+                productId = productId,
+                dateTime = dateTime,
+                frequency = frequency
+            )
+        )
+    }
+}

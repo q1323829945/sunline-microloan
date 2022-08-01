@@ -1,6 +1,6 @@
 package cn.sunline.saas.customer_offer.service.dto
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.global.constant.ApplyStatus
 
 data class DTOCustomerOfferProcedure(
         var customerOfferId:String,

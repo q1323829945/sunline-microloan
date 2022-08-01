@@ -1,6 +1,6 @@
 package cn.sunline.saas.customer.offer.modules.db
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
@@ -35,7 +35,7 @@ class CustomerOffer (
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", length = 256, columnDefinition = "varchar(256) not null")
-    var status:ApplyStatus = ApplyStatus.RECORD,
+    var status: ApplyStatus = ApplyStatus.RECORD,
 
     @NotNull
     @Column(name = "data", columnDefinition = "text not null")

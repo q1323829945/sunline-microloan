@@ -2,21 +2,13 @@ package cn.sunline.saas.consumer_loan.service
 
 import cn.sunline.saas.consumer_loan.exception.LoanBusinessException
 import cn.sunline.saas.consumer_loan.service.dto.*
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
-import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.AgreementStatus
-import cn.sunline.saas.global.constant.LoanFeeType
-import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.global.constant.YesOrNo
-import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
-import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
@@ -26,18 +18,12 @@ import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import cn.sunline.saas.rpc.invoke.impl.PageInvokeImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.aspectj.apache.bcel.generic.Instruction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestParam
 import java.math.BigDecimal
-import javax.persistence.criteria.Predicate
 
 
 @Service

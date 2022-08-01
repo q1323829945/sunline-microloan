@@ -1,6 +1,6 @@
 package cn.sunline.saas.customer.offer.services
 
-import cn.sunline.saas.customer.offer.modules.ApplyStatus
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.customer.offer.modules.db.CustomerLoanApply
 import cn.sunline.saas.customer.offer.modules.dto.*
 import cn.sunline.saas.customer.offer.repositories.CustomerLoanApplyRepository
