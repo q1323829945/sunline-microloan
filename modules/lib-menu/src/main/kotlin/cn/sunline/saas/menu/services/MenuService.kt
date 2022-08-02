@@ -16,6 +16,8 @@ class MenuService {
         val enterpriseConfig = Menu("enterpriseConfig","","","",3)
         val businessHandling= Menu("businessHandling","","","",4)
         val businessQuery = Menu("businessQuery","","","",5)
+        val statisticsQuery = Menu("statisticsQuery","","","",5)
+
 
         val roleConfig = Menu("roleConfig","sysConfig","","/dashboard/role",1)
         val permissionConfig = Menu("permissionConfig","sysConfig","","/dashboard/permissions",2)
@@ -32,11 +34,13 @@ class MenuService {
         val repaymentManagementConfig = Menu("repaymentManagementConfig","businessHandling","","/dashboard/repaymentManagementLoanConfig",13)
         val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",14)
         val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",15)
-        val loanQuery = Menu("loanQuery","businessQuery","","/dashboard/businessQuery",17)
+        val loanQuery = Menu("loanQuery","businessQuery","","/dashboard/businessQuery",16)
+        val commissionStatisticsConfig = Menu("commissionStatisticsConfig","statisticsQuery","","/dashboard/commissionStatisticsConfig",17)
+        val loanApplicationStatisticsConfig = Menu("loanApplicationStatisticsConfig","statisticsQuery","","/dashboard/loanApplicationStatisticsConfig",18)
 
 
 
-        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling,businessQuery
+        menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling,businessQuery,statisticsQuery
             ,roleConfig
             ,permissionConfig
             ,userConfig
@@ -52,7 +56,9 @@ class MenuService {
             ,repaymentManagementConfig
             ,pdpaConfig
             ,pdpaAuthorityConfig
-            ,loanQuery)
+            ,loanQuery
+            ,commissionStatisticsConfig
+            ,loanApplicationStatisticsConfig)
 
     }
 

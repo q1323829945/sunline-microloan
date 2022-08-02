@@ -1,5 +1,6 @@
 package cn.sunline.saas.config
 
+import cn.sunline.saas.menu.modules.Menu
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
@@ -126,6 +127,10 @@ enum class PermissionConfig (
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
     PDPA_AUTHORITY_MENU("menu","pdpaAuthorityConfig", RequestMethod.GET,"View pdpaAuthorityConfig menu"),
     LOAN_QUERY_MENU("menu","loanQuery", RequestMethod.GET,"view loan query menu"),
+    COMMISSION_STATISTICS_QUERY_MENU("menu","commissionStatisticsConfig", RequestMethod.GET,"View commission statistics query menu"),
+    LOAN_APPLICATION_STATISTICS_QUERY_MENU("menu","loanApplicationStatisticsConfig", RequestMethod.GET,"view loan application statistics query menu"),
+
+
 
 
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/repayment/instruction(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
