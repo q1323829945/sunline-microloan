@@ -1,0 +1,5 @@
+package cn.sunline.saas.rpc.pubsub
+
+enum class StatisticsPublishTopic {
+    LOAN_APPLICATION_DETAIL,LOAN_APPLICATION_STATISTICS,COMMISSION_DETAIL,COMMISSION_STATISTICS
+}

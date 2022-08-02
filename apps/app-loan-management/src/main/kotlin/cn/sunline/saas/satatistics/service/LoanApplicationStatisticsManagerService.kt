@@ -15,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 
 @Service
 class LoanApplicationStatisticsManagerService(
     private val tenantDateTime: TenantDateTime
 ) {
-
     @Autowired
     private lateinit var loanApplicationStatisticsService: LoanApplicationStatisticsService
 
@@ -47,14 +48,6 @@ class LoanApplicationStatisticsManagerService(
             )
         }
     }
-
-//    fun addLoanApplicationDetailAndStatistics(dtoLoanApplicationDetail: DTOLoanApplicationDetail) {
-//        val dateTime = tenantDateTime.now()
-//        val endDate = tenantDateTime.toTenantDateTime(dateTime.toLocalDate().toDate())
-//        val startDate = endDate.plusDays(-1)
-//        saveLoanApplicationDetail(dtoLoanApplicationDetail)
-//        saveLoanApplicationStatistics(dateTime, startDate.toDate(), endDate.toDate(), Frequency.D)
-//    }
 
     fun addLoanApplicationDetail(dtoLoanApplicationDetail: DTOLoanApplicationDetail) {
         loanApplicationDetailService.getByApplicationId(dtoLoanApplicationDetail.applicationId)?: run{

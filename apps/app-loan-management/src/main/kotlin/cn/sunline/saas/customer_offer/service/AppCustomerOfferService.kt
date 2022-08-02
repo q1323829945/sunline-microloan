@@ -1,20 +1,23 @@
 package cn.sunline.saas.customer_offer.service
 
-import cn.sunline.saas.global.constant.ApplyStatus
-import cn.sunline.saas.global.constant.ApplyStatus.*
+import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer.offer.modules.dto.DTOCustomerOfferLoanView
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
-import cn.sunline.saas.customer.offer.exceptions.CustomerOfferNotFoundException
 import cn.sunline.saas.customer_offer.exceptions.CustomerOfferStatusException
 import cn.sunline.saas.customer_offer.service.dto.DTOCustomerOfferPage
 import cn.sunline.saas.customer_offer.service.dto.DTOInvokeCustomerOfferView
 import cn.sunline.saas.customer_offer.service.dto.DTOManagementCustomerOfferView
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
+import cn.sunline.saas.global.constant.ApplyStatus
+import cn.sunline.saas.global.constant.ApplyStatus.*
 import cn.sunline.saas.global.constant.UnderwritingType
 import cn.sunline.saas.global.constant.UnderwritingType.*
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
+import cn.sunline.saas.rpc.pubsub.StatisticsPublish
+import cn.sunline.saas.rpc.pubsub.dto.DTOCommissionDetail
+import cn.sunline.saas.rpc.pubsub.dto.DTOLoanApplicationDetail
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -31,7 +34,8 @@ import javax.servlet.http.HttpServletResponse
 @Service
 class AppCustomerOfferService(
     val customerOfferInvoke: CustomerOfferInvoke,
-    val tenantDateTime: TenantDateTime
+    val tenantDateTime: TenantDateTime,
+    private val statisticsPublish: StatisticsPublish
 ) {
 
     @Autowired
@@ -45,11 +49,16 @@ class AppCustomerOfferService(
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun getPaged(customerId:Long?,productId:Long?,productName:String?,pageable: Pageable):Page<DTOCustomerOfferPage> {
-        val filter = customerOfferService.getCustomerOfferPaged(customerId,productId,productName, pageable).content
+    fun getPaged(
+        customerId: Long?,
+        productId: Long?,
+        productName: String?,
+        pageable: Pageable
+    ): Page<DTOCustomerOfferPage> {
+        val filter = customerOfferService.getCustomerOfferPaged(customerId, productId, productName, pageable).content
             .filter { it.status != RECORD }
 
-        val page = customerOfferService.rePaged(filter,pageable).map {
+        val page = customerOfferService.rePaged(filter, pageable).map {
             val apply = customerLoanApplyService.getOne(it.id!!)
             val customerOfferLoanView = apply?.run {
                 objectMapper.readValue<DTOCustomerOfferLoanView>(this.data)
@@ -57,9 +66,9 @@ class AppCustomerOfferService(
             val underwriting = customerOfferInvoke.getUnderwriting(it.id!!)
 
             val loanAgreement = underwriting?.status?.run {
-                if(UnderwritingType.valueOf(underwriting.status) == APPROVAL){
+                if (UnderwritingType.valueOf(underwriting.status) == APPROVAL) {
                     customerOfferInvoke.getLoanAgreement(it.id!!)
-                }else {
+                } else {
                     null
                 }
             }
@@ -82,28 +91,32 @@ class AppCustomerOfferService(
         return page
     }
 
-    fun approval(id: Long){
-        updateStatus(id,APPROVALED)
-
+    fun approval(id: Long) {
+        updateStatus(id, APPROVALED)
+        syncLoanApplicationStatistics(id)
     }
 
-    fun rejected(id:Long){
+    fun rejected(id: Long) {
         updateStatus(id, ApplyStatus.REJECTED)
+        syncLoanApplicationStatistics(id)
     }
 
-    private fun updateStatus(id:Long,status: ApplyStatus){
-        val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
+    private fun updateStatus(id: Long, status: ApplyStatus) {
+        val customerOffer =
+            customerOfferService.getOne(id) ?: throw CustomerOfferNotFoundException("Invalid customer offer")
 
-        checkStatus(customerOffer.status,status)
+        checkStatus(customerOffer.status, status)
 
         customerOffer.status = status
 
         customerOfferService.save(customerOffer)
     }
 
-    private fun checkStatus(oldStatus: ApplyStatus, newStatus: ApplyStatus){
-        when(oldStatus){
-            SUBMIT -> if(newStatus != APPROVALED && newStatus != ApplyStatus.REJECTED) throw CustomerOfferStatusException("status can not be update")
+    private fun checkStatus(oldStatus: ApplyStatus, newStatus: ApplyStatus) {
+        when (oldStatus) {
+            SUBMIT -> if (newStatus != APPROVALED && newStatus != ApplyStatus.REJECTED) throw CustomerOfferStatusException(
+                "status can not be update"
+            )
             else -> throw CustomerOfferStatusException("status can not be update")
         }
     }
@@ -124,15 +137,16 @@ class AppCustomerOfferService(
             config?.run {
                 it.documentTemplateName = this.name
             }
-            it.fileName = it.file.substring(it.file.lastIndexOf("/")+1)
+            it.fileName = it.file.substring(it.file.lastIndexOf("/") + 1)
         }
 
         val customerOffer = customerOfferService.getOne(id)
         val product = customerOfferInvoke.getProduct(customerOffer!!.productId)
         managementCustomerOffer.product = objectMapper.convertValue(product)
-        managementCustomerOffer.product!!.productId =product.id
+        managementCustomerOffer.product!!.productId = product.id
 
-        val underwriting = if(customerOffer.status != RECORD) customerOfferInvoke.getUnderwriting(customerOffer.id!!) else null
+        val underwriting =
+            if (customerOffer.status != RECORD) customerOfferInvoke.getUnderwriting(customerOffer.id!!) else null
 
         underwriting?.run {
             managementCustomerOffer.underwriting = objectMapper.convertValue(this)
@@ -142,23 +156,24 @@ class AppCustomerOfferService(
     }
 
 
-    fun download(path:String,response: HttpServletResponse){
+    fun download(path: String, response: HttpServletResponse) {
         val inputStream = customerLoanApplyService.download(path)
 
-        val fileName = path.substring(path.lastIndexOf("/")+1)
+        val fileName = path.substring(path.lastIndexOf("/") + 1)
 
         response.reset()
         response.contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE
         response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"))
 
-        IOUtils.write(inputStream.readBytes(),response.outputStream)
+        IOUtils.write(inputStream.readBytes(), response.outputStream)
         inputStream.close()
     }
 
-    fun getInvokeCustomerOffer(id:Long): DTOInvokeCustomerOfferView {
+    fun getInvokeCustomerOffer(id: Long): DTOInvokeCustomerOfferView {
         val customerOfferLoan = customerLoanApplyService.retrieve(id)
 
-        val customerOffer = customerOfferService.getOne(id)?:throw CustomerOfferNotFoundException("Invalid customer offer")
+        val customerOffer =
+            customerOfferService.getOne(id) ?: throw CustomerOfferNotFoundException("Invalid customer offer")
         val product = customerOfferInvoke.getProduct(customerOffer.productId)
 
         return DTOInvokeCustomerOfferView(
@@ -172,5 +187,35 @@ class AppCustomerOfferService(
             objectMapper.convertValue(customerOfferLoan.referenceAccount!!),
             product.loanPurpose
         )
+    }
+
+    private fun syncLoanApplicationStatistics(customerOfferId: Long) {
+        val customerOfferLoan = customerLoanApplyService.retrieve(customerOfferId)
+        val customerOffer = customerOfferService.getOne(customerOfferId)
+            ?: throw CustomerOfferNotFoundException("Invalid customer offer")
+        statisticsPublish.addLoanApplicationDetail(
+            DTOLoanApplicationDetail(
+                channel = "0",
+                productId = customerOffer.productId,
+                productName = customerOffer.productName,
+                applicationId = customerOfferId,
+                amount = customerOfferLoan.loan!!.amount.toBigDecimal(),
+                currency = customerOfferLoan.loan!!.currency,
+                status = customerOffer.status,
+            )
+        )
+        statisticsPublish.addLoanApplicationStatistics()
+
+        statisticsPublish.addCommissionDetail(
+            DTOCommissionDetail(
+                channel = "0",
+                applicationId = customerOfferId,
+                amount = customerOfferLoan.loan!!.amount.toBigDecimal(),
+                currency = customerOfferLoan.loan!!.currency,
+                status = customerOffer.status,
+            )
+        )
+
+        statisticsPublish.addCommissionStatistics()
     }
 }

@@ -148,6 +148,9 @@ enum class PermissionConfig (
     LOAN_APPLICATION_DETAIL_ADD("LoanApplicationStatistics", "LoanApplicationStatistics/addLoanApplicationDetail\$", RequestMethod.POST, "Add loan application detail"),
     LOAN_APPLICATION_STATISTICS_ADD("LoanApplicationStatistics", "LoanApplicationStatistics/addLoanApplicationStatistics\$", RequestMethod.POST, "Add loan application statistics"),
 
+    COMMISSION_STATISTICS_GET_LIST("CommissionStatistics","CommissionStatistics(\\?.*|\$)",RequestMethod.GET,"View commission statistics"),
+    COMMISSION_DETAIL_ADD("CommissionStatistics", "CommissionStatistics/addCommissionDetail\$", RequestMethod.POST, "Add commission detail"),
+    COMMISSION_STATISTICS_ADD("CommissionStatistics", "CommissionStatistics/addCommissionStatistics\$", RequestMethod.POST, "Add application statistics")
 
 }
 

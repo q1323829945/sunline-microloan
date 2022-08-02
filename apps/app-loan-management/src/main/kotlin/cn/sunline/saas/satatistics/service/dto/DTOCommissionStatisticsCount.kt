@@ -3,12 +3,11 @@ package cn.sunline.saas.satatistics.service.dto
 import java.math.BigDecimal
 
 
-data class DTOLoanApplicationStatisticsCount(
+data class DTOCommissionStatisticsCount(
     val channel: String,
-    val productId: String,
-    val productName: String,
+    val commissionFeatureId: Long,
+    val ratio: BigDecimal,
     val amount: BigDecimal,
-    val applyCount: Long,
-    val approvalCount: Long,
+    val statisticsAmount: BigDecimal,
     val dateTime: String
 )

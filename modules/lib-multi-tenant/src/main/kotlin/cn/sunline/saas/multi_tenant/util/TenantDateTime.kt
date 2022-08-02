@@ -38,6 +38,11 @@ class TenantDateTime(private val tenantService: TenantService) {
     fun getYearMonthDay(dt: DateTime): String {
         return dt.toString(DateTimeFormat.forPattern("yyyyMMdd"))
     }
+
+    fun getYearMonth(dt: DateTime): String {
+        return dt.toString(DateTimeFormat.forPattern("yyyyMM"))
+    }
+
     fun betweenTimes(end: DateTime, start: DateTime = now()): Period {
         return Interval(start,end).toPeriod()
     }
