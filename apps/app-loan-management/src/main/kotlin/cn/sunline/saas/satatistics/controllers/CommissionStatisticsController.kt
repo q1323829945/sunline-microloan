@@ -19,12 +19,12 @@ class CommissionStatisticsController {
     @Autowired
     private lateinit var commissionStatisticsManagerService: CommissionStatisticsManagerService
 
-    @PostMapping("addCommissionDetail")
+    @PostMapping("addDetail")
     fun addCommissionDetail(@RequestBody dtoCommissionDetail: DTOCommissionDetail){
         commissionStatisticsManagerService.addCommissionDetail(dtoCommissionDetail)
     }
 
-    @PostMapping("addCommissionStatistics")
+    @PostMapping("addStatistics")
     fun addCommissionStatistics(){
         commissionStatisticsManagerService.addCommissionStatistics()
     }

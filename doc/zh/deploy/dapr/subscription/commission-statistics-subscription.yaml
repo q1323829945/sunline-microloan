@@ -1,10 +1,10 @@
 apiVersion: dapr.io/v1alpha1
 kind: Subscription
 metadata:
-  name: initiate-person
+  name: commission-statistics
 spec:
-  topic: INITIATE_PERSON
-  route: /Person
+  topic: COMMISSION_STATISTICS
+  route: /CommissionStatistics/addStatistics
   pubsubname: app-loan-management-pub-sub
 scopes:
   - app-loan-management

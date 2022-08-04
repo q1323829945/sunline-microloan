@@ -11,3 +11,4 @@ data class DTOCommissionStatisticsCount(
     val statisticsAmount: BigDecimal,
     val dateTime: String
 )
+

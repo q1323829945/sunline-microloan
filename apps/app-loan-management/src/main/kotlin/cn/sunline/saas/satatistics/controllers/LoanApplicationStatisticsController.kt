@@ -16,12 +16,12 @@ class LoanApplicationStatisticsController {
     @Autowired
     private lateinit var loanApplicationStatisticsManagerService: LoanApplicationStatisticsManagerService
 
-    @PostMapping("addLoanApplicationDetail")
+    @PostMapping("addDetail")
     fun addLoanApplicationDetail(@RequestBody dtoLoanApplicationDetail: DTOLoanApplicationDetail){
         loanApplicationStatisticsManagerService.addLoanApplicationDetail(dtoLoanApplicationDetail)
     }
 
-    @PostMapping("addLoanApplicationStatistics")
+    @PostMapping("addStatistics")
     fun addLoanApplicationStatistics(){
         loanApplicationStatisticsManagerService.addLoanApplicationStatistics()
     }

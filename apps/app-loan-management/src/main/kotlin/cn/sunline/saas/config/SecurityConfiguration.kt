@@ -33,7 +33,10 @@ class SecurityConfiguration (private val tokenService: TokenService,
             "/CustomerOffer/rejected","/BusinessStatistics","/CustomerStatistics","/CustomerOffer/approval",
             "/ConsumerLoan/LoanAgreement/Initiate","/PositionKeeping","/Underwriting/Initiate",
             "/ConsumerLoan/LoanAgreement/Paid","/ConsumerLoan/LoanAgreement/Signed","/tenant",
-            "/ConsumerLoan/invoice/finish/[0-9]+","/ConsumerLoan/invoice/cancel/[0-9]+"
+            "/ConsumerLoan/invoice/finish/[0-9]+","/ConsumerLoan/invoice/cancel/[0-9]+",
+            "/LoanApplicationStatistics/addDetail","/LoanApplicationStatistics/addStatistics",
+            "/CommissionStatistics/addDetail","/CommissionStatistics/addStatistics",
+            "/Person"
         ).antMatchers( //test
             "/test/**","/test"
         )

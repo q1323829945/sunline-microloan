@@ -71,6 +71,7 @@ class PubSubService {
             val requestUrl = "http://localhost:3500/v1.0/publish/$pubSubName/$topic"
             try {
                 runBlocking(CoroutineName("PUBSUB-$pubSubName-$topic")) {
+                    val body = objectMapper.writeValueAsString(payload?.let { PubsubRequest(it) })
                     logger.info { "[$seq] Started PubSub request: $requestUrl" }
                     pubSubClient.request(requestUrl) {
                         method = HttpMethod.Post
@@ -80,7 +81,11 @@ class PubSubService {
                         }
 //                        contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
-                        payload?.run { setBody(objectMapper.writeValueAsString(PubsubRequest(payload))) }
+                        payload?.run {
+                            val content = objectMapper.writeValueAsString(PubsubRequest(payload))
+                            logger.info{  "[$seq] Started PubSub request body: $content" }
+                            setBody(content)
+                        }
                     }
                 }
             } catch (ex: Exception) {
