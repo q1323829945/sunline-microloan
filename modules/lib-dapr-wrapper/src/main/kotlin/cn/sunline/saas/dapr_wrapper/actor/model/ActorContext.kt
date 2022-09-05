@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ActorContext {
-
-    @Autowired
     private val context: MutableMap<String, AbstractActor> = mutableMapOf()
 
     fun registerActor(actorType: String, actor: AbstractActor) {
