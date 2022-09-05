@@ -33,6 +33,12 @@ class HandlerRequestHeaderFilter(private val tenantService: TenantService): Filt
             ContextUtil.setUserId(this)
         }
 
+
+        httpServletRequest.getHeader("submit")?.run {
+            ContextUtil.setApplyLoanSubmit(this)
+        }
+
+
         httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.key)?.run {
             ContextUtil.setTenant(this)
 
@@ -43,7 +49,7 @@ class HandlerRequestHeaderFilter(private val tenantService: TenantService): Filt
                 }
                 ContextUtil.setPermissions(permissions)
             }
-        }
+        }?:run{ ContextUtil.setTenant("0") }
 
         request.getRequestDispatcher(httpServletRequest.servletPath).forward(request,response)
     }

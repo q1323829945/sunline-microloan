@@ -1,6 +1,8 @@
 package cn.sunline.saas.dapr_wrapper.actor.model
 
 import org.joda.time.DateTime
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 /**
  * @title: RegisteredActor
@@ -14,10 +16,7 @@ data class EntityConfig(
     val reentrancyEnabled: Boolean? = null
 )
 
+@Component
 abstract class AbstractActor(val actorType: String, val entityConfig: EntityConfig? = null) {
-    fun registerActor() {
-        ActorContext.registerActor(actorType, this)
-    }
-
     abstract fun doJob(actorId: String, jobId: String)
 }

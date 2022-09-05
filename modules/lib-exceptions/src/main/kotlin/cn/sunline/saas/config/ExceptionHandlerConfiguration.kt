@@ -3,6 +3,7 @@ package cn.sunline.saas.config
 import cn.sunline.saas.exceptions.*
 import cn.sunline.saas.response.DTOResponseError
 import cn.sunline.saas.response.response
+import org.apache.commons.io.IOUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,12 +15,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import java.nio.charset.Charset
 
 @ControllerAdvice
 class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(
-        BadRequestException::class, NotFoundException::class, BusinessException::class, SystemException::class,ManagementException::class
+        BadRequestException::class, NotFoundException::class, BusinessException::class, SystemException::class,ManagementException::class,
+        SuccessRequestException::class
     )
     fun handleCustomerException(ex: BaseException): ResponseEntity<Any> {
         val status = when (ex) {
@@ -27,6 +30,7 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
             is NotFoundException -> HttpStatus.NOT_FOUND
             is BusinessException -> HttpStatus.INTERNAL_SERVER_ERROR
             is SystemException -> HttpStatus.INTERNAL_SERVER_ERROR
+            is SuccessRequestException -> HttpStatus.OK
             else -> {
                 HttpStatus.BAD_REQUEST
             }
@@ -57,18 +61,20 @@ class ExceptionHandlerConfiguration : ResponseEntityExceptionHandler() {
     override fun handleHttpMessageNotReadable(
         ex: HttpMessageNotReadableException, headers: HttpHeaders, status: HttpStatus, request: WebRequest
     ): ResponseEntity<Any> {
+        logger.error(ex.cause?.message)
         var errorMessage = "Incomplete parameters, please check spec"
         return DTOResponseError(
-            ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER.code, errorMessage,null , null
+            ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER.code, errorMessage,null , ex.cause?.message
         ).response(HttpStatus.BAD_REQUEST) as ResponseEntity<Any>
     }
 
     override fun handleMissingServletRequestParameter(
         ex: MissingServletRequestParameterException, headers: HttpHeaders, status: HttpStatus, request: WebRequest
     ): ResponseEntity<Any> {
+        logger.error(ex.cause?.message)
         var errorMessage = "Missing parameters, please check parameters"
         return DTOResponseError(
-            ManagementExceptionCode.REQUEST_MISSING_REQUEST_PARAMETER.code, errorMessage, null, null
+            ManagementExceptionCode.REQUEST_MISSING_REQUEST_PARAMETER.code, errorMessage, null, ex.cause?.message
         ).response(HttpStatus.BAD_REQUEST) as ResponseEntity<Any>
     }
 }

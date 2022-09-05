@@ -2,8 +2,12 @@ package cn.sunline.saas.dapr_wrapper.actor
 
 import cn.sunline.saas.dapr_wrapper.actor.request.ReminderRequest
 import cn.sunline.saas.dapr_wrapper.actor.request.Timer
+import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -24,6 +28,7 @@ class ActorReminderService {
 
     companion object {
         private var logger = KotlinLogging.logger {}
+        val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         private val daprClient: HttpClient = HttpClient(CIO) {
             engine {
                 threadsCount = 8
@@ -64,7 +69,7 @@ class ActorReminderService {
                         method = httpMethod
                         contentType(ContentType.Application.Json)
                         accept(ContentType.Application.Json)
-                        setBody(body)
+                        setBody(objectMapper.writeValueAsString(body))
                     }
                 }
             } catch (ex: Exception) {
@@ -85,7 +90,7 @@ class ActorReminderService {
                         )
                     )
                 }
-                logger.error { "[$actorId] Actor Reminders request [$actorType] [$actorId] [$name] [$httpMethod] has failed: $requestUrl - $exception" }
+                logger.error { "[$actorId] Actor Reminders request [$actorType] [$actorId] [$name] [$httpMethod] has failed: $requestUrl - ${exception.message}" }
             }
         }
 

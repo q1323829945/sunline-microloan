@@ -8,6 +8,7 @@ import cn.sunline.saas.dapr_wrapper.actor.request.DTORegisteredActor
 import cn.sunline.saas.dapr_wrapper.config.DaprConfig
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,13 +21,16 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping
 class ActorUserService(private val daprConfig: DaprConfig) {
+    @Autowired
+    private lateinit var actorContext: ActorContext
+
 
     @GetMapping("/dapr/config")
     fun registeredActor(): DTORegisteredActor {
-        val actorTypes = ActorContext.getActorTypes()
+        val actorTypes = actorContext.getActorTypes()
         val entitiesConfig = mutableListOf<DTOEntitiesConfig>()
         actorTypes.forEach {
-            val actor = ActorContext.getActor(it)
+            val actor = actorContext.getActor(it)
             actor.entityConfig?.run {
                 val dtoEntitiesConfigReentrancy = this.reentrancyEnabled?.run { DTOEntitiesConfigReentrancy(this) }
                 entitiesConfig.add(
@@ -57,7 +61,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "methodName") methodName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId,methodName)
+        actorContext.getActor(actorType).doJob(actorId,methodName)
 
         return DTOResponseSuccess(Unit).response()
     }
@@ -68,7 +72,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "reminderName") reminderName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId,reminderName)
+        actorContext.getActor(actorType).doJob(actorId,reminderName)
 
         return DTOResponseSuccess(Unit).response()
     }
@@ -79,7 +83,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "timerName") timerName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId,timerName)
+        actorContext.getActor(actorType).doJob(actorId,timerName)
 
         return DTOResponseSuccess(Unit).response()
     }

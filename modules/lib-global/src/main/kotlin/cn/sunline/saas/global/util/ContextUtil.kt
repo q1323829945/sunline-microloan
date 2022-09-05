@@ -80,3 +80,12 @@ fun ContextUtil.getPermissions():List<String>?{
         this
     }
 }
+
+fun ContextUtil.setApplyLoanSubmit(params:String){
+    put("submit",params)
+}
+
+fun ContextUtil.getApplyLoanSubmit():Boolean{
+    val submit = get("submit")
+    return submit.toString() == "error"
+}

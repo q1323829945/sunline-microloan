@@ -7,5 +7,5 @@ package cn.sunline.saas.scheduler.job.model
  * @date 2022/5/25 10:47
  */
 enum class SchedulerType {
-    TIMER,INVOKER
+    TIMER,INVOKER,REMINDER
 }

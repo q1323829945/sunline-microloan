@@ -34,7 +34,7 @@ class InterestRateService (private val interestRateRepository: InterestRateRepos
         return interestRateRepository.findByRatePlanIdAndPeriod(ratePlanId,period)
     }
 
-    fun findByRatePlanId(ratePlanId: Long):List<InterestRate>?{
-        return interestRateRepository.findByRatePlanId(ratePlanId)
+    fun findByRatePlanId(ratePlanId: Long):List<InterestRate>{
+        return interestRateRepository.findByRatePlanId(ratePlanId)?: listOf()
     }
 }

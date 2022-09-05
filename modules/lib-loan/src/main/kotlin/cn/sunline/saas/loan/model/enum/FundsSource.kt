@@ -1,0 +1,7 @@
+package cn.sunline.saas.loan.model.enum
+
+enum class FundsSource(code:String) {
+    FIXED_INCOME("001"),VARIABLE_INCOME("002"),BUSINESS_INCOME("003"),REMITTANCES("004"),
+    PENSION("005"),PERSONAL_SAVINGS("006"),ALLOWANCE("007"),INHERITANCE("008"),
+    INVESTMENT("009"),RENTAL_INCOME("010"),SALE_OF_ASSET("011"),OTHERS("012")
+}

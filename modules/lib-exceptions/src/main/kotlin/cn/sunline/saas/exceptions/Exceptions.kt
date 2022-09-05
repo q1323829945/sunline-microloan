@@ -29,8 +29,9 @@ open class NotFoundException(
 open class BusinessException(
     exceptionMessage: String? = null,
     statusCode: ManagementExceptionCode,
-    user: Long? = null
-) : BaseException(statusCode, exceptionMessage, user, null)
+    user: Long? = null,
+    data:Any? = null,
+) : BaseException(statusCode, exceptionMessage, user, data)
 
 open class SystemException(
     exceptionMessage: String? = null,
@@ -41,3 +42,10 @@ open class BadRequestException(
     exceptionMessage: String? = null,
     statusCode: ManagementExceptionCode,
 ) : BaseException(statusCode, exceptionMessage, null, null)
+
+open class SuccessRequestException(
+    exceptionMessage: String? = null,
+    statusCode: ManagementExceptionCode,
+    user: Long? = null,
+    data:Any? = null,
+) : BaseException(statusCode, exceptionMessage, user, data)
