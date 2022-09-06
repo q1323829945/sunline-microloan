@@ -6,6 +6,8 @@ huawei:
       securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
       region: "cn-east-3"
       bucketName: "lizheng-test2"
+      ###图片处理，用于浏览器预览图片对象 styleName。 https://support.huaweicloud.com/intl/zh-cn/fg-obs/obs_01_0310.html
+      style: "style1"
     iam:
       domainUserName: "qq1323829945"
       username: "q1323829945"

@@ -1,0 +1,25 @@
+minio:
+#  endpoint: http://192.168.2.10:30105
+#  port: 30109  #如果是url就注释，如果是ip+端口就放开
+  accessKey: sunline
+  secretKey: sunline300348
+  isUrl: false
+
+huawei:
+  cloud:
+    obs:
+      accessKey: "MBP2MCNEYM4S016MIVWS"
+      securityKey: "DBWVHqLdiC2WU4BoaHlK5w5nYeJwGHMkBwZcwoBh"
+      region: "ap-southeast-3"
+      bucketName: "test-saas-micro-loan"
+      ###图片处理，用于浏览器预览图片对象 styleName。 https://support.huaweicloud.com/intl/zh-cn/fg-obs/obs_01_0310.html
+      style: "style1"
+
+
+logging:
+  level:
+    cn.sunline.saas.huaweicloud: trace
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"
+
+
