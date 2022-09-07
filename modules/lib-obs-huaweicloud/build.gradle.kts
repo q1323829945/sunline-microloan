@@ -8,6 +8,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("io.jsonwebtoken:jjwt:${jjwtVersion}")
     implementation("joda-time:joda-time:${jodaVersion}")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-global"))

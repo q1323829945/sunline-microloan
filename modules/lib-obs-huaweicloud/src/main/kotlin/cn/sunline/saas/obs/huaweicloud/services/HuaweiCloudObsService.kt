@@ -106,7 +106,11 @@ class HuaweiCloudObsService:ObsApi {
         //body
         val entity = when(val body = putParams.body){
             is String -> httpConfig.setRequestBody(body.toByteArray())
-            is InputStream -> httpConfig.setRequestBody(body.readBytes())
+            is InputStream -> {
+                val entity = httpConfig.setRequestBody(body.readBytes())
+                body.close()
+                entity
+            }
             is ByteArray -> httpConfig.setRequestBody(body)
             else -> throw ObsBodyTypeException("body type error", ManagementExceptionCode.BODY_TYPE_ERROR)
         }

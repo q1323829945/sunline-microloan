@@ -21,6 +21,7 @@ dependencies {
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.googlecode.log4jdbc:log4jdbc:${log4jdbcVersion}")
     implementation("commons-io:commons-io:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-response"))

@@ -3,6 +3,8 @@ import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.channel.statistics.services.ApiDetailService
+
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.setUUID
 import cn.sunline.saas.multi_tenant.services.TenantService
 import mu.KotlinLogging
@@ -23,9 +25,8 @@ import javax.servlet.http.HttpServletRequest
 class ApiRequestFilter(val tenantService: TenantService): Filter {
     var logger = KotlinLogging.logger {}
 
-    private val whiteList = mutableListOf<String>(
-//        "/menus"
-    )
+    private val whiteList = mutableListOf(
+        "/menus","/healthz"    )
 
     @Autowired
     private lateinit var apiDetailService: ApiDetailService
@@ -47,9 +48,7 @@ class ApiRequestFilter(val tenantService: TenantService): Filter {
 
                 if(whiteList.contains(httpServletRequest.requestURI)){
                     apiDetailService.saveApiDetail(httpServletRequest.requestURI)
-                }
-            }
-        }
+                }        }
 
 
 

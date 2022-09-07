@@ -16,6 +16,7 @@ dependencies {
     implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
 
     implementation(project(":lib-exceptions"))

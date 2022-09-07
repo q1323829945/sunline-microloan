@@ -6,6 +6,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("joda-time:joda-time:${jodaVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation(project(":lib-global"))
     implementation(project(":lib-multi-tenant"))
     implementation(project(":lib-exceptions"))

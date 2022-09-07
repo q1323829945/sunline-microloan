@@ -72,7 +72,7 @@ class HuaweiCloudObsServiceTest {
 
         val arrayInputStream = huaweiCloudObsService.getObject(get) as InputStream
 
-        val outputStream = FileOutputStream(File("qqq.jpg"))
+        val outputStream = FileOutputStream(File("src\\test\\resources\\file\\qqq.JPG"))
 
         val bytes = ByteArray(1024)
         while (true){
@@ -84,10 +84,16 @@ class HuaweiCloudObsServiceTest {
             outputStream.write(bytes,0,len)
         }
 
+        outputStream.close()
+        arrayInputStream.close()
+
+
+
+
     }
 
     @Test
-    @Disabled
+//    @Disabled
     fun `delete object`(){
         val del = DeleteParams("mimimi3.JPG")
         huaweiCloudObsService.deleteObject(del)
