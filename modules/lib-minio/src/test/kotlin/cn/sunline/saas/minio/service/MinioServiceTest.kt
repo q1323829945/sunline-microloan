@@ -3,6 +3,7 @@ package cn.sunline.saas.minio.service
 import io.minio.*
 import okhttp3.OkHttpClient
 import org.apache.commons.io.FileUtils
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -25,15 +26,28 @@ class MinioServiceTest {
         minioTemplate.createBucket("mytest")
         val file = FileInputStream(File("src\\test\\resources\\file\\123.JPG"))
         minioTemplate.putObject("mytest","test.jpg",file)
+
+        val exists = minioTemplate.checkFileExists("mytest","test.jpg")
+        Assertions.assertThat(exists).isEqualTo(true)
     }
 
     @Test
-//    @Disabled
+    @Disabled
     fun `get object`(){
         minioTemplate.createBucket("mytest")
         val stream = minioTemplate.getObject("mytest","test.jpg")
         val file = File("src\\test\\resources\\file\\getFile.JPG")
-        FileUtils.copyInputStreamToFile(stream,file)
+        stream?.run { FileUtils.copyInputStreamToFile(stream,file) }
+
+    }
+
+    @Test
+    @Disabled
+    fun `delete object`(){
+        minioTemplate.removeObject("mytest","test.jpg")
+
+        val exists = minioTemplate.checkFileExists("mytest","test.jpg")
+        Assertions.assertThat(exists).isEqualTo(false)
     }
 
 

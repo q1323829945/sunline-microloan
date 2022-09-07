@@ -3,22 +3,21 @@ package cn.sunline.saas.obs.huaweicloud.config
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 @Component
-class HuaweiCloudConfig {
-
-    @Value("\${huawei.cloud.obs.accessKey}")
-    lateinit var accessKey:String
-    @Value("\${huawei.cloud.obs.securityKey}")
-    lateinit var securityKey:String
-    @Value("\${huawei.cloud.obs.region}")
-    lateinit var region:String
-    @Value("\${huawei.cloud.obs.bucketName}")
-    lateinit var bucketName:String
+@ConfigurationProperties(prefix = "huawei.cloud.obs")
+class HuaweiCloudConfig(
+    var accessKey:String = "",
+    var securityKey:String = "",
+    var region:String = "",
+    var bucketName:String = "",
+    var style:String = ""
+) {
 
 
     fun getCloudUploadFormatDate(): String {

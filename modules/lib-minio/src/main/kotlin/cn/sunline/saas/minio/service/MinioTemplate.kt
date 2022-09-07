@@ -12,7 +12,6 @@ import java.io.FileInputStream
 import java.io.InputStream
 
 @Component
-//@ConfigurationProperties(prefix = "minio")
 class MinioTemplate(
     val minioConfig: MinioConfig,
 ) {
@@ -67,7 +66,7 @@ class MinioTemplate(
                     )
             }
         } catch (e:Exception){
-            logger.error("file:[$filePath] not in bucket:[$bucketName] / $filePath not exists" )
+            logger.error("file:[$filePath] is not in bucket:[$bucketName] / $filePath is not exists" )
             return null
         }
         return null
@@ -84,5 +83,9 @@ class MinioTemplate(
             return false
         }
         return false
+    }
+
+    fun removeObject(bucketName: String,filePath: String){
+        minioClient().removeObject(RemoveObjectArgs.builder().bucket(bucketName).`object`(filePath).build())
     }
 }

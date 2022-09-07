@@ -5,6 +5,7 @@ import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.obs.api.PutParams
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -90,5 +91,17 @@ class HuaweiCloudObsServiceTest {
     fun `delete object`(){
         val del = DeleteParams("mimimi3.JPG")
         huaweiCloudObsService.deleteObject(del)
+    }
+
+
+    @Test
+    @Disabled
+    fun `get picture view`(){
+        val params = GetParams("48895297438892032/48950681445089280/33727192146395136/db85d8ac-0789-11eb-bda8-0242c0a84002.jpg")
+        val url = huaweiCloudObsService.getPictureView(params)
+
+        Thread.sleep(5000)
+        val url2 = huaweiCloudObsService.getPictureView(params)
+        Assertions.assertThat(url).isEqualTo(url2)
     }
 }

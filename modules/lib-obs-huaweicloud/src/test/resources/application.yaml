@@ -2,10 +2,10 @@
 huawei:
   cloud:
     obs:
-      accessKey: "KZGUMLJ5Z9MTEGBSVVQD"
-      securityKey: "01nNSdo9au0koJ39DlEFhmYnFF5EUpExG8eLJ68O"
-      region: "cn-east-3"
-      bucketName: "lizheng-test2"
+      accessKey: "MBP2MCNEYM4S016MIVWS"
+      securityKey: "DBWVHqLdiC2WU4BoaHlK5w5nYeJwGHMkBwZcwoBh"
+      region: "ap-southeast-3"
+      bucketName: "test-saas-micro-loan"
       ###图片处理，用于浏览器预览图片对象 styleName。 https://support.huaweicloud.com/intl/zh-cn/fg-obs/obs_01_0310.html
       style: "style1"
     iam:

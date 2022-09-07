@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URLEncoder
+import java.nio.charset.Charset
 
 @Service
 class HuaweiCloudObsService:ObsApi {
@@ -22,6 +23,14 @@ class HuaweiCloudObsService:ObsApi {
 
     @Autowired
     private lateinit var httpConfig: HttpConfig
+
+    data class Picture(
+        val key:String,
+        val url:String,
+        val expires:Long
+    )
+
+    val pictures = mutableMapOf<String,Picture>()
 
     /**
      * https://support.huaweicloud.com/api-obs/obs_04_0021.html
@@ -143,6 +152,63 @@ class HuaweiCloudObsService:ObsApi {
         headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
 
         httpConfig.execute(HttpRequestMethod.DELETE,uri,null,headers)
+    }
+
+    /**
+     * https://support.huaweicloud.com/intl/zh-cn/usermanual-obs/obs_03_0046.html
+     */
+    override fun getPictureView(getParams: GetParams): String {
+        val picture = pictures[getParams.key]
+        picture?.run {
+            if(System.currentTimeMillis() / 1000 + 60 < this.expires){
+                return this.url
+            }
+        }
+
+
+        val key = URLEncoder.encode(getParams.key,"utf-8")
+        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
+
+
+        val expires = getExpires()
+        val canonicalizeResource = getPictureViewCanonicalizeResource(key)
+        val signature = getSignature(HttpRequestMethod.GET,"","",expires.toString(),"",canonicalizeResource)
+        val urlEncoderSignature = URLEncoder.encode(signature, Charset.defaultCharset())
+
+        val url = "$uri?Signature=$urlEncoderSignature&Expires=$expires&AccessKeyId=${huaweiCloudConfig.accessKey}&${getPictureUrlQuery()}"
+
+        pictures[getParams.key] = Picture(getParams.key,url,expires)
+
+        return url
+    }
+
+
+    private fun getPictureViewCanonicalizeResource(key:String):String{
+        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key?"
+        val path = getPictureUrlQuery()
+        return canonicalizeResource + path
+    }
+
+    private fun getPictureUrlQuery():String{
+        val params = mutableListOf("response-content-disposition=inline",
+//            "response-content-type=application/octet-stream",
+//            "versionId=null",
+            "x-image-process=style/${huaweiCloudConfig.style}"
+        )
+
+        var query = ""
+        for(i in params.indices){
+            query += params[i]
+            if(i < params.size - 1){
+                query += "&"
+            }
+        }
+
+        return query
+    }
+
+    private fun getExpires(): Long {
+        return System.currentTimeMillis() / 1000 + 3600
     }
 
     private fun getSignature(requestMode:HttpRequestMethod,md5:String,contentType:String,requestTime:String,canonicalizeHeaders:String,canonicalizeResource:String):String{

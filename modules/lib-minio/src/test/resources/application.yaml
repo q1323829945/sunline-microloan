@@ -1,6 +1,6 @@
 minio:
-#  endpoint: http://192.168.2.10:30105
-#  port: 30109  #如果是url就注释，如果是ip+端口就放开
+  endpoint: 192.168.2.9
+  port: 30109  #如果是url就注释，如果是ip+端口就放开
   accessKey: sunline
   secretKey: sunline300348
   isUrl: false

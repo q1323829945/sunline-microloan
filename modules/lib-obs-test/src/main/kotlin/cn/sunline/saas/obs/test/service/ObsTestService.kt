@@ -35,4 +35,8 @@ class ObsTestService: ObsApi {
 
     override fun deleteObject(deleteParams: DeleteParams) {
     }
+
+    override fun getPictureView(getParams: GetParams): String {
+        return getParams.key
+    }
 }

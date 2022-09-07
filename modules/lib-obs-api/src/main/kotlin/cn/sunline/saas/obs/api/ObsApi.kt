@@ -30,4 +30,5 @@ interface ObsApi {
 
     fun deleteObject(deleteParams: DeleteParams)
 
+    fun getPictureView(getParams: GetParams): String
 }
