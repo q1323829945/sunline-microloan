@@ -1,5 +1,6 @@
 package cn.sunline.saas.loan.service.assembly
 
+import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.SuccessRequestException
 import cn.sunline.saas.loan.exception.SubTypeIsIrrelevantParentTypeException
@@ -58,7 +59,7 @@ object LoanApplyAssembly {
         try {
             loan = objectMapper.readValue(data)
         } catch (e:Exception){
-            throw SuccessRequestException("Incomplete parameters, please check spec",
+            throw BusinessException("Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER,null,e.message)
         }
         return loan
@@ -85,7 +86,7 @@ object LoanApplyAssembly {
         try {
             loan = objectMapper.readValue(data)
         } catch (e:Exception){
-            throw SuccessRequestException("Incomplete parameters, please check spec",
+            throw BusinessException("Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER,null,e.message)
         }
         return loan
@@ -132,7 +133,7 @@ object LoanApplyAssembly {
         try {
             loan = objectMapper.readValue(data)
         } catch (e:Exception){
-            throw SuccessRequestException("Incomplete parameters, please check spec",
+            throw BusinessException("Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER,null,e.message)
         }
         return loan
@@ -165,7 +166,7 @@ object LoanApplyAssembly {
         try {
             loan = objectMapper.readValue(data)
         } catch (e:Exception){
-            throw SuccessRequestException("Incomplete parameters, please check spec",
+            throw BusinessException("Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER,null,e.message)
         }
         return loan
@@ -214,7 +215,7 @@ object LoanApplyAssembly {
         try {
             dtoLoanAgent = objectMapper.readValue(data)
         } catch (e: Exception) {
-            throw SuccessRequestException(
+            throw BusinessException(
                 "Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER, null, e.message
             )
@@ -227,7 +228,7 @@ object LoanApplyAssembly {
         try {
             loan = objectMapper.readValue(data)
         } catch (e:Exception){
-            throw SuccessRequestException("Incomplete parameters, please check spec",
+            throw BusinessException("Incomplete parameters, please check spec",
                 ManagementExceptionCode.REQUEST_INCOMPLETE_PARAMETER,null,e.message)
         }
         return loan
