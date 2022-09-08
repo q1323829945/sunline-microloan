@@ -1,5 +1,7 @@
 package cn.sunline.saas.satatistics.service
 
+import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
+import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -8,6 +10,7 @@ import cn.sunline.saas.channel.statistics.modules.db.CommissionStatistics
 import cn.sunline.saas.channel.statistics.modules.dto.*
 import cn.sunline.saas.channel.statistics.services.CommissionDetailService
 import cn.sunline.saas.channel.statistics.services.CommissionStatisticsService
+import cn.sunline.saas.loan.exception.LoanApplyNotFoundException
 import cn.sunline.saas.satatistics.service.dto.DTOCommissionChartsAmount
 import cn.sunline.saas.satatistics.service.dto.DTOCommissionStatisticsCharts
 import cn.sunline.saas.satatistics.service.dto.DTOCommissionStatisticsCount
@@ -33,6 +36,12 @@ class CommissionStatisticsManagerService(
 
     @Autowired
     private lateinit var commissionDetailService: CommissionDetailService
+
+    @Autowired
+    private lateinit var channelAgreementService : ChannelAgreementService
+
+    @Autowired
+    private lateinit var channelCastService: ChannelCastService
 
     private val ratio = BigDecimal(0.2).setScale(2, RoundingMode.HALF_UP)
 
@@ -138,8 +147,14 @@ class CommissionStatisticsManagerService(
                 endDate
             )
         )
-        commission.forEach {
+        commission.forEach { it ->
             // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
+            val channelCast = channelCastService.getChannelCast(it.channelCode, it.channelName)?: throw LoanApplyNotFoundException("Invalid loan apply")
+//            val channelAgreement = channelAgreementService.getPageByChannelId(
+//                channelCast.id,
+//                Pageable.unpaged()
+//            ).content.sortByDescending<> { it.signedDate }
+//            ratio = channelAgreement.
             val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)

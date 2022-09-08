@@ -58,7 +58,6 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
                 channelCastType = it.channelCastType,
                 enable = organisation.enable
             )
-            objectMapper.convertValue(it)
         }
     }
 

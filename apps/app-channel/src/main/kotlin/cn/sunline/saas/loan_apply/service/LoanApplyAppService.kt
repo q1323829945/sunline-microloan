@@ -1,6 +1,8 @@
 package cn.sunline.saas.loan_apply.service
 
 
+import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
+import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.ApplyStatus
