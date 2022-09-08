@@ -4,11 +4,14 @@ import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.satatistics.service.dto.*
 import cn.sunline.saas.channel.statistics.modules.db.CommissionStatistics
 import cn.sunline.saas.channel.statistics.modules.dto.*
 import cn.sunline.saas.channel.statistics.services.CommissionDetailService
 import cn.sunline.saas.channel.statistics.services.CommissionStatisticsService
+import cn.sunline.saas.satatistics.service.dto.DTOCommissionChartsAmount
+import cn.sunline.saas.satatistics.service.dto.DTOCommissionStatisticsCharts
+import cn.sunline.saas.satatistics.service.dto.DTOCommissionStatisticsCount
+import cn.sunline.saas.satatistics.service.dto.DTOCommissionStatisticsPageCount
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -137,7 +140,7 @@ class CommissionStatisticsManagerService(
         )
         commission.forEach {
             // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
-            val business = checkCommissionStatisticsExist(it.channelCode, dateTime, frequency)
+            val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
                 business.statisticsAmount = it.amount
@@ -160,12 +163,14 @@ class CommissionStatisticsManagerService(
 
     private fun checkCommissionStatisticsExist(
         channelCode: String,
+        channelName: String,
         dateTime: DateTime,
         frequency: Frequency
     ): CommissionStatistics? {
         return commissionStatisticsService.findByDate(
             DTOCommissionStatisticsFindParams(
                 channelCode = channelCode,
+                channelName = channelName,
                 dateTime = dateTime,
                 frequency = frequency
             )

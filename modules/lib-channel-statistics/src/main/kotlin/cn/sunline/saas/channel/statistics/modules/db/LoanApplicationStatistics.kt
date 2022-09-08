@@ -10,31 +10,22 @@ import javax.validation.constraints.NotNull
 
 
 @Entity
-@Table(
-    name = "loan_application_statistics",
-    indexes = [
-        javax.persistence.Index(
-            name = "idx_loan_application_statistics_unique",
-            columnList = "channel_code,product_id,year,month,day,frequency,tenant_id",
-            unique = true
-        )
-    ]
-)
+@Table(name = "loan_application_statistics")
 @EntityListeners(TenantListener::class)
-class LoanApplicationStatistics(
+class LoanApplicationStatistics (
     @Id
     var id: Long? = null,
 
     @NotNull
-    @Column(name = "channel_code", length = 64, nullable = false, columnDefinition = "varchar(64) ")
-    var channelCode: String,
+    @Column(name = "channel_code", columnDefinition = "varchar(256) not null")
+    val channelCode: String,
 
     @NotNull
-    @Column(name = "channel_name", length = 128, nullable = false, columnDefinition = "varchar(128) ")
+    @Column(name = "channel_name",length = 128,nullable = false,  columnDefinition = "varchar(128) ")
     var channelName: String,
 
     @NotNull
-    @Column(name = "product_id", columnDefinition = "bigint not null")
+    @Column(name = "product_id",  columnDefinition = "bigint not null")
     val productId: Long,
 
     @NotNull
@@ -42,20 +33,20 @@ class LoanApplicationStatistics(
     val productName: String,
 
     @NotNull
-    @Column(name = "amount", scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
+    @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
     var amount: BigDecimal,
 
     @NotNull
-    @Column(name = "apply_count", columnDefinition = "bigint not null")
+    @Column(name = "apply_count",  columnDefinition = "bigint not null")
     var applyCount: Long,
 
     @NotNull
-    @Column(name = "approval_count", columnDefinition = "bigint not null")
+    @Column(name = "approval_count",  columnDefinition = "bigint not null")
     var approvalCount: Long,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "frequency", length = 128, columnDefinition = "varchar(128) not null")
+    @Column(name = "frequency",length = 128, columnDefinition = "varchar(128) not null")
     var frequency: Frequency,
 
     @NotNull
@@ -67,14 +58,14 @@ class LoanApplicationStatistics(
     val month: Long,
 
     @NotNull
-    @Column(name = "day", columnDefinition = "bigint not null")
+    @Column(name = "day",  columnDefinition = "bigint not null")
     val day: Long,
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     var datetime: Date,
 
-    ) : MultiTenant {
+    ): MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", columnDefinition = "bigint not null")

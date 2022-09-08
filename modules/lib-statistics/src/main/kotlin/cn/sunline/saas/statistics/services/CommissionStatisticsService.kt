@@ -18,34 +18,94 @@ import java.util.*
 import javax.persistence.criteria.Predicate
 
 @Service
-class CommissionStatisticsService (
+class CommissionStatisticsService(
     private val commissionStatisticsRepository: CommissionStatisticsRepository,
     private val sequence: Sequence,
     private val tenantDateTime: TenantDateTime
-):BaseMultiTenantRepoService<CommissionStatistics, Long>(commissionStatisticsRepository) {
+) : BaseMultiTenantRepoService<CommissionStatistics, Long>(commissionStatisticsRepository) {
 
 
-    fun getPaged(year: Long?, month: Long?, day: Long?, tenantId: Long?, pageable: Pageable): Page<CommissionStatistics> {
-        return getPaged({ root, _, criteriaBuilder ->
+    fun getPaged(
+        startYear: Long?,
+        endYear: Long?,
+        startMonth: Long?,
+        endMonth: Long?,
+        startDay: Long?,
+        endDay: Long?,
+        tenantId: Long?,
+        channelCode: String?,
+        channelName: String?,
+        frequency: Frequency?,
+        pageable: Pageable
+    ): Page<CommissionStatistics> {
+        return getPaged({ root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            year?.let{ predicates.add(criteriaBuilder.equal(root.get<Long>("year"), it)) }
-            month?.let{ predicates.add(criteriaBuilder.equal(root.get<Long>("month"), it)) }
-            day?.let{ predicates.add(criteriaBuilder.equal(root.get<Long>("day"), it)) }
-            tenantId?.let{ predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), it)) }
-            predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), Frequency.D))
+            tenantId?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), it)) }
+            channelCode?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelCode"), it)) }
+            channelName?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), it)) }
+            frequency?.let { predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), it)) }
+            startYear?.let {
+                endYear?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("year"),
+                            startYear,
+                            endYear
+                        )
+                    )
+                }
+            }
+            startMonth?.let {
+                endMonth?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("month"),
+                            startMonth,
+                            endMonth
+                        )
+                    )
+                }
+            }
+            startDay?.let {
+                endDay?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("day"),
+                            startDay,
+                            endDay
+                        )
+                    )
+                }
+            }
+
+            query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
             criteriaBuilder.and(*(predicates.toTypedArray()))
+
         }, pageable)
     }
 
-    fun findByDate(dtoCommissionStatisticsFindParams: DTOCommissionStatisticsFindParams): CommissionStatistics?{
+    fun findByDate(dtoCommissionStatisticsFindParams: DTOCommissionStatisticsFindParams): CommissionStatistics? {
         val dateTime = dtoCommissionStatisticsFindParams.dateTime
-        return getOneWithTenant { root, _, criteriaBuilder ->
+        return getOneWithTenant { root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("channel"),dtoCommissionStatisticsFindParams.channel))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("year"),dateTime.year.toLong()))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("month"),dateTime.monthOfYear.toLong()))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("day"),dateTime.dayOfMonth.toLong()))
-            predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"),dtoCommissionStatisticsFindParams.frequency))
+            predicates.add(
+                criteriaBuilder.equal(
+                    root.get<String>("channelCode"),
+                    dtoCommissionStatisticsFindParams.channelCode
+                )
+            )
+            predicates.add(criteriaBuilder.equal(root.get<Long>("year"), dateTime.year.toLong()))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("month"), dateTime.monthOfYear.toLong()))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("day"), dateTime.dayOfMonth.toLong()))
+            predicates.add(
+                criteriaBuilder.equal(
+                    root.get<Frequency>("frequency"),
+                    dtoCommissionStatisticsFindParams.frequency
+                )
+            )
+
+            query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
+
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }
@@ -57,7 +117,8 @@ class CommissionStatisticsService (
             CommissionStatistics(
                 id = sequence.nextId(),
                 commissionFeatureId = dtoCommissionStatistics.commissionFeatureId,
-                channel = dtoCommissionStatistics.channel,
+                channelCode = dtoCommissionStatistics.channelCode,
+                channelName = dtoCommissionStatistics.channelName,
                 statisticsAmount = dtoCommissionStatistics.statisticsAmount,
                 amount = dtoCommissionStatistics.amount,
                 frequency = dtoCommissionStatistics.frequency,
@@ -75,7 +136,8 @@ class CommissionStatisticsService (
             CommissionStatistics(
                 id = sequence.nextId(),
                 commissionFeatureId = dtoCommissionStatistics.commissionFeatureId,
-                channel = dtoCommissionStatistics.channel,
+                channelCode = dtoCommissionStatistics.channelCode,
+                channelName = dtoCommissionStatistics.channelName,
                 statisticsAmount = dtoCommissionStatistics.statisticsAmount,
                 amount = dtoCommissionStatistics.amount,
                 frequency = dtoCommissionStatistics.frequency,

@@ -129,9 +129,10 @@ class LoanApplyAppService {
                     channelName = loanAgent.channelName,
                     productId = product.id.toLong(),
                     productName = product.name,
-                    applicationId = applicationId,
+                    applicationId = applicationId.toLong(),
                     amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                     status = loanAgent.status,
+                    currency = CurrencyType.USD
                 )
             )
             loanApplicationStatisticsManagerService.addLoanApplicationStatistics()
@@ -140,9 +141,10 @@ class LoanApplyAppService {
                 DTOCommissionDetail(
                     channelCode = loanAgent.channelCode,
                     channelName = loanAgent.channelName,
-                    applicationId = applicationId,
+                    applicationId = applicationId.toLong(),
                     amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                     status = loanAgent.status,
+                    currency = CurrencyType.USD
                 )
             )
 

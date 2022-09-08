@@ -27,7 +27,8 @@ class CommissionDetailService(
         save(
             CommissionDetail(
                 id = sequence.nextId(),
-                channel = dtoCommissionDetail.channel,
+                channelCode = dtoCommissionDetail.channelCode,
+                channelName = dtoCommissionDetail.channelName,
                 applicationId = dtoCommissionDetail.applicationId,
                 amount = dtoCommissionDetail.amount,
                 datetime = tenantDateTime.now().toDate(),
@@ -39,9 +40,10 @@ class CommissionDetailService(
 
     fun getGroupByStatusCount(dtoCommissionDetailQueryParams: DTOCommissionDetailQueryParams): List<DTOCommissionCount> {
         val statusList = getAllByParams(dtoCommissionDetailQueryParams)
-        return statusList.content.groupBy { it.channel }.map { it ->
+        return statusList.content.groupBy { it.channelCode }.map { it ->
             DTOCommissionCount(
                 it.key,
+                it.value.first().channelName,
                 it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount })
         }
     }

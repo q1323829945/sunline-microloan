@@ -15,6 +15,7 @@ data class DTOCommissionStatistics(
 
 data class DTOCommissionStatisticsFindParams(
     val channelCode: String,
+    val channelName: String,
     val dateTime: DateTime,
     val frequency: Frequency,
 )

@@ -5,7 +5,8 @@ import org.joda.time.DateTime
 import java.math.BigDecimal
 
 data class DTOCommissionStatistics(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val commissionFeatureId: Long,
     val statisticsAmount: BigDecimal,
     val amount: BigDecimal,
@@ -13,7 +14,8 @@ data class DTOCommissionStatistics(
 )
 
 data class DTOCommissionStatisticsFindParams(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val dateTime: DateTime,
     val frequency: Frequency,
 )

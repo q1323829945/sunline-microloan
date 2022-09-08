@@ -11,6 +11,7 @@ import cn.sunline.saas.statistics.repositories.LoanApplicationStatisticsReposito
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.persistence.criteria.Predicate
 
 @Service
@@ -22,34 +23,74 @@ class LoanApplicationStatisticsService(
 
 
     fun getPaged(
-        year: Long?,
-        month: Long?,
-        day: Long?,
+        startYear: Long?,
+        endYear: Long?,
+        startMonth: Long?,
+        endMonth: Long?,
+        startDay: Long?,
+        endDay: Long?,
         tenantId: Long?,
-//        channel: String?,
-//        productCode: String?,
-//        frequency: Frequency,
+        channelCode: String?,
+        channelName: String?,
+        productId: Long?,
+        frequency: Frequency?,
         pageable: Pageable
     ): Page<LoanApplicationStatistics> {
-        return getPaged({ root, _, criteriaBuilder ->
+        return getPaged({ root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            year?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("year"), it)) }
-            month?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("month"), it)) }
-            day?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("day"), it)) }
             tenantId?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), it)) }
-//            predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), frequency))
+            channelCode?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelCode"), it)) }
+            channelName?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), it)) }
+            productId?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), it)) }
+            frequency?.let { predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), it)) }
+            startYear?.let {
+                endYear?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("year"),
+                            startYear,
+                            endYear
+                        )
+                    )
+                }
+            }
+            startMonth?.let {
+                endMonth?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("month"),
+                            startMonth,
+                            endMonth
+                        )
+                    )
+                }
+            }
+            startDay?.let {
+                endDay?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("day"),
+                            startDay,
+                            endDay
+                        )
+                    )
+                }
+            }
+
+            query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
+
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable)
     }
 
     fun findByDate(dtoLoanApplicationStatisticsFindParams: DTOLoanApplicationStatisticsFindParams): LoanApplicationStatistics? {
         val dateTime = dtoLoanApplicationStatisticsFindParams.dateTime
-        return getOneWithTenant { root, _, criteriaBuilder ->
+        return getOneWithTenant { root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(
                 criteriaBuilder.equal(
-                    root.get<String>("channel"),
-                    dtoLoanApplicationStatisticsFindParams.channel
+                    root.get<String>("channelCode"),
+                    dtoLoanApplicationStatisticsFindParams.channelCode
                 )
             )
             predicates.add(
@@ -67,6 +108,9 @@ class LoanApplicationStatisticsService(
                     dtoLoanApplicationStatisticsFindParams.frequency
                 )
             )
+
+            query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
+
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }
@@ -77,7 +121,8 @@ class LoanApplicationStatisticsService(
         return save(
             LoanApplicationStatistics(
                 id = sequence.nextId(),
-                channel = dtoLoanApplicationStatistics.channel,
+                channelCode = dtoLoanApplicationStatistics.channelCode,
+                channelName = dtoLoanApplicationStatistics.channelName,
                 productId = dtoLoanApplicationStatistics.productId,
                 productName = dtoLoanApplicationStatistics.productName,
                 amount = dtoLoanApplicationStatistics.amount,
@@ -97,7 +142,8 @@ class LoanApplicationStatisticsService(
         return save(
             LoanApplicationStatistics(
                 id = sequence.nextId(),
-                channel = dtoLoanApplicationStatistics.channel,
+                channelCode = dtoLoanApplicationStatistics.channelCode,
+                channelName = dtoLoanApplicationStatistics.channelName,
                 productId = dtoLoanApplicationStatistics.productId,
                 productName = dtoLoanApplicationStatistics.productName,
                 amount = dtoLoanApplicationStatistics.amount,

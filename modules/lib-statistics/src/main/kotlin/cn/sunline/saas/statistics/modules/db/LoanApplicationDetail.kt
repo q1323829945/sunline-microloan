@@ -18,8 +18,12 @@ class LoanApplicationDetail(
     var id: Long? = null,
 
     @NotNull
-    @Column(name = "channel", columnDefinition = "varchar(256) not null")
-    val channel: String,
+    @Column(name = "channel_code", columnDefinition = "varchar(256) not null")
+    val channelCode: String,
+
+    @NotNull
+    @Column(name = "channel_name",length = 128,nullable = false,  columnDefinition = "varchar(128) ")
+    var channelName: String,
 
     @NotNull
     @Column(name = "product_id", columnDefinition = "bigint not null")

@@ -5,7 +5,8 @@ import org.joda.time.DateTime
 import java.math.BigDecimal
 
 data class DTOLoanApplicationStatistics(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val productId: Long,
     val productName: String,
     val amount: BigDecimal,
@@ -15,7 +16,8 @@ data class DTOLoanApplicationStatistics(
 )
 
 data class DTOLoanApplicationStatisticsFindParams(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val productId: Long,
     val dateTime: DateTime,
     val frequency: Frequency,

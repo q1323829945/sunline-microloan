@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull
 
 
 data class DTOLoanApplicationDetail(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val productId: Long,
     val productName: String,
     val applicationId: Long,
@@ -24,7 +25,8 @@ data class DTOLoanApplicationDetailQueryParams(
 )
 
 data class DTOLoanApplicationCount(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val productId: Long,
     val productName: String,
     val approvalCount: Long,

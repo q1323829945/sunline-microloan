@@ -1,14 +1,14 @@
 package cn.sunline.saas.channel.statistics.services
 
-import cn.sunline.saas.global.constant.ApplyStatus
-import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.channel.statistics.modules.db.CommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionCount
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetailQueryParams
 import cn.sunline.saas.channel.statistics.repositories.CommissionDetailRepository
+import cn.sunline.saas.global.constant.ApplyStatus
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.seq.Sequence
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -32,6 +32,7 @@ class CommissionDetailService(
                 applicationId = dtoCommissionDetail.applicationId,
                 amount = dtoCommissionDetail.amount,
                 datetime = tenantDateTime.now().toDate(),
+                currency = dtoCommissionDetail.currency,
                 status = dtoCommissionDetail.status
             )
         )
@@ -39,14 +40,12 @@ class CommissionDetailService(
 
     fun getGroupByStatusCount(dtoCommissionDetailQueryParams: DTOCommissionDetailQueryParams): List<DTOCommissionCount> {
         val statusList = getAllByParams(dtoCommissionDetailQueryParams)
-        val dtoCommissionCounts = ArrayList<DTOCommissionCount>()
-        statusList.content.groupBy { it.channelCode }.forEach { channelCodeMap ->
-            dtoCommissionCounts += DTOCommissionCount(
-                channelCode = channelCodeMap.key,
-                channelName = channelCodeMap.value.first().channelName,
-                amount = channelCodeMap.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount })
+        return statusList.content.groupBy { it.channelCode }.map { it ->
+            DTOCommissionCount(
+                it.key,
+                it.value.first().channelName,
+                it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount })
         }
-        return dtoCommissionCounts
     }
 
 
@@ -65,10 +64,10 @@ class CommissionDetailService(
         }, Pageable.unpaged())
     }
 
-    fun getByApplicationId(applicationId: String): CommissionDetail? {
+    fun getByApplicationId(applicationId: Long): CommissionDetail? {
         return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("applicationId"), applicationId))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("applicationId"), applicationId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }

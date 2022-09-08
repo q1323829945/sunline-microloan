@@ -16,19 +16,19 @@ class ActorContextTest {
 
     @BeforeEach
     fun `emulate command runner`() {
-        Test1RegisterActor().registerActor()
-        Test2RegisterActor().registerActor()
+        Test1RegisterActor()
+        Test2RegisterActor()
     }
 
     @Test
     fun `context map correct`() {
-        val context = ActorContext.getActorTypes()
+        val context = ActorContext().getActorTypes()
         assertThat(context.size).isEqualTo(2)
     }
 
     @Test
     fun `do job`() {
-        val actor = ActorContext.getActor("Test1RegisteredActor")
+        val actor = ActorContext().getActor("Test1RegisteredActor")
         Assertions.assertThrows(Exception::class.java) {
             actor.doJob("first","1")
         }

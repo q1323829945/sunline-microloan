@@ -30,7 +30,8 @@ class LoanApplicationDetailService(
         save(
             LoanApplicationDetail(
                 id = sequence.nextId(),
-                channel = dtoLoanApplicationDetail.channel,
+                channelCode = dtoLoanApplicationDetail.channelCode,
+                channelName = dtoLoanApplicationDetail.channelName,
                 productId = dtoLoanApplicationDetail.productId,
                 productName = dtoLoanApplicationDetail.productName,
                 applicationId = dtoLoanApplicationDetail.applicationId,
@@ -44,14 +45,15 @@ class LoanApplicationDetailService(
 
     fun getGroupByStatusCount(dtoLoanApplicationDetailQueryParams: DTOLoanApplicationDetailQueryParams): List<DTOLoanApplicationCount> {
         val statusList = getAllByParams(dtoLoanApplicationDetailQueryParams)
-        val groupBy = statusList.content.groupBy { it.channel }
+        val groupBy = statusList.content.groupBy { it.channelCode }
 
         val dtoLoanApplicationCount = mutableListOf<DTOLoanApplicationCount>()
         groupBy.forEach { channelMap ->
             val productGroupBy = channelMap.value.groupBy { it.productId }
             productGroupBy.forEach { productMap ->
                 dtoLoanApplicationCount += DTOLoanApplicationCount(
-                    channel = channelMap.key,
+                    channelCode = channelMap.key,
+                    channelName = productMap.value.first().channelName,
                     amount = productMap.value.sumOf { it.amount },
                     applyCount = productMap.value.count().toLong(),
                     approvalCount = productMap.value.count { ApplyStatus.APPROVALED == it.status }.toLong(),

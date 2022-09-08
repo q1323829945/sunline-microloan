@@ -17,6 +17,7 @@ data class DTOLoanApplicationStatistics(
 
 data class DTOLoanApplicationStatisticsFindParams(
     val channelCode: String,
+    val channelName: String,
     val productId: Long,
     val dateTime: DateTime,
     val frequency: Frequency,

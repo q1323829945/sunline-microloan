@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull
 
 
 data class DTOCommissionDetail(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val applicationId: Long,
     val amount: BigDecimal,
     val currency: CurrencyType,
@@ -22,6 +23,7 @@ data class DTOCommissionDetailQueryParams(
 )
 
 data class DTOCommissionCount(
-    val channel: String,
+    val channelCode: String,
+    val channelName: String,
     val amount: BigDecimal
 )

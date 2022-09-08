@@ -55,7 +55,7 @@ class LoanApplicationStatisticsScheduler(
         val loanApplication =
             loanApplicationDetailService.getGroupByStatusCount(DTOLoanApplicationDetailQueryParams(startDate, endDate))
         loanApplication.forEach {
-            val business = checkLoanApplicationExist(it.channelCode, it.productId, dateTime, frequency)
+            val business = checkLoanApplicationExist(it.channelCode, it.channelName,it.productId, dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount
                 business.applyCount = it.applyCount
@@ -81,6 +81,7 @@ class LoanApplicationStatisticsScheduler(
 
     private fun checkLoanApplicationExist(
         channelCode: String,
+        channelName: String,
         productId: Long,
         dateTime: DateTime,
         frequency: Frequency
@@ -88,6 +89,7 @@ class LoanApplicationStatisticsScheduler(
         return loanApplicationStatisticsService.findByDate(
             DTOLoanApplicationStatisticsFindParams(
                 channelCode = channelCode,
+                channelName = channelName,
                 productId = productId,
                 dateTime = dateTime,
                 frequency = frequency

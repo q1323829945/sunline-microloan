@@ -66,7 +66,7 @@ class CommissionStatisticsScheduler(
         )
         commission.forEach {
             // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
-            val business = checkCommissionStatisticsExist(it.channel, dateTime, frequency)
+            val business = checkCommissionStatisticsExist(it.channelCode, it.channelName, dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
                 business.statisticsAmount =  it.amount
@@ -75,7 +75,8 @@ class CommissionStatisticsScheduler(
             } else {
                 commissionStatisticsService.saveCommissionStatistics(
                     DTOCommissionStatistics(
-                        channel = it.channel,
+                        channelCode = it.channelCode,
+                        channelName = it.channelName,
                         commissionFeatureId = 0,
                         statisticsAmount =  it.amount,
                         amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
@@ -87,13 +88,15 @@ class CommissionStatisticsScheduler(
     }
 
     private fun checkCommissionStatisticsExist(
-        channel: String,
+        channelCode: String,
+        channelName: String,
         dateTime: DateTime,
         frequency: Frequency
     ): CommissionStatistics? {
         return commissionStatisticsService.findByDate(
             DTOCommissionStatisticsFindParams(
-                channel = channel,
+                channelCode = channelCode,
+                channelName = channelName,
                 dateTime = dateTime,
                 frequency = frequency
             )

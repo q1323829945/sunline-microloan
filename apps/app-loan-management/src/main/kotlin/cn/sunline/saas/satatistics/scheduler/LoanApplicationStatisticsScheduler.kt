@@ -55,11 +55,12 @@ class LoanApplicationStatisticsScheduler(
         val loanApplication =
             loanApplicationDetailService.getGroupByStatusCount(DTOLoanApplicationDetailQueryParams(startDate, endDate))
         loanApplication.forEach {
-            val business = checkLoanApplicationExist(it.channel, it.productId, dateTime, frequency)
+            val business = checkLoanApplicationExist(it.channelCode, it.channelName, it.productId, dateTime, frequency)
             business ?: run {
                 loanApplicationStatisticsService.saveLoanApplicationStatistics(
                     DTOLoanApplicationStatistics(
-                        channel = it.channel,
+                        channelCode = it.channelCode,
+                        channelName = it.channelName,
                         productId = it.productId,
                         productName = it.productName,
                         amount = it.amount,
@@ -73,14 +74,16 @@ class LoanApplicationStatisticsScheduler(
     }
 
     private fun checkLoanApplicationExist(
-        channel: String,
+        channelCode: String,
+        channelName: String,
         productId: Long,
         dateTime: DateTime,
         frequency: Frequency
     ): LoanApplicationStatistics? {
         return loanApplicationStatisticsService.findByDate(
             DTOLoanApplicationStatisticsFindParams(
-                channel = channel,
+                channelCode = channelCode,
+                channelName = channelName,
                 productId = productId,
                 dateTime = dateTime,
                 frequency = frequency

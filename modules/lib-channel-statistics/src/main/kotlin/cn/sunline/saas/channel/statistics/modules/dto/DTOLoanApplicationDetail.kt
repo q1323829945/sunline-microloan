@@ -4,8 +4,6 @@ import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.model.CurrencyType
 import java.math.BigDecimal
 import java.util.*
-import javax.persistence.Column
-import javax.validation.constraints.NotNull
 
 
 data class DTOLoanApplicationDetail(
@@ -13,8 +11,9 @@ data class DTOLoanApplicationDetail(
     val channelName: String,
     val productId: Long,
     val productName: String,
-    val applicationId: String,
+    val applicationId: Long,
     val amount: BigDecimal,
+    val currency: CurrencyType,
     val status: ApplyStatus,
 )
 

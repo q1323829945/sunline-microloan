@@ -1,14 +1,14 @@
 package cn.sunline.saas.channel.statistics.services
 
-import cn.sunline.saas.global.constant.ApplyStatus
-import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.channel.statistics.modules.db.LoanApplicationDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationCount
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetailQueryParams
 import cn.sunline.saas.channel.statistics.repositories.LoanApplicationDetailRepository
+import cn.sunline.saas.global.constant.ApplyStatus
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.seq.Sequence
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -22,6 +22,10 @@ class LoanApplicationDetailService(
     private val tenantDateTime: TenantDateTime
 ) : BaseMultiTenantRepoService<LoanApplicationDetail, Long>(loanApplicationDetailRepository) {
 
+//    data class GroupKey(val channelId: Long,val productId: Long)
+//
+//    fun LoanApplicationDetail.toKey() = GroupKey(channelId,productId)
+
     fun saveApplicationDetail(dtoLoanApplicationDetail: DTOLoanApplicationDetail) {
         save(
             LoanApplicationDetail(
@@ -33,6 +37,7 @@ class LoanApplicationDetailService(
                 applicationId = dtoLoanApplicationDetail.applicationId,
                 amount = dtoLoanApplicationDetail.amount,
                 datetime = tenantDateTime.now().toDate(),
+                currency = dtoLoanApplicationDetail.currency,
                 status = dtoLoanApplicationDetail.status
             )
         )
@@ -40,22 +45,24 @@ class LoanApplicationDetailService(
 
     fun getGroupByStatusCount(dtoLoanApplicationDetailQueryParams: DTOLoanApplicationDetailQueryParams): List<DTOLoanApplicationCount> {
         val statusList = getAllByParams(dtoLoanApplicationDetailQueryParams)
-        val dtoLoanApplicationCounts = mutableListOf<DTOLoanApplicationCount>()
-        statusList.content.groupBy { it.channelCode }
-            .forEach { channelCodeMap ->
-                channelCodeMap.value.groupBy { it.productId }.forEach { productIdMap ->
-                    dtoLoanApplicationCounts += DTOLoanApplicationCount(
-                        channelCode = channelCodeMap.key,
-                        channelName = productIdMap.value.first().channelName,
-                        amount = productIdMap.value.sumOf { it.amount },
-                        applyCount = productIdMap.value.count().toLong(),
-                        approvalCount = productIdMap.value.count { ApplyStatus.APPROVALED == it.status }.toLong(),
-                        productId = productIdMap.key,
-                        productName = productIdMap.value.first().productName
-                    )
-                }
+        val groupBy = statusList.content.groupBy { it.channelCode }
+
+        val dtoLoanApplicationCount = mutableListOf<DTOLoanApplicationCount>()
+        groupBy.forEach { channelMap ->
+            val productGroupBy = channelMap.value.groupBy { it.productId }
+            productGroupBy.forEach { productMap ->
+                dtoLoanApplicationCount += DTOLoanApplicationCount(
+                    channelCode = channelMap.key,
+                    channelName = productMap.value.first().channelName,
+                    amount = productMap.value.sumOf { it.amount },
+                    applyCount = productMap.value.count().toLong(),
+                    approvalCount = productMap.value.count { ApplyStatus.APPROVALED == it.status }.toLong(),
+                    productId = productMap.key,
+                    productName = productMap.value.first().productName
+                )
             }
-        return dtoLoanApplicationCounts
+        }
+        return dtoLoanApplicationCount
     }
 
 
@@ -74,10 +81,10 @@ class LoanApplicationDetailService(
         }, Pageable.unpaged())
     }
 
-    fun getByApplicationId(applicationId: String): LoanApplicationDetail? {
+    fun getByApplicationId(applicationId: Long): LoanApplicationDetail? {
         return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("applicationId"), applicationId))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("applicationId"), applicationId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }

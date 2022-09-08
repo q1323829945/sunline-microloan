@@ -40,15 +40,18 @@ class LoanApplicationStatisticsManagerService(
     ): Page<DTOLoanApplicationStatisticsCount> {
         val tenantIdData = tenantId ?: ContextUtil.getTenant().toLong()
         val frequencyData = frequency ?: Frequency.D
-        val endDateTime = if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
+        val endDateTime =
+            if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
         val startDateTime = if (startDate.isNullOrEmpty()) {
             when (frequencyData) {
                 Frequency.Y -> {
                     endDateTime.plusYears(-6)
                 }
+
                 Frequency.M -> {
                     endDateTime.plusMonths(-6)
                 }
+
                 else -> {
                     endDateTime.plusDays(-6)
                 }
@@ -135,7 +138,8 @@ class LoanApplicationStatisticsManagerService(
                 )
             )
         loanApplication.forEach {
-            val business = checkLoanApplicationStatisticsExist(it.channelCode, it.productId, dateTime, frequency)
+            val business =
+                checkLoanApplicationStatisticsExist(it.channelCode, it.channelName, it.productId, dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount
                 business.applyCount = it.applyCount
@@ -161,6 +165,7 @@ class LoanApplicationStatisticsManagerService(
 
     private fun checkLoanApplicationStatisticsExist(
         channelCode: String,
+        channelName: String,
         productId: Long,
         dateTime: DateTime,
         frequency: Frequency
@@ -168,6 +173,7 @@ class LoanApplicationStatisticsManagerService(
         return loanApplicationStatisticsService.findByDate(
             DTOLoanApplicationStatisticsFindParams(
                 channelCode = channelCode,
+                channelName = channelName,
                 productId = productId,
                 dateTime = dateTime,
                 frequency = frequency
@@ -186,15 +192,18 @@ class LoanApplicationStatisticsManagerService(
     ): DTOLoanApplicationStatisticsCharts {
         val tenantIdData = tenantId ?: ContextUtil.getTenant().toLong()
         val frequencyData = frequency ?: Frequency.D
-        val endDateTime = if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
+        val endDateTime =
+            if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
         val startDateTime = if (startDate.isNullOrEmpty()) {
             when (frequencyData) {
                 Frequency.Y -> {
                     endDateTime.plusYears(-6)
                 }
+
                 Frequency.M -> {
                     endDateTime.plusMonths(-6)
                 }
+
                 else -> {
                     endDateTime.plusDays(-6)
                 }
@@ -349,6 +358,7 @@ class LoanApplicationStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 Frequency.M -> {
                     val endDateTime = start.plusMonths(index)
                     list.add(tenantDateTime.getYearMonth(endDateTime))
@@ -358,6 +368,7 @@ class LoanApplicationStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 Frequency.D -> {
                     val endDateTime = start.plusDays(index)
                     list.add(tenantDateTime.getYearMonthDay(endDateTime))
@@ -368,6 +379,7 @@ class LoanApplicationStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 else -> {
                     flag = false
                 }
