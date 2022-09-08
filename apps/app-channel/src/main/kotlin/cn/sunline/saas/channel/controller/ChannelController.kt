@@ -2,10 +2,10 @@ package cn.sunline.saas.channel.controller
 
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelCommissionAgreementAdd
 import cn.sunline.saas.channel.controller.dto.*
+import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.channel.service.ChannelAgreementManagerService
 import cn.sunline.saas.channel.service.ChannelManagerService
 import cn.sunline.saas.global.constant.AgreementType
-import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -68,6 +68,12 @@ class ChannelController {
         @RequestBody dtoChannelChange: DTOChannelChange
     ): ResponseEntity<DTOResponseSuccess<DTOChannelView>> {
         val channel = channelManagerService.updateChannel(id, dtoChannelChange)
+        return DTOResponseSuccess(channel).response()
+    }
+
+    @PutMapping("enable/{id}")
+    fun updateChannelEnable(@PathVariable id: Long): ResponseEntity<DTOResponseSuccess<DTOChannelView>> {
+        val channel = channelManagerService.updateChannelEnable(id)
         return DTOResponseSuccess(channel).response()
     }
 

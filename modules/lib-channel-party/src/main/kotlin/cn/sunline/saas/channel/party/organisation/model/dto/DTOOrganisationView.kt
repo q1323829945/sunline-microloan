@@ -4,6 +4,7 @@ import cn.sunline.saas.channel.party.organisation.model.BusinessUnitType
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.channel.party.organisation.model.OrganisationIdentificationType
 import cn.sunline.saas.channel.party.organisation.model.OrganizationInvolvementType
+import cn.sunline.saas.global.constant.YesOrNo
 
 
 data class DTOOrganisationView(
@@ -17,7 +18,8 @@ data class DTOOrganisationView(
     val organizationInvolvements:List<DTOOrganizationInvolvementView>?,
     val businessUnits:List<DTOBusinessUnitView>?,
     var tenantId: Long?,
-    val channelCast: DTOChannelCastView?
+    val channelCast: DTOChannelCastView?,
+    val enable: YesOrNo
 )
 
 data class DTOOrganisationIdentificationView(

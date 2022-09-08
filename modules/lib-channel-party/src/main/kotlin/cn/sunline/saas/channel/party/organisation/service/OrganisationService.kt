@@ -10,10 +10,12 @@ import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.repository.OrganisationRepository
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.hibernate.type.YesNoType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -65,7 +67,8 @@ class OrganisationService(
                     this
                 ).toDate()
             },
-            placeOfRegistration = dtoOrganisationAdd.placeOfRegistration
+            placeOfRegistration = dtoOrganisationAdd.placeOfRegistration,
+            enable = YesOrNo.Y
         )
         organisation.organisationIdentifications =
             objectMapper.convertValue(dtoOrganisationAdd.organisationIdentifications)
@@ -74,13 +77,15 @@ class OrganisationService(
             organisation.organizationInvolvements = objectMapper.convertValue(it)
         }
 
-        dtoOrganisationAdd.channelCast?.let { organisation.channelCast =  ChannelCast(
-            id = id,
-            channelCode = it.channelCode,
-            channelName = it.channelName,
-            channelCastType = it.channelCastType,
-            dateTime = tenantDateTime.now().toDate()
-        ) }
+        dtoOrganisationAdd.channelCast?.let {
+            organisation.channelCast = ChannelCast(
+                id = id,
+                channelCode = it.channelCode,
+                channelName = it.channelName,
+                channelCastType = it.channelCastType,
+                dateTime = tenantDateTime.now().toDate()
+            )
+        }
         val save = save(organisation)
 
         return getDTOOrganisationView(save)
@@ -116,6 +121,13 @@ class OrganisationService(
             organisation.organizationInvolvements = objectMapper.convertValue(it)
         }
 
+        return getDTOOrganisationView(save(organisation))
+    }
+
+
+    fun updateOrganisationEnable(id: Long): DTOOrganisationView {
+        val organisation = getOne(id) ?: throw OrganisationNotFoundException("Invalid organisation")
+        organisation.enable = if (organisation.enable == YesOrNo.Y) YesOrNo.N else YesOrNo.Y
         return getDTOOrganisationView(save(organisation))
     }
 
@@ -170,7 +182,8 @@ class OrganisationService(
             organizationInvolvements = objectMapper.convertValue(organisation.organizationInvolvements),
             businessUnits = objectMapper.convertValue(organisation.businessUnits),
             tenantId = organisation.getTenantId(),
-            channelCast = organisation.channelCast?.let { objectMapper.convertValue(it) }
+            channelCast = organisation.channelCast?.let { objectMapper.convertValue(it) },
+            enable = organisation.enable
         )
     }
 

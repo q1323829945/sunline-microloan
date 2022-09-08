@@ -2,6 +2,7 @@ package cn.sunline.saas.channel.controller.dto
 
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.channel.party.organisation.model.OrganisationIdentificationType
+import cn.sunline.saas.global.constant.YesOrNo
 
 data class DTOChannelAdd(
     val legalEntityIndicator: String,
@@ -31,9 +32,10 @@ data class DTOChannelView(
     val organisationSector: String,
     val organisationRegistrationDate: String?,
     val placeOfRegistration: String?,
-    val channelCast: DTOChannelCastView?,
+    val channelCast: DTOChannelCastView,
     val channelIdentification: List<DTOChannelIdentificationView>,
-    val tenantId: String
+    val tenantId: String,
+    val enable: YesOrNo
 )
 
 data class DTOChannelIdentificationView(

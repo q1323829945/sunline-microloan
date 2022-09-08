@@ -15,6 +15,7 @@ import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.create.CreateScheduler
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCustomerDetail
 import cn.sunline.saas.channel.statistics.services.CustomerDetailService
+import cn.sunline.saas.rpc.pubsub.dto.DTOChannelData
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -73,7 +74,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
 
         addChannelStatistics(newChannel)
 
-        //syncChannel("addChannel", newChannel)
+        syncChannel("addChannel", newChannel, false)
 
         return newChannel
     }
@@ -82,12 +83,20 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
 
         val dtoOrganisationChange = getDTOOrganisationChange(id, dtoChannelChange)
         val updateOrganisation = organisationService.updateOrganisation(id, dtoOrganisationChange)
+
+//        syncChannel("updateChannel", updateChannel, true)
+
+        return getDTOChannelView(updateOrganisation)
+    }
+
+    fun updateChannelEnable(id: Long): DTOChannelView {
+        val updateOrganisation = organisationService.updateOrganisationEnable(id)
         val updateChannel = getDTOChannelView(updateOrganisation)
 
-        //syncChannel("updateChannel", updateChannel)
-
+        syncChannel("updateChannel", updateChannel, true)
         return updateChannel
     }
+
 
     fun getChannel(id: Long): DTOChannelView {
         val organisation = organisationService.getDetail(id)
@@ -127,7 +136,8 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
             placeOfRegistration = dtoOrganisationView.placeOfRegistration,
             channelCast = dtoChannelCast,
             channelIdentification = dtoChannelIdentificationViews,
-            tenantId = dtoOrganisationView.tenantId.toString()
+            tenantId = dtoOrganisationView.tenantId.toString(),
+            enable = dtoOrganisationView.enable
         )
     }
 
@@ -180,11 +190,18 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
         )
     }
 
-    private fun syncChannel(method: String, dtoChannelView: DTOChannelView) {
+    private fun syncChannel(method: String, dtoChannelView: DTOChannelView, isUpdate: Boolean) {
         try {
             logger.info("[${method}]: sync ${dtoChannelView.id} channel start")
 
-            channelPublishImpl.syncChannel(objectMapper.convertValue(dtoChannelView))
+            val data = DTOChannelData(
+                channelCode = dtoChannelView.channelCast.channelCode,
+                channelName = dtoChannelView.channelCast.channelName,
+                enable = dtoChannelView.enable,
+                isUpdate = isUpdate
+            )
+
+            channelPublishImpl.syncChannel(data)
 
             logger.info("[${method}]: sync ${dtoChannelView.id} channel end")
         } catch (e: Exception) {
@@ -197,7 +214,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
         try {
             logger.info("[addChannelStatistics]: add ${dtoChannelView.id} channel statistics detail start")
 
-            customerDetailService.getOneByPartyIdAndPartyType(dtoChannelView.id.toLong(),PartyType.CHANNEL)?:run{
+            customerDetailService.getOneByPartyIdAndPartyType(dtoChannelView.id.toLong(), PartyType.CHANNEL) ?: run {
                 customerDetailService.saveCustomerDetail(
                     DTOCustomerDetail(
                         partyId = dtoChannelView.id.toLong(),

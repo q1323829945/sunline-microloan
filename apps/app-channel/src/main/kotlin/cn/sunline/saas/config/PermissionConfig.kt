@@ -77,6 +77,7 @@ enum class PermissionConfig (
     CHANNEL_GET_DETAIL("channel", "channel/[0-9]+\$", RequestMethod.GET, "channel get detail"),
     CHANNEL_ADD("channel", "channel\$", RequestMethod.POST, "channel add"),
     CHANNEL_MODIFY("channel", "channel/[0-9]+\$", RequestMethod.PUT, "channel modify"),
+    CHANNEL_ENABLE_MODIFY("channel", "channel/enable/[0-9]+\$", RequestMethod.PUT, "channel enable modify"),
     CHANNEL_AGREEMENT_LIST("channel", "channel/agreement/[0-9]+\$", RequestMethod.GET, "channel get agreement list"),
     CHANNEL_AGREEMENT_COMMISSION_ADD("channel", "channel/agreement/commission\$", RequestMethod.POST, "channel agreement add"),
     CHANNEL_AGREEMENT_COMMISSION_DETAIL("channel", "channel/agreement/commission/[0-9]+\$", RequestMethod.GET, "channel get agreement detail"),

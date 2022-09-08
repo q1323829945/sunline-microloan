@@ -1,5 +1,7 @@
 package cn.sunline.saas.channel.party.organisation.model.db
 
+import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import java.util.Date
@@ -48,6 +50,10 @@ class Organisation(
     @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "id")
     var channelCast: ChannelCast? = null,
+
+    @NotNull
+    @Column(name = "enable", length = 32, columnDefinition = "varchar(32) not null")
+    var enable: YesOrNo,
 
     ) : MultiTenant {
     @NotNull

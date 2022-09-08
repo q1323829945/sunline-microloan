@@ -1,5 +1,6 @@
 package cn.sunline.saas.party.organisation.model.dto
 
+import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.party.organisation.model.BusinessUnitType
 import cn.sunline.saas.party.organisation.model.OrganisationIdentificationType
 import cn.sunline.saas.party.organisation.model.OrganizationInvolvementType
@@ -13,7 +14,7 @@ data class DTOOrganisationAdd(
     val placeOfRegistration:String,
     val organisationIdentifications:List<DTOOrganisationIdentificationAdd>,
     val organizationInvolvements:List<DTOOrganizationInvolvementAdd>,
-    val businessUnits:List<DTOBusinessUnitAdd>,
+    val businessUnits:List<DTOBusinessUnitAdd>
 
 )
 

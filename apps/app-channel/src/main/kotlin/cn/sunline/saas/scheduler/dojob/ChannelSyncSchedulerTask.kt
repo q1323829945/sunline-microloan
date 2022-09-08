@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class ChannelSyncSchedulerTask(
-    actorType:String = ActorType.SYNC_CHANNEL.name,
+    actorType: String = ActorType.SYNC_CHANNEL.name,
     entityConfig: EntityConfig? = null
-): AbstractActor(actorType, entityConfig) {
+) : AbstractActor(actorType, entityConfig) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     private var logger = KotlinLogging.logger {}
@@ -113,7 +113,8 @@ class ChannelSyncSchedulerTask(
             placeOfRegistration = dtoOrganisationView.placeOfRegistration,
             channelCast = dtoChannelCast,
             channelIdentification = dtoChannelIdentificationViews,
-            tenantId = dtoOrganisationView.tenantId.toString()
+            tenantId = dtoOrganisationView.tenantId.toString(),
+            enable = dtoOrganisationView.enable
         )
     }
 }
