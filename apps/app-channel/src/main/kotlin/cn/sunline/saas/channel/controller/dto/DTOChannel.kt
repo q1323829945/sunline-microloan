@@ -63,3 +63,12 @@ data class DTOChannelIdentificationChange(
     val channelIdentificationType: OrganisationIdentificationType,
     val channelIdentification: String,
 )
+
+
+data class DTOChannelPageView(
+    var id:String,
+    val channelCode: String,
+    val channelName: String,
+    val channelCastType: ChannelCastType,
+    val enable: YesOrNo
+)

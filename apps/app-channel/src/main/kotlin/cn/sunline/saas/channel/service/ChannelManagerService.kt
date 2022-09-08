@@ -47,9 +47,19 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
     @Autowired
     private lateinit var customerDetailService: CustomerDetailService
 
-    fun getChannelPaged(channelCode: String?, channelName: String?, pageable: Pageable): Page<DTOChannelCastView> {
+    fun getChannelPaged(channelCode: String?, channelName: String?, pageable: Pageable): Page<DTOChannelPageView> {
         val page = channelCastService.getChannelCastPaged(channelCode, channelName, pageable)
-        return page.map { objectMapper.convertValue(it) }
+        return page.map {
+            val organisation = organisationService.getOne(it.id) ?: throw ChannelBusinessException("Invalid Channel", ManagementExceptionCode.CHANNEL_NOT_FOUND)
+            DTOChannelPageView(
+                 id = it.id.toString(),
+                channelCode = it.channelCode,
+                channelName = it.channelName,
+                channelCastType = it.channelCastType,
+                enable = organisation.enable
+            )
+            objectMapper.convertValue(it)
+        }
     }
 
     fun getAllChannel(): Page<DTOChannelCastView> {
