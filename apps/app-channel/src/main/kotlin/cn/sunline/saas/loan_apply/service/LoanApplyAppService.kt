@@ -2,6 +2,7 @@ package cn.sunline.saas.loan_apply.service
 
 
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
+import cn.sunline.saas.channel.arrangement.service.ChannelArrangementService
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.BusinessException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
@@ -94,6 +95,15 @@ class LoanApplyAppService {
     @Autowired
     private lateinit var businessStatisticsManagerService: BusinessStatisticsManagerService
 
+    @Autowired
+    private lateinit var channelAgreementService : ChannelAgreementService
+
+    @Autowired
+    private lateinit var channelCastService: ChannelCastService
+
+    @Autowired
+    private lateinit var channelArrangementService: ChannelArrangementService
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getProduct(productType: ProductType): DTOProductAppView {
@@ -125,6 +135,15 @@ class LoanApplyAppService {
                 loanAgentService.getOne(applicationId.toLong())
                     ?: throw LoanApplyNotFoundException("Invalid loan apply")
             val product = productService.getProduct(loanAgent.productId!!)
+
+            val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)?: throw LoanApplyNotFoundException("Invalid loan apply")
+            val channelAgreement = channelAgreementService.getPageByChannelId(
+                channelCast.id,
+                Pageable.unpaged()
+            ).content.first()
+
+            val channelArrangement = channelArrangementService.getOneByChannelId(channelAgreement.id.toLong())
+            val ratio = channelArrangement.commissionRatio
             loanApplicationStatisticsManagerService.addLoanApplicationDetail(
                 DTOLoanApplicationDetail(
                     channelCode = loanAgent.channelCode,
@@ -146,7 +165,9 @@ class LoanApplyAppService {
                     applicationId = applicationId.toLong(),
                     amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                     status = loanAgent.status,
-                    currency = CurrencyType.USD
+                    currency = CurrencyType.USD,
+                    ratio = ratio,
+                    statisticsAmount = loanAgent.loanApply?.amount?.multiply(ratio) ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), // TODO ratio fixed
                 )
             )
 

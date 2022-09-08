@@ -7,7 +7,6 @@ data class DTOCommissionStatisticsPageCount(
     val channelCode: String,
     val channelName: String,
     val commissionFeatureId: Long,
-    val ratio: BigDecimal,
     val amount: BigDecimal,
     val statisticsAmount: BigDecimal,
     val dateTime: String
@@ -30,7 +29,6 @@ data class DTOCommissionChartsAmount(
 data class DTOCommissionStatisticsCount(
     val channelCode: String,
     val channelName: String,
-    val ratio: BigDecimal,
     val amount: BigDecimal,
     val statisticsAmount: BigDecimal,
     val tenantId:Long

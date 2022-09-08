@@ -1,6 +1,7 @@
 package cn.sunline.saas.satatistics.service
 
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
+import cn.sunline.saas.channel.arrangement.service.ChannelArrangementService
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
@@ -36,14 +37,6 @@ class CommissionStatisticsManagerService(
 
     @Autowired
     private lateinit var commissionDetailService: CommissionDetailService
-
-    @Autowired
-    private lateinit var channelAgreementService : ChannelAgreementService
-
-    @Autowired
-    private lateinit var channelCastService: ChannelCastService
-
-    private val ratio = BigDecimal(0.2).setScale(2, RoundingMode.HALF_UP)
 
     fun getPaged(
         startDate: String?,
@@ -91,7 +84,6 @@ class CommissionStatisticsManagerService(
                 channelName = it.channelName,
                 statisticsAmount = it.statisticsAmount,
                 amount = it.amount,
-                ratio = ratio,
                 commissionFeatureId = it.commissionFeatureId,
                 dateTime = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.datetime))
             )
@@ -148,16 +140,9 @@ class CommissionStatisticsManagerService(
             )
         )
         commission.forEach { it ->
-            // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
-            val channelCast = channelCastService.getChannelCast(it.channelCode, it.channelName)?: throw LoanApplyNotFoundException("Invalid loan apply")
-//            val channelAgreement = channelAgreementService.getPageByChannelId(
-//                channelCast.id,
-//                Pageable.unpaged()
-//            ).content.sortByDescending<> { it.signedDate }
-//            ratio = channelAgreement.
             val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
             if (business != null) {
-                business.amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
+                business.amount = it.amount
                 business.statisticsAmount = it.amount
                 business.datetime = tenantDateTime.now().toDate()
                 commissionStatisticsService.save(business)
@@ -168,7 +153,7 @@ class CommissionStatisticsManagerService(
                         channelName = it.channelName,
                         commissionFeatureId = 0,
                         statisticsAmount = it.amount,
-                        amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
+                        amount = it.amount,
                         frequency = frequency
                     )
                 )
@@ -339,13 +324,13 @@ class CommissionStatisticsManagerService(
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
 
+
         return page.content.groupBy { it.channelCode }.map { groupBy ->
             DTOCommissionStatisticsCount(
                 channelCode = groupBy.key,
                 channelName = groupBy.value.first().channelName,
-                ratio =  ratio,
                 amount = groupBy.value.sumOf { it.amount },
-                statisticsAmount = groupBy.value.sumOf { it.amount }.multiply(ratio).setScale(2,RoundingMode.HALF_UP),
+                statisticsAmount = groupBy.value.sumOf { it.statisticsAmount },
                 tenantId = tenantId
             )
         }

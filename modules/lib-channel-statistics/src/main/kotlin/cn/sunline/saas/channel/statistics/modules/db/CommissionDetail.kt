@@ -33,6 +33,13 @@ class CommissionDetail (
     @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
     var amount: BigDecimal,
 
+    @Column(name = "ratio",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var ratio: BigDecimal?,
+
+    @NotNull
+    @Column(name = "statistics_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var statisticsAmount: BigDecimal,
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")

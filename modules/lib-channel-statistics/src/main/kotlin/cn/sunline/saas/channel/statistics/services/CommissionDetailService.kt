@@ -31,6 +31,8 @@ class CommissionDetailService(
                 channelName = dtoCommissionDetail.channelName,
                 applicationId = dtoCommissionDetail.applicationId,
                 amount = dtoCommissionDetail.amount,
+                ratio = dtoCommissionDetail.ratio,
+                statisticsAmount = dtoCommissionDetail.statisticsAmount,
                 datetime = tenantDateTime.now().toDate(),
                 currency = dtoCommissionDetail.currency,
                 status = dtoCommissionDetail.status
@@ -42,9 +44,11 @@ class CommissionDetailService(
         val statusList = getAllByParams(dtoCommissionDetailQueryParams)
         return statusList.content.groupBy { it.channelCode }.map { it ->
             DTOCommissionCount(
-                it.key,
-                it.value.first().channelName,
-                it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount })
+                channelCode = it.key,
+                channelName = it.value.first().channelName,
+                amount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount },
+                statisticsAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.statisticsAmount }
+            )
         }
     }
 
