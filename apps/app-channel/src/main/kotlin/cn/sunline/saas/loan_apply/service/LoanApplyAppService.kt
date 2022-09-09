@@ -98,7 +98,6 @@ class LoanApplyAppService {
     @Autowired
     private lateinit var businessStatisticsManagerService: BusinessStatisticsManagerService
 
-
     @Autowired
     private lateinit var minioService: MinioService
     @Autowired
@@ -106,6 +105,10 @@ class LoanApplyAppService {
 
     @Autowired
     private lateinit var channelArrangementService: ChannelArrangementService
+
+    @Autowired
+    private lateinit var channelAgreementService:ChannelAgreementService
+
     @Autowired
     private lateinit var obsApi: ObsApi
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
