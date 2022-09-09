@@ -24,9 +24,7 @@ class SecurityConfiguration (private val tokenService: TokenService,
     override fun configure(web: WebSecurity?) {
         web!!.ignoring()
             .antMatchers("/auth/login","/dapr/**","/error","/healthz","/questionnaire","questionnaire/**",
-                "/loan/record","/loan/status/**","/loan/product/**","/loan/submit/callback","/application/batch/record/loan"
-                ,"/test","/actors/**","/**/all","/test/**")
-            .regexMatchers(HttpMethod.GET,"/product(\\?.*|\$)","/test(\\?.*|\$)","/(\\?.*|\$)/all(\\?.*|\$)")
+                "/loan/record","/loan/status/**","/loan/product/**","/loan/submit/callback","/application/batch/record/loan"                ,"/test","/actors/**","/**/all","/pdpa","/pdpa/**")            .regexMatchers(HttpMethod.GET,"/product(\\?.*|\$)","/test(\\?.*|\$)","/(\\?.*|\$)/all(\\?.*|\$)")
     }
 
     override fun configure(http: HttpSecurity?) {

@@ -31,6 +31,8 @@ class MenuService {
         val loanApplicationStatisticsConfig = Menu("loanApplicationStatisticsConfig","statisticsQuery","","/dashboard/loanApplicationStatisticsConfig",10)
         val channelQueryConfig = Menu("channelQueryConfig","channelConfig","","/dashboard/channelQueryConfig",11)
         val positionConfig = Menu("positionConfig","sysConfig","","/dashboard/positionConfig",12)
+        val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",13)
+        val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",14)
 
 
         menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling,businessQuery,statisticsQuery,channelConfig
@@ -45,7 +47,9 @@ class MenuService {
             ,commissionStatisticsConfig
             ,loanApplicationStatisticsConfig
             ,channelQueryConfig
-            ,positionConfig)
+            ,positionConfig
+            ,pdpaConfig
+            ,pdpaAuthorityConfig)
 
     }
 

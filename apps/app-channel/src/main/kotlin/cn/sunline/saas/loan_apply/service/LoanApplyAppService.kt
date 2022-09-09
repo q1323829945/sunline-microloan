@@ -43,6 +43,8 @@ import cn.sunline.saas.channel.statistics.modules.dto.DTOBusinessDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
 import cn.sunline.saas.minio.MinioService
+import cn.sunline.saas.obs.api.GetParams
+import cn.sunline.saas.obs.api.ObsApi
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -104,6 +106,8 @@ class LoanApplyAppService {
 
     @Autowired
     private lateinit var channelArrangementService: ChannelArrangementService
+    @Autowired
+    private lateinit var obsApi: ObsApi
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getProduct(productType: ProductType): DTOProductAppView {
@@ -323,6 +327,18 @@ class LoanApplyAppService {
             val product = productService.getOne(this.toLong())
             product?.run {
                 loanAgent.productName = this.name
+            }
+        }
+
+        loanAgent.fileInformation?.forEach { files ->
+            val obsFiles = mutableListOf<String>()
+            files.path?.forEach {
+                val key = obsApi.getPictureView(GetParams(it))
+                obsFiles.add(key)
+            }
+            files.path?.run {
+                this.clear()
+                this.addAll(obsFiles)
             }
         }
 

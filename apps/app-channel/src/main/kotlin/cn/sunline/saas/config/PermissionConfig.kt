@@ -99,6 +99,8 @@ enum class PermissionConfig (
     LOAN_APPLY_QUERY_MENU("menu","loanApplyQueryConfig", RequestMethod.GET,"View loan apply query menu"),
     CHANNEL_QUERY_MENU("menu","channelQueryConfig", RequestMethod.GET,"View channel query menu"),
     POSITION_MENU("menu","positionConfig",RequestMethod.GET,"View position menu"),
+    PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
+    PDPA_AUTHORITY_MENU("menu","pdpaAuthorityConfig", RequestMethod.GET,"View pdpaAuthorityConfig menu"),
 
 }
 
