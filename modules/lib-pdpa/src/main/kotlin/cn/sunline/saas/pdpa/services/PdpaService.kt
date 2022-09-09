@@ -130,7 +130,11 @@ class PdpaService(
     private fun downloadPdpaInformation(path:String):List<DTOPdpaItem>{
         val json = when(val result = obsApi.getObject(GetParams(path))){
             is String -> result
-            is InputStream -> String(result.readAllBytes())
+            is InputStream -> {
+                val str = String(result.readAllBytes())
+                result.close()
+                str
+            }
             else -> throw PdpaNotFoundException("pdpa information not found")
         }
         return objectMapper.readValue(json)

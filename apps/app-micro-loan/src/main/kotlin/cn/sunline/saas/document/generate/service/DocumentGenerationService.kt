@@ -34,5 +34,6 @@ class DocumentGenerationService {
         val put = PutParams(dtoGeneration.key,pdfInputStream)
         huaweiCloudService.putObject(put)
 
+        inputStream.close()
     }
 }

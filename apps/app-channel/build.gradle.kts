@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":lib-channel-party"))
     implementation(project(":lib-channel-agreement"))
     implementation(project(":lib-channel-arrangement"))
+    implementation(project(":lib-minio"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
 }

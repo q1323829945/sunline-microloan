@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 
@@ -19,17 +20,15 @@ const val HUAWEI_CLOUD_IAM_TOKEN_HASH = "huawei_cloud_iam_token_hash"
 const val HUAWEI_CLOUD_IAM_TOKEN_KEY = "huawei_cloud_iam_token_key"
 
 @Component
-class HuaweiCloudApigConfig(private val httpConfig: HttpConfig, private var redisClient: RedisClient) {
-
-    @Value("\${huawei.cloud.iam.domainUserName}")
-    lateinit var domainUserName:String
-    @Value("\${huawei.cloud.iam.username}")
-    lateinit var username:String
-    @Value("\${huawei.cloud.iam.password}")
-    lateinit var password:String
-    @Value("\${huawei.cloud.iam.projectId}")
-    lateinit var projectId:String
-
+@ConfigurationProperties(prefix = "huawei.cloud.iam")
+class HuaweiCloudApigConfig(
+    private val httpConfig: HttpConfig,
+    private var redisClient: RedisClient,
+    var domainUserName:String = "",
+    var username:String = "",
+    var password:String = "",
+    var projectId:String = ""
+    ) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 

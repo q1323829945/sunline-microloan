@@ -53,6 +53,15 @@ redis:
   useSentinel: false
   password:
 
+minio:
+  endpoint: "https://minio.saas.finline.app"
+  #  if endpointType = IP,open this
+  #  port: 30109
+  accessKey: "AKIAIOSFODNN7EXAMPLE"
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  endpointType: URL  # 'URL' or 'IP'
+  bucket: "public-bucket"
+
 logging:
   level:
     cn.sunline.saas: trace
@@ -65,3 +74,5 @@ logging:
       resultset: OFF
   pattern:
     console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"
+
+

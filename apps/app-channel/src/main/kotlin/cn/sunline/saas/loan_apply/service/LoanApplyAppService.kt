@@ -42,6 +42,7 @@ import cn.sunline.saas.channel.statistics.modules.TransactionType
 import cn.sunline.saas.channel.statistics.modules.dto.DTOBusinessDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
+import cn.sunline.saas.minio.MinioService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -95,15 +96,14 @@ class LoanApplyAppService {
     @Autowired
     private lateinit var businessStatisticsManagerService: BusinessStatisticsManagerService
 
-    @Autowired
-    private lateinit var channelAgreementService : ChannelAgreementService
 
+    @Autowired
+    private lateinit var minioService: MinioService
     @Autowired
     private lateinit var channelCastService: ChannelCastService
 
     @Autowired
     private lateinit var channelArrangementService: ChannelArrangementService
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getProduct(productType: ProductType): DTOProductAppView {
@@ -214,7 +214,26 @@ class LoanApplyAppService {
     }
 
     fun loanRecord(data: String): LoanAgent {
-        val loanAgent = loanAgentService.addOne(data)      
+        val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(data)
+        dtoLoanAgent.fileInformation?.forEach { files ->
+            val obsFiles = mutableListOf<String>()
+            files.path?.forEach {
+                val key = minioService.minioToObs(it,it)
+                key?.run {
+                    obsFiles.add(this)
+                }?:run{
+                    obsFiles.add(it)
+                }
+
+            }
+            files.path?.run {
+                this.clear()
+                this.addAll(obsFiles)
+            }
+        }
+        val newData = objectMapper.writeValueAsString(dtoLoanAgent)
+        val loanAgent = loanAgentService.addOne(newData)
+
         createScheduler.create(ActorType.LOAN_APPLY_HANDLE,loanAgent.applicationId.toString())
         return loanAgent
     }
@@ -338,7 +357,7 @@ class LoanApplyAppService {
                 productName = product?.name,
                 productType = it.loanApply?.productType,
                 term = it.loanApply?.term,
-                date = it.created?.toString(),
+                date = it.created?.run{ tenantDateTime.toTenantDateTime(this).toString() },
                 status = it.status,
                 channelCode = it.channelCode,
                 channelName = it.channelName,

@@ -77,5 +77,5 @@ data class DTOBaseCorporateInformation(
 
 data class DTOBaseFileInformation(
     val key:String? = null,
-    val path:List<String>? = null
+    var path:MutableList<String>? = null
 )

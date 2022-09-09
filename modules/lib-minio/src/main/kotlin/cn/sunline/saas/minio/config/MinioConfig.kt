@@ -1,5 +1,7 @@
 package cn.sunline.saas.minio.config
 
+import cn.sunline.saas.minio.model.EndpointType
+import cn.sunline.saas.minio.model.EndpointType.*
 import io.minio.MinioClient
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -12,14 +14,14 @@ class MinioConfig(
     var port:Int = 30109,
     var accessKey:String = "sunline",
     var secretKey:String = "sunline300348",
-    var isUrl:Boolean = false
+    var endpointType: EndpointType = IP,
+    var bucket:String = "sunline"
 ) {
     @Bean
     fun initMinoClient():MinioClient{
-        return if(isUrl){
-            MinioClient.builder().endpoint(endpoint).credentials(accessKey, secretKey).build()
-        } else {
-            MinioClient.builder().endpoint(endpoint,port,false).credentials(accessKey, secretKey).build()
+        return when(endpointType){
+            URL -> MinioClient.builder().endpoint(endpoint).credentials(accessKey, secretKey).build()
+            IP -> MinioClient.builder().endpoint(endpoint,port,false).credentials(accessKey, secretKey).build()
         }
     }
 }

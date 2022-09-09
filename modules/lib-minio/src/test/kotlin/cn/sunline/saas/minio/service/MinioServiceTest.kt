@@ -23,19 +23,19 @@ class MinioServiceTest {
     @Test
     @Disabled
     fun `put object`(){
-        minioTemplate.createBucket("mytest")
+        minioTemplate.createBucket("test")
         val file = FileInputStream(File("src\\test\\resources\\file\\123.JPG"))
-        minioTemplate.putObject("mytest","test.jpg",file)
+        minioTemplate.putObject("test.jpg",file)
 
-        val exists = minioTemplate.checkFileExists("mytest","test.jpg")
+        val exists = minioTemplate.checkFileExists("test.jpg")
         Assertions.assertThat(exists).isEqualTo(true)
     }
 
     @Test
     @Disabled
     fun `get object`(){
-        minioTemplate.createBucket("mytest")
-        val stream = minioTemplate.getObject("mytest","test.jpg")
+        minioTemplate.createBucket("test")
+        val stream = minioTemplate.getObject("test.jpg")
         val file = File("src\\test\\resources\\file\\getFile.JPG")
         stream?.run { FileUtils.copyInputStreamToFile(stream,file) }
 
@@ -44,9 +44,9 @@ class MinioServiceTest {
     @Test
     @Disabled
     fun `delete object`(){
-        minioTemplate.removeObject("mytest","test.jpg")
+        minioTemplate.removeObject("test.jpg")
 
-        val exists = minioTemplate.checkFileExists("mytest","test.jpg")
+        val exists = minioTemplate.checkFileExists("test.jpg")
         Assertions.assertThat(exists).isEqualTo(false)
     }
 

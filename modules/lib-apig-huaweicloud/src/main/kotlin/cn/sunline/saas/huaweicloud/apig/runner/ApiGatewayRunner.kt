@@ -12,34 +12,24 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
+@ConfigurationProperties(prefix = "huawei.cloud.apig")
 class ApiGatewayRunner(
     val huaweiCloudApigEnvironmentService: GatewayEnvironment,
     val huaweiCloudApigGroupService: GatewayGroup,
     val huaweiCloudApigApiService: GatewayApi,
-    val huaweiCloudApigAppService: GatewayApp
+    val huaweiCloudApigAppService: GatewayApp,
+    var groupName:String = "",
+    var environmentName:String = "",
+    var appName:String? = null,
+    var ip:String = "",
+    var domainUrl:String? = null,
+    var appType:AppType = AppType.MANAGEMENT
 ): CommandLineRunner {
     private val logger: Logger = LoggerFactory.getLogger(ApiGatewayRunner::class.java)
-
-    @Value("\${huawei.cloud.apig.groupName}")
-    lateinit var groupName:String
-
-    @Value("\${huawei.cloud.apig.environmentName}")
-    lateinit var environmentName:String
-
-    @Value("\${huawei.cloud.apig.appName}")
-    var appName:String? = null
-
-    @Value("\${huawei.cloud.apig.ip}")
-    private lateinit var ip:String
-
-    @Value("\${huawei.cloud.apig.domainUrl}")
-    var domainUrl:String? = null
-
-    @Value("\${huawei.cloud.apig.appType}")
-    private lateinit var appType:AppType
 
     var environmentId:String? = null
     var groupId:String? = null

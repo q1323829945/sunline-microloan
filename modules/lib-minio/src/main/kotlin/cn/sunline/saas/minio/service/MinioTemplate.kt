@@ -32,10 +32,10 @@ class MinioTemplate(
         }
     }
 
-    fun putObject(bucketName: String,filePath:String,stream:InputStream,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
+    fun putObject(filePath:String,stream:InputStream,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
         minioClient().putObject(
             PutObjectArgs.builder()
-                .bucket(bucketName)
+                .bucket(minioConfig.bucket)
                 .`object`(filePath)
                 .stream(stream,stream.available().toLong(),-1)
                 .contentType(contentType)
@@ -44,48 +44,48 @@ class MinioTemplate(
         stream.close()
     }
 
-    fun putObject(bucketName: String,filePath:String,bytes:ByteArray,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
+    fun putObject(filePath:String,bytes:ByteArray,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
         val stream = ByteArrayInputStream(bytes)
-        putObject(bucketName, filePath, stream, contentType)
+        putObject(filePath, stream, contentType)
     }
 
-    fun putObject(bucketName: String,filePath:String,file:File,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
+    fun putObject(filePath:String,file:File,contentType:String = MediaType.APPLICATION_OCTET_STREAM_VALUE){
         val stream = FileInputStream(file)
-        putObject(bucketName, filePath, stream, contentType)
+        putObject(filePath, stream, contentType)
     }
 
-    fun getObject(bucketName: String,filePath: String):InputStream?{
+    fun getObject(filePath: String):InputStream?{
         try {
-            if(checkBucketExists(bucketName)){
+            if(checkBucketExists(minioConfig.bucket)){
                 return minioClient()
                     .getObject(
                         GetObjectArgs.builder()
-                            .bucket(bucketName)
+                            .bucket(minioConfig.bucket)
                             .`object`(filePath)
                             .build()
                     )
             }
         } catch (e:Exception){
-            logger.error("file:[$filePath] is not in bucket:[$bucketName] / $filePath is not exists" )
+            logger.error("file:[$filePath] is not in bucket:[${minioConfig.bucket}] / $filePath is not exists" )
             return null
         }
         return null
     }
 
-    fun checkFileExists(bucketName: String,filePath: String):Boolean{
+    fun checkFileExists(filePath: String):Boolean{
         try {
-            if(checkBucketExists(bucketName)){
-                minioClient().statObject(StatObjectArgs.builder().bucket(bucketName).`object`(filePath).build())
+            if(checkBucketExists(minioConfig.bucket)){
+                minioClient().statObject(StatObjectArgs.builder().bucket(minioConfig.bucket).`object`(filePath).build())
                 return true
             }
         } catch (e:Exception){
-            logger.error("file:[$filePath] not in bucket:[$bucketName] / $filePath not exists" )
+            logger.error("file:[$filePath] not in bucket:[${minioConfig.bucket}] / $filePath not exists" )
             return false
         }
         return false
     }
 
-    fun removeObject(bucketName: String,filePath: String){
-        minioClient().removeObject(RemoveObjectArgs.builder().bucket(bucketName).`object`(filePath).build())
+    fun removeObject(filePath: String){
+        minioClient().removeObject(RemoveObjectArgs.builder().bucket(minioConfig.bucket).`object`(filePath).build())
     }
 }

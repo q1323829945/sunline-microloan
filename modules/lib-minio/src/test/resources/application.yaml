@@ -1,9 +1,11 @@
 minio:
-  endpoint: 192.168.2.9
-  port: 30109  #如果是url就注释，如果是ip+端口就放开
-  accessKey: sunline
-  secretKey: sunline300348
-  isUrl: false
+  endpoint: "https://minio.saas.finline.app"
+#  if endpointType = IP,open this
+#  port: 30109
+  accessKey: "AKIAIOSFODNN7EXAMPLE"
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  endpointType: URL  # 'URL' or 'IP'
+  bucket: "test"
 
 huawei:
   cloud:
