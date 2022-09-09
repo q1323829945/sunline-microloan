@@ -333,17 +333,17 @@ class LoanApplyAppService {
             }
         }
 
-        loanAgent.fileInformation?.forEach { files ->
-            val obsFiles = mutableListOf<String>()
-            files.path?.forEach {
-                val key = obsApi.getPictureView(GetParams(it))
-                obsFiles.add(key)
-            }
-            files.path?.run {
-                this.clear()
-                this.addAll(obsFiles)
-            }
-        }
+//        loanAgent.fileInformation?.forEach { files ->
+//            val obsFiles = mutableListOf<String>()
+//            files.path?.forEach {
+//                val key = obsApi.getPictureView(GetParams(it))
+//                obsFiles.add(key)
+//            }
+//            files.path?.run {
+//                this.clear()
+//                this.addAll(obsFiles)
+//            }
+//        }
 
         return loanAgent
     }

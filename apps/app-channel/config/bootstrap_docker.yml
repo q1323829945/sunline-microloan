@@ -56,7 +56,7 @@ redis:
 minio:
   endpoint: "https://minio.saas.finline.app"
   #  if endpointType = IP,open this
-  #  port: 30109
+  port: "30109"
   accessKey: "AKIAIOSFODNN7EXAMPLE"
   secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
   endpointType: URL  # 'URL' or 'IP'
