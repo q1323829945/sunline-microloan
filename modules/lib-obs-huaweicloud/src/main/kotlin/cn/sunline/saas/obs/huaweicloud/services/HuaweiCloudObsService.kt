@@ -41,14 +41,8 @@ class HuaweiCloudObsService:ObsApi {
         val uri = getUri(bucketParams.bucketName, regin)
 
         //header
-        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${bucketParams.bucketName}/"
-        val signature = getSignature(HttpRequestMethod.PUT,"","application/xml",requestTime,"",canonicalizeResource)
-        val headers = mutableMapOf<String,String>()
-        headers["Date"] = requestTime
-        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+        val headers = initHeader(HttpRequestMethod.PUT,bucketParams.bucketName,null,"application/xml")
         headers["Content-Type"] = "application/xml"
-
         //body
         val date = DateTime.now().toString("yyyy-MM-dd")
 
@@ -76,12 +70,7 @@ class HuaweiCloudObsService:ObsApi {
         val uri = getUri(bucketName, huaweiCloudConfig.region)
 
         //header
-        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${bucketName}/"
-        val signature = getSignature(HttpRequestMethod.DELETE,"","",requestTime,"",canonicalizeResource)
-        val headers = mutableMapOf<String,String>()
-        headers["Date"] = requestTime
-        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+        val headers = initHeader(HttpRequestMethod.PUT,bucketName)
 
         httpConfig.execute(HttpRequestMethod.DELETE,uri,null,headers)
     }
@@ -96,12 +85,7 @@ class HuaweiCloudObsService:ObsApi {
         val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
 
         //header
-        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
-        val signature = getSignature(HttpRequestMethod.PUT,"","",requestTime,"",canonicalizeResource)
-        val headers = mutableMapOf<String,String>()
-        headers["Date"] = requestTime
-        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+        val headers = initHeader(HttpRequestMethod.PUT,key = key)
 
         //body
         val entity = when(val body = putParams.body){
@@ -127,12 +111,8 @@ class HuaweiCloudObsService:ObsApi {
         val key = URLEncoder.encode(getParams.key,"utf-8")
         val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
         //header
-        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
-        val signature = getSignature(HttpRequestMethod.GET,"","",requestTime,"",canonicalizeResource)
-        val headers = mutableMapOf<String,String>()
-        headers["Date"] = requestTime
-        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+        val headers = initHeader(HttpRequestMethod.GET,key = key)
+
 
         val response = httpConfig.execute(HttpRequestMethod.GET,uri,null,headers)
 
@@ -148,12 +128,7 @@ class HuaweiCloudObsService:ObsApi {
         val key = URLEncoder.encode(deleteParams.key,"utf-8")
         val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
         //header
-        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
-        val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key"
-        val signature = getSignature(HttpRequestMethod.DELETE,"","",requestTime,"",canonicalizeResource)
-        val headers = mutableMapOf<String,String>()
-        headers["Date"] = requestTime
-        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+        val headers = initHeader(HttpRequestMethod.DELETE,key = key)
 
         httpConfig.execute(HttpRequestMethod.DELETE,uri,null,headers)
     }
@@ -169,23 +144,19 @@ class HuaweiCloudObsService:ObsApi {
             }
         }
 
-
         val key = URLEncoder.encode(getParams.key,"utf-8")
-        val uri = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
-
+        val basePath = getUri(huaweiCloudConfig.bucketName, huaweiCloudConfig.region, key)
 
         val expires = getExpires()
         val canonicalizeResource = getPictureViewCanonicalizeResource(key)
         val signature = getSignature(HttpRequestMethod.GET,"","",expires.toString(),"",canonicalizeResource)
         val urlEncoderSignature = URLEncoder.encode(signature, Charset.defaultCharset())
-
-        val url = "$uri?Signature=$urlEncoderSignature&Expires=$expires&AccessKeyId=${huaweiCloudConfig.accessKey}&${getPictureUrlQuery()}"
+        val url = "$basePath?Signature=$urlEncoderSignature&Expires=$expires&AccessKeyId=${huaweiCloudConfig.accessKey}&${getPictureUrlQuery()}"
 
         pictures[getParams.key] = Picture(getParams.key,url,expires)
 
         return url
     }
-
 
     private fun getPictureViewCanonicalizeResource(key:String):String{
         val canonicalizeResource = "/${huaweiCloudConfig.bucketName}/$key?"
@@ -200,15 +171,15 @@ class HuaweiCloudObsService:ObsApi {
             "x-image-process=style/${huaweiCloudConfig.style}"
         )
 
-        var query = ""
+        val query = StringBuilder()
         for(i in params.indices){
-            query += params[i]
+            query.append(params[i])
             if(i < params.size - 1){
-                query += "&"
+                query.append("&")
             }
         }
 
-        return query
+        return query.toString()
     }
 
     private fun getExpires(): Long {
@@ -231,6 +202,17 @@ class HuaweiCloudObsService:ObsApi {
 
     private fun getUri(bucketName: String,region:String):String{
         return "http://$bucketName.obs.$region.myhuaweicloud.com"
+    }
+
+    private fun initHeader(httpRequestMethod: HttpRequestMethod, bucketName: String = huaweiCloudConfig.bucketName, key: String? = null, contentType: String = ""):MutableMap<String,String>{
+        val requestTime = huaweiCloudConfig.getCloudUploadFormatDate()
+        val canonicalizeResource = key?.run { "/$bucketName/$key" }?:run { "/$bucketName/" }
+        val signature = getSignature(httpRequestMethod,"",contentType,requestTime,"",canonicalizeResource)
+        val headers = mutableMapOf<String,String>()
+        headers["Date"] = requestTime
+        headers["Authorization"] = "OBS ${huaweiCloudConfig.accessKey}:$signature"
+
+        return headers
     }
 
 }
