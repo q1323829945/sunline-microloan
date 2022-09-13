@@ -1,6 +1,8 @@
 package cn.sunline.saas.dapr_wrapper.pubsub
 
+import cn.sunline.saas.dapr_wrapper.pubsub.request.BindingsRequest
 import cn.sunline.saas.dapr_wrapper.pubsub.request.PubsubRequest
+import cn.sunline.saas.dapr_wrapper.pubsub.request.data1
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.meta.Header
@@ -118,6 +120,50 @@ class PubSubService {
                     "requestMethod" to httpResponse.request.method.value
                 )
             )
+        }
+
+
+        fun bindings(pubSubName: String, topic: String, payload: Any? = null, tenant: String? = null) {
+
+            var exception: Exception?  = null
+            val seq = UUID.randomUUID().toString()
+            val requestUrl = "http://localhost:3500/v1.0/bindings/channel-sync-bindings"
+            try {
+                runBlocking(CoroutineName("bindings-$pubSubName-$topic")) {
+                    val body = objectMapper.writeValueAsString(payload?.let { PubsubRequest(it) })
+                    logger.info { "[$seq] Started bindings request: $requestUrl" }
+                    pubSubClient.request(requestUrl) {
+                        method = HttpMethod.Post
+                        headers {
+                            append("X-Sequence", seq)
+                            tenant?.run { append(Header.TENANT_AUTHORIZATION.key, tenant) }
+                        }
+//                        contentType(ContentType.Application.Json)
+                        accept(ContentType.Application.Json)
+                        payload?.run {
+                            val content = objectMapper.writeValueAsString(BindingsRequest(data1(payload),"create"))
+                            logger.info{  "[$seq] Started bindings request body: $content" }
+                            setBody(content)
+                        }
+                    }
+                }
+            } catch (ex: Exception) {
+                exception = ex
+            }
+
+            if (exception == null) {
+                logger.info { "[$seq] Finished bindings request [$pubSubName] [$topic]: $requestUrl" }
+            } else {
+                if (exception !is ManagementException) {
+                    exception = ManagementException(
+                        ManagementExceptionCode.DAPR_PUBSUB_NETWORK_ERROR,
+                        exception.localizedMessage,
+                        data = mapOf("bindings" to pubSubName, "topic" to topic)
+                    )
+                }
+
+                logger.error { "[$seq] bindings request [$pubSubName] [$topic] has failed: $requestUrl - $exception" }
+            }
         }
     }
 }

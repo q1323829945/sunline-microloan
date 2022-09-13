@@ -14,3 +14,17 @@ data class PubsubRequest(
         Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
     )
 }
+
+data class BindingsRequest(
+    val data: data1,
+    val operation: String
+) {
+    val metadata: Map<String, String> = mapOf(
+        Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+        Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+    )
+}
+
+data class data1(
+    val data: Any
+)
