@@ -66,7 +66,7 @@ class DocumentTemplateServiceTest(
                 documentStoreReference = "$directoryId/testdoc.docx",
                 directoryId = directory.id!!,
                 fileType = FileType.DOCX,
-                languageType = LanguageType.CHINESE,
+                languageType = LanguageType.EN_PH,
                 documentType = DocumentType.CERTIFICATE
             ),file
         )
@@ -121,7 +121,7 @@ class DocumentTemplateServiceTest(
                 documentStoreReference = "$directoryId/testdoc.docx",
                 directoryId = directoryId,
                 fileType = FileType.DOCX,
-                languageType = LanguageType.CHINESE,
+                languageType = LanguageType.EN_PH,
                 documentType = DocumentType.CERTIFICATE,
             ),
             FileInputStream(File("src\\test\\resources\\file\\testdoc.docx"))

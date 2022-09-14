@@ -35,7 +35,7 @@ class PdpaServiceTest {
         val pdpa = pdpaService.addOne(
             DTOPdpaAdd(
                 country = CountryType.CHN,
-                language = LanguageType.CHINESE,
+                language = LanguageType.EN_PH,
                 pdpaInformation = items()
             )
         )
@@ -70,7 +70,7 @@ class PdpaServiceTest {
 
     @Test
     fun `get by country and language`(){
-        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,LanguageType.CHINESE)
+        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,LanguageType.EN_PH)
         Assertions.assertThat(pdpa).isNotNull
 
     }
