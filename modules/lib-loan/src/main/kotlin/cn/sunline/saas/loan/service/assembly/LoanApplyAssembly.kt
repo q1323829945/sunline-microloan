@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import java.math.BigDecimal
 
 object LoanApplyAssembly {
     private val objectMapper = jacksonObjectMapper()
@@ -38,6 +39,13 @@ object LoanApplyAssembly {
                 workEmail = dtoLoanAgent.employeeInformation?.email,
                 workAddress = dtoLoanAgent.employeeInformation?.address,
                 workLandline = dtoLoanAgent.employeeInformation?.homeLandLine
+            ),
+            productInformation = DTOProductInformation(
+                details = DTOProductDetails(
+                    amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
+                    term = dtoLoanAgent.loanInformation?.term,
+                    purpose = dtoLoanAgent.loanInformation?.purpose
+                )
             ),
             channel = dtoLoanAgent.channel,
             dataPrivacyConsent = DTOSignature(
@@ -75,6 +83,13 @@ object LoanApplyAssembly {
             customerInformation = DTOCustomerInformation(
                 name = dtoLoanAgent.personalInformation?.name,
                 birthDay = dtoLoanAgent.personalInformation?.birthDay,
+            ),
+            productInformation = DTOProductInformation(
+                details = DTOProductDetails(
+                    amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
+                    term = dtoLoanAgent.loanInformation?.term,
+                    purpose = dtoLoanAgent.loanInformation?.purpose
+                )
             ),
             channel = dtoLoanAgent.channel,
             questionnaires = questionnaires
@@ -123,6 +138,11 @@ object LoanApplyAssembly {
             spouseInformation = DTOTeacherSpouseInformation(
                 name = dtoLoanAgent.personalInformation?.spouseInformation?.name,
             ),
+            loanInformation = DTOLoanInformation(
+                amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
+                term = dtoLoanAgent.loanInformation?.term,
+                purpose = dtoLoanAgent.loanInformation?.purpose?.run { mutableListOf(this) }
+            ),
             channel = dtoLoanAgent.channel,
             signature = dtoLoanAgent.signature
         )
@@ -154,6 +174,11 @@ object LoanApplyAssembly {
             companyInformation = DTOCompanyInformation(
                 name = dtoLoanAgent.employeeInformation?.name,
                 address = dtoLoanAgent.employeeInformation?.address
+            ),
+            loanInformation = DTOLoanInformation(
+                amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
+                term = dtoLoanAgent.loanInformation?.term,
+                purpose = dtoLoanAgent.loanInformation?.purpose?.run { mutableListOf(this) }
             ),
             channel = dtoLoanAgent.channel,
             signature = dtoLoanAgent.signature,
@@ -202,6 +227,10 @@ object LoanApplyAssembly {
             ),
             spouseInformation = DTOSpouseInformation(
                 name = dtoLoanAgent.personalInformation?.spouseInformation?.name
+            ),
+            loanInformation = DTOCorporateLoanInformation(
+                amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
+                term = dtoLoanAgent.loanInformation?.term,
             ),
             channel = dtoLoanAgent.channel,
             undertaking = DTOUndertaking(

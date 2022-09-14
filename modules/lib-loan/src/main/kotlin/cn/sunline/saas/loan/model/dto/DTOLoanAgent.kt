@@ -1,6 +1,8 @@
 package cn.sunline.saas.loan.model.dto
 
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.ProductType
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.loan.model.enum.*
 
 data class DTOLoanAgent(
@@ -10,6 +12,7 @@ data class DTOLoanAgent(
     val contactInformation:DTOBaseContactInformation? = null,
     val employeeInformation:DTOBaseEmployeeInformation? = null,
     val corporateInformation:DTOBaseCorporateInformation? = null,
+    val loanInformation:DTOBaseLoanInformation? = null,
     val loanType:LoanType? = null,
     val fileInformation:List<DTOBaseFileInformation> ? = null,
     val signature:String? = null,
@@ -78,4 +81,11 @@ data class DTOBaseCorporateInformation(
 data class DTOBaseFileInformation(
     val key:String? = null,
     var path:MutableList<String>? = null
+)
+
+data class DTOBaseLoanInformation(
+    val amount:String? = null,
+    val term:LoanTermType? = null,
+    val purpose:String? = null,
+    val currencyType: CurrencyType? = null
 )
