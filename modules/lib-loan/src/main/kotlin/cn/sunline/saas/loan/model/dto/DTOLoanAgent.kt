@@ -87,5 +87,5 @@ data class DTOBaseLoanInformation(
     val amount:String? = null,
     val term:LoanTermType? = null,
     val purpose:String? = null,
-    val currencyType: CurrencyType? = null
+    val currency: CurrencyType? = null
 )
