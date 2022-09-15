@@ -1,6 +1,5 @@
 package cn.sunline.saas.pdpa.services
 
-import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -97,11 +96,11 @@ class PdpaService(
         }, newPageable)
     }
 
-    fun getByCountryAndLanguage(country:CountryType,language: LanguageType):Pdpa?{
+    fun getByCountryAndLanguage(country:CountryType,language: String):Pdpa?{
         return getOneWithTenant{root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<CountryType>("country"),country))
-            predicates.add(criteriaBuilder.equal(root.get<LanguageType>("language"),language))
+            predicates.add(criteriaBuilder.equal(root.get<String>("language"),language))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }
@@ -117,7 +116,7 @@ class PdpaService(
         )
     }
 
-    private fun uploadPdpaInformation(country: CountryType,language: LanguageType,pdpaInformation:List<DTOPdpaItem>):String{
+    private fun uploadPdpaInformation(country: CountryType,language: String,pdpaInformation:List<DTOPdpaItem>):String{
         val dateTime = DateTime.now().toString(DateTimeFormat.forPattern("yyyyMMddHHmmss"))
         val path = "pdpa/${ContextUtil.getTenant()}/$country/$language/$dateTime.json"
 

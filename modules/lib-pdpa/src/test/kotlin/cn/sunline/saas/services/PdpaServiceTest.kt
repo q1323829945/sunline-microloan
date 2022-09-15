@@ -1,6 +1,5 @@
 package cn.sunline.saas.services
 
-import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
@@ -35,7 +34,7 @@ class PdpaServiceTest {
         val pdpa = pdpaService.addOne(
             DTOPdpaAdd(
                 country = CountryType.CHN,
-                language = LanguageType.EN_PH,
+                language = "en-ph",
                 pdpaInformation = items()
             )
         )
@@ -70,7 +69,7 @@ class PdpaServiceTest {
 
     @Test
     fun `get by country and language`(){
-        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,LanguageType.EN_PH)
+        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,"en-ph")
         Assertions.assertThat(pdpa).isNotNull
 
     }

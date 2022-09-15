@@ -31,7 +31,7 @@ class PdpaController {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping("{country}/{language}/retrieve")
-    fun getPDPAInformation(@PathVariable country: CountryType,@PathVariable language:LanguageType): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
+    fun getPDPAInformation(@PathVariable country: CountryType,@PathVariable language:String): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
         val pdpa = pdpaService.getByCountryAndLanguage(country,language)?:throw PdpaNotFoundException("Invalid pdpa")
         val dtoPdpa = pdpaService.getDTOPdpaView(pdpa.id)
         return DTOResponseSuccess(dtoPdpa).response()

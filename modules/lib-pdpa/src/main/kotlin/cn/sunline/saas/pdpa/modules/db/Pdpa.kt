@@ -33,8 +33,7 @@ class Pdpa (
 
     @Column(updatable = false, length = 32, columnDefinition = "varchar(32) not null")
     @NotNull
-    @Enumerated(value = EnumType.STRING)
-    val language:LanguageType,
+    val language:String,
 
     @Column(name = "information_file_path", length = 1024, columnDefinition = "varchar(1024) not null")
     @NotNull

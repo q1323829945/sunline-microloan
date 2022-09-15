@@ -1,6 +1,5 @@
 package cn.sunline.saas.pdpa.controllers
 
-import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.pdpa.exception.PdpaNotFoundException
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAdd
@@ -31,7 +30,7 @@ class PdpaController {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping("{country}/{language}/retrieve")
-    fun getPDPAInformation(@PathVariable country: CountryType,@PathVariable language:LanguageType): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
+    fun getPDPAInformation(@PathVariable country: CountryType,@PathVariable language:String): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
         val pdpa = pdpaService.getByCountryAndLanguage(country,language)?:throw PdpaNotFoundException("Invalid pdpa")
         val dtoPdpa = pdpaService.getDTOPdpaView(pdpa.id)
         return DTOResponseSuccess(dtoPdpa).response()

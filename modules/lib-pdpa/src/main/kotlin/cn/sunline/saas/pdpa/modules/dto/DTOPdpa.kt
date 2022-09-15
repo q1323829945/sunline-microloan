@@ -6,7 +6,7 @@ import cn.sunline.saas.global.model.CountryType
 
 data class DTOPdpaAdd (
     val country:CountryType,
-    val language: LanguageType,
+    val language: String,
     val pdpaInformation:List<DTOPdpaItem>
 )
 
@@ -17,7 +17,7 @@ data class DTOPdpaChange (
 data class DTOPdpaView (
     val id:String,
     val country:CountryType,
-    val language: LanguageType,
+    val language: String,
     var pdpaInformation:List<DTOPdpaItem>? = null
 )
 
