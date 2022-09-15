@@ -149,8 +149,8 @@ class LoanApplyAppService {
                 Pageable.unpaged()
             ).content.first()
 
-            val channelArrangement = channelArrangementService.getOneByChannelId(channelAgreement.id.toLong())
-            val ratio = channelArrangement.commissionRatio
+            // TODO val channelArrangement = channelArrangementService.getPageByChannelId(channelAgreement.id.toLong())
+            val ratio = BigDecimal(0.2)
             loanApplicationStatisticsManagerService.addLoanApplicationDetail(
                 DTOLoanApplicationDetail(
                     channelCode = loanAgent.channelCode,
@@ -217,7 +217,7 @@ class LoanApplyAppService {
     }
 
     fun loanApplySubmitCallBack(applicationId: String, status: ApplyStatus): LoanAgent {
-        return loanAgentService.updateStatus(applicationId.toLong(), status)
+        return updateStatus(applicationId, status)
     }
 
     fun loanRecord(data: String): LoanAgent {

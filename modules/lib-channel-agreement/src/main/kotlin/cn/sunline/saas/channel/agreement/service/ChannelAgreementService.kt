@@ -1,13 +1,12 @@
 package cn.sunline.saas.channel.agreement.service
 
-import cn.sunline.saas.channel.agreement.exception.ChannelAgreementNotFoundException
 import cn.sunline.saas.channel.agreement.factory.ChannelAgreementFactory
 import cn.sunline.saas.channel.agreement.model.db.ChannelAgreement
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementPageView
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementView
 import cn.sunline.saas.channel.agreement.repository.ChannelAgreementRepository
-import cn.sunline.saas.channel.arrangement.exception.ChannelArrangementNotFoundException
+import cn.sunline.saas.channel.arrangement.factory.ChannelArrangementFactory
 import cn.sunline.saas.channel.arrangement.service.ChannelArrangementService
 import cn.sunline.saas.global.constant.AgreementType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
@@ -31,17 +30,19 @@ class ChannelAgreementService(
     private lateinit var channelAgreementFactory: ChannelAgreementFactory
 
     @Autowired
+    private lateinit var channelArrangementFactory: ChannelArrangementFactory
+
+    @Autowired
     private lateinit var channelArrangementService: ChannelArrangementService
 
     @Transactional
     fun registered(dtoChannelAgreementAdd: DTOChannelAgreementAdd): DTOChannelAgreementView {
         val channelAgreement = save(channelAgreementFactory.instance(dtoChannelAgreementAdd))
-        val channelArrangement =
-            channelArrangementService.registered(channelAgreement.id, dtoChannelAgreementAdd.channelArrangement)
+        val channelArrangement = channelArrangementService.save(channelArrangementFactory.instance(channelAgreement.id,dtoChannelAgreementAdd.channelCommissionArrangement))
 
         return DTOChannelAgreementView(
             channelAgreement = channelAgreement,
-            channelArrangement = channelArrangement
+            channelArrangement = channelArrangement.toList()
         )
     }
 
@@ -60,10 +61,10 @@ class ChannelAgreementService(
             predicates.add(criteriaBuilder.equal(root.get<Long>("id"), agreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }!!//?: ChannelAgreementNotFoundException("Invalid Channel agreement")
-        val channelArrangement = channelArrangementService.getOneByChannelId(channelAgreement.id)
+        val channelArrangement = channelArrangementService.getPageByChannelId(channelAgreement.id, Pageable.unpaged())
         return DTOChannelAgreementView(
             channelAgreement = channelAgreement,
-            channelArrangement = channelArrangement
+            channelArrangement = channelArrangement.content
         )
     }
 

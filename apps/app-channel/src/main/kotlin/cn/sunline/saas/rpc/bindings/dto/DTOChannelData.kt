@@ -1,4 +1,4 @@
-package cn.sunline.saas.rpc.pubsub.dto
+package cn.sunline.saas.rpc.bindings.dto
 
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.channel.party.organisation.model.OrganisationIdentificationType

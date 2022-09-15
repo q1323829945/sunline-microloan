@@ -18,13 +18,13 @@ data class DTOChannelAgreementAdd(
     val agreementType: AgreementType,
     val fromDateTime: String?,
     val toDateTime: String?,
-    val channelArrangement: DTOChannelArrangementAdd
+    val channelCommissionArrangement: List<DTOChannelArrangementAdd>
 )
 
 
 data class DTOChannelAgreementView(
     val channelAgreement: ChannelAgreement,
-    val channelArrangement: ChannelArrangement
+    val channelArrangement: List<ChannelArrangement>
 )
 
 
@@ -35,12 +35,4 @@ data class DTOChannelAgreementPageView(
     val signedDate: String,
     val fromDateTime: String,
     val toDateTime: String
-)
-
-data class DTOChannelCommissionAgreementAdd(
-    val channelId: Long,
-    val agreementType: AgreementType,
-    val fromDateTime: String?,
-    val toDateTime: String?,
-    val commissionRatio: BigDecimal
 )

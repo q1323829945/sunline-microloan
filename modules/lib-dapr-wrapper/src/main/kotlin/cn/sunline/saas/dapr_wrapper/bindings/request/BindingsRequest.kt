@@ -6,8 +6,13 @@ import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUserId
 
 
-class BindingsRequest (
-    val data: Any,
+data class BindingsBaseRequest(
+    val data: BindingsRequest,
+    val operation: String
+)
+
+data class BindingsRequest(
+    val data: Any
 ) {
     val metadata: Map<String, String> = mapOf(
         Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),

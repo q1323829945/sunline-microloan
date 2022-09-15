@@ -13,3 +13,8 @@ const val APP_MICRO_LOAN_PUB_SUB = "app-micro-loan-pub-sub"
 const val APP_WRAPPER_PUB_SUB = "app-wrapper-pub-sub"
 
 //topic
+
+
+
+//bindings
+const val CHANNEL_SYNC_BINDINGS = "channel-sync-bindings"

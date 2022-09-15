@@ -3,17 +3,14 @@ package cn.sunline.saas.channel.service
 import cn.sunline.saas.channel.agreement.exception.ChannelAgreementNotFoundException
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementPageView
-import cn.sunline.saas.channel.agreement.model.dto.DTOChannelCommissionAgreementAdd
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
-import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementAdd
+import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementView
 import cn.sunline.saas.channel.controller.dto.DTOChannelCommissionAgreementView
 import cn.sunline.saas.channel.exception.ChannelAgreementBusinessException
 import cn.sunline.saas.channel.exception.ChannelBusinessException
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.CommissionMethodType
-import cn.sunline.saas.global.constant.CommissionType
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -39,45 +36,60 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
         return page.map { objectMapper.convertValue(it) }
     }
 
-    fun addChannelCommissionAgreement(dtoChannelCommissionAgreementAdd: DTOChannelCommissionAgreementAdd): DTOChannelCommissionAgreementView {
+    fun addChannelCommissionAgreement(dtoChannelAgreementAdd: DTOChannelAgreementAdd): DTOChannelCommissionAgreementView {
 
-        channelCastService.getOne(dtoChannelCommissionAgreementAdd.channelId) ?: throw ChannelBusinessException(
+        channelCastService.getOne(dtoChannelAgreementAdd.channelId) ?: throw ChannelBusinessException(
             "Invalid Channel", ManagementExceptionCode.CHANNEL_NOT_FOUND
         )
 
         val oldAgreement = channelAgreementService.getOneByChannelIdAndAgreementType(
-            dtoChannelCommissionAgreementAdd.channelId,
-            dtoChannelCommissionAgreementAdd.agreementType
+            dtoChannelAgreementAdd.channelId,
+            dtoChannelAgreementAdd.agreementType
         )
         if (oldAgreement != null) {
             val now = tenantDateTime.now()
-            if(now.isBefore(tenantDateTime.toTenantDateTime(oldAgreement.toDateTime))){
+            if (now.isBefore(tenantDateTime.toTenantDateTime(oldAgreement.toDateTime))) {
                 throw ChannelAgreementBusinessException(
                     "This channel has effective agreement",
                     ManagementExceptionCode.DATA_ALREADY_EXIST
                 )
             }
         }
-        val dtoChannelAgreementAdd = DTOChannelAgreementAdd(
-            channelId = dtoChannelCommissionAgreementAdd.channelId,
-            agreementType = dtoChannelCommissionAgreementAdd.agreementType,
-            fromDateTime = dtoChannelCommissionAgreementAdd.fromDateTime,
-            toDateTime = dtoChannelCommissionAgreementAdd.toDateTime,
-            channelArrangement = DTOChannelArrangementAdd(
-                commissionMethodType = CommissionMethodType.RATIO,
-                commissionAmount = null,
-                commissionRatio = dtoChannelCommissionAgreementAdd.commissionRatio,
-                commissionType = CommissionType.LOANAPPLICATION
-            )
-        )
+//        val dtoChannelAgreementAdd = DTOChannelAgreementAdd(
+//            channelId = dtoChannelAgreementAdd.channelId,
+//            agreementType = dtoChannelAgreementAdd.agreementType,
+//            fromDateTime = dtoChannelAgreementAdd.fromDateTime,
+//            toDateTime = dtoChannelAgreementAdd.toDateTime,
+//            channelArrangement = DTOChannelArrangementAdd(
+//                commissionMethodType = CommissionMethodType.RATIO,
+//                commissionAmount = null,
+//                commissionRatio = dtoChannelCommissionAgreementAdd.commissionRatio,
+//                commissionType = CommissionType.LOANAPPLICATION
+//            )
+//        )
         val channelCommissionAgreement = channelAgreementService.registered(dtoChannelAgreementAdd)
+        val channelArrangements = mutableListOf<DTOChannelArrangementView>()
+        channelCommissionAgreement.channelArrangement.forEach {
+            channelArrangements += DTOChannelArrangementView(
+                id = it.id.toString(),
+                channelAgreementId = it.channelAgreementId.toString(),
+                commissionMethodType = it.commissionMethodType,
+                commissionType = it.commissionType,
+                commissionAmount = it.commissionAmount,
+                commissionRatio = it.commissionRatio,
+                commissionAmountRangeType = it.commissionAmountRangeType,
+                commissionCountRangeType = it.commissionCountRangeType
+            )
+        }
         return DTOChannelCommissionAgreementView(
             id = channelCommissionAgreement.channelAgreement.id.toString(),
             channelId = channelCommissionAgreement.channelAgreement.channelId.toString(),
-            commissionRatio = channelCommissionAgreement.channelArrangement.commissionRatio,
+            channelArrangement = channelArrangements,
             agreementType = channelCommissionAgreement.channelAgreement.agreementType,
-            fromDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.channelAgreement.fromDateTime).toString(),
-            toDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.channelAgreement.toDateTime).toString()
+            fromDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.channelAgreement.fromDateTime)
+                .toString(),
+            toDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.channelAgreement.toDateTime)
+                .toString()
         )
     }
 
@@ -86,14 +98,28 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
             "This channel agreement has already exist"
         )
         val detail = channelAgreementService.getDetail(id)!!
+
+        val channelArrangements = mutableListOf<DTOChannelArrangementView>()
+        detail.channelArrangement.forEach {
+            channelArrangements += DTOChannelArrangementView(
+                id = it.id.toString(),
+                channelAgreementId = it.channelAgreementId.toString(),
+                commissionMethodType = it.commissionMethodType,
+                commissionType = it.commissionType,
+                commissionAmount = it.commissionAmount,
+                commissionRatio = it.commissionRatio,
+                commissionAmountRangeType = it.commissionAmountRangeType,
+                commissionCountRangeType = it.commissionCountRangeType
+            )
+        }
+
         return DTOChannelCommissionAgreementView(
             id = channelCommissionAgreement.id.toString(),
             channelId = channelCommissionAgreement.channelId.toString(),
-            commissionRatio = detail.channelArrangement.commissionRatio,
+            channelArrangement = channelArrangements,
             agreementType = channelCommissionAgreement.agreementType,
             fromDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.fromDateTime).toString(),
             toDateTime = tenantDateTime.toTenantDateTime(channelCommissionAgreement.toDateTime).toString()
-
         )
     }
 }

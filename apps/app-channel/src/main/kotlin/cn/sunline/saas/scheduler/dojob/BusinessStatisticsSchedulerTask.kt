@@ -1,5 +1,6 @@
 package cn.sunline.saas.scheduler.dojob
 
+import cn.sunline.saas.channel.exception.ChannelBusinessException
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor

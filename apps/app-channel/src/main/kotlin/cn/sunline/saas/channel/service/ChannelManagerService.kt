@@ -3,19 +3,19 @@ package cn.sunline.saas.channel.service
 import cn.sunline.saas.channel.controller.dto.*
 import cn.sunline.saas.channel.controller.dto.DTOChannelCastView
 import cn.sunline.saas.channel.exception.ChannelBusinessException
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.PartyType
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.channel.party.organisation.model.dto.*
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelCastAdd
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.channel.party.organisation.service.OrganisationService
-import cn.sunline.saas.rpc.pubsub.impl.ChannelPublishImpl
-import cn.sunline.saas.scheduler.ActorType
-import cn.sunline.saas.scheduler.create.CreateScheduler
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCustomerDetail
 import cn.sunline.saas.channel.statistics.services.CustomerDetailService
-import cn.sunline.saas.rpc.pubsub.dto.DTOChannelData
+import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.PartyType
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.rpc.bindings.dto.DTOChannelData
+import cn.sunline.saas.rpc.bindings.impl.ChannelBindingsImpl
+import cn.sunline.saas.scheduler.ActorType
+import cn.sunline.saas.scheduler.create.CreateScheduler
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -39,7 +39,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
     private lateinit var channelCastService: ChannelCastService
 
     @Autowired
-    private lateinit var channelPublishImpl: ChannelPublishImpl
+    private lateinit var channelBindingsImpl: ChannelBindingsImpl
 
     @Autowired
     private lateinit var createScheduler: CreateScheduler
@@ -92,9 +92,6 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
 
         val dtoOrganisationChange = getDTOOrganisationChange(id, dtoChannelChange)
         val updateOrganisation = organisationService.updateOrganisation(id, dtoOrganisationChange)
-
-//        syncChannel("updateChannel", updateChannel, true)
-
         return getDTOChannelView(updateOrganisation)
     }
 
@@ -210,7 +207,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
                 isUpdate = isUpdate
             )
 
-            channelPublishImpl.syncChannel(data)
+            channelBindingsImpl.syncChannel(data)
 
             logger.info("[${method}]: sync ${dtoChannelView.id} channel end")
         } catch (e: Exception) {

@@ -1,6 +1,6 @@
 package cn.sunline.saas.channel.controller
 
-import cn.sunline.saas.channel.agreement.model.dto.DTOChannelCommissionAgreementAdd
+import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.controller.dto.*
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
 import cn.sunline.saas.channel.service.ChannelAgreementManagerService
@@ -88,10 +88,10 @@ class ChannelController {
 
     @PostMapping("agreement/commission")
     fun addChannelCommissionAgreement(
-        @RequestBody dtoChannelCommissionAgreementAdd: DTOChannelCommissionAgreementAdd
+        @RequestBody dtoChannelAgreementAdd: DTOChannelAgreementAdd
     ): ResponseEntity<DTOResponseSuccess<DTOChannelCommissionAgreementView>> {
         val channelAgreement =
-            channelAgreementManagerService.addChannelCommissionAgreement(dtoChannelCommissionAgreementAdd)
+            channelAgreementManagerService.addChannelCommissionAgreement(dtoChannelAgreementAdd)
         return DTOResponseSuccess(channelAgreement).response()
     }
 

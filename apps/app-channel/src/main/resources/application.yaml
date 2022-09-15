@@ -77,14 +77,18 @@ redis:
   password:
 
 logging:
+  file:
+    path: logs/app-channel/
   level:
-    cn.sunline.saas: trace
+    root: INFO
+    cn.sunline.saas: INFO
     jdbc:
       sqlonly: OFF
       audit: OFF
       resultsettable: OFF
       connection: OFF
-      sqltiming: INFO
+      sqltiming: INFO #INFO
       resultset: OFF
   pattern:
     console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"

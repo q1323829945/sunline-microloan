@@ -4,11 +4,14 @@ import cn.sunline.saas.channel.controller.dto.DTOChannelCastView
 import cn.sunline.saas.channel.controller.dto.DTOChannelIdentificationView
 import cn.sunline.saas.channel.controller.dto.DTOChannelView
 import cn.sunline.saas.channel.exception.ChannelBusinessException
+import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
+import cn.sunline.saas.channel.party.organisation.service.OrganisationService
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.rpc.bindings.impl.ChannelBindingsImpl
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.service.OrganisationService
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
@@ -43,7 +46,7 @@ class ChannelSyncSchedulerTask(
     private lateinit var organisationService: OrganisationService
 
     @Autowired
-    private lateinit var channelPublishImpl: ChannelPublishImpl
+    private lateinit var channelBindingsImpl: ChannelBindingsImpl
 
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
@@ -59,7 +62,7 @@ class ChannelSyncSchedulerTask(
 
             logger.info("[doJob]: sync $actorId channel start")
 
-            channelPublishImpl.syncChannel(objectMapper.convertValue(dtoChannelView))
+           channelBindingsImpl.syncChannel(objectMapper.convertValue(dtoChannelView))
 
 
             logger.info("[doJob]: sync $actorId channel end")

@@ -6,7 +6,10 @@ import cn.sunline.saas.channel.arrangement.repository.ChannelArrangementReposito
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.persistence.criteria.Predicate
 
 
@@ -17,28 +20,12 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
     @Autowired
     private lateinit var seq: Sequence
 
-    fun registered(
-        channelAgreementId: Long, dtoChannelArrangementAdd: DTOChannelArrangementAdd
-    ): ChannelArrangement {
-        return save(
-            ChannelArrangement(
-                id = seq.nextId(),
-                channelAgreementId = channelAgreementId,
-                commissionType = dtoChannelArrangementAdd.commissionType,
-                commissionMethodType = dtoChannelArrangementAdd.commissionMethodType,
-                commissionAmount = dtoChannelArrangementAdd.commissionAmount,
-                commissionRatio = dtoChannelArrangementAdd.commissionRatio
-            )
-        )
-    }
 
-    fun getOneByChannelId(channelAgreementId: Long): ChannelArrangement {
-        return getOneWithTenant { root, _, criteriaBuilder ->
+    fun getPageByChannelId(channelAgreementId: Long, pageable: Pageable): Page<ChannelArrangement> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }!!//?: ChannelArrangementNotFoundException("Invalid Channel Arrangement")
+        }, pageable)
     }
-
 }
-
