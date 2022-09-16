@@ -4,6 +4,7 @@ import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
 import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementAdd
 import cn.sunline.saas.global.constant.AgreementType
+import cn.sunline.saas.global.constant.CommissionAmountRangeType
 import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.global.constant.CommissionType
 import cn.sunline.saas.global.util.ContextUtil
@@ -44,20 +45,24 @@ class ChannelAgreementServiceTest(
     @Order(1)
     fun `save channel agreement`() {
 
-        val now = DateTime(2022,1,1,0,0,0)//tenantDateTime.now()
+        val now = DateTime(2022, 1, 1, 0, 0, 0)//tenantDateTime.now()
 
+        val list = mutableListOf<DTOChannelArrangementAdd>()
+        list += DTOChannelArrangementAdd(
+            commissionType = CommissionType.LOAN_APPLICATION,
+            commissionMethodType = CommissionMethodType.APPLY_COUNT_FIX_AMOUNT,
+            commissionAmount = null,
+            commissionRatio = BigDecimal("0.3"),
+            commissionAmountRangeType = CommissionAmountRangeType.DEFAULT,
+            commissionCountRangeType = null
+        )
         val channelAgreement = channelAgreementService.registered(
             DTOChannelAgreementAdd(
                 channelId = channelId,
                 agreementType = AgreementType.COMMISSION_SALE,
                 fromDateTime = now.toString(),
                 toDateTime = now.plusYears(1).toString(),
-                channelArrangement = DTOChannelArrangementAdd(
-                    commissionType = CommissionType.LOANAPPLICATION,
-                    commissionMethodType = CommissionMethodType.RATIO,
-                    commissionAmount = null,
-                    commissionRatio = BigDecimal("0.3")
-                )
+                channelCommissionArrangement = list
             )
         )
         Assertions.assertThat(channelAgreement).isNotNull
@@ -74,15 +79,16 @@ class ChannelAgreementServiceTest(
 
     @Test
     @Order(3)
-    fun `get channel agreement by ChannelId And AgreementType`(){
-        val channelAgreement = channelAgreementService.getOneByChannelIdAndAgreementType(channelId,AgreementType.COMMISSION_SALE)
+    fun `get channel agreement by ChannelId And AgreementType`() {
+        val channelAgreement =
+            channelAgreementService.getOneByChannelIdAndAgreementType(channelId, AgreementType.COMMISSION_SALE)
         Assertions.assertThat(channelAgreement).isNotNull
     }
 
 
     @Test
     @Order(4)
-    fun `get channel agreement by ChannelId`(){
+    fun `get channel agreement by ChannelId`() {
         val channelAgreementPage = channelAgreementService.getPageByChannelId(channelId, Pageable.unpaged())
         Assertions.assertThat(channelAgreementPage).isNotNull
     }

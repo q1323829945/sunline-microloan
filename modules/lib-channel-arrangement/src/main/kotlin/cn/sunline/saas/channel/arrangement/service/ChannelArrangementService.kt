@@ -6,6 +6,7 @@ import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementAdd
 import cn.sunline.saas.channel.arrangement.model.dto.RangeValue
 import cn.sunline.saas.channel.arrangement.repository.ChannelArrangementRepository
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,13 +34,14 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
         }, pageable)
     }
 
-    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): List<RangeValue> {
+    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): Map<CommissionMethodType,List<RangeValue>> {
         val pages = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable).content
         val rangeValues = mutableListOf<RangeValue>()
+        var type:CommissionMethodType = CommissionMethodType.APPLY_COUNT_FIX_AMOUNT
         pages.forEach {
             rangeValues += RangeValue(
                 lowerLimit = it.lowerLimit,
@@ -48,7 +50,10 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
                 throw ChannelArrangementNotFoundException("channel commission not found",ManagementExceptionCode.CHANNEL_COMMISSION_NOT_FOUND)
 
             )
+            type = it.commissionMethodType
         }
-        return rangeValues
+        val map = hashMapOf<CommissionMethodType,List<RangeValue>>()
+        map[type] = rangeValues
+        return map
     }
 }

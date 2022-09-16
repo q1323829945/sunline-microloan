@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Pageable
 import java.math.BigDecimal
 
 
@@ -30,24 +31,24 @@ class ChannelArrangementServiceTest(@Autowired private val channelArrangementSer
         channelAgreementId = seq.nextId()
     }
 
-    @Test
-    @Order(1)
-    fun `save channel arrangement`() {
-        val dtoChannelArrangementAdd = DTOChannelArrangementAdd(
-            commissionType = CommissionType.LOANAPPLICATION,
-            commissionMethodType = CommissionMethodType.RATIO,
-            commissionAmount = null,
-            commissionRatio = BigDecimal("0.3")
-        )
-        val actual = channelArrangementService.registered(channelAgreementId,dtoChannelArrangementAdd)
-
-        Assertions.assertThat(actual).isNotNull
-    }
+//    @Test
+//    @Order(1)
+//    fun `save channel arrangement`() {
+//        val dtoChannelArrangementAdd = DTOChannelArrangementAdd(
+//            commissionType = CommissionType.LOANAPPLICATION,
+//            commissionMethodType = CommissionMethodType.RATIO,
+//            commissionAmount = null,
+//            commissionRatio = BigDecimal("0.3")
+//        )
+//        val actual = channelArrangementService.registered(channelAgreementId,dtoChannelArrangementAdd)
+//
+//        Assertions.assertThat(actual).isNotNull
+//    }
 
     @Test
     @Order(2)
     fun `get channel arrangement`() {
-        val organisation = channelArrangementService.getOneByChannelId(channelAgreementId)
+        val organisation = channelArrangementService.getRangeValuesByChannelAgreementId(channelAgreementId, Pageable.unpaged())
 
         Assertions.assertThat(organisation).isNotNull
     }

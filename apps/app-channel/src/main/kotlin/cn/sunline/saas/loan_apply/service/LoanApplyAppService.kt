@@ -2,6 +2,7 @@ package cn.sunline.saas.loan_apply.service
 
 
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
+import cn.sunline.saas.channel.arrangement.component.ChannelCommissionCalculator
 import cn.sunline.saas.channel.arrangement.service.ChannelArrangementService
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.BusinessException
@@ -150,6 +151,11 @@ class LoanApplyAppService {
             ).content.first()
 
             // TODO val channelArrangement = channelArrangementService.getPageByChannelId(channelAgreement.id.toLong())
+            val rangeValues = channelArrangementService.getRangeValuesByChannelAgreementId(channelAgreement.id.toLong(),
+                Pageable.unpaged())
+            val amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+//            val ratio = ChannelCommissionCalculator(channelAgreement).calculate(amount,rangeValues)
+
             val ratio = BigDecimal(0.2)
             loanApplicationStatisticsManagerService.addLoanApplicationDetail(
                 DTOLoanApplicationDetail(
