@@ -61,7 +61,7 @@ class BusinessStatisticsManagerService(
 
     fun addBusinessStatistics() {
         val nowDate = tenantDateTime.now()
-        if (nowDate.hourOfDay == 0) {
+//        if (nowDate.hourOfDay == 0) {
             //根据租户时区统计数据
             //每日统计
             saveDay(nowDate)
@@ -74,7 +74,7 @@ class BusinessStatisticsManagerService(
                     saveYear(nowDate)
                 }
             }
-        }
+//        }
     }
 
     private fun saveYear(dateTime: DateTime) {

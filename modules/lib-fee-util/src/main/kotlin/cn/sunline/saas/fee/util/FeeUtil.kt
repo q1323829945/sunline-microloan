@@ -25,9 +25,6 @@ object FeeUtil {
             FeeMethodType.FIX_AMOUNT -> {
                 baseAmount
             }
-            else -> {
-                BigDecimal.ZERO
-            }
         }
     }
 

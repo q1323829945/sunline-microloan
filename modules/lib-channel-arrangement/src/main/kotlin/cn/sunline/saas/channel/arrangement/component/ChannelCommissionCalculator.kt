@@ -1,8 +1,6 @@
 package cn.sunline.saas.channel.arrangement.component
 
 import cn.sunline.saas.channel.arrangement.model.dto.RangeValue
-import cn.sunline.saas.global.constant.CommissionAmountRangeType
-import cn.sunline.saas.global.constant.CommissionCountRangeType
 import cn.sunline.saas.global.constant.CommissionMethodType
 import java.math.BigDecimal
 
@@ -17,31 +15,6 @@ class ChannelCommissionCalculator(
             CommissionMethodType.APPLY_AMOUNT_RATIO -> calculateApplyAmountRatio(range, rangeValues)
             CommissionMethodType.APPROVAL_AMOUNT_RATIO -> calculateApprovalAmountRatio(range, rangeValues)
         }
-    }
-
-
-    fun getAmountRangeValueList(rangeMap: Map<CommissionCountRangeType, BigDecimal>): List<RangeValue> {
-        val rangeValues = mutableListOf<RangeValue>()
-        rangeMap.forEach {
-            rangeValues += RangeValue(
-                lowerLimit = it.key.lowerLimit,
-                upperLimit = it.key.upperLimit,
-                rangeValue = it.value
-            )
-        }
-        return rangeValues
-    }
-
-    fun getRatioRangeValueList(rangeMap: Map<CommissionAmountRangeType, BigDecimal>): List<RangeValue> {
-        val rangeValues = mutableListOf<RangeValue>()
-        rangeMap.forEach {
-            rangeValues += RangeValue(
-                lowerLimit = it.key.lowerLimit,
-                upperLimit = it.key.upperLimit,
-                rangeValue = it.value
-            )
-        }
-        return rangeValues
     }
 
 

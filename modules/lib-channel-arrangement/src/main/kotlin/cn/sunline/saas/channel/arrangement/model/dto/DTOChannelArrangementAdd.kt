@@ -33,6 +33,7 @@ data class DTOChannelArrangementView(
 )
 
 data class RangeValue(
+    val commissionMethodType: CommissionMethodType,
     val lowerLimit: BigDecimal?,
     val upperLimit: BigDecimal?,
     val rangeValue: BigDecimal

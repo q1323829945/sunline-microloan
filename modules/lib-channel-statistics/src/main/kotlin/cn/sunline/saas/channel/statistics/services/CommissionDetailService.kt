@@ -75,4 +75,12 @@ class CommissionDetailService(
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }
+
+    fun getListByStatus(status: ApplyStatus): List<CommissionDetail> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("status"), status))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged()).content
+    }
 }

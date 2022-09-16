@@ -34,26 +34,22 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
         }, pageable)
     }
 
-    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): Map<CommissionMethodType,List<RangeValue>> {
+    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): List<RangeValue> {
         val pages = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable).content
         val rangeValues = mutableListOf<RangeValue>()
-        var type:CommissionMethodType = CommissionMethodType.APPLY_COUNT_FIX_AMOUNT
         pages.forEach {
             rangeValues += RangeValue(
+                commissionMethodType = it.commissionMethodType,
                 lowerLimit = it.lowerLimit,
                 upperLimit = it.upperLimit,
                 rangeValue = (it.commissionRatio ?: it.commissionAmount) ?:
                 throw ChannelArrangementNotFoundException("channel commission not found",ManagementExceptionCode.CHANNEL_COMMISSION_NOT_FOUND)
-
             )
-            type = it.commissionMethodType
         }
-        val map = hashMapOf<CommissionMethodType,List<RangeValue>>()
-        map[type] = rangeValues
-        return map
+        return rangeValues
     }
 }

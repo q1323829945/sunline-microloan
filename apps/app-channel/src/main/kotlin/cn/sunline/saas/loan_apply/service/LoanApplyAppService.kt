@@ -43,6 +43,8 @@ import cn.sunline.saas.channel.statistics.modules.TransactionType
 import cn.sunline.saas.channel.statistics.modules.dto.DTOBusinessDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
+import cn.sunline.saas.channel.statistics.services.CommissionDetailService
+import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.minio.MinioService
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
@@ -101,6 +103,7 @@ class LoanApplyAppService {
 
     @Autowired
     private lateinit var minioService: MinioService
+
     @Autowired
     private lateinit var channelCastService: ChannelCastService
 
@@ -108,7 +111,11 @@ class LoanApplyAppService {
     private lateinit var channelArrangementService: ChannelArrangementService
 
     @Autowired
-    private lateinit var channelAgreementService:ChannelAgreementService
+    private lateinit var channelAgreementService: ChannelAgreementService
+
+    @Autowired
+    private lateinit var commissionDetailService: CommissionDetailService
+
 
     @Autowired
     private lateinit var obsApi: ObsApi
@@ -142,27 +149,20 @@ class LoanApplyAppService {
             val loanAgent =
                 loanAgentService.getOne(applicationId.toLong())
                     ?: throw LoanApplyNotFoundException("Invalid loan apply")
-            val product = productService.getProduct(loanAgent.productId!!)
 
-            val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)?: throw LoanApplyNotFoundException("Invalid loan apply")
+            val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)
+                ?: throw LoanApplyNotFoundException("Invalid loan apply")
             val channelAgreement = channelAgreementService.getPageByChannelId(
                 channelCast.id,
                 Pageable.unpaged()
             ).content.first()
 
-            // TODO val channelArrangement = channelArrangementService.getPageByChannelId(channelAgreement.id.toLong())
-            val rangeValues = channelArrangementService.getRangeValuesByChannelAgreementId(channelAgreement.id.toLong(),
-                Pageable.unpaged())
-            val amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
-//            val ratio = ChannelCommissionCalculator(channelAgreement).calculate(amount,rangeValues)
-
-            val ratio = BigDecimal(0.2)
             loanApplicationStatisticsManagerService.addLoanApplicationDetail(
                 DTOLoanApplicationDetail(
                     channelCode = loanAgent.channelCode,
                     channelName = loanAgent.channelName,
-                    productId = product.id.toLong(),
-                    productName = product.name,
+                    productId = loanAgent.productId ?: 0,
+                    productName = loanAgent.loanApply?.productType?.name ?: "",
                     applicationId = applicationId.toLong(),
                     amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                     status = loanAgent.status,
@@ -170,6 +170,56 @@ class LoanApplyAppService {
                 )
             )
             loanApplicationStatisticsManagerService.addLoanApplicationStatistics()
+
+            var statisticsAmount = BigDecimal.ZERO
+            var ratio: BigDecimal? = BigDecimal.ZERO
+            val amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+            val rangeValues = channelArrangementService.getRangeValuesByChannelAgreementId(
+                channelAgreement.id.toLong(),
+                Pageable.unpaged()
+            )
+            rangeValues.forEach { it ->
+                statisticsAmount = when (it.commissionMethodType) {
+                    CommissionMethodType.APPLY_COUNT_FIX_AMOUNT -> {
+                        val applyCount =
+                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.size + 1
+                        ratio = null
+                        ChannelCommissionCalculator(it.commissionMethodType).calculate(
+                            applyCount.toBigDecimal(),
+                            rangeValues
+                        ) ?: BigDecimal.ZERO
+                    }
+
+                    CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT -> {
+                        val approvalCount = commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).size + 1
+                        ratio = null
+                        ChannelCommissionCalculator(it.commissionMethodType).calculate(
+                            approvalCount.toBigDecimal(),
+                            rangeValues
+                        ) ?: BigDecimal.ZERO
+                    }
+
+                    CommissionMethodType.APPLY_AMOUNT_RATIO -> {
+                        val applyAmount =
+                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.sumOf { it.amount }
+                                .add(amount)
+                        ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(applyAmount, rangeValues)
+                            ?: BigDecimal.ZERO
+                        amount.multiply(ratio)
+                    }
+
+                    CommissionMethodType.APPROVAL_AMOUNT_RATIO -> {
+                        val approvalAmount =
+                            commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).sumOf { it.amount }
+                                .add(amount)
+                        ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(
+                            approvalAmount,
+                            rangeValues
+                        ) ?: BigDecimal.ZERO
+                        amount.multiply(ratio)
+                    }
+                }
+            }
 
             commissionStatisticsManagerService.addCommissionDetail(
                 DTOCommissionDetail(
@@ -180,7 +230,7 @@ class LoanApplyAppService {
                     status = loanAgent.status,
                     currency = CurrencyType.USD,
                     ratio = ratio,
-                    statisticsAmount = loanAgent.loanApply?.amount?.multiply(ratio) ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), // TODO ratio fixed
+                    statisticsAmount = statisticsAmount
                 )
             )
 
@@ -231,10 +281,10 @@ class LoanApplyAppService {
         dtoLoanAgent.fileInformation?.forEach { files ->
             val obsFiles = mutableListOf<String>()
             files.path?.forEach {
-                val key = minioService.minioToObs(it,it)
+                val key = minioService.minioToObs(it, it)
                 key?.run {
                     obsFiles.add(this)
-                }?:run{
+                } ?: run {
                     obsFiles.add(it)
                 }
 
@@ -247,7 +297,7 @@ class LoanApplyAppService {
         val newData = objectMapper.writeValueAsString(dtoLoanAgent)
         val loanAgent = loanAgentService.addOne(newData)
 
-        createScheduler.create(ActorType.LOAN_APPLY_HANDLE,loanAgent.applicationId.toString())
+        createScheduler.create(ActorType.LOAN_APPLY_HANDLE, loanAgent.applicationId.toString())
         return loanAgent
     }
 
@@ -311,12 +361,14 @@ class LoanApplyAppService {
                     questionnaires
                 )
             )
+
             CLIENT -> loanApplyService.addClientLoan(
                 LoanApplyAssembly.convertToClientLoan(
                     dtoLoanAgent,
                     questionnaires
                 )
             )
+
             TEACHER -> loanApplyService.addTeacherLoan(LoanApplyAssembly.convertToTeacherLoan(dtoLoanAgent))
             KABUHAYAN -> loanApplyService.addKabuhayanLoan(
                 LoanApplyAssembly.convertToKabuhayanLoan(
@@ -324,6 +376,7 @@ class LoanApplyAppService {
                     questionnaires
                 )
             )
+
             CORPORATE -> loanApplyService.addCorporateLoan(LoanApplyAssembly.convertToCorporateLoan(dtoLoanAgent))
         }
 
@@ -382,7 +435,7 @@ class LoanApplyAppService {
                 productName = product?.name,
                 productType = it.loanApply?.productType,
                 term = it.loanApply?.term,
-                date = it.created?.run{ tenantDateTime.toTenantDateTime(this).toString() },
+                date = it.created?.run { tenantDateTime.toTenantDateTime(this).toString() },
                 status = it.status,
                 channelCode = it.channelCode,
                 channelName = it.channelName,
@@ -396,7 +449,6 @@ class LoanApplyAppService {
         try {
             logger.info("[saveBusinessDetailStatistic]: save $applicationId business detail statistics start")
 
-            logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics start")
             val loanAgent =
                 loanAgentService.getOne(applicationId.toLong())
                     ?: throw LoanApplyNotFoundException("Invalid loan apply")
@@ -405,7 +457,7 @@ class LoanApplyAppService {
                 DTOBusinessDetail(
                     agreementId = applicationId.toLong(),
                     customerId = 1L, //TODO get channel
-                    amount =  loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                    amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
                     currency = CurrencyType.USD,
                     transactionType = TransactionType.PAYMENT
                 )

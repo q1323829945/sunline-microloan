@@ -95,7 +95,7 @@ class LoanApplicationStatisticsManagerService(
 
     fun addLoanApplicationStatistics() {
         val nowDate = tenantDateTime.now()
-        if (nowDate.hourOfDay == 0) {
+//        if (nowDate.hourOfDay == 0) {
             //根据租户时区统计数据
             //每日统计
             saveDay(nowDate)
@@ -108,7 +108,7 @@ class LoanApplicationStatisticsManagerService(
                     saveYear(nowDate)
                 }
             }
-        }
+//        }
     }
 
     private fun saveYear(dateTime: DateTime) {

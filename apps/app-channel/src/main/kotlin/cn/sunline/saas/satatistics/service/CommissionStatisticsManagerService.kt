@@ -98,7 +98,7 @@ class CommissionStatisticsManagerService(
 
     fun addCommissionStatistics() {
         val nowDate = tenantDateTime.now()
-        if (nowDate.hourOfDay == 0) {
+//        if (nowDate.hourOfDay == 0) {
             //根据租户时区统计数据
             //每日统计
             saveDay(nowDate)
@@ -111,7 +111,7 @@ class CommissionStatisticsManagerService(
                     saveYear(nowDate)
                 }
             }
-        }
+//        }
     }
 
     private fun saveYear(dateTime: DateTime) {
@@ -143,7 +143,7 @@ class CommissionStatisticsManagerService(
             val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
             if (business != null) {
                 business.amount = it.amount
-                business.statisticsAmount = it.amount
+                business.statisticsAmount = it.statisticsAmount
                 business.datetime = tenantDateTime.now().toDate()
                 commissionStatisticsService.save(business)
             } else {
@@ -152,7 +152,7 @@ class CommissionStatisticsManagerService(
                         channelCode = it.channelCode,
                         channelName = it.channelName,
                         commissionFeatureId = 0,
-                        statisticsAmount = it.amount,
+                        statisticsAmount = it.statisticsAmount,
                         amount = it.amount,
                         frequency = frequency
                     )
