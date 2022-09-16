@@ -61,7 +61,7 @@ class ChannelAgreementService(
             predicates.add(criteriaBuilder.equal(root.get<Long>("id"), agreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }!!//?: ChannelAgreementNotFoundException("Invalid Channel agreement")
-        val channelArrangement = channelArrangementService.getPageByChannelId(channelAgreement.id, Pageable.unpaged())
+        val channelArrangement = channelArrangementService.getPageByChannelAgreementId(channelAgreement.id, Pageable.unpaged())
         return DTOChannelAgreementView(
             channelAgreement = channelAgreement,
             channelArrangement = channelArrangement.content
