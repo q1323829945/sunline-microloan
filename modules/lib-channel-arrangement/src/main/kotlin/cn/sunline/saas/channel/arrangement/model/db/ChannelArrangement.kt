@@ -46,11 +46,11 @@ class ChannelArrangement(
     @Enumerated(value = EnumType.STRING)
     val commissionCountRangeType: CommissionCountRangeType?,
 
-    @Column(name = "lower_limit", nullable = false, columnDefinition = "bigint null")
-    val lowerLimit: Long?,
+    @Column(name = "lower_limit", nullable = false, columnDefinition = "decimal(19,2) null")
+    val lowerLimit: BigDecimal?,
 
-    @Column(name = "upper_limit", nullable = false, columnDefinition = "bigint null")
-    val upperLimit: Long?,
+    @Column(name = "upper_limit", nullable = false, columnDefinition = "decimal(19,2) null")
+    val upperLimit: BigDecimal?,
 
 
     ) : MultiTenant {
