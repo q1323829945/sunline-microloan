@@ -392,18 +392,6 @@ class LoanApplyAppService {
             }
         }
 
-//        loanAgent.fileInformation?.forEach { files ->
-//            val obsFiles = mutableListOf<String>()
-//            files.path?.forEach {
-//                val key = obsApi.getPictureView(GetParams(it))
-//                obsFiles.add(key)
-//            }
-//            files.path?.run {
-//                this.clear()
-//                this.addAll(obsFiles)
-//            }
-//        }
-
         return loanAgent
     }
 
@@ -428,13 +416,14 @@ class LoanApplyAppService {
 
         return paged.map {
             val product = it.productId?.run { productService.getOne(this) }
+            val loanAgentData = LoanApplyAssembly.convertToLoanAgent(it.data)
             DTOLoanApplyPageView(
                 applicationId = it.applicationId.toString(),
                 name = it.name,
-                amount = it.loanApply?.amount,
+                amount = it.loanApply?.amount?:run { loanAgentData.loanInformation?.amount?.run { BigDecimal(this) } },
                 productName = product?.name,
                 productType = it.loanApply?.productType,
-                term = it.loanApply?.term,
+                term = it.loanApply?.term?:run { loanAgentData.loanInformation?.term },
                 date = it.created?.run { tenantDateTime.toTenantDateTime(this).toString() },
                 status = it.status,
                 channelCode = it.channelCode,
