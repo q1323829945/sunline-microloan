@@ -1,7 +1,5 @@
 package cn.sunline.saas.channel.party.organisation.service
 
-import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.channel.party.organisation.exception.OrganisationNotFoundException
 import cn.sunline.saas.channel.party.organisation.model.db.ChannelCast
 import cn.sunline.saas.channel.party.organisation.model.db.Organisation
@@ -12,20 +10,18 @@ import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationChang
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.repository.OrganisationRepository
 import cn.sunline.saas.global.constant.YesOrNo
-import cn.sunline.saas.loan.model.db.LoanAgent
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.hibernate.metamodel.model.domain.internal.SingularAttributeImpl
-import org.hibernate.type.YesNoType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
-import javax.persistence.metamodel.Attribute
 
 /**
  * @title: OrganisationService
