@@ -33,16 +33,20 @@ class LoanApplicationStatistics (
     val productName: String,
 
     @NotNull
-    @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var amount: BigDecimal,
-
-    @NotNull
     @Column(name = "apply_count",  columnDefinition = "bigint not null")
     var applyCount: Long,
 
     @NotNull
     @Column(name = "approval_count",  columnDefinition = "bigint not null")
     var approvalCount: Long,
+
+    @NotNull
+    @Column(name = "apply_amount",  columnDefinition = "bigint not null")
+    var applyAmount: BigDecimal,
+
+    @NotNull
+    @Column(name = "approval_amount",  columnDefinition = "bigint not null")
+    var approvalAmount: BigDecimal,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

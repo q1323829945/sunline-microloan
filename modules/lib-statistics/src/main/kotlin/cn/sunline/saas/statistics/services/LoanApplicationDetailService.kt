@@ -22,9 +22,6 @@ class LoanApplicationDetailService(
     private val tenantDateTime: TenantDateTime
 ) : BaseMultiTenantRepoService<LoanApplicationDetail, Long>(loanApplicationDetailRepository) {
 
-//    data class GroupKey(val channelId: Long,val productId: Long)
-//
-//    fun LoanApplicationDetail.toKey() = GroupKey(channelId,productId)
 
     fun saveApplicationDetail(dtoLoanApplicationDetail: DTOLoanApplicationDetail) {
         save(
@@ -35,7 +32,8 @@ class LoanApplicationDetailService(
                 productId = dtoLoanApplicationDetail.productId,
                 productName = dtoLoanApplicationDetail.productName,
                 applicationId = dtoLoanApplicationDetail.applicationId,
-                amount = dtoLoanApplicationDetail.amount,
+                applyAmount = dtoLoanApplicationDetail.applyAmount,
+                approvalAmount = dtoLoanApplicationDetail.approvalAmount,
                 datetime = tenantDateTime.now().toDate(),
                 currency = dtoLoanApplicationDetail.currency,
                 status = dtoLoanApplicationDetail.status
@@ -54,7 +52,8 @@ class LoanApplicationDetailService(
                 dtoLoanApplicationCount += DTOLoanApplicationCount(
                     channelCode = channelMap.key,
                     channelName = productMap.value.first().channelName,
-                    amount = productMap.value.sumOf { it.amount },
+                    applyAmount = productMap.value.sumOf { it.applyAmount },
+                    approvalAmount = productMap.value.sumOf { it.approvalAmount },
                     applyCount = productMap.value.count().toLong(),
                     approvalCount = productMap.value.count { ApplyStatus.APPROVALED == it.status }.toLong(),
                     productId = productMap.key,

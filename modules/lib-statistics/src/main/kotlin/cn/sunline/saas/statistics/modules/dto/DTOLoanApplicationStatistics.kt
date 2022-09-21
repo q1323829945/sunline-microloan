@@ -9,9 +9,10 @@ data class DTOLoanApplicationStatistics(
     val channelName: String,
     val productId: Long,
     val productName: String,
-    val amount: BigDecimal,
     val applyCount: Long,
     val approvalCount: Long,
+    val applyAmount: BigDecimal,
+    val approvalAmount: BigDecimal,
     val frequency: Frequency
 )
 

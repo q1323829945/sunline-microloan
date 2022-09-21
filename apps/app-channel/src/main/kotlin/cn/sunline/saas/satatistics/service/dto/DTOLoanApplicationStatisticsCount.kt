@@ -8,7 +8,8 @@ data class DTOLoanApplicationStatisticsCount(
     val channelName: String,
     val productId: String,
     val productName: String,
-    val amount: BigDecimal,
+    val applyAmount: BigDecimal,
+    val approvalAmount: BigDecimal,
     val applyCount: Long,
     val approvalCount: Long,
     val dateTime: String
@@ -21,8 +22,9 @@ data class DTOLoanApplicationStatisticsCharts(
     val productName: String?,
     val applyCount: List<DTOLoanApplicationChartsCount>,
     val approvalCount: List<DTOLoanApplicationChartsApprovalCount>,
-    val applyAmount: List<DTOLoanApplicationChartsAmount>,
-)
+    val applyAmount: List<DTOLoanApplicationChartsApplyAmount>,
+    val approvalAmount: List<DTOLoanApplicationChartsApprovalAmount>
+    )
 
 data class DTOLoanApplicationChartsCount(
     val channelCode: String?,
@@ -44,7 +46,16 @@ data class DTOLoanApplicationChartsApprovalCount(
 
 
 
-data class DTOLoanApplicationChartsAmount(
+data class DTOLoanApplicationChartsApplyAmount(
+    val channelCode: String?,
+    val channelName: String?,
+    val productId: String?,
+    val productName: String?,
+    val amount: BigDecimal,
+    val dateTime: String
+)
+
+data class DTOLoanApplicationChartsApprovalAmount(
     val channelCode: String?,
     val channelName: String?,
     val productId: String?,

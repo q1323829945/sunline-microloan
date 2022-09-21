@@ -12,8 +12,9 @@ data class DTOLoanApplicationDetail(
     val productId: Long,
     val productName: String,
     val applicationId: Long,
-    val amount: BigDecimal,
-    val currency: CurrencyType,
+    val applyAmount: BigDecimal,
+    val approvalAmount: BigDecimal,
+    val currency: CurrencyType?,
     val status: ApplyStatus,
 )
 
@@ -29,5 +30,6 @@ data class DTOLoanApplicationCount(
     val productName: String,
     val approvalCount: Long,
     val applyCount: Long,
-    val amount: BigDecimal
+    val applyAmount: BigDecimal,
+    val approvalAmount: BigDecimal
 )

@@ -51,6 +51,9 @@ enum class PermissionConfig (
     COMMISSION_STATISTICS_ADD("CommissionStatistics", "commissionStatistics/addStatistics\$", RequestMethod.POST, "Add application statistics"),
     COMMISSION_STATISTICS_GET_CHARTS("CommissionStatistics", "commissionStatistics/charts(\\?.*|\$)", RequestMethod.GET, "View commission  statistics charts"),
 
+    CHANNEL_STATISTICS_GET_CHARTS("ChannelStatistics", "channelStatistics/pie(\\?.*|\$)", RequestMethod.GET, "View channel  statistics charts"),
+
+
     PRODUCT_ADD("product", "product\$", RequestMethod.POST, "Add product"),
     PRODUCT_MODIFY("product", "product\$", RequestMethod.PUT, "Modify product"),
     PRODUCT_GET_LIST("product", "product/paged(\\?.*|\$)", RequestMethod.GET, "View product list"),

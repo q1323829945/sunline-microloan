@@ -42,22 +42,23 @@ class LoanApplicationStatisticsScheduler(
     override fun saveMonth(dateTime: DateTime) {
         val endDate = getLocalDate(dateTime)
         val startDate = endDate.plusMonths(-1)
-        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.M)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(), Frequency.M)
     }
 
     override fun saveDay(dateTime: DateTime) {
         val endDate = getLocalDate(dateTime)
         val startDate = endDate.plusDays(-1)
-        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.D)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(), Frequency.D)
     }
 
     private fun schedulerLoanApplication(dateTime: DateTime, startDate: Date, endDate: Date, frequency: Frequency) {
         val loanApplication =
             loanApplicationDetailService.getGroupByStatusCount(DTOLoanApplicationDetailQueryParams(startDate, endDate))
         loanApplication.forEach {
-            val business = checkLoanApplicationExist(it.channelCode, it.channelName,it.productId, dateTime, frequency)
+            val business = checkLoanApplicationExist(it.channelCode, it.channelName, it.productId, dateTime, frequency)
             if (business != null) {
-                business.amount = it.amount
+                business.approvalAmount = it.approvalAmount
+                business.applyAmount = it.applyAmount
                 business.applyCount = it.applyCount
                 business.approvalCount = it.approvalCount
                 business.datetime = tenantDateTime.now().toDate()
@@ -69,7 +70,8 @@ class LoanApplicationStatisticsScheduler(
                         channelName = it.channelName,
                         productId = it.productId,
                         productName = it.productName,
-                        amount = it.amount,
+                        approvalAmount = it.approvalAmount,
+                        applyAmount = it.applyAmount,
                         applyCount = it.applyCount,
                         approvalCount = it.approvalCount,
                         frequency = frequency

@@ -156,7 +156,7 @@ class LoanApplyAppService {
                 channelCast.id,
                 Pageable.unpaged()
             ).content.first()
-
+            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
             loanApplicationStatisticsManagerService.addLoanApplicationDetail(
                 DTOLoanApplicationDetail(
                     channelCode = loanAgent.channelCode,
@@ -164,22 +164,23 @@ class LoanApplyAppService {
                     productId = loanAgent.productId ?: 0,
                     productName = loanAgent.loanApply?.productType?.name ?: "",
                     applicationId = applicationId.toLong(),
-                    amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                    applyAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                    approvalAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), //TODO new approval amount
                     status = loanAgent.status,
-                    currency = CurrencyType.USD
+                    currency = dtoLoanAgent.loanInformation?.currency
                 )
             )
             loanApplicationStatisticsManagerService.addLoanApplicationStatistics()
 
-            var statisticsAmount = BigDecimal.ZERO
+            var commissionAmount = BigDecimal.ZERO
             var ratio: BigDecimal? = BigDecimal.ZERO
-            val amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+            val statisticsAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
             val rangeValues = channelArrangementService.getRangeValuesByChannelAgreementId(
                 channelAgreement.id.toLong(),
                 Pageable.unpaged()
             )
             rangeValues.forEach { it ->
-                statisticsAmount = when (it.commissionMethodType) {
+                commissionAmount = when (it.commissionMethodType) {
                     CommissionMethodType.APPLY_COUNT_FIX_AMOUNT -> {
                         val applyCount =
                             commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.size + 1
@@ -202,21 +203,21 @@ class LoanApplyAppService {
                     CommissionMethodType.APPLY_AMOUNT_RATIO -> {
                         val applyAmount =
                             commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.sumOf { it.amount }
-                                .add(amount)
+                                .add(statisticsAmount)
                         ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(applyAmount, rangeValues)
                             ?: BigDecimal.ZERO
-                        amount.multiply(ratio)
+                        statisticsAmount.multiply(ratio)
                     }
 
                     CommissionMethodType.APPROVAL_AMOUNT_RATIO -> {
                         val approvalAmount =
                             commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).sumOf { it.amount }
-                                .add(amount)
+                                .add(statisticsAmount)
                         ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(
                             approvalAmount,
                             rangeValues
                         ) ?: BigDecimal.ZERO
-                        amount.multiply(ratio)
+                        statisticsAmount.multiply(ratio)
                     }
                 }
             }
@@ -226,7 +227,7 @@ class LoanApplyAppService {
                     channelCode = loanAgent.channelCode,
                     channelName = loanAgent.channelName,
                     applicationId = applicationId.toLong(),
-                    amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                    amount = commissionAmount,
                     status = loanAgent.status,
                     currency = CurrencyType.USD,
                     ratio = ratio,

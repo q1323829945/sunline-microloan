@@ -80,7 +80,8 @@ class LoanApplicationStatisticsManagerService(
                 channelName = it.channelName,
                 productId = it.productId.toString(),
                 productName = it.productName,
-                amount = it.amount,
+                applyAmount = it.applyAmount,
+                approvalAmount = it.approvalAmount,
                 applyCount = it.applyCount,
                 approvalCount = it.approvalCount
             )
@@ -140,7 +141,8 @@ class LoanApplicationStatisticsManagerService(
         loanApplication.forEach {
             val business = checkLoanApplicationStatisticsExist(it.channelCode,it.channelName, it.productId, dateTime, frequency)
             if (business != null) {
-                business.amount = it.amount
+                business.applyAmount = it.applyAmount
+                business.approvalAmount = it.approvalAmount
                 business.applyCount = it.applyCount
                 business.approvalCount = it.approvalCount
                 business.datetime = tenantDateTime.now().toDate()
@@ -152,7 +154,8 @@ class LoanApplicationStatisticsManagerService(
                         channelName = it.channelName,
                         productId = it.productId,
                         productName = it.productName,
-                        amount = it.amount,
+                        applyAmount = it.applyAmount,
+                        approvalAmount = it.approvalAmount,
                         applyCount = it.applyCount,
                         approvalCount = it.approvalCount,
                         frequency = frequency
@@ -224,7 +227,8 @@ class LoanApplicationStatisticsManagerService(
         )
         val applyChartsCount = ArrayList<DTOLoanApplicationChartsCount>()
         val approvalChartsCount = ArrayList<DTOLoanApplicationChartsApprovalCount>()
-        val applyChartsAmount = ArrayList<DTOLoanApplicationChartsAmount>()
+        val applyChartsAmount = ArrayList<DTOLoanApplicationChartsApplyAmount>()
+        val approvalChartsAmount = ArrayList<DTOLoanApplicationChartsApprovalAmount>()
         var productName: String? = null
         val groupBy = page.sortedBy { it.datetime }.groupBy {
             when (frequency) {
@@ -255,12 +259,20 @@ class LoanApplicationStatisticsManagerService(
                 dateTime = it.key
             )
 
-            applyChartsAmount += DTOLoanApplicationChartsAmount(
+            applyChartsAmount += DTOLoanApplicationChartsApplyAmount(
                 channelCode = if (channelCode == null && channelName == null) null else it.value.first().channelCode,
                 channelName = if (channelCode == null && channelName == null) null else it.value.first().channelName,
                 productId = if (productId == null) null else it.value.first().productId.toString(),
                 productName = productName,
-                amount = it.value.sumOf { it.amount },
+                amount = it.value.sumOf { it.applyAmount },
+                dateTime = it.key
+            )
+            approvalChartsAmount += DTOLoanApplicationChartsApprovalAmount(
+                channelCode = if (channelCode == null && channelName == null) null else it.value.first().channelCode,
+                channelName = if (channelCode == null && channelName == null) null else it.value.first().channelName,
+                productId = if (productId == null) null else it.value.first().productId.toString(),
+                productName = productName,
+                amount = it.value.sumOf { it.approvalAmount },
                 dateTime = it.key
             )
         }
@@ -271,7 +283,8 @@ class LoanApplicationStatisticsManagerService(
             productName = productName,
             applyCount = reApplyCountList(applyChartsCount, startDateTime, endDateTime, frequencyData),
             approvalCount = reApprovalCountList(approvalChartsCount, startDateTime, endDateTime, frequencyData),
-            applyAmount = reApplyAmountList(applyChartsAmount, startDateTime, endDateTime, frequencyData)
+            applyAmount = reApplyAmountList(applyChartsAmount, startDateTime, endDateTime, frequencyData),
+            approvalAmount = reApprovalAmountList(approvalChartsAmount, startDateTime, endDateTime, frequencyData)
         )
     }
 
@@ -320,16 +333,38 @@ class LoanApplicationStatisticsManagerService(
     }
 
     private fun reApplyAmountList(
-        content: List<DTOLoanApplicationChartsAmount>,
+        content: List<DTOLoanApplicationChartsApplyAmount>,
         start: DateTime,
         end: DateTime,
         frequency: Frequency
-    ): List<DTOLoanApplicationChartsAmount> {
-        val list = ArrayList<DTOLoanApplicationChartsAmount>()
+    ): List<DTOLoanApplicationChartsApplyAmount> {
+        val list = ArrayList<DTOLoanApplicationChartsApplyAmount>()
         val dateTimes = getDateRange(start, end, frequency)
         dateTimes.forEach { dateTimeString ->
             val first = content.firstOrNull { it.dateTime == dateTimeString }
-            list += DTOLoanApplicationChartsAmount(
+            list += DTOLoanApplicationChartsApplyAmount(
+                channelCode = first?.channelCode,
+                channelName = first?.channelName,
+                productId = first?.productId,
+                productName = first?.productName,
+                amount = first?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                dateTime = dateTimeString
+            )
+        }
+        return list
+    }
+
+    private fun reApprovalAmountList(
+        content: List<DTOLoanApplicationChartsApprovalAmount>,
+        start: DateTime,
+        end: DateTime,
+        frequency: Frequency
+    ): List<DTOLoanApplicationChartsApprovalAmount> {
+        val list = ArrayList<DTOLoanApplicationChartsApprovalAmount>()
+        val dateTimes = getDateRange(start, end, frequency)
+        dateTimes.forEach { dateTimeString ->
+            val first = content.firstOrNull { it.dateTime == dateTimeString }
+            list += DTOLoanApplicationChartsApprovalAmount(
                 channelCode = first?.channelCode,
                 channelName = first?.channelName,
                 productId = first?.productId,

@@ -22,7 +22,7 @@ class LoanApplicationDetail(
     val channelCode: String,
 
     @NotNull
-    @Column(name = "channel_name",length = 128,nullable = false,  columnDefinition = "varchar(128) ")
+    @Column(name = "channel_name", length = 128, nullable = false, columnDefinition = "varchar(128) ")
     var channelName: String,
 
     @NotNull
@@ -38,13 +38,17 @@ class LoanApplicationDetail(
     val applicationId: Long,
 
     @NotNull
-    @Column(name = "amount", scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
-    var amount: BigDecimal,
+    @Column(name = "apply_amount", scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
+    var applyAmount: BigDecimal,
+
+    @NotNull
+    @Column(name = "approval_amount", scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
+    var approvalAmount: BigDecimal,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
-    val currency: CurrencyType,
+    @Column(name = "currency", length = 32, columnDefinition = "varchar(32) not null")
+    val currency: CurrencyType? = null,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

@@ -42,13 +42,13 @@ class LoanApplicationStatisticsScheduler(
     override fun saveMonth(dateTime: DateTime) {
         val endDate = getLocalDate(dateTime)
         val startDate = endDate.plusMonths(-1)
-        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.M)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(), Frequency.M)
     }
 
     override fun saveDay(dateTime: DateTime) {
         val endDate = getLocalDate(dateTime)
         val startDate = endDate.plusDays(-1)
-        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(),Frequency.D)
+        schedulerLoanApplication(dateTime, startDate.toDate(), endDate.toDate(), Frequency.D)
     }
 
     private fun schedulerLoanApplication(dateTime: DateTime, startDate: Date, endDate: Date, frequency: Frequency) {
@@ -63,7 +63,8 @@ class LoanApplicationStatisticsScheduler(
                         channelName = it.channelName,
                         productId = it.productId,
                         productName = it.productName,
-                        amount = it.amount,
+                        applyAmount = it.applyAmount,
+                        approvalAmount = it.approvalAmount,
                         applyCount = it.applyCount,
                         approvalCount = it.approvalCount,
                         frequency = frequency

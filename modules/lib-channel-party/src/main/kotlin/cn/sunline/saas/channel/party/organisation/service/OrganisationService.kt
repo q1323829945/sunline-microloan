@@ -6,15 +6,18 @@ import cn.sunline.saas.channel.party.organisation.exception.OrganisationNotFound
 import cn.sunline.saas.channel.party.organisation.model.db.ChannelCast
 import cn.sunline.saas.channel.party.organisation.model.db.Organisation
 import cn.sunline.saas.channel.party.organisation.model.db.OrganisationIdentification
+import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelCastView
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationAdd
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationChange
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.repository.OrganisationRepository
 import cn.sunline.saas.global.constant.YesOrNo
+import cn.sunline.saas.loan.model.db.LoanAgent
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.hibernate.metamodel.model.domain.internal.SingularAttributeImpl
 import org.hibernate.type.YesNoType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
+import javax.persistence.metamodel.Attribute
 
 /**
  * @title: OrganisationService
@@ -185,6 +189,25 @@ class OrganisationService(
             channelCast = organisation.channelCast?.let { objectMapper.convertValue(it) },
             enable = organisation.enable
         )
+    }
+
+    fun getOrganisationListByEnable(enable: YesOrNo?): MutableList<DTOChannelCastView> {
+        val paged = getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            enable?.let { predicates.add(criteriaBuilder.equal(root.get<YesOrNo>("enable"), it)) }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+
+        }, Pageable.unpaged())
+        return paged.content.filter { it.channelCast != null }.map {
+            it.channelCast!!.let { channelCast ->
+                DTOChannelCastView(
+                    id = channelCast.id.toString(),
+                    channelCode = channelCast.channelCode,
+                    channelName = channelCast.channelName,
+                    channelCastType = channelCast.channelCastType
+                )
+            }
+        }.toMutableList()
     }
 
 }
