@@ -187,10 +187,13 @@ class OrganisationService(
         )
     }
 
-    fun getOrganisationListByEnable(enable: YesOrNo?): MutableList<DTOChannelCastView> {
+    fun getOrganisationListByEnable(enable: YesOrNo?,channelCode:String?): MutableList<DTOChannelCastView> {
         val paged = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
+
+            val join = root.join<Organisation, ChannelCast>("channelCast")
             enable?.let { predicates.add(criteriaBuilder.equal(root.get<YesOrNo>("enable"), it)) }
+            channelCode?.let { predicates.add(criteriaBuilder.equal(join.get<String>("channelCode"), it)) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
 
         }, Pageable.unpaged())

@@ -60,7 +60,7 @@ class ChannelStatisticsManagerService(
             tenantDateTime.toTenantDateTime(startDate)
         }
 
-        val channelList = organisationService.getOrganisationListByEnable(YesOrNo.Y)
+        val channelList = organisationService.getOrganisationListByEnable(YesOrNo.Y,channelCode)
         val list = mutableListOf<DTOChannelStatistics>()
         channelList.forEach { root ->
             val paged = loanApplicationStatisticsService.getPaged(
@@ -71,7 +71,7 @@ class ChannelStatisticsManagerService(
                 startDateTime.dayOfMonth.toLong(),
                 endDateTime.dayOfMonth.toLong(),
                 tenantIdData,
-                root.channelCode,
+                if (channelName.isNullOrEmpty()) root.channelCode else channelCode,
                 if (channelName.isNullOrEmpty()) null else channelName,
                 if (productId.isNullOrEmpty()) null else productId.toLong(),
                 frequencyData,

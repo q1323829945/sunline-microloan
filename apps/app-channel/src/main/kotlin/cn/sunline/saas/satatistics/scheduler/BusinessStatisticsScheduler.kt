@@ -70,7 +70,7 @@ class BusinessStatisticsScheduler(
         }
     }
 
-    private fun checkBusinessExist(customerId:Long, dateTime: DateTime, frequency: Frequency, currencyType: CurrencyType):BusinessStatistics?{
+    private fun checkBusinessExist(customerId:Long, dateTime: DateTime, frequency: Frequency, currencyType: CurrencyType?):BusinessStatistics?{
         return businessStatisticsService.findByDate(DTOBusinessStatisticsFindParams(customerId,dateTime,frequency,currencyType))
     }
 

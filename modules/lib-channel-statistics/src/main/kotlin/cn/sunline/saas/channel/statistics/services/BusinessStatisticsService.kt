@@ -25,7 +25,7 @@ class BusinessStatisticsService (
         return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("customerId"),dtoBusinessStatisticsFindParams.customerId))
-            predicates.add(criteriaBuilder.equal(root.get<CurrencyType>("currency"),dtoBusinessStatisticsFindParams.currencyType))
+            dtoBusinessStatisticsFindParams.currencyType?.let{predicates.add(criteriaBuilder.equal(root.get<CurrencyType>("currency"),it))}
             predicates.add(criteriaBuilder.equal(root.get<Long>("year"),lastDate.year.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("month"),lastDate.monthOfYear.toLong()))
             predicates.add(criteriaBuilder.equal(root.get<Long>("day"),lastDate.dayOfMonth.toLong()))

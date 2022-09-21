@@ -10,7 +10,7 @@ data class DTOBusinessStatistics(
     val customerId:Long,
     val paymentAmount: BigDecimal,
     val repaymentAmount:BigDecimal,
-    val currencyType: CurrencyType,
+    val currencyType: CurrencyType?,
     val frequency: Frequency,
 )
 
@@ -18,5 +18,5 @@ data class DTOBusinessStatisticsFindParams(
     val customerId:Long,
     val datetime: DateTime,
     val frequency: Frequency,
-    val currencyType: CurrencyType
+    val currencyType: CurrencyType?
 )

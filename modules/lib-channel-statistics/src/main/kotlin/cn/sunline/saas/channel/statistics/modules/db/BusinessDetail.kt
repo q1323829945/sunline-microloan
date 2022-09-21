@@ -28,10 +28,9 @@ class BusinessDetail  (
     @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
     var amount: BigDecimal,
 
-    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
-    val currency: CurrencyType,
+    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) null")
+    val currency: CurrencyType?,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

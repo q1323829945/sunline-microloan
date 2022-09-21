@@ -9,7 +9,7 @@ data class DTOBusinessDetail(
     val agreementId: Long,
     val customerId:Long,
     var amount: BigDecimal,
-    val currency: CurrencyType,
+    val currency: CurrencyType?,
     var transactionType: TransactionType = TransactionType.PAYMENT,
 )
 
@@ -22,7 +22,7 @@ data class DTOBusinessCount(
     val customerId:Long,
     val paymentAmount: BigDecimal,
     val repaymentAmount:BigDecimal,
-    val currency:CurrencyType
+    val currency:CurrencyType?
 )
 
 

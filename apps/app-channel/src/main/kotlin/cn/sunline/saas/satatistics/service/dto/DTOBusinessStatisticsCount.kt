@@ -6,7 +6,7 @@ import java.math.BigDecimal
 data class DTOBusinessStatisticsCount(
     val paymentAmount:BigDecimal,
     val repaymentAmount:BigDecimal,
-    val currency: CurrencyType,
+    val currency: CurrencyType?,
     val tenantId:Long
 )
 

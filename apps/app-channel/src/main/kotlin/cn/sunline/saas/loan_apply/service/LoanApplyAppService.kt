@@ -442,13 +442,14 @@ class LoanApplyAppService {
             val loanAgent =
                 loanAgentService.getOne(applicationId.toLong())
                     ?: throw LoanApplyNotFoundException("Invalid loan apply")
+            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
 
             businessStatisticsManagerService.addBusinessDetail(
                 DTOBusinessDetail(
                     agreementId = applicationId.toLong(),
                     customerId = 1L, //TODO get channel
                     amount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
-                    currency = CurrencyType.USD,
+                    currency = dtoLoanAgent.loanInformation?.currency,
                     transactionType = TransactionType.PAYMENT
                 )
             )

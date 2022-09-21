@@ -33,7 +33,7 @@ class BusinessStatistics  (
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
-    val currency: CurrencyType,
+    val currency: CurrencyType?,
 
     @NotNull
     @Column(name = "repayment_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
