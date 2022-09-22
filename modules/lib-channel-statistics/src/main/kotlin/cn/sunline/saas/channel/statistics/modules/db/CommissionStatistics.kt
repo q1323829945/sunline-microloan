@@ -33,8 +33,8 @@ class CommissionStatistics(
     var statisticsAmount: BigDecimal,
 
     @NotNull
-    @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var amount: BigDecimal,
+    @Column(name = "commission_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var commissionAmount: BigDecimal,
 
     @NotNull
     @Enumerated(value = EnumType.STRING)

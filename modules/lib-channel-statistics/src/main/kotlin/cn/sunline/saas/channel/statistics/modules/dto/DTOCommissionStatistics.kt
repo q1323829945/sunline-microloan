@@ -9,7 +9,7 @@ data class DTOCommissionStatistics(
     val channelName: String,
     val commissionFeatureId: Long,
     val statisticsAmount: BigDecimal,
-    val amount: BigDecimal,
+    val commissionAmount: BigDecimal,
     val frequency: Frequency
 )
 

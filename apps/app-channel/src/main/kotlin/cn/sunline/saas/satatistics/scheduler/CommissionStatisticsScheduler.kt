@@ -68,8 +68,8 @@ class CommissionStatisticsScheduler(
             // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
             val business = checkCommissionStatisticsExist(it.channelCode,it.channelName, dateTime, frequency)
             if (business != null) {
-                business.amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
-                business.statisticsAmount =  it.amount
+                business.commissionAmount = it.statisticsAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
+                business.statisticsAmount =  it.statisticsAmount
                 business.datetime = tenantDateTime.now().toDate()
                 commissionStatisticsService.save(business)
             } else {
@@ -78,8 +78,8 @@ class CommissionStatisticsScheduler(
                         channelCode = it.channelCode,
                         channelName = it.channelName,
                         commissionFeatureId = 0,
-                        statisticsAmount =  it.amount,
-                        amount = it.amount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
+                        statisticsAmount =  it.statisticsAmount,
+                        commissionAmount = it.commissionAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
                         frequency = frequency
                     )
                 )

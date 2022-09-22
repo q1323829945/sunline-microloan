@@ -30,7 +30,7 @@ class CommissionDetailService(
                 channelCode = dtoCommissionDetail.channelCode,
                 channelName = dtoCommissionDetail.channelName,
                 applicationId = dtoCommissionDetail.applicationId,
-                amount = dtoCommissionDetail.amount,
+                commissionAmount = dtoCommissionDetail.commissionAmount,
                 ratio = dtoCommissionDetail.ratio,
                 statisticsAmount = dtoCommissionDetail.statisticsAmount,
                 datetime = tenantDateTime.now().toDate(),
@@ -46,7 +46,7 @@ class CommissionDetailService(
             DTOCommissionCount(
                 channelCode = it.key,
                 channelName = it.value.first().channelName,
-                amount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.amount },
+                commissionAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.commissionAmount },
                 statisticsAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.statisticsAmount }
             )
         }

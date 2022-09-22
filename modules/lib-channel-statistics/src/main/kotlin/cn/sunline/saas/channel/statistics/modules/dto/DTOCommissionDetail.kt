@@ -10,7 +10,7 @@ data class DTOCommissionDetail(
     val channelCode: String,
     val channelName: String,
     val applicationId: Long,
-    val amount: BigDecimal,
+    val commissionAmount: BigDecimal,
     val ratio: BigDecimal?,
     val statisticsAmount: BigDecimal,
     val currency: CurrencyType,
@@ -25,6 +25,6 @@ data class DTOCommissionDetailQueryParams(
 data class DTOCommissionCount(
     val channelCode: String,
     val channelName: String,
-    val amount: BigDecimal,
+    val commissionAmount: BigDecimal,
     val statisticsAmount: BigDecimal,
 )

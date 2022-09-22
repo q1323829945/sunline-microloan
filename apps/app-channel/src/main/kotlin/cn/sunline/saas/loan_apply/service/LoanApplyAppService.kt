@@ -202,7 +202,7 @@ class LoanApplyAppService {
 
                     CommissionMethodType.APPLY_AMOUNT_RATIO -> {
                         val applyAmount =
-                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.sumOf { it.amount }
+                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.sumOf { it.commissionAmount }
                                 .add(statisticsAmount)
                         ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(applyAmount, rangeValues)
                             ?: BigDecimal.ZERO
@@ -211,7 +211,7 @@ class LoanApplyAppService {
 
                     CommissionMethodType.APPROVAL_AMOUNT_RATIO -> {
                         val approvalAmount =
-                            commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).sumOf { it.amount }
+                            commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).sumOf { it.commissionAmount }
                                 .add(statisticsAmount)
                         ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(
                             approvalAmount,
@@ -227,7 +227,7 @@ class LoanApplyAppService {
                     channelCode = loanAgent.channelCode,
                     channelName = loanAgent.channelName,
                     applicationId = applicationId.toLong(),
-                    amount = commissionAmount,
+                    commissionAmount = commissionAmount,
                     status = loanAgent.status,
                     currency = CurrencyType.USD,
                     ratio = ratio,

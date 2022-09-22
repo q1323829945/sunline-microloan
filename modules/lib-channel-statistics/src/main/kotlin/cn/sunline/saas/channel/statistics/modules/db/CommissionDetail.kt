@@ -30,8 +30,8 @@ class CommissionDetail (
     val applicationId: Long,
 
     @NotNull
-    @Column(name = "amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
-    var amount: BigDecimal,
+    @Column(name = "commission_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    var commissionAmount: BigDecimal,
 
     @Column(name = "ratio",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
     var ratio: BigDecimal?,

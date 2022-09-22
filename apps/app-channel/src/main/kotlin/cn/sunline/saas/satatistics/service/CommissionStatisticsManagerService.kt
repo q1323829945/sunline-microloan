@@ -83,7 +83,7 @@ class CommissionStatisticsManagerService(
                 channelCode = it.channelCode,
                 channelName = it.channelName,
                 statisticsAmount = it.statisticsAmount,
-                amount = it.amount,
+                amount = it.commissionAmount,
                 commissionFeatureId = it.commissionFeatureId,
                 dateTime = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.datetime))
             )
@@ -142,7 +142,7 @@ class CommissionStatisticsManagerService(
         commission.forEach { it ->
             val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
             if (business != null) {
-                business.amount = it.amount
+                business.commissionAmount = it.commissionAmount
                 business.statisticsAmount = it.statisticsAmount
                 business.datetime = tenantDateTime.now().toDate()
                 commissionStatisticsService.save(business)
@@ -153,7 +153,7 @@ class CommissionStatisticsManagerService(
                         channelName = it.channelName,
                         commissionFeatureId = 0,
                         statisticsAmount = it.statisticsAmount,
-                        amount = it.amount,
+                        commissionAmount = it.commissionAmount,
                         frequency = frequency
                     )
                 )
@@ -230,7 +230,7 @@ class CommissionStatisticsManagerService(
             commissionChartsAmount += DTOCommissionChartsAmount(
                 channelCode = if (channelCode == null && channelName == null) null else it.value.first().channelCode,
                 channelName =  if (channelCode == null && channelName == null) null else it.value.first().channelName,
-                amount = it.value.sumOf { it.amount },
+                amount = it.value.sumOf { it.commissionAmount },
                 dateTime = it.key
             )
         }
@@ -329,7 +329,7 @@ class CommissionStatisticsManagerService(
             DTOCommissionStatisticsCount(
                 channelCode = groupBy.key,
                 channelName = groupBy.value.first().channelName,
-                amount = groupBy.value.sumOf { it.amount },
+                amount = groupBy.value.sumOf { it.commissionAmount },
                 statisticsAmount = groupBy.value.sumOf { it.statisticsAmount },
                 tenantId = tenantId
             )
