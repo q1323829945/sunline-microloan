@@ -30,10 +30,10 @@ class ChannelCastService (
     }
 
     fun getChannelCast(channelCode: String, channelName: String): ChannelCast? {
-        val channelCast = getOneWithTenant { root, _, criteriaBuilder ->
+        val channelCast = get { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<String>("channelCode"), channelCode))
-            predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), channelName))
+            //predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), channelName))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
         return channelCast
