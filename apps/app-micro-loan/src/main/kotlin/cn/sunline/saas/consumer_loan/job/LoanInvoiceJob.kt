@@ -2,6 +2,7 @@ package cn.sunline.saas.consumer_loan.job
 
 import cn.sunline.saas.account.model.dto.DTOAccountBalanceChange
 import cn.sunline.saas.account.service.LoanAccountService
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.invoice.model.InvoiceStatus
@@ -47,7 +48,7 @@ class LoanInvoiceJob(
     @Autowired
     private lateinit var loanAgreementService: LoanAgreementService
 
-    override fun doJob(actorId: String, jobId: String) {
+    override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val agreementId = actorId.toLong()
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {

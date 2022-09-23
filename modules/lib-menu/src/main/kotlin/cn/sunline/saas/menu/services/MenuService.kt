@@ -33,7 +33,6 @@ class MenuService {
         val loanAgreementManagementConfig = Menu("loanAgreementManagementConfig","businessHandling","","/dashboard/loanAgreementManagementConfig",12)
         val repaymentManagementConfig = Menu("repaymentManagementConfig","businessHandling","","/dashboard/repaymentManagementLoanConfig",13)
         val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",14)
-        val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",15)
         val loanQuery = Menu("loanQuery","businessQuery","","/dashboard/businessQuery",16)
         val commissionStatisticsConfig = Menu("commissionStatisticsConfig","statisticsQuery","","/dashboard/commissionStatisticsConfig",17)
         val loanApplicationStatisticsConfig = Menu("loanApplicationStatisticsConfig","statisticsQuery","","/dashboard/loanApplicationStatisticsConfig",18)
@@ -55,7 +54,6 @@ class MenuService {
             ,employeeConfig
             ,repaymentManagementConfig
             ,pdpaConfig
-            ,pdpaAuthorityConfig
             ,loanQuery
             ,commissionStatisticsConfig
             ,loanApplicationStatisticsConfig)

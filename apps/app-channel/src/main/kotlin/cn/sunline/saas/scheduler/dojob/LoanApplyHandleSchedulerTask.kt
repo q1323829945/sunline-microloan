@@ -8,16 +8,15 @@ import cn.sunline.saas.global.constant.PositionType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.loan.model.db.LoanAgent
-import cn.sunline.saas.loan.model.db.LoanApply
 import cn.sunline.saas.loan.model.db.LoanApplyHandle
 import cn.sunline.saas.loan.model.dto.DTOLoanApplyHandle
 import cn.sunline.saas.loan.service.LoanAgentService
 import cn.sunline.saas.loan.service.LoanApplyHandleService
-import cn.sunline.saas.loan.service.LoanApplyService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.channel.rbac.modules.Position
 import cn.sunline.saas.channel.rbac.modules.User
 import cn.sunline.saas.channel.rbac.services.UserService
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.util.*
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
 
@@ -62,7 +60,7 @@ class LoanApplyHandleSchedulerTask (
         var percentage:BigDecimal
     )
 
-    override fun doJob(applicationId: String, jobId: String) {
+    override fun doJob(applicationId: String, jobId: String, data: ActorCommand) {
 
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {

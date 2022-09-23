@@ -10,17 +10,18 @@ import cn.sunline.saas.rbac.services.UserService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class AppCommandRunner(
         val permissionService: PermissionService,
         val roleService: RoleService,
         val userService: UserService
-) : CommandLineRunner {
+){
     private val adminUsername = "admin"
     private val adminRole = "ROLE_ADMIN"
 
-    override fun run(vararg args: String?) {
+    fun run() {
         reloadPermissions()
         reloadAdminRole()
         reloadAdminUser()
@@ -44,7 +45,7 @@ class AppCommandRunner(
             Role(name = adminRole, remark = "Admin Role")
         }
 
-        val permissions = permissionService.getPaged(pageable = Pageable.unpaged()).toSet()
+        val permissions = permissionService.getPageWithTenant(pageable = Pageable.unpaged()).toSet()
         adminRole.permissions.clear()
         adminRole.permissions.addAll(permissions)
         roleService.save(adminRole)
@@ -52,7 +53,7 @@ class AppCommandRunner(
 
     private fun reloadPermissions() {
         val allPermissionConfigs = PermissionConfig.values().map { it.name }.toSet()
-        val existingPermissionConfigs = permissionService.getPaged(pageable = Pageable.unpaged()).map { it.name }.toSet()
+        val existingPermissionConfigs = permissionService.getPageWithTenant(pageable = Pageable.unpaged()).map { it.name }.toSet()
         val missingPermissionConfigs = allPermissionConfigs
                 .filter { !existingPermissionConfigs.contains(it) && validatePermissionConfig(it) }
                 .map { PermissionConfig.valueOf(it) }

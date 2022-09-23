@@ -1,5 +1,6 @@
 package cn.sunline.saas.consumer_loan.job
 
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.formula.CalculateInterest
@@ -55,7 +56,7 @@ class InvoiceAccountJob(
      *  when it equaled to mini payment amount then compute outstanding amount
      *  change status to finished
      */
-    override fun doJob(actorId: String, jobId: String) {
+    override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
             this.execute(tenantDateTime.now())

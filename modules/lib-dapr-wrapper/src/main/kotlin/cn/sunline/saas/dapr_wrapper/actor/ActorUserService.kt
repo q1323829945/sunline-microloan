@@ -70,10 +70,9 @@ class ActorUserService(private val daprConfig: DaprConfig) {
     fun invokeReminder(
         @PathVariable(name = "actorType") actorType: String,
         @PathVariable(name = "actorId") actorId: String,
-        @PathVariable(name = "reminderName") reminderName: String
-    ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        actorContext.getActor(actorType).doJob(actorId,reminderName)
-
+        @PathVariable(name = "reminderName") reminderName: String,
+        @RequestBody data:ActorCommand): ResponseEntity<DTOResponseSuccess<Unit>> {
+        actorContext.getActor(actorType).doJob(actorId,reminderName,data)
         return DTOResponseSuccess(Unit).response()
     }
 

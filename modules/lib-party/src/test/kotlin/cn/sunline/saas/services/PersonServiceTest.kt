@@ -3,6 +3,7 @@ package cn.sunline.saas.services
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.setTimeZone
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.party.person.model.PersonIdentificationType
@@ -12,12 +13,14 @@ import cn.sunline.saas.party.person.model.dto.*
 import cn.sunline.saas.party.person.service.PersonService
 import cn.sunline.saas.seq.Sequence
 import org.assertj.core.api.Assertions
+import org.joda.time.DateTimeZone
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PersonServiceTest(@Autowired val tenantService: TenantService) {
@@ -32,12 +35,15 @@ class PersonServiceTest(@Autowired val tenantService: TenantService) {
     fun `init`(){
         tenantService.save(
             Tenant(
-                id = 12344566,
+                id = 123456,
+                name = "name",
                 country = CountryType.CHN,
+                enabled = true,
+                saasUUID = UUID.randomUUID()
             )
         )
 
-        ContextUtil.setTenant("12344566")
+        ContextUtil.setTenant("123456")
 
         val person = personService.register(
             DTOPersonAdd(
@@ -49,7 +55,7 @@ class PersonServiceTest(@Autowired val tenantService: TenantService) {
                     givenName = "givenName"
                 ),
                 residentialStatus = ResidentialStatus.NON_PERMANENT,
-                birthDate = "19991111",
+                birthDate = "1999-11-11",
                 nationality = CountryType.CHN,
                 ethnicity = "ethnicity",
                 personIdentifications = mutableListOf(

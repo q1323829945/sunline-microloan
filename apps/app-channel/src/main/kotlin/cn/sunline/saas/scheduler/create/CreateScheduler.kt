@@ -24,6 +24,7 @@ class CreateScheduler {
 
     @Autowired
     private lateinit var seq: Sequence
+
     fun create(actorType: ActorType, applicationId:String) {
         val accountDate = calculateSchedulerTimer.baseDateTime()
         val targetDateTime = accountDate.plusMinutes(interval)

@@ -6,6 +6,7 @@ import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.response.DTOResponseSuccess
@@ -21,7 +22,7 @@ class ScheduleInvokeImpl: ScheduleInvoke {
             methodName = "RatePlan/${ratePlanId}",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()
@@ -35,7 +36,7 @@ class ScheduleInvokeImpl: ScheduleInvoke {
             methodName = "RatePlan/all",
             queryParams = mapOf("type" to "$ratePlanType"),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()

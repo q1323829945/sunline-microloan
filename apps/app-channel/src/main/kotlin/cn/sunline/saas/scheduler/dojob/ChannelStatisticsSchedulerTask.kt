@@ -1,28 +1,19 @@
 package cn.sunline.saas.scheduler.dojob
 
-import cn.sunline.saas.channel.controller.dto.DTOChannelCastView
-import cn.sunline.saas.channel.controller.dto.DTOChannelIdentificationView
-import cn.sunline.saas.channel.controller.dto.DTOChannelView
-import cn.sunline.saas.channel.exception.ChannelBusinessException
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
-import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.PartyType
-import cn.sunline.saas.loan.service.LoanAgentService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.service.OrganisationService
-import cn.sunline.saas.rpc.pubsub.impl.ChannelPublishImpl
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCustomerDetail
 import cn.sunline.saas.channel.statistics.services.CustomerDetailService
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
@@ -50,7 +41,7 @@ class ChannelStatisticsSchedulerTask(
     private lateinit var customerDetailService: CustomerDetailService
 
 
-    override fun doJob(actorId: String, jobId: String) {
+    override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
             this.execute(tenantDateTime.now())

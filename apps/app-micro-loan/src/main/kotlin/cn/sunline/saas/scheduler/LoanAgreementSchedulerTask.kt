@@ -3,6 +3,7 @@ package cn.sunline.saas.scheduler
 import cn.sunline.saas.consumer_loan.job.InvoiceAccountJob
 import cn.sunline.saas.consumer_loan.job.LoanAutoRepaymentJob
 import cn.sunline.saas.consumer_loan.job.LoanInvoiceJob
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
@@ -66,7 +67,7 @@ class LoanAgreementSchedulerTask(
     @Autowired
     private lateinit var tenantDateTime: TenantDateTime
 
-    override fun doJob(actorId: String, taskId: String) {
+    override fun doJob(actorId: String, taskId: String, data: ActorCommand) {
         val accountDate = calculateSchedulerTimer.baseDateTime()
 
         val agreementId = actorId.toLong()

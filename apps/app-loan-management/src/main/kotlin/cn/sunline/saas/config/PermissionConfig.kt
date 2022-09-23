@@ -125,7 +125,6 @@ enum class PermissionConfig (
     LOAN_AGREEMENT_MANAGEMENT_MENU("menu","loanAgreementManagementConfig", RequestMethod.GET,"View formal loanAgreementManagementConfig menu"),
     REPAYMENT_MANAGEMENT_MENU("menu","repaymentManagementConfig", RequestMethod.GET,"View formal repaymentManagementConfig menu"),
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
-    PDPA_AUTHORITY_MENU("menu","pdpaAuthorityConfig", RequestMethod.GET,"View pdpaAuthorityConfig menu"),
     LOAN_QUERY_MENU("menu","loanQuery", RequestMethod.GET,"view loan query menu"),
     COMMISSION_STATISTICS_QUERY_MENU("menu","commissionStatisticsConfig", RequestMethod.GET,"View commission statistics query menu"),
     LOAN_APPLICATION_STATISTICS_QUERY_MENU("menu","loanApplicationStatisticsConfig", RequestMethod.GET,"view loan application statistics query menu"),

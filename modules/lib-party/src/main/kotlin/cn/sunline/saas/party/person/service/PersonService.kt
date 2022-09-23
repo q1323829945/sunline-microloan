@@ -30,6 +30,7 @@ class PersonService(private val personRepository: PersonRepository,
     @Autowired
     private lateinit var sequence: Sequence
 
+
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun register(dtoPersonAdd: DTOPersonAdd):DTOPersonView{
@@ -142,6 +143,8 @@ class PersonService(private val personRepository: PersonRepository,
             personRoles = objectMapper.convertValue(person.personRoles)
         )
     }
+
+
 
 
 }

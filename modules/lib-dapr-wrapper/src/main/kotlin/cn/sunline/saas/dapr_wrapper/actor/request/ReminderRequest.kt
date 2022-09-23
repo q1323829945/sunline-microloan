@@ -8,7 +8,8 @@ package cn.sunline.saas.dapr_wrapper.actor.request
  */
 data class ReminderRequest(
     val dueTime: String,
-    val period: String = ""
+    val period: String = "",
+    val data:Any? = null
 )
 
 

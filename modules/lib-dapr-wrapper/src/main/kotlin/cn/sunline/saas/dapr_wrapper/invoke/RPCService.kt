@@ -1,11 +1,8 @@
 package cn.sunline.saas.dapr_wrapper.invoke
 
 import cn.sunline.saas.dapr_wrapper.invoke.request.RPCRequest
-import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getPermissions
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -108,10 +105,6 @@ class RPCService {
         }
 
         inline fun <reified T> makeRequest(httpMethod: HttpMethod, serviceName: String, methodName: String, queryParams: Map<String, String>? = mapOf(), payload: Any? = null, headerParams: Map<String, String> = mapOf(), tenant: String? = null): T? {
-            if(checkPermissions(serviceName)){
-                logger.info { "没有权限" }
-                return null
-            }
             var exception: Exception?  = null
             val seq = UUID.randomUUID().toString()
             val requestUrl = "http://localhost:3500/v1.0/invoke/$serviceName/method/$methodName"
@@ -187,19 +180,6 @@ class RPCService {
                     "requestMethod" to httpResponse.request.method.value
                 )
             )
-        }
-
-        fun checkPermissions(applicationId:String):Boolean{
-            val permissions = ContextUtil.getPermissions()
-
-            if(permissions.isNullOrEmpty()){
-                logger.info { "permissions is empty" }
-            }
-
-            permissions?.firstOrNull { it == applicationId }?.run {
-                return false
-            }?: return true
-
         }
     }
 

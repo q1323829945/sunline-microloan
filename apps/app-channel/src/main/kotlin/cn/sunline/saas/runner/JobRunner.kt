@@ -23,7 +23,6 @@ class JobRunner {
     @Autowired
     private lateinit var loanApplyHandleSchedulerTask: LoanApplyHandleSchedulerTask
 
-
     @PostConstruct
     fun run() {
         actorContext.registerActor(ActorType.LOAN_APPLY_SUBMIT.name,loanApplySubmitSchedulerTask)

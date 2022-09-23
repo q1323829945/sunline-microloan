@@ -15,7 +15,7 @@ class Test2RegisterActor(
 ) :
     AbstractActor(actorType, entityConfig) {
 
-    override fun doJob(actorId: String,jobId:String) {
+    override fun doJob(actorId: String, jobId:String, data: ActorCommand) {
         println("do my job")
     }
 }

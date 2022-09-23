@@ -61,6 +61,7 @@ subprojects {
 		implementation(kotlin("stdlib-jdk8"))
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1")
+		implementation("io.github.microutils:kotlin-logging:2.1.21")
 	}
 
 	tasks.withType<KotlinCompile> {

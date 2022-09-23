@@ -1,14 +1,11 @@
 package cn.sunline.saas.tenant.service.dto
 
+import java.util.UUID
+
 data class DTOTenant(
     val id:Long,
+    val name:String,
     val country: String,
     val enabled:Boolean,
-    val permissions:List<DTOTenantPermission>?
-)
-
-
-data class DTOTenantPermission(
-    val productApplicationId:String,
-    val subscriptionId:Long? = null
+    val saasUUID:String,
 )

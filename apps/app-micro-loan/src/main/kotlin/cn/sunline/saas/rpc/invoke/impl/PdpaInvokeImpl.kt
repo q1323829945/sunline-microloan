@@ -8,6 +8,7 @@ import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.rpc.invoke.PdpaInvoke
 import cn.sunline.saas.rpc.invoke.dto.DTOCustomerPdpaInformation
@@ -23,7 +24,7 @@ class PdpaInvokeImpl: PdpaInvoke {
             methodName = "pdpa/${country.name}/${language.name}/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -36,7 +37,7 @@ class PdpaInvokeImpl: PdpaInvoke {
             methodName = "pdpa/$pdpaId",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -49,7 +50,7 @@ class PdpaInvokeImpl: PdpaInvoke {
             methodName = "customer/pdpa/$customerId",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -62,7 +63,7 @@ class PdpaInvokeImpl: PdpaInvoke {
             methodName = "pdpa/authority",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()

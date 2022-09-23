@@ -28,12 +28,12 @@ class  RoleManagerService  {
     private lateinit var permissionService: PermissionService
 
     fun getPaged(pageable: Pageable): Page<DTORoleView> {
-        val page = roleService.getPaged(pageable = pageable)
+        val page = roleService.getPageWithTenant(pageable = pageable)
         return page.map { objectMapper.convertValue(it) }
     }
 
     fun getAll(): Page<DTORoleView> {
-        val page = roleService.getPaged(pageable = Pageable.unpaged())
+        val page = roleService.getPageWithTenant(pageable = Pageable.unpaged())
         return page.map { objectMapper.convertValue(it) }
     }
 

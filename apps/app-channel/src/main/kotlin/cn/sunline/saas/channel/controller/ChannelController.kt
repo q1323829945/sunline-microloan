@@ -6,6 +6,7 @@ import cn.sunline.saas.channel.service.ChannelAgreementManagerService
 import cn.sunline.saas.channel.service.ChannelManagerService
 import cn.sunline.saas.global.constant.AgreementType
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
+import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
@@ -31,6 +32,7 @@ class ChannelController {
         val broker = ChannelCastView(ChannelCastType.BROKER, null, 2)
         channelCastViewList = listOf(agent, broker)
     }
+
 
     @GetMapping
     fun getChannelPaged(

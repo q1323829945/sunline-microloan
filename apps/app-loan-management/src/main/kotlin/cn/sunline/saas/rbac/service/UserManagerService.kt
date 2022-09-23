@@ -33,7 +33,7 @@ class UserManagerService  {
     private lateinit var rbacInvoke: RbacInvoke
 
     fun getPaged(pageable: Pageable): Page<DTOUserView> {
-        val page = userService.getPaged(pageable = pageable).map {
+        val page = userService.getPageWithTenant(pageable = pageable).map {
             DTOUserView(
                 id = it.id.toString(),
                 username = it.username,

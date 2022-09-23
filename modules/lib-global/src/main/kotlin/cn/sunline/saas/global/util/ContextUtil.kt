@@ -16,7 +16,7 @@ object ContextUtil {
     internal const val TENANT_KEY = "TENANT_ID"
     internal const val USER_KEY = "USER_ID"
     internal const val TIME_ZONE = "TIME_ZONE"
-    internal const val PERMISSIONS = "PERMISSIONS"
+    internal const val UUID_KEY = "UUID"
 
     internal fun put(key: String, value: Any) {
         if (context.get() == null) {
@@ -45,6 +45,19 @@ fun ContextUtil.getTenant(): String {
     }
 }
 
+fun ContextUtil.setUUID(tenantId: String) {
+    put(UUID_KEY, tenantId)
+}
+
+fun ContextUtil.getUUID(): String {
+    val tenantId = get(UUID_KEY)
+    if (tenantId == null){
+        throw TenantUninitializedException("tenant is not in the context")
+    }else{
+        return tenantId.toString()
+    }
+}
+
 fun ContextUtil.setUserId(userId: String) {
     put(USER_KEY, userId)
 }
@@ -64,21 +77,6 @@ fun ContextUtil.getTimeZone(): DateTimeZone? {
 
 fun ContextUtil.setTimeZone(timZone:DateTimeZone)  {
     put(TIME_ZONE, timZone)
-}
-
-fun ContextUtil.setPermissions(permissions:List<String>?){
-    permissions?.run {
-        put(PERMISSIONS,permissions)
-    }
-}
-
-fun ContextUtil.getPermissions():List<String>?{
-    val permissions = get(PERMISSIONS)
-
-    return permissions?.run {
-        this as List<String>
-        this
-    }
 }
 
 fun ContextUtil.setApplyLoanSubmit(params:String){

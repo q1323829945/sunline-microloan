@@ -3,11 +3,13 @@ package cn.sunline.saas.filter
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.*
 import cn.sunline.saas.multi_tenant.services.TenantService
+import cn.sunline.saas.multi_tenant.util.TenantMap
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
+import mu.KotlinLogging
 import org.apache.commons.io.IOUtils
 import org.springframework.core.MethodParameter
 import org.springframework.core.annotation.Order
@@ -19,11 +21,13 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice
 import java.io.InputStream
 import java.lang.reflect.Type
 import java.nio.charset.Charset
+import java.util.*
 
 @ControllerAdvice
 class RequestBodyAdviceFilter(
     private val tenantService: TenantService
 ) : RequestBodyAdvice {
+    var logger = KotlinLogging.logger {}
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -47,10 +51,13 @@ class RequestBodyAdviceFilter(
         }
 
         val body = IOUtils.toString(inputMessage.body, Charset.forName("utf-8"))
-        val bodyMap = when(val bodyData = objectMapper.readValue<Map<*,*>>(body)["data"]){
-            is String -> objectMapper.readValue<Map<*,*>>(bodyData)
-            else -> objectMapper.treeToValue<Map<*,*>>(objectMapper.valueToTree(bodyData))
-        }
+        val bodyData = objectMapper.readValue<Map<*,*>>(body)["data"]
+        val bodyMap = bodyData?.run {
+            when(this){
+                is String -> objectMapper.readValue<Map<*,*>>(this)
+                else -> objectMapper.treeToValue<Map<*,*>>(objectMapper.valueToTree(this))
+            }
+        }?: run { emptyMap() }
 
         return object : HttpInputMessage{
             override fun getHeaders(): HttpHeaders {
@@ -67,15 +74,7 @@ class RequestBodyAdviceFilter(
                     }
 
                     this[Header.TENANT_AUTHORIZATION.key]?.run {
-                        ContextUtil.setTenant(this)
-
-                        if(ContextUtil.getPermissions().isNullOrEmpty()){
-                            val tenants = tenantService.getOne(this.toLong())
-                            val permissions = tenants?.permissions?.map {
-                                it.productApplicationId
-                            }
-                            ContextUtil.setPermissions(permissions)
-                        }
+                        TenantMap.setContextUtil(tenantService,this)
                     }
                 }
                 return httpHeaders

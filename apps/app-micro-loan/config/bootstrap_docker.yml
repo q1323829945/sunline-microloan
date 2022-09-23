@@ -13,7 +13,7 @@ spring:
     baseline-on-migrate: true
     enabled: false
   datasource:
-    url: "jdbc:mysql://172.19.2.154:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    url: "jdbc:mysql://172.19.2.154:3306/db_quick_loan?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
     username: "root"
     password: "uNEED2021@"
     driver-class-name: "com.mysql.cj.jdbc.Driver"

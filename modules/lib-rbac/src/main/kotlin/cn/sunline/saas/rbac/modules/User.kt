@@ -1,5 +1,7 @@
 package cn.sunline.saas.rbac.modules
 
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.security.core.GrantedAuthority
@@ -13,7 +15,7 @@ import javax.validation.constraints.NotNull
 @Table(
         name = "user",
         indexes = [
-            Index(name = "idx_user_username", columnList = "username", unique = true),
+            Index(name = "idx_user_username", columnList = "username,tenant_id", unique = true),
             Index(name = "idx_user_enabled", columnList = "enabled"),
             Index(name = "idx_user_account_expired", columnList = "accountExpired"),
             Index(name = "idx_user_credentials_expired", columnList = "credentialsExpired"),
@@ -22,6 +24,7 @@ import javax.validation.constraints.NotNull
             Index(name = "idx_user_updated", columnList = "updated"),
         ]
 )
+@EntityListeners(TenantListener::class)
 class User (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,7 +81,7 @@ class User (
         @UpdateTimestamp
         @Temporal(TemporalType.TIMESTAMP)
         var updated: Date? = null
-): UserDetails {
+): UserDetails, MultiTenant {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val roles = roles.mapNotNull { it.permissions }
         val permissions = roles.flatMap { it.mapNotNull { p -> p.name } }
@@ -115,5 +118,18 @@ class User (
 
     override fun isEnabled(): Boolean {
         return enabled
+    }
+
+
+    @NotNull
+    @Column(name = "tenant_id",columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
     }
 }

@@ -31,6 +31,10 @@ class TenantDateTime(private val tenantService: TenantService) {
         return DateTime(dt, getTenantTimeZone())
     }
 
+    fun toTenantDateTime(year:Int,month:Int,day:Int):DateTime{
+        return DateTime().withZone(getTenantTimeZone()).withDate(year,month,day).withTime(0,0,0,0)
+    }
+
     fun now(): DateTime {
         return DateTime.now(getTenantTimeZone())
     }

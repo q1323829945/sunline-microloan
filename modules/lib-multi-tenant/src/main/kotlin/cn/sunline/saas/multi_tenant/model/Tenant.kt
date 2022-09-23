@@ -1,6 +1,7 @@
 package cn.sunline.saas.multi_tenant.model
 
 import cn.sunline.saas.global.model.CountryType
+import java.util.UUID
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -16,7 +17,12 @@ import javax.validation.constraints.NotNull
 )
 class Tenant(
     @Id
-    val id: Long,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
+    @NotNull
+    @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    var name: String,
 
     @NotNull
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
@@ -27,7 +33,12 @@ class Tenant(
     @NotNull
     var enabled: Boolean = false,
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "tenantId")
-    var permissions: MutableList<TenantPermission>? = mutableListOf()
+    @NotNull
+    @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
+    var uuid: UUID = UUID.randomUUID(),
+
+    @NotNull
+    @Column(name = "saas_uuid",columnDefinition = "BINARY(16)", nullable = false, updatable = false)
+    var saasUUID: UUID,
 
 )

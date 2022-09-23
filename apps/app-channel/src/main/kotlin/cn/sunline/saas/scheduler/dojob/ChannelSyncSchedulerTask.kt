@@ -8,11 +8,10 @@ import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.ApplyStatus
-import cn.sunline.saas.loan.service.LoanAgentService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
 import cn.sunline.saas.channel.party.organisation.service.OrganisationService
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.rpc.pubsub.impl.ChannelPublishImpl
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
@@ -47,7 +46,7 @@ class ChannelSyncSchedulerTask(
     private lateinit var channelPublishImpl: ChannelPublishImpl
 
 
-    override fun doJob(actorId: String, jobId: String) {
+    override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
             this.execute(tenantDateTime.now())

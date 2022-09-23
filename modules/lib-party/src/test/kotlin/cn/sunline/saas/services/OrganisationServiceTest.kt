@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrganisationServiceTest(@Autowired val organisationService: OrganisationService,@Autowired val tenantService: TenantService) {
@@ -28,7 +29,10 @@ class OrganisationServiceTest(@Autowired val organisationService: OrganisationSe
         tenantService.save(
             Tenant(
                 id = 12344566,
+                name = "name",
                 country = CountryType.CHN,
+                enabled = true,
+                saasUUID = UUID.randomUUID()
             )
         )
 

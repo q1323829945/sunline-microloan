@@ -2,6 +2,8 @@ package cn.sunline.saas.statistics.filter
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.multi_tenant.services.TenantService
+import cn.sunline.saas.multi_tenant.util.TenantMap
 import cn.sunline.saas.statistics.services.ApiDetailService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,19 +21,22 @@ import javax.servlet.http.HttpServletRequest
 class ApiRequestFilter: Filter {
     protected val logger: Logger = LoggerFactory.getLogger(ApiRequestFilter::class.java)
 
-    private val whiteList = mutableListOf(
-        "/menus"
+    private val whiteList = mutableListOf<String>(
+//        "/menus"
     )
 
     @Autowired
     private lateinit var apiDetailService: ApiDetailService
+
+    @Autowired
+    private lateinit var tenantService: TenantService
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
 
         val httpServletRequest = request as HttpServletRequest
 
         httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.key)?.run {
-            ContextUtil.setTenant(this)
+            TenantMap.setContextUtil(tenantService,this)
         }
 
         if(whiteList.contains(httpServletRequest.requestURI)){

@@ -49,9 +49,9 @@ class ActorReminderService {
         }
 
         fun createReminders(
-            actorType: String, actorId: String, name: String, dueTime: Timer?, period: Timer?
+            actorType: String, actorId: String, name: String, dueTime: Timer?, period: Timer?,data:Any? = null
         ) {
-            val body = ReminderRequest(dueTime.toString(), period.toString())
+            val body = ReminderRequest(dueTime.toString(), period.toString(),data)
             makeRequest(actorType, actorId, name, HttpMethod.Post, body)
         }
 

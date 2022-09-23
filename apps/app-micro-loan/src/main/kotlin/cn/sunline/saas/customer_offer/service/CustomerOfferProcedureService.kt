@@ -119,7 +119,7 @@ class CustomerOfferProcedureService(
                 givenName = "givenName"
             ),
             residentialStatus = ResidentialStatus.NON_PERMANENT,
-            birthDate = "19991111",
+            birthDate = "1999-11-11",
             nationality = CountryType.CHN,
             ethnicity ="ethnicity",
             personIdentifications = mutableListOf(

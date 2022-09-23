@@ -1,7 +1,6 @@
 package cn.sunline.saas.dapr_wrapper.actor.model
 
-import org.joda.time.DateTime
-import org.springframework.beans.factory.annotation.Autowired
+import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import org.springframework.stereotype.Component
 
 /**
@@ -18,5 +17,5 @@ data class EntityConfig(
 
 @Component
 abstract class AbstractActor(val actorType: String, val entityConfig: EntityConfig? = null) {
-    abstract fun doJob(actorId: String, jobId: String)
+    abstract fun doJob(actorId: String, jobId: String,data: ActorCommand = ActorCommand())
 }

@@ -1,6 +1,9 @@
 package cn.sunline.saas.rbac.services
 
 import cn.sunline.saas.base_jpa.services.BaseRepoService
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.rbac.exception.PersonAlreadyBindingException
 import cn.sunline.saas.rbac.modules.User
 import cn.sunline.saas.rbac.repositories.UserRepository
@@ -12,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(baseRepository), UserDetailsService {
+class UserService(baseRepository: UserRepository) : BaseMultiTenantRepoService<User, Long>(baseRepository), UserDetailsService {
     @Autowired
     private lateinit var userRepository: UserRepository
 
@@ -45,7 +48,7 @@ class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(
     }
 
     fun validate(username: String, password: String): User? {
-        val user = userRepository.findByUsername(username)?: return null
+        val user = userRepository.findByUsernameAndTenantId(username,ContextUtil.getTenant().toLong())?: return null
         return if (BCrypt.checkpw(password, user.password)) {
             user
         } else {
@@ -54,11 +57,11 @@ class UserService(baseRepository: UserRepository) : BaseRepoService<User, Long>(
     }
 
     fun getByUsername(username: String): User? {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameAndTenantId(username,ContextUtil.getTenant().toLong())
     }
 
     private fun findByPersonId(personId:Long):User?{
-        return userRepository.findByPersonId(personId)
+        return userRepository.findByPersonIdAndTenantId(personId,ContextUtil.getTenant().toLong())
     }
 
     override fun loadUserByUsername(username: String): UserDetails? {

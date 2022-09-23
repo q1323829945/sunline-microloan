@@ -7,6 +7,7 @@ import cn.sunline.saas.global.constant.APP_MICRO_LOAN
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
@@ -46,7 +47,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             methodName = "UnderwritingManagement/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -61,7 +62,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             methodName = "ConsumerLoan/LoanAgreement/$applicationId",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -74,7 +75,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             methodName = "ConsumerLoan/LoanAgreement/$applicationId/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -87,7 +88,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             methodName = "ConsumerLoan/LoanAgreement/Info/$agreementId/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
@@ -100,7 +101,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             methodName = "ConsumerLoan/fee/item/$agreementId/retrieve",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
