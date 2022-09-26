@@ -69,6 +69,9 @@ enum class PermissionConfig (
     LOAN_APPLY_SUPPLEMENT("loan", "loan/supplement\$", RequestMethod.PUT, "set loan apply supplement"),
     LOAN_APPLY_SET_PRODUCT("loan", "loan/product/set\$", RequestMethod.PUT, "set loan apply product"),
     LOAN_AGENT_GET("loan", "loan/agent/[0-9]+\$", RequestMethod.GET, "get loan agent"),
+    LOAN_TEST1("loan", "loan/test1(\\?.*|\$)", RequestMethod.GET, "get loan agent"),
+    LOAN_TEST2("loan", "loan/test2(\\?.*|\$)", RequestMethod.GET, "get loan agent"),
+
 
     POSITION_GET("position", "position/[0-9A-Za-z]+\$", RequestMethod.GET, "View position profile"),
     POSITION_GET_LIST("position", "position(\\?.*|\$)", RequestMethod.GET, "View position list"),

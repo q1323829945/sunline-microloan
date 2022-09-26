@@ -94,21 +94,21 @@ class LoanApplicationStatisticsManagerService(
         }
     }
 
-    fun addLoanApplicationStatistics() {
-        val nowDate = tenantDateTime.now()
+    fun addLoanApplicationStatistics(dateTime: DateTime? = null) {
+        val nowDate = dateTime ?: tenantDateTime.now()
 //        if (nowDate.hourOfDay == 0) {
-            //根据租户时区统计数据
-            //每日统计
-            saveDay(nowDate)
-            //每月统计
-            if (nowDate.dayOfMonth == 1) {
-                saveMonth(nowDate)
+        //根据租户时区统计数据
+        //每日统计
+        saveDay(nowDate)
+        //每月统计
+        if (nowDate.dayOfMonth == 1) {
+            saveMonth(nowDate)
 
-                //每年统计
-                if (nowDate.monthOfYear == 1) {
-                    saveYear(nowDate)
-                }
+            //每年统计
+            if (nowDate.monthOfYear == 1) {
+                saveYear(nowDate)
             }
+        }
 //        }
     }
 
@@ -424,7 +424,6 @@ class LoanApplicationStatisticsManagerService(
         }
         return list
     }
-
 
 
 }

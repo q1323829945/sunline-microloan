@@ -49,15 +49,18 @@ class CommissionStatisticsManagerService(
     ): Page<DTOCommissionStatisticsPageCount> {
         val tenantIdData = tenantId ?: ContextUtil.getTenant().toLong()
         val frequencyData = frequency ?: Frequency.D
-        val endDateTime = if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
+        val endDateTime =
+            if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
         val startDateTime = if (startDate.isNullOrEmpty()) {
             when (frequencyData) {
                 Frequency.Y -> {
                     endDateTime.plusYears(-7)
                 }
+
                 Frequency.M -> {
                     endDateTime.plusMonths(-7)
                 }
+
                 else -> {
                     endDateTime.plusDays(-7)
                 }
@@ -96,21 +99,21 @@ class CommissionStatisticsManagerService(
         }
     }
 
-    fun addCommissionStatistics() {
-        val nowDate = tenantDateTime.now()
+    fun addCommissionStatistics(dateTime: DateTime? = null) {
+        val nowDate = dateTime?:tenantDateTime.now()
 //        if (nowDate.hourOfDay == 0) {
-            //根据租户时区统计数据
-            //每日统计
-            saveDay(nowDate)
-            //每月统计
-            if (nowDate.dayOfMonth == 1) {
-                saveMonth(nowDate)
+        //根据租户时区统计数据
+        //每日统计
+        saveDay(nowDate)
+        //每月统计
+        if (nowDate.dayOfMonth == 1) {
+            saveMonth(nowDate)
 
-                //每年统计
-                if (nowDate.monthOfYear == 1) {
-                    saveYear(nowDate)
-                }
+            //每年统计
+            if (nowDate.monthOfYear == 1) {
+                saveYear(nowDate)
             }
+        }
 //        }
     }
 
@@ -140,7 +143,7 @@ class CommissionStatisticsManagerService(
             )
         )
         commission.forEach { it ->
-            val business = checkCommissionStatisticsExist(it.channelCode, it.channelName,dateTime, frequency)
+            val business = checkCommissionStatisticsExist(it.channelCode, it.channelName, dateTime, frequency)
             if (business != null) {
                 business.commissionAmount = it.commissionAmount
                 business.statisticsAmount = it.statisticsAmount
@@ -187,15 +190,18 @@ class CommissionStatisticsManagerService(
     ): DTOCommissionStatisticsCharts {
         val tenantIdData = tenantId ?: ContextUtil.getTenant().toLong()
         val frequencyData = frequency ?: Frequency.D
-        val endDateTime = if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
+        val endDateTime =
+            if (endDate.isNullOrEmpty()) tenantDateTime.now() else tenantDateTime.toTenantDateTime(endDate)
         val startDateTime = if (startDate.isNullOrEmpty()) {
             when (frequencyData) {
                 Frequency.Y -> {
                     endDateTime.plusYears(-6)
                 }
+
                 Frequency.M -> {
                     endDateTime.plusMonths(-6)
                 }
+
                 else -> {
                     endDateTime.plusDays(-6)
                 }
@@ -229,7 +235,7 @@ class CommissionStatisticsManagerService(
         groupBy.forEach { it ->
             commissionChartsAmount += DTOCommissionChartsAmount(
                 channelCode = if (channelCode == null && channelName == null) null else it.value.first().channelCode,
-                channelName =  if (channelCode == null && channelName == null) null else it.value.first().channelName,
+                channelName = if (channelCode == null && channelName == null) null else it.value.first().channelName,
                 amount = it.value.sumOf { it.commissionAmount },
                 dateTime = it.key
             )
@@ -284,6 +290,7 @@ class CommissionStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 Frequency.M -> {
                     val endDateTime = start.plusMonths(index)
                     list.add(tenantDateTime.getYearMonth(endDateTime))
@@ -293,6 +300,7 @@ class CommissionStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 Frequency.D -> {
                     val endDateTime = start.plusDays(index)
                     list.add(tenantDateTime.getYearMonthDay(endDateTime))
@@ -303,6 +311,7 @@ class CommissionStatisticsManagerService(
                         flag = false
                     }
                 }
+
                 else -> {
                     flag = false
                 }
@@ -312,13 +321,12 @@ class CommissionStatisticsManagerService(
         return list
     }
 
-    fun getStatisticsByDate(year:Long,month:Long,day:Long,tenantId:Long): List<DTOCommissionStatisticsCount> {
-        val page = commissionStatisticsService.getPaged({
-                root, _, criteriaBuilder ->
+    fun getStatisticsByDate(year: Long, month: Long, day: Long, tenantId: Long): List<DTOCommissionStatisticsCount> {
+        val page = commissionStatisticsService.getPaged({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("year"),year))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("month"),month))
-            predicates.add(criteriaBuilder.equal(root.get<Long>("day"),day))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("year"), year))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("month"), month))
+            predicates.add(criteriaBuilder.equal(root.get<Long>("day"), day))
             predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), Frequency.D))
             predicates.add(criteriaBuilder.equal(root.get<Long>("tenantId"), tenantId))
             criteriaBuilder.and(*(predicates.toTypedArray()))

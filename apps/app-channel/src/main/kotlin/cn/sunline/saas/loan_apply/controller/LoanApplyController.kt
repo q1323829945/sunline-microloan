@@ -7,12 +7,14 @@ import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.loan.model.dto.DTOLoanAgent
 import cn.sunline.saas.loan.model.dto.DTOLoanApplyStatus
 import cn.sunline.saas.channel.product.model.dto.DTOProductAppView
+import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.loan.service.LoanAgentService
 import cn.sunline.saas.loan.service.LoanApplyService
 import cn.sunline.saas.loan_apply.service.LoanApplyAppService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.scheduler.ActorType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -135,5 +137,15 @@ class LoanApplyController {
     fun getLoanAgentDetail(@PathVariable applicationId:String):ResponseEntity<DTOResponseSuccess<DTOLoanAgent>>{
         val agent = loanApplyAppService.getLoanAgentDetail(applicationId)
         return DTOResponseSuccess(agent).response()
+    }
+
+    @GetMapping("test1")
+    fun test1(){
+        loanApplyAppService.test1()
+    }
+    @GetMapping("test2")
+    fun test2(@PathParam(value = "actorId")actorId: String,
+              @PathParam(value = "jobId")jobId: String){
+        ActorReminderService.deleteReminders(ActorType.LOAN_APPLY_STATISTICS.name,actorId,jobId)
     }
 }

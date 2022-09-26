@@ -26,7 +26,7 @@ class InitPdpa {
     }
 
     fun addPdpa(){
-        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,"zh-CH")
+        val pdpa = pdpaService.getByCountryAndLanguage(CountryType.CHN,"zh-CN")
         pdpa?:run {
             val pdpaInformation = objectMapper.readValue<List<DTOPdpaItem>>(json)
             val dtoPdpa = DTOPdpaAdd(

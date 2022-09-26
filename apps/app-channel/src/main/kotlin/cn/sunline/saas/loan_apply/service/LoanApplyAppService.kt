@@ -171,7 +171,7 @@ class LoanApplyAppService {
                     currency = dtoLoanAgent.loanInformation?.currency
                 )
             )
-            loanApplicationStatisticsManagerService.addLoanApplicationStatistics()
+            loanApplicationStatisticsManagerService.addLoanApplicationStatistics(tenantDateTime.toTenantDateTime(loanAgent.created!!))
 
             var commissionAmount = BigDecimal.ZERO
             var ratio: BigDecimal? = BigDecimal.ZERO
@@ -236,7 +236,7 @@ class LoanApplyAppService {
                 )
             )
 
-            commissionStatisticsManagerService.addCommissionStatistics()
+            commissionStatisticsManagerService.addCommissionStatistics(tenantDateTime.toTenantDateTime(loanAgent.created!!))
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
         } catch (e: Exception) {
             logger.error("[syncLoanApplicationStatistics]: sync applicationId:$applicationId , error massage : ${e.message}")
@@ -467,6 +467,12 @@ class LoanApplyAppService {
         } catch (e: Exception) {
             logger.error("[saveBusinessDetailStatistic]: save applicationId:$applicationId  business detail statistics, error massage : ${e.message}")
             createScheduler.create(ActorType.LOAN_APPLY_STATISTICS, applicationId)
+        }
+    }
+
+    fun test1(){
+        loanAgentService.getPageWithTenant(null, Pageable.unpaged() ).content.forEach {
+            syncLoanApplicationStatistics(it.applicationId.toString())
         }
     }
 }
