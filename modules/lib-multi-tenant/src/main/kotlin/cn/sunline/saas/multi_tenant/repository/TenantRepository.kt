@@ -11,6 +11,5 @@ import java.util.UUID
  * @date 2022/2/28 12:05
  */
 interface TenantRepository : BaseRepository<Tenant, Long>{
-    fun findBySaasUUID(saasUUID: UUID):Tenant?
     fun findByUuid(uuid: UUID):Tenant?
 }

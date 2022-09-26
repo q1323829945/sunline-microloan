@@ -26,11 +26,11 @@ class RatePlanManagerService {
     private lateinit var ratePlanService: RatePlanService
 
     fun getPaged(pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPaged(pageable = pageable)
+        return ratePlanService.getPageWithTenant(pageable = pageable)
     }
 
     fun getAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPaged({ root, _, criteriaBuilder ->
+        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
             criteriaBuilder.and(*(predicates.toTypedArray()))
@@ -61,7 +61,7 @@ class RatePlanManagerService {
     }
 
     fun getInvokeAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPaged({ root, _, criteriaBuilder ->
+        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
             criteriaBuilder.and(*(predicates.toTypedArray()))

@@ -1,6 +1,8 @@
 package cn.sunline.saas.channel.rbac.modules
 
 import cn.sunline.saas.channel.rbac.modules.User
+import cn.sunline.saas.multi_tenant.jpa.TenantListener
+import cn.sunline.saas.multi_tenant.model.MultiTenant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
@@ -11,9 +13,10 @@ import javax.validation.constraints.NotNull
 @Table(
     name = "position",
     indexes = [
-        Index(name = "idx_position_name", columnList = "name", unique = true),
+        Index(name = "idx_position_name", columnList = "name,tenant_id", unique = true),
     ]
 )
+@EntityListeners(TenantListener::class)
 class Position(
     @Id
     @Column(name = "id", columnDefinition = "varchar(32)")
@@ -40,4 +43,18 @@ class Position(
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var updated: Date? = null
-)
+) : MultiTenant {
+
+    @NotNull
+    @Column(name = "tenant_id",columnDefinition = "bigint not null")
+    private var tenantId: Long = 0L
+
+    override fun getTenantId(): Long {
+        return tenantId
+    }
+
+    override fun setTenantId(o: Long) {
+        tenantId = o
+    }
+
+}

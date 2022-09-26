@@ -12,10 +12,9 @@ import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.rpc.bindings.impl.ChannelBindingsImpl
-import cn.sunline.saas.channel.party.organisation.model.dto.DTOOrganisationView
-import cn.sunline.saas.channel.party.organisation.service.OrganisationService
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
-import cn.sunline.saas.rpc.pubsub.impl.ChannelPublishImpl
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
@@ -52,6 +51,7 @@ class ChannelSyncSchedulerTask(
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
+            ContextUtil.setTenant(this.getTenantId().toString())
             this.execute(tenantDateTime.now())
             schedulerJobLogService.save(this)
         }

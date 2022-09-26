@@ -40,7 +40,7 @@ class DocumentTemplateController {
 
     @GetMapping
     fun getAllPaged():ResponseEntity<DTOPagedResponseSuccess>{
-        val paged = documentTemplateService.getPaged(pageable = Pageable.unpaged())
+        val paged = documentTemplateService.getPageWithTenant(pageable = Pageable.unpaged())
         return DTOPagedResponseSuccess(paged.map { objectMapper.convertValue<DTODocumentTemplateView>(it)}).response()
     }
 

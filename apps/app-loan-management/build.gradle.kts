@@ -53,7 +53,4 @@ dependencies {
     implementation(project(":lib-invoice"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
-
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

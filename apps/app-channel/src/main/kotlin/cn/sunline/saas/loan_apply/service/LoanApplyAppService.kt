@@ -45,6 +45,7 @@ import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
 import cn.sunline.saas.channel.statistics.services.CommissionDetailService
 import cn.sunline.saas.global.constant.CommissionMethodType
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.minio.MinioService
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
@@ -279,6 +280,12 @@ class LoanApplyAppService {
 
     fun loanRecord(data: String): LoanAgent {
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(data)
+
+        channelCastService.getUniqueChannelCast(dtoLoanAgent.channel.code,dtoLoanAgent.channel.name)?.run {
+            ContextUtil.setTenant(this.getTenantId().toString())
+        }?:run { ContextUtil.setTenant("1") }
+
+
         dtoLoanAgent.fileInformation?.forEach { files ->
             val obsFiles = mutableListOf<String>()
             files.path?.forEach {

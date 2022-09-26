@@ -14,11 +14,6 @@ import java.util.UUID
  */
 @Service
 class TenantService(private val tenantRepository: TenantRepository) : BaseRepoService<Tenant, Long>(tenantRepository) {
-
-    fun findBySaasUUID(saasUUID:UUID):Tenant?{
-        return tenantRepository.findBySaasUUID(saasUUID)
-    }
-
     fun findByUUID(uuid:UUID):Tenant?{
         return tenantRepository.findByUuid(uuid)
     }

@@ -27,7 +27,7 @@ class InterestRateManagerService {
     private lateinit var interestFeatureService: InterestFeatureService
 
     fun getPaged(ratePlanId: Long?, pageable: Pageable): Page<InterestRate> {
-        return interestRateService.getPaged({ root, _, criteriaBuilder ->
+        return interestRateService.getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("ratePlanId"), ratePlanId))
             criteriaBuilder.and(*(predicates.toTypedArray()))

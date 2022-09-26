@@ -57,7 +57,7 @@ class SchedulerJobLog(
     @Temporal(TemporalType.TIMESTAMP)
     var completedDate: Date? = null,
 
-    @Column(name = "error_context", nullable = true, length = 128, columnDefinition = "varchar(128) not null")
+    @Column(name = "error_context", nullable = true, length = 128, columnDefinition = "varchar(128) default null")
     var errorContext: String? = null
 ): MultiTenant {
 

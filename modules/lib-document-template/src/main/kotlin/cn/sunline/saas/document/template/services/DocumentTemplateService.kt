@@ -5,6 +5,9 @@ import cn.sunline.saas.document.template.modules.db.DocumentTemplate
 import cn.sunline.saas.document.template.repositories.DocumentTemplateRepository
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.obs.api.DeleteParams
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
@@ -15,14 +18,14 @@ import java.io.InputStream
 
 @Service
 class DocumentTemplateService(private val documentTemplateRepository: DocumentTemplateRepository) :
-    BaseRepoService<DocumentTemplate, Long>(documentTemplateRepository) {
+    BaseMultiTenantRepoService<DocumentTemplate, Long>(documentTemplateRepository) {
 
     @Autowired
     private lateinit var obs: ObsApi
 
     fun addDocumentTemplate(documentTemplate: DocumentTemplate, inputStream: InputStream): DocumentTemplate {
         val checkTemplate =
-            documentTemplateRepository.findByDocumentStoreReference(documentTemplate.documentStoreReference)
+            documentTemplateRepository.findByDocumentStoreReferenceAndTenantId(documentTemplate.documentStoreReference,ContextUtil.getTenant().toLong())
         if (checkTemplate != null) {
             throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST, "document already exist")
         }
@@ -41,7 +44,7 @@ class DocumentTemplateService(private val documentTemplateRepository: DocumentTe
         inputStream: InputStream?
     ): DocumentTemplate {
         inputStream?.run {
-            val checkTemplate = documentTemplateRepository.findByDocumentStoreReference(newOne.documentStoreReference)
+            val checkTemplate = documentTemplateRepository.findByDocumentStoreReferenceAndTenantId(newOne.documentStoreReference,ContextUtil.getTenant().toLong())
             if (checkTemplate != null && oldOne.documentStoreReference != newOne.documentStoreReference) {
                 throw ManagementException(ManagementExceptionCode.DATA_ALREADY_EXIST, "document already exist")
             }

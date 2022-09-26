@@ -31,7 +31,7 @@ class HandlerRequestHeaderFilter(val tenantService: TenantService): Filter {
         val httpServletRequest = request as HttpServletRequest
 
         if(!httpServletRequest.requestURI.equals("/healthz")){
-            logger.debug(httpServletRequest.requestURI)
+            logger.info(httpServletRequest.requestURI)
         }
         httpServletRequest.getHeader(Header.USER_AUTHORIZATION.key)?.run {
             ContextUtil.setUserId(this)

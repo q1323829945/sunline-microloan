@@ -32,7 +32,7 @@ class OrganisationServiceTest(@Autowired val organisationService: OrganisationSe
                 name = "name",
                 country = CountryType.CHN,
                 enabled = true,
-                saasUUID = UUID.randomUUID()
+                uuid = UUID.randomUUID()
             )
         )
 

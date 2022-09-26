@@ -13,6 +13,8 @@ import cn.sunline.saas.channel.rbac.modules.dto.DTOUserView
 import cn.sunline.saas.channel.rbac.services.PositionService
 import cn.sunline.saas.channel.rbac.services.RoleService
 import cn.sunline.saas.channel.rbac.services.UserService
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -38,11 +40,11 @@ class UserManagerService  {
     private lateinit var roleService: RoleService
 
     fun getPaged(username:String?,position: String?,unPosition:Boolean,pageable: Pageable): Page<DTOUserView> {
-        val page = userService.getPaged({ root,_,criteriaBuilder ->
+        val page = userService.getPageWithTenant({ root,_,criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             val positionTable = root.join<User,Position>("position",JoinType.LEFT)
             position?.run {
-                predicates.add(criteriaBuilder.equal(positionTable.get<String>("id"),position))
+                predicates.add(criteriaBuilder.equal(positionTable.get<String>("id"),position + ContextUtil.getTenant()))
             }
             if(unPosition){
                 predicates.add(criteriaBuilder.isNull(positionTable.get<String>("id")))

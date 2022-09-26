@@ -4,6 +4,8 @@ import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.dapr_wrapper.actor.model.AbstractActor
 import cn.sunline.saas.dapr_wrapper.actor.model.EntityConfig
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.loan_apply.service.LoanApplyAppService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.ActorType
@@ -35,6 +37,7 @@ class LoanApplyStatisticsSchedulerTask(
 
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
+            ContextUtil.setTenant(this.getTenantId().toString())
             this.execute(tenantDateTime.now())
             schedulerJobLogService.save(this)
         }

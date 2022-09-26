@@ -1,6 +1,8 @@
 package cn.sunline.saas.pdpa.controllers
 
 import cn.sunline.saas.global.model.CountryType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.pdpa.exception.PdpaNotFoundException
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAdd
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaChange
@@ -31,6 +33,7 @@ class PdpaController {
 
     @GetMapping("{country}/{language}/retrieve")
     fun getPDPAInformation(@PathVariable country: CountryType,@PathVariable language:String): ResponseEntity<DTOResponseSuccess<DTOPdpaView>> {
+        ContextUtil.setTenant("1")
         val pdpa = pdpaService.getByCountryAndLanguage(country,language)?:throw PdpaNotFoundException("Invalid pdpa")
         val dtoPdpa = pdpaService.getDTOPdpaView(pdpa.id)
         return DTOResponseSuccess(dtoPdpa).response()

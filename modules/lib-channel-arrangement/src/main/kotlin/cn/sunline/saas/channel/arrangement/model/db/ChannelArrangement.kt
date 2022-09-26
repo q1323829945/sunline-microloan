@@ -32,24 +32,24 @@ class ChannelArrangement(
     @Column(name = "commission_method_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val commissionMethodType: CommissionMethodType,
 
-    @Column(name = "commission_amount",nullable = true, scale = 19, precision = 2, columnDefinition = "decimal(19,2) null")
+    @Column(name = "commission_amount",nullable = true, scale = 19, precision = 2, columnDefinition = "decimal(19,2) default null")
     val commissionAmount: BigDecimal?,
 
-    @Column(name = "commission_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) null")
+    @Column(name = "commission_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) default null")
     val commissionRatio: BigDecimal?,
 
-    @Column(name = "commission_amount_range_type", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "commission_amount_range_type", nullable = true, length = 32, columnDefinition = "varchar(32) default null")
     @Enumerated(value = EnumType.STRING)
     val commissionAmountRangeType: CommissionAmountRangeType?,
 
-    @Column(name = "commission_count_range_type", nullable = false, length = 32, columnDefinition = "varchar(32) null")
+    @Column(name = "commission_count_range_type", nullable = true, length = 32, columnDefinition = "varchar(32) default null")
     @Enumerated(value = EnumType.STRING)
     val commissionCountRangeType: CommissionCountRangeType?,
 
-    @Column(name = "lower_limit", nullable = false, columnDefinition = "decimal(19,2) null")
+    @Column(name = "lower_limit", nullable = true, columnDefinition = "decimal(19,2) default null")
     val lowerLimit: BigDecimal?,
 
-    @Column(name = "upper_limit", nullable = false, columnDefinition = "decimal(19,2) null")
+    @Column(name = "upper_limit", nullable = true, columnDefinition = "decimal(19,2) default null")
     val upperLimit: BigDecimal?,
 
 

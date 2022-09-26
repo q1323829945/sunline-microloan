@@ -48,6 +48,15 @@ class ChannelCastService (
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable)
     }
+
+    fun getUniqueChannelCast(channelCode: String,channelName: String):ChannelCast?{
+        return get{ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<String>("channelCode"), channelCode))
+            predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), channelName))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }
+    }
 }
 
 

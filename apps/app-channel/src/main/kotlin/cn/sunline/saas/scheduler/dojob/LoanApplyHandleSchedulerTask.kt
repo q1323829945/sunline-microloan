@@ -17,6 +17,7 @@ import cn.sunline.saas.channel.rbac.modules.Position
 import cn.sunline.saas.channel.rbac.modules.User
 import cn.sunline.saas.channel.rbac.services.UserService
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
@@ -147,10 +148,10 @@ class LoanApplyHandleSchedulerTask (
     }
 
     private fun getUsersByPosition(positionType: PositionType):List<User>{
-        return userService.getPaged({ root, _, criteriaBuilder ->
+        return userService.getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             val positionTable = root.join<User,Position>("position",JoinType.INNER)
-            predicates.add(criteriaBuilder.equal(positionTable.get<String>("id"),positionType.position))
+            predicates.add(criteriaBuilder.equal(positionTable.get<String>("id"),positionType.position + ContextUtil.getTenant()))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged()).content
     }

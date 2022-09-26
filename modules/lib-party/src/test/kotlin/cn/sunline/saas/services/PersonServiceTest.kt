@@ -39,7 +39,7 @@ class PersonServiceTest(@Autowired val tenantService: TenantService) {
                 name = "name",
                 country = CountryType.CHN,
                 enabled = true,
-                saasUUID = UUID.randomUUID()
+                uuid = UUID.randomUUID()
             )
         )
 

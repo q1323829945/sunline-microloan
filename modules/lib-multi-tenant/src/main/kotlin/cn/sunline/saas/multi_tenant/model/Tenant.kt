@@ -37,8 +37,4 @@ class Tenant(
     @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     var uuid: UUID = UUID.randomUUID(),
 
-    @NotNull
-    @Column(name = "saas_uuid",columnDefinition = "BINARY(16)", nullable = false, updatable = false)
-    var saasUUID: UUID,
-
 )

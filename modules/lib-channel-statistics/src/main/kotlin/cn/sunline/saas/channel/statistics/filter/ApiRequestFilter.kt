@@ -7,6 +7,7 @@ import cn.sunline.saas.channel.statistics.services.ApiDetailService
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.setUUID
 import cn.sunline.saas.multi_tenant.services.TenantService
+import cn.sunline.saas.multi_tenant.util.TenantMap
 import mu.KotlinLogging
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -25,8 +26,9 @@ import javax.servlet.http.HttpServletRequest
 class ApiRequestFilter(val tenantService: TenantService): Filter {
     var logger = KotlinLogging.logger {}
 
-    private val whiteList = mutableListOf(
-        "/menus","/healthz"    )
+    private val whiteList = mutableListOf<String>(
+//        "/menus","/healthz"
+    )
 
     @Autowired
     private lateinit var apiDetailService: ApiDetailService
@@ -36,21 +38,12 @@ class ApiRequestFilter(val tenantService: TenantService): Filter {
         val httpServletRequest = request as HttpServletRequest
 
         httpServletRequest.getHeader(Header.TENANT_AUTHORIZATION.key)?.run {
-            ContextUtil.setUUID(this)
-            val tenant = try{
-                tenantService.findByUUID(UUID.fromString(this))
-            } catch (e:Exception){
-                logger.error{ e.message }
-                null
-            }
-            tenant?.run {
-                ContextUtil.setTenant(this.id.toString())
+            TenantMap.setContextUtil(tenantService,this)
+        }
 
-                if(whiteList.contains(httpServletRequest.requestURI)){
-                    apiDetailService.saveApiDetail(httpServletRequest.requestURI)
-                }        }
-
-
+        if(whiteList.contains(httpServletRequest.requestURI)){
+            apiDetailService.saveApiDetail(httpServletRequest.requestURI)
+        }
 
         chain?.doFilter(request,response)
     }

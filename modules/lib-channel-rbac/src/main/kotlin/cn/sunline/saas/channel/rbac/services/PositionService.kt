@@ -8,6 +8,9 @@ import cn.sunline.saas.channel.rbac.modules.Position
 import cn.sunline.saas.channel.rbac.modules.dto.DTOPositionAdd
 import cn.sunline.saas.channel.rbac.modules.dto.DTOPositionView
 import cn.sunline.saas.channel.rbac.repositories.PositionRepository
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -21,7 +24,7 @@ import javax.persistence.criteria.Predicate
 class PositionService(
     val baseRepository: PositionRepository,
     val sequence: Sequence
-) : BaseRepoService<Position, String>(baseRepository) {
+) : BaseMultiTenantRepoService<Position, String>(baseRepository) {
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     var defaultPositions:MutableList<String> = mutableListOf()
@@ -64,7 +67,7 @@ class PositionService(
 
     fun paged(name: String?,pageable: Pageable):Page<DTOPositionView>{
 
-        return getPaged({ root,_,criteriaBuilder ->
+        return getPageWithTenant({ root,_,criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             name?.run { predicates.add(criteriaBuilder.like(root.get("name"),"$name%")) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
@@ -75,7 +78,7 @@ class PositionService(
 
     private fun getId(name:String):String{
         return if(defaultPositions.contains(name)){
-            name
+            name + ContextUtil.getTenant()
         } else {
             sequence.nextId().toString()
         }
@@ -97,7 +100,7 @@ class PositionService(
     }
 
     private fun getByName(name:String): Position?{
-        val position = get { root, _, criteriaBuilder ->
+        val position = getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<String>("name"),name))
             criteriaBuilder.and(*(predicates.toTypedArray()))
