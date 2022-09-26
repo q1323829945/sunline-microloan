@@ -7,6 +7,7 @@ import cn.sunline.saas.runner.AppCommandRunner
 import cn.sunline.saas.channel.statistics.services.ApiDetailService
 import cn.sunline.saas.channel.statistics.services.BusinessDetailService
 import cn.sunline.saas.channel.statistics.services.CustomerDetailService
+import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.pdpa.services.InitPdpa
 import cn.sunline.saas.pdpa.services.PdpaService
 import cn.sunline.saas.webhook.enum.WebhookType
@@ -36,12 +37,15 @@ class SubscriptionFactory {
     @Autowired
     private lateinit var customerDetailService: CustomerDetailService
 
+    @Autowired
+    private lateinit var obsApi: ObsApi
+
     fun instance(webhookType: WebhookType):Subscription{
         return when(webhookType){
             SUBSCRIPTION_ONBOARD -> SubscriptionOnBoard(tenantService, appCommandRunner)
             SUBSCRIPTION_ADD -> SubscriptionAdd(tenantService, appCommandRunner)
             SUBSCRIPTION_REMOVE -> SubscriptionRemove(tenantService)
-            SUBSCRIPTION_GET_INFO -> SubscriptionGetInfo(tenantService)
+            SUBSCRIPTION_GET_INFO -> SubscriptionGetInfo(tenantService,obsApi)
             BILLING_GET_INFO -> BillingGetInfo(tenantService, tenantDateTime, apiDetailService, businessDetailService, customerDetailService)
         }
     }

@@ -37,7 +37,7 @@ class SubscriptionGetInfo(
         val webMap = objectMapper.writeValueAsString(mutableMapOf(
             "url" to "https://quickloan-app-demo.saas.finline.app?tenant=${tenant.uuid}",
             "access_key" to "300348",
-            "client_id" to tenant.uuid.toString(),
+            "client_id" to "nothing",
         ))
         return WebhookResponse(
             true,

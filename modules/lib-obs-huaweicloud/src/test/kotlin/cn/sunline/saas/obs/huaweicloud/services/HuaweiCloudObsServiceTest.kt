@@ -103,9 +103,9 @@ class HuaweiCloudObsServiceTest {
     @Test
     @Disabled
     fun `get picture view`(){
-        val params = GetParams("48895297438892032/48950681445089280/33727192146395136/db85d8ac-0789-11eb-bda8-0242c0a84002.jpg")
+        val params = GetParams("appServer.png")
         val url = huaweiCloudObsService.getPictureView(params)
-
+        println(url)
         Thread.sleep(5000)
         val url2 = huaweiCloudObsService.getPictureView(params)
         Assertions.assertThat(url).isEqualTo(url2)
