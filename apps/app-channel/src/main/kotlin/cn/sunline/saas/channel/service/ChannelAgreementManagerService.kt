@@ -10,6 +10,9 @@ import cn.sunline.saas.channel.exception.ChannelAgreementBusinessException
 import cn.sunline.saas.channel.exception.ChannelBusinessException
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.global.constant.CommissionAmountRangeType
+import cn.sunline.saas.global.constant.CommissionCountRangeType
+import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -55,18 +58,49 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 )
             }
         }
-//        val dtoChannelAgreementAdd = DTOChannelAgreementAdd(
-//            channelId = dtoChannelAgreementAdd.channelId,
-//            agreementType = dtoChannelAgreementAdd.agreementType,
-//            fromDateTime = dtoChannelAgreementAdd.fromDateTime,
-//            toDateTime = dtoChannelAgreementAdd.toDateTime,
-//            channelArrangement = DTOChannelArrangementAdd(
-//                commissionMethodType = CommissionMethodType.RATIO,
-//                commissionAmount = null,
-//                commissionRatio = dtoChannelCommissionAgreementAdd.commissionRatio,
-//                commissionType = CommissionType.LOANAPPLICATION
-//            )
-//        )
+        dtoChannelAgreementAdd.channelCommissionArrangement.forEach {
+            if (it.commissionMethodType == CommissionMethodType.APPROVAL_AMOUNT_RATIO || it.commissionMethodType == CommissionMethodType.APPLY_AMOUNT_RATIO) {
+                val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
+                val defaultSize =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionAmountRangeType == CommissionAmountRangeType.DEFAULT }.size
+                if (size > 0 && defaultSize > 0) {
+                    throw ChannelAgreementBusinessException(
+                        "please choose default or others config",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+                val chooseSize =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionAmountRangeType }.values.size
+                if (chooseSize > 0) {
+                    throw ChannelAgreementBusinessException(
+                        "more than one same config",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+            }
+
+            if (it.commissionMethodType == CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT || it.commissionMethodType == CommissionMethodType.APPLY_COUNT_FIX_AMOUNT) {
+                val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
+                val defaultSize =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionCountRangeType == CommissionCountRangeType.DEFAULT }.size
+                if (size > 0 && defaultSize > 0) {
+                    throw ChannelAgreementBusinessException(
+                        "please choose default or others config",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+                val chooseSize =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionCountRangeType }.values.size
+                if (chooseSize > 0) {
+                    throw ChannelAgreementBusinessException(
+                        "more than one same config",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+            }
+        }
+
+
         val channelCommissionAgreement = channelAgreementService.registered(dtoChannelAgreementAdd)
         val channelArrangements = mutableListOf<DTOChannelArrangementView>()
         channelCommissionAgreement.channelArrangement.forEach {
