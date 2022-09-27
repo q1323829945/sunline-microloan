@@ -31,7 +31,7 @@ class InitPdpa {
             val pdpaInformation = objectMapper.readValue<List<DTOPdpaItem>>(json)
             val dtoPdpa = DTOPdpaAdd(
                 country = CountryType.CHN,
-                language = "zh-CH",
+                language = "zh-CN",
                 pdpaInformation = pdpaInformation
             )
 
