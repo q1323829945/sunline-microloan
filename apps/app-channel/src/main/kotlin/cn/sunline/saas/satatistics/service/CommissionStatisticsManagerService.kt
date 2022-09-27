@@ -87,7 +87,6 @@ class CommissionStatisticsManagerService(
                 channelName = it.channelName,
                 statisticsAmount = it.statisticsAmount,
                 amount = it.commissionAmount,
-                commissionFeatureId = it.commissionFeatureId,
                 dateTime = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.datetime))
             )
         }
@@ -154,7 +153,6 @@ class CommissionStatisticsManagerService(
                     DTOCommissionStatistics(
                         channelCode = it.channelCode,
                         channelName = it.channelName,
-                        commissionFeatureId = 0,
                         statisticsAmount = it.statisticsAmount,
                         commissionAmount = it.commissionAmount,
                         frequency = frequency

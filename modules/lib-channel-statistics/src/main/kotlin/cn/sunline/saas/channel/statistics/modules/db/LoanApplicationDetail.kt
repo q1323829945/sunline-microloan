@@ -21,7 +21,6 @@ class LoanApplicationDetail(
     @Column(name = "channel_code", columnDefinition = "varchar(256) not null")
     val channelCode: String,
 
-    @NotNull
     @Column(name = "channel_name", length = 128, nullable = false, columnDefinition = "varchar(128) ")
     var channelName: String,
 
@@ -45,9 +44,8 @@ class LoanApplicationDetail(
     @Column(name = "approval_amount", scale = 19, precision = 2, columnDefinition = "decimal(19,2) not null")
     var approvalAmount: BigDecimal,
 
-    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "currency", length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "currency", length = 32, columnDefinition = "varchar(32)")
     val currency: CurrencyType? = null,
 
     @NotNull

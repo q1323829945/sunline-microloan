@@ -7,7 +7,6 @@ import java.math.BigDecimal
 data class DTOCommissionStatistics(
     val channelCode: String,
     val channelName: String,
-    val commissionFeatureId: Long,
     val statisticsAmount: BigDecimal,
     val commissionAmount: BigDecimal,
     val frequency: Frequency

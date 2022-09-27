@@ -17,14 +17,9 @@ class CommissionStatistics(
     var id: Long? = null,
 
     @NotNull
-    @Column(name = "commission_feature_id", columnDefinition = "bigint not null")
-    val commissionFeatureId: Long,
-
-    @NotNull
     @Column(name = "channel_code", columnDefinition = "varchar(256) not null")
     val channelCode: String,
 
-    @NotNull
     @Column(name = "channel_name",length = 128,nullable = false,  columnDefinition = "varchar(128) ")
     var channelName: String,
 

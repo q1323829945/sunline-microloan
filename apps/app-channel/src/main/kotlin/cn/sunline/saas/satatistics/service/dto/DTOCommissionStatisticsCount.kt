@@ -6,7 +6,6 @@ import java.math.BigDecimal
 data class DTOCommissionStatisticsPageCount(
     val channelCode: String,
     val channelName: String,
-    val commissionFeatureId: Long,
     val amount: BigDecimal,
     val statisticsAmount: BigDecimal,
     val dateTime: String

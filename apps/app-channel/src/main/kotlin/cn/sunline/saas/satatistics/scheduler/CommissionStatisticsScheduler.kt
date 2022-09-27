@@ -77,7 +77,6 @@ class CommissionStatisticsScheduler(
                     DTOCommissionStatistics(
                         channelCode = it.channelCode,
                         channelName = it.channelName,
-                        commissionFeatureId = 0,
                         statisticsAmount =  it.statisticsAmount,
                         commissionAmount = it.commissionAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
                         frequency = frequency

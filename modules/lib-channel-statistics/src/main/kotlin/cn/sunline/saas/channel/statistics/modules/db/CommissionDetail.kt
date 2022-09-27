@@ -21,7 +21,6 @@ class CommissionDetail (
     @Column(name = "channel_code", columnDefinition = "varchar(256) not null")
     val channelCode: String,
 
-    @NotNull
     @Column(name = "channel_name",length = 128,nullable = false,  columnDefinition = "varchar(128) ")
     var channelName: String,
 
@@ -29,20 +28,17 @@ class CommissionDetail (
     @Column(name = "application_id", columnDefinition = "bigint not null")
     val applicationId: Long,
 
-    @NotNull
-    @Column(name = "commission_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    @Column(name = "commission_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) null")
     var commissionAmount: BigDecimal,
 
-    @Column(name = "ratio",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    @Column(name = "ratio",scale = 19,precision = 2, columnDefinition = "decimal(19,2) null")
     var ratio: BigDecimal?,
 
-    @NotNull
-    @Column(name = "statistics_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) not null")
+    @Column(name = "statistics_amount",scale = 19,precision = 2, columnDefinition = "decimal(19,2) null")
     var statisticsAmount: BigDecimal,
 
-    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "currency",  length = 32, columnDefinition = "varchar(32) null")
     val currency: CurrencyType,
 
     @NotNull
