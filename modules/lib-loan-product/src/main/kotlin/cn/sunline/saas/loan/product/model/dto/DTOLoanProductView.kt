@@ -74,6 +74,7 @@ data class DTOInterestFeatureView(
         val ratePlanId: String,
         val interest: DTOInterestFeatureModalityView,
         val overdueInterest: DTOOverdueInterestFeatureModalityView,
+        val basicPoint: BigDecimal?
 )
 
 data class DTOInterestFeatureModalityView(

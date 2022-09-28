@@ -6,5 +6,6 @@ data class DTOInterestRate(
     val id: String? = null,
     val period: LoanTermType,
     val rate: String,
-    val ratePlanId:String
+    val ratePlanId: String,
+    val basePoint: Long
 )

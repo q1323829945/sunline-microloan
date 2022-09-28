@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class BusinessStatisticsSchedulerTask(
-    actorType:String = ActorType.CHANNEL_STATISTICS.name,
+    actorType:String = ActorType.BUSINESS_STATISTICS.name,
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
 

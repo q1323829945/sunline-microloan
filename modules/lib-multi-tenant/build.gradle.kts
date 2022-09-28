@@ -1,11 +1,12 @@
 val jodaVersion: String by rootProject.extra
+val mysqlConnectorVersion: String by rootProject.extra
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("joda-time:joda-time:${jodaVersion}")
-
+    implementation("mysql:mysql-connector-java:${mysqlConnectorVersion}")
     api(project(":lib-base-jpa"))
     implementation(project(":lib-exceptions"))
     implementation(project(":lib-global"))

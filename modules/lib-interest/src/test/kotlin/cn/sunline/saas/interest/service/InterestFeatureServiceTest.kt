@@ -30,7 +30,8 @@ class InterestFeatureServiceTest(
             ratePlanId = 1000,
             baseYearDays = BaseYearDays.ACCOUNT_YEAR,
             adjustFrequency = "NOW",
-            overdueInterestRatePercentage = 150
+            overdueInterestRatePercentage = 150,
+            basicPoint = null
         )
 
         val actual = interestFeatureService.register(1,interestFeature)

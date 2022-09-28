@@ -41,6 +41,7 @@ class CustomerOfferServiceTest(
             Tenant(
                 id = 12344566,
                 country = CountryType.CHN,
+                name = "admin"
             )
         )
         ContextUtil.setTenant("12344566")

@@ -2,6 +2,7 @@ package cn.sunline.saas.interest.model.dto
 
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.interest.constant.InterestType
+import java.math.BigDecimal
 
 /**
  * @title: DTOInterestFeatureAdd
@@ -14,5 +15,6 @@ data class DTOInterestFeatureAdd(
     val ratePlanId: Long,
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val overdueInterestRatePercentage: Long
+    val overdueInterestRatePercentage: Long,
+    val basicPoint: BigDecimal?
 )

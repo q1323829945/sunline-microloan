@@ -17,11 +17,11 @@ class CalculateInterestRate(private val yearInterestRatePercent: BigDecimal) {
         return num.divide(BigDecimal(100), CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)
     }
 
-    fun getYearRate():BigDecimal{
+    fun getYearRate(): BigDecimal {
         return dealPercent(getYearRateWithPercent())
     }
 
-    fun getYearRateWithPercent():BigDecimal{
+    fun getYearRateWithPercent(): BigDecimal {
         return yearInterestRatePercent
     }
 
@@ -64,9 +64,9 @@ class CalculateInterestRate(private val yearInterestRatePercent: BigDecimal) {
         return dealPercent(calRateWithPercent(floatInterestRate))
     }
 
-    fun calRateWithNoPercent(floatInterestRate: BigDecimal): BigDecimal {
-        return yearInterestRatePercent.multiply(floatInterestRate)
+    fun calRateWithNoPercent(floatInterestRate: BigDecimal, basePoint: Long): BigDecimal {
+        return yearInterestRatePercent.multiply((1 + basePoint).toBigDecimal())
             .divide(BigDecimal(100), CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)
-            .add(yearInterestRatePercent)
+            .add(floatInterestRate)
     }
 }

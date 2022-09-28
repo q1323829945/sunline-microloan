@@ -173,6 +173,7 @@ class ConsumerLoanService(
                 FeeMethodType.FEE_RATIO -> {
                     FeeUtil.calFeeAmount(customerOffer.amount.toBigDecimal(), it.feeRate!!, it.feeMethodType)
                 }
+
                 FeeMethodType.FIX_AMOUNT -> {
                     it.feeAmount
                 }
@@ -183,8 +184,10 @@ class ConsumerLoanService(
                     feeArrangementId = it.id.toLong(),
                     feeAmount = feeAmount ?: BigDecimal.ZERO,
                     repaymentAmount = BigDecimal.ZERO,
-                    feeFromDate = tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime).toDate(),
-                    feeToDate = tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime).toDate(),
+                    feeFromDate = tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.fromDateTime)
+                        .toDate(),
+                    feeToDate = tenantDateTime.toTenantDateTime(loanAgreementAggregate.loanAgreement.toDateTime)
+                        .toDate(),
                     feeUser = null,
                     currencyType = loanAgreementAggregate.loanAgreement.currency,
                 )
@@ -295,7 +298,7 @@ class ConsumerLoanService(
         feeItemService.listByAgreementId(loanAgreement.id).forEach {
             it.repaymentAmount = it.feeAmount
             it.repaymentStatus = RepaymentStatus.CLEAR
-            it.feeRepaymentDate =tenantDateTime.now().toDate()
+            it.feeRepaymentDate = tenantDateTime.now().toDate()
             feeItemService.save(it)
         }
 
@@ -433,7 +436,8 @@ class ConsumerLoanService(
         }
         val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong())
+        val basePoint = loanProduct.interestFeature.interest.basePoint?:0
+        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong(), basePoint)
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -451,34 +455,38 @@ class ConsumerLoanService(
 
     private fun convertToInterestRate(list: List<DTOInvokeRates>, ratePlanId: Long): MutableList<InterestRate> {
         val rates = mutableListOf<InterestRate>()
-        for (rate in list) {
+        list.forEach {
             rates.add(
                 InterestRate(
-                    rate.id.toLong(), rate.period, rate.rate.toBigDecimal(), ratePlanId
+                    id = it.id.toLong(),
+                    period = it.period,
+                    rate = it.rate.toBigDecimal(),
+                    ratePlanId = ratePlanId
                 )
             )
         }
         return rates
     }
 
-    private fun getInterestRate(interestType: InterestType, term: LoanTermType, ratePlanId: Long): BigDecimal {
-        val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId.toLong())
-        val ratesModel = convertToInterestRate(rateResult.rates, ratePlanId.toLong())
+    private fun getInterestRate(
+        interestType: InterestType,
+        term: LoanTermType,
+        ratePlanId: Long,
+        basePoint: Long
+    ): BigDecimal {
+        val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
+        val baseRateModel = convertToInterestRate(baseRateResult.rates, ratePlanId.toLong())
+        val baseRate = InterestRateHelper.getRate(term, baseRateModel)
+            ?: throw BaseRateNullException("base rate must be not null when interest type is floating rate")
+        val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId)
+        val ratesModel = convertToInterestRate(rateResult.rates, ratePlanId)
         val rate = InterestRateHelper.getRate(term, ratesModel)!!
-        val executionRate = when (interestType) {
-            InterestType.FIXED -> rate
-            InterestType.FLOATING_RATE_NOTE -> {
-                val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
-                val baseRateModel = convertToInterestRate(baseRateResult.rates, ratePlanId.toLong())
-                val baseRate = InterestRateHelper.getRate(term, baseRateModel)
-                if (baseRate == null) {
-                    throw BaseRateNullException("base rate must be not null when interest type is floating rate")
-                } else {
-                    CalculateInterestRate(baseRate).calRateWithNoPercent(rate)
-                }
+        return when (interestType) {
+            InterestType.FIXED -> baseRate
+            InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
+                CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basePoint)
             }
         }
-        return executionRate
     }
 
     private fun convertToScheduleTrialMapper(
@@ -620,7 +628,7 @@ class ConsumerLoanService(
         }
 
         val invoice = invoiceService.getOne(dtoInvoiceRepay.invoiceId.toLong())
-            ?: throw  LoanInvoiceBusinessException("Loan Invoice Not Found")
+            ?: throw LoanInvoiceBusinessException("Loan Invoice Not Found")
 
         val loanAgreement = loanAgreementService.getOne(invoice.agreementId)
             ?: throw LoanAgreementNotFoundException("loan agreement not found")
@@ -708,8 +716,9 @@ class ConsumerLoanService(
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
+        val basePoint = loanProduct.interestFeature.interest.basePoint ?: 0
         val interestRate =
-            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong())
+            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong(),basePoint)
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -835,8 +844,9 @@ class ConsumerLoanService(
         feeArrangement.filter { it.feeType == LoanFeeType.PREPAYMENT }.forEach {
             val feeAmount = when (it.feeMethodType) {
                 FeeMethodType.FEE_RATIO -> {
-                    FeeUtil.calFeeAmount( dtoPrepayment.principal.toBigDecimal(), it.feeRate!!, it.feeMethodType)
+                    FeeUtil.calFeeAmount(dtoPrepayment.principal.toBigDecimal(), it.feeRate!!, it.feeMethodType)
                 }
+
                 FeeMethodType.FIX_AMOUNT -> {
                     it.feeAmount
                 }
@@ -1099,7 +1109,7 @@ class ConsumerLoanService(
         }
         return list
     }
-    
+
     fun getFeeItemListByAgreementId(agreementId: Long): List<DTOFeeItemView> {
         return feeItemService.listByAgreementId(agreementId).map {
             val feeArrangement = feeArrangementService.getOne(it.feeArrangementId)

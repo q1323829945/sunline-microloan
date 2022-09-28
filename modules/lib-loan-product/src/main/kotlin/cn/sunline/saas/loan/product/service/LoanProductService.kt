@@ -365,7 +365,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.interestFeature.run {
                 interestFeature.ratePlanId = this.ratePlanId.toLong()
                 interestFeature.interest =
-                    InterestFeatureModality(interestFeature.id, this.baseYearDays, this.adjustFrequency)
+                    InterestFeatureModality(interestFeature.id, this.baseYearDays, this.adjustFrequency, this.basePoint)
                 interestFeature.overdueInterest =
                     OverdueInterestFeatureModality(interestFeature.id, this.overdueInterestRatePercentage.toLong())
                 interestFeature.interestType = this.interestType

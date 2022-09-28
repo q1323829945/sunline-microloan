@@ -30,8 +30,8 @@ class MultiTenantRepoServiceTest(@Autowired val testDBModelService: TestDBModelS
 
     @BeforeAll
     fun `init`() {
-        val testTenant1 = Tenant(100, CountryType.GBR, true)
-        val testTenant2 = Tenant(200, CountryType.GBR, true)
+        val testTenant1 = Tenant(100, "admin", CountryType.GBR, true)
+        val testTenant2 = Tenant(200, "admin", CountryType.GBR, true)
         tenantService.save(mutableListOf(testTenant1,testTenant2))
     }
 
@@ -46,6 +46,7 @@ class MultiTenantRepoServiceTest(@Autowired val testDBModelService: TestDBModelS
 
     @Test
     fun `get list with tenant`() {
+
         ContextUtil.setTenant("200")
         val actual = mutableListOf<TestDBModel>()
         actual.add(TestDBModel(date=tenantDateTime.now().toDate()))

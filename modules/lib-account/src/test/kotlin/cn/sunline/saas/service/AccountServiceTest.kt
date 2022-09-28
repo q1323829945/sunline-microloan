@@ -43,6 +43,7 @@ class AccountServiceTest {
             Tenant(
                 id = 1,
                 country = CountryType.CHN,
+                name = "admin"
             )
         )
     }

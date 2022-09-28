@@ -64,7 +64,9 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             ratePlanId = 1000,
             baseYearDays = BaseYearDays.ACCOUNT_YEAR,
             adjustFrequency = "NOW",
-            overdueInterestRatePercentage = 150
+            overdueInterestRatePercentage = 150,
+            basicPoint = BigDecimal(0.1)
+
         )
 
         val prepayments = mutableListOf <DTOPrepaymentFeatureModalityAdd>()
@@ -191,7 +193,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             ratePlanId = 1000,
             baseYearDays = BaseYearDays.ACCOUNT_YEAR,
             adjustFrequency = "NOW",
-            overdueInterestRatePercentage = 150
+            overdueInterestRatePercentage = 150,
+            basicPoint = null
         )
 
         val prepayments = mutableListOf <DTOPrepaymentFeatureModalityAdd>()

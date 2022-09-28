@@ -38,6 +38,7 @@ class InvoiceServiceTest {
             Tenant(
                 id = 123,
                 country = CountryType.CHN,
+                name = "admin"
             )
         )
 

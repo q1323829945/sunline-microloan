@@ -24,19 +24,20 @@ class UnderwritingArrangementServiceTest {
     private lateinit var tenantService: TenantService
 
     @BeforeAll
-    fun init(){
+    fun init() {
         ContextUtil.setTenant("123")
 
         tenantService.save(
             Tenant(
                 id = 123,
-                country = CountryType.CHN
+                country = CountryType.CHN,
+                name = "admin"
             )
         )
     }
 
     @Test
-    fun registered(){
+    fun registered() {
         val arrangement = underwritingArrangementService.registered(
             dtoUnderwritingArrangementAdd = DTOUnderwritingArrangementAdd(
                 agreementId = 1,

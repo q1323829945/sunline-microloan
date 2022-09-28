@@ -3,6 +3,7 @@ package cn.sunline.saas.interest.model.db
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
+import java.math.BigDecimal
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -27,8 +28,11 @@ class InterestFeatureModality(
     var baseYearDays: BaseYearDays,
 
     @NotNull
-    @Column(name="adjust_frequency",nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    var adjustFrequency: String
+    @Column(name = "adjust_frequency", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    var adjustFrequency: String,
+
+    @Column(name = "basic_point", columnDefinition = "bigint null")
+    var basicPoint: BigDecimal?
 
 ) : MultiTenant {
 

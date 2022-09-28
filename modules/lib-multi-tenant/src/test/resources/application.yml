@@ -14,10 +14,10 @@ spring:
     show-sql: true
     generate-ddl: false
 
-#  datasource:
-#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
-#    driver-class-name: org.h2.Driver
-#    initialization-mode: always
+  #  datasource:
+  #    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+  #    driver-class-name: org.h2.Driver
+  #    initialization-mode: always
 
   datasource:
     url: "jdbc:mysql://localhost:3306/db_agent?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
