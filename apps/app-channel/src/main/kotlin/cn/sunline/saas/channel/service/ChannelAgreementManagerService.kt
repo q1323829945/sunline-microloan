@@ -60,40 +60,46 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
         }
         dtoChannelAgreementAdd.channelCommissionArrangement.forEach {
             if (it.commissionMethodType == CommissionMethodType.APPROVAL_AMOUNT_RATIO || it.commissionMethodType == CommissionMethodType.APPLY_AMOUNT_RATIO) {
+                val rangeType =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionAmountRangeType }
+                rangeType.forEach {
+                    val chooseSize = it.value.size
+                    if (chooseSize > 1) {
+                        throw ChannelAgreementBusinessException(
+                            "more than one same config",
+                            ManagementExceptionCode.DATA_ALREADY_EXIST
+                        )
+                    }
+                }
                 val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
                 val defaultSize =
                     dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionAmountRangeType == CommissionAmountRangeType.DEFAULT }.size
-                if (size > 0 && defaultSize > 0) {
+                if (size > 1 && defaultSize > 0) {
                     throw ChannelAgreementBusinessException(
                         "please choose default or others config",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
-                    )
-                }
-                val chooseSize =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionAmountRangeType }.values.size
-                if (chooseSize > 0) {
-                    throw ChannelAgreementBusinessException(
-                        "more than one same config",
                         ManagementExceptionCode.DATA_ALREADY_EXIST
                     )
                 }
             }
 
             if (it.commissionMethodType == CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT || it.commissionMethodType == CommissionMethodType.APPLY_COUNT_FIX_AMOUNT) {
+                val rangeType =
+                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionCountRangeType }
+                rangeType.forEach {
+                    val chooseSize = it.value.size
+                    if (chooseSize > 1) {
+                        throw ChannelAgreementBusinessException(
+                            "more than one same config",
+                            ManagementExceptionCode.DATA_ALREADY_EXIST
+                        )
+                    }
+                }
                 val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
                 val defaultSize =
                     dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionCountRangeType == CommissionCountRangeType.DEFAULT }.size
-                if (size > 0 && defaultSize > 0) {
+                if (size > 1 && defaultSize > 0) {
                     throw ChannelAgreementBusinessException(
                         "please choose default or others config",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
-                    )
-                }
-                val chooseSize =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionCountRangeType }.values.size
-                if (chooseSize > 0) {
-                    throw ChannelAgreementBusinessException(
-                        "more than one same config",
                         ManagementExceptionCode.DATA_ALREADY_EXIST
                     )
                 }
