@@ -21,7 +21,7 @@ class SecurityConfiguration (private val tokenService: TokenService,
 
     override fun configure(web: WebSecurity?) {
         web!!.ignoring().antMatchers(//base
-            "/auth/login","/dapr/**","/error","/healthz","/actors/**"
+            "/auth/login","/dapr/**","/error","/healthz","/actors/**","/RatePlan/**"
         ).regexMatchers( //rpc
             "/LoanProduct/[0-9]+","/UnderwritingManagement/[0-9]+","/ConsumerLoan/LoanAgreement/[0-9]+",
             "/InterestRate/all(\\?.*|\$)","/BusinessUnit/[0-9]+","/Person/[0-9]+","/CustomerOffer/invoke/[0-9]+",

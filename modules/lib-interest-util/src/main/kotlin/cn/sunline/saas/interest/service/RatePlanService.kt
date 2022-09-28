@@ -1,5 +1,7 @@
 package cn.sunline.saas.interest.service
 
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.repository.RatePlanRepository
@@ -33,6 +35,6 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
     }
 
     fun findByType(type: RatePlanType): RatePlan? {
-       return ratePlanRepository.findByType(type)
+       return ratePlanRepository.findByTypeAndTenantId(type,ContextUtil.getTenant().toLong())
     }
 }
