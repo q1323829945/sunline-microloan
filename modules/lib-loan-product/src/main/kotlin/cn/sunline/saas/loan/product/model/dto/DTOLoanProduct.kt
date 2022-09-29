@@ -51,7 +51,7 @@ data class DTOInterestFeature(
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
     val overdueInterestRatePercentage: String,
-    val basePoint: BigDecimal?
+    val basicPoint: BigDecimal?
 )
 
 data class DTORepaymentFeature(
