@@ -18,30 +18,18 @@ import cn.sunline.saas.global.util.setTenant
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 
-@Service
 class ChannelStatisticsSchedulerTask(
+    private val tenantDateTime: TenantDateTime,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val organisationService: OrganisationService,
+    private val customerDetailService: CustomerDetailService,
     actorType:String = ActorType.CHANNEL_STATISTICS.name,
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     private var logger = KotlinLogging.logger {}
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var organisationService: OrganisationService
-
-    @Autowired
-    private lateinit var customerDetailService: CustomerDetailService
-
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())

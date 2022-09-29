@@ -15,9 +15,4 @@ import org.springframework.data.repository.query.Param
  * @date 2022/3/7 15:19
  */
 interface LoanProductRepository:BaseRepository<LoanProduct,Long>{
-
-
-    fun findByIdentificationCode(identificationCode:String):MutableList<LoanProduct>?
-
-    fun findByIdentificationCodeAndStatus(identificationCode:String,bankingProductStatus: BankingProductStatus):MutableList<LoanProduct>?
 }

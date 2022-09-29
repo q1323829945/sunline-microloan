@@ -73,11 +73,11 @@ class LoanAgentService (
                 INDIVIDUAL -> {
                     dtoLoanAgent.personalInformation?.name?.run {
                         var name = "${firstName}·"
-                        middleName?.run {
+                        if(!middleName.isNullOrEmpty()){
                             name += "$this·"
                         }
-                        name+= lastName
-                        suffix?.run {
+                        name += lastName
+                        if(!suffix.isNullOrEmpty()){
                             name += " $this"
                         }
                         return name

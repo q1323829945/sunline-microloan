@@ -15,7 +15,6 @@ data class EntityConfig(
     val reentrancyEnabled: Boolean? = null
 )
 
-@Component
 abstract class AbstractActor(val actorType: String, val entityConfig: EntityConfig? = null) {
     abstract fun doJob(actorId: String, jobId: String,data: ActorCommand = ActorCommand())
 }

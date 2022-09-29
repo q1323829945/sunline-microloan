@@ -8,6 +8,7 @@ import cn.sunline.saas.rbac.modules.dto.DTOCustomerChange
 import cn.sunline.saas.rbac.repositories.CustomerRepository
 import cn.sunline.saas.seq.Sequence
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Predicate
 
 @Service
 class CustomerService(
@@ -22,6 +23,14 @@ class CustomerService(
 
 
     fun addOne(dtoCustomerAdd: DTOCustomerAdd):Customer{
+        getOneWithTenant{ root,_,c ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(c.equal(root.get<String>(""),dtoCustomerAdd.userId))
+            c.and(*(predicates.toTypedArray()))
+        }?.run {
+            this
+        }
+
         return save(
             Customer(
                 sequence.nextId(),

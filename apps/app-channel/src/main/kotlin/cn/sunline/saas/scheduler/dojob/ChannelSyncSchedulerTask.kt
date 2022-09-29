@@ -26,26 +26,17 @@ import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Service
 class ChannelSyncSchedulerTask(
+    private val tenantDateTime: TenantDateTime,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val organisationService: OrganisationService,
+    private val channelBindingsImpl: ChannelBindingsImpl,
     actorType: String = ActorType.SYNC_CHANNEL.name,
     entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     private var logger = KotlinLogging.logger {}
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var organisationService: OrganisationService
-
-    @Autowired
-    private lateinit var channelBindingsImpl: ChannelBindingsImpl
 
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {

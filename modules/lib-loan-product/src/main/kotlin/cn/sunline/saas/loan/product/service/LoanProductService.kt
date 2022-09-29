@@ -224,8 +224,11 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             ManagementExceptionCode.PRODUCT_NOT_FOUND
         )
         if (status == BankingProductStatus.SOLD) {
-            val productList = loanProductRepos.findByIdentificationCode(nowProduct.identificationCode)
-                ?: throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
+            val productList = getPageWithTenant({ root,_,criteriaBuilder ->
+                val predicates = mutableListOf<Predicate>()
+                predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),nowProduct.identificationCode))
+                criteriaBuilder.and(*(predicates.toTypedArray()))
+            }, Pageable.unpaged())
             for (product in productList) {
                 if (BankingProductStatus.SOLD == product.status) {
                     product.status = BankingProductStatus.OBSOLETE
@@ -238,8 +241,11 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     fun findByIdentificationCode(identificationCode: String): MutableList<DTOLoanProductView> {
-        val productList = loanProductRepos.findByIdentificationCode(identificationCode)
-            ?: throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
+        val productList = getPageWithTenant({ root,_,criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),identificationCode))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
         val list = ArrayList<DTOLoanProductView>()
         for (product in productList) {
             val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
@@ -253,8 +259,12 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         identificationCode: String,
         bankingProductStatus: BankingProductStatus
     ): MutableList<DTOLoanProductView> {
-        val productList = loanProductRepos.findByIdentificationCodeAndStatus(identificationCode, bankingProductStatus)
-            ?: throw LoanProductNotFoundException("Invalid loan product", ManagementExceptionCode.PRODUCT_NOT_FOUND)
+        val productList = getPageWithTenant({ root,_,criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),identificationCode))
+            predicates.add(criteriaBuilder.equal(root.get<BankingProductStatus>("status"),bankingProductStatus))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
         val list = ArrayList<DTOLoanProductView>()
         for (product in productList) {
             val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)

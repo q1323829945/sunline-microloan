@@ -28,25 +28,15 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/5/23 16:25
  */
-@Service
 class InvoiceAccountJob(
+    private val tenantDateTime: TenantDateTime,
+    private val invoiceService: InvoiceService,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val calculateSchedulerTimer: CalculateSchedulerTimer,
+    private val loanAgreementService: LoanAgreementService,
     actorType: String = "InvoiceAccountActor", entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
 
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var invoiceService: InvoiceService
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
-
-    @Autowired
-    private lateinit var loanAgreementService: LoanAgreementService
 
     private val outstanding: MutableMap<InvoiceAmountType, BigDecimal> = mutableMapOf()
 
