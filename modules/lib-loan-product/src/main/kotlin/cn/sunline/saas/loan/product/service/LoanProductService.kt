@@ -365,9 +365,9 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.interestFeature.run {
                 interestFeature.ratePlanId = this.ratePlanId.toLong()
                 interestFeature.interest =
-                    InterestFeatureModality(interestFeature.id, this.baseYearDays, this.adjustFrequency, this.basicPoint)
+                    InterestFeatureModality(interestFeature.id, this.interest.baseYearDays, this.interest.adjustFrequency, this.interest.basicPoint)
                 interestFeature.overdueInterest =
-                    OverdueInterestFeatureModality(interestFeature.id, this.overdueInterestRatePercentage.toLong())
+                    OverdueInterestFeatureModality(interestFeature.id, this.overdueInterest.overdueInterestRatePercentage.toLong())
                 interestFeature.interestType = this.interestType
                 val updateInterestFeature = interestProductFeatureService.save(interestFeature)
                 dtoLoanProduct.interestFeature = objectMapper.convertValue(updateInterestFeature)

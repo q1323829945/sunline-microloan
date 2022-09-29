@@ -436,8 +436,8 @@ class ConsumerLoanService(
         }
         val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val basePoint = loanProduct.interestFeature.interest.basePoint?:0
-        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong(), basePoint)
+        val basicPoint = loanProduct.interestFeature.interest.basePoint?:BigDecimal.ZERO
+        val interestRate = getInterestRate(loanProduct.interestFeature.interestType, term, ratePlanId.toLong(), basicPoint)
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -472,7 +472,7 @@ class ConsumerLoanService(
         interestType: InterestType,
         term: LoanTermType,
         ratePlanId: Long,
-        basePoint: Long
+        basicPoint: BigDecimal
     ): BigDecimal {
         val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
         val baseRateModel = convertToInterestRate(baseRateResult.rates, ratePlanId.toLong())
@@ -484,7 +484,7 @@ class ConsumerLoanService(
         return when (interestType) {
             InterestType.FIXED -> baseRate
             InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
-                CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basePoint)
+                CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint)
             }
         }
     }
@@ -716,9 +716,9 @@ class ConsumerLoanService(
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.productId)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val basePoint = loanProduct.interestFeature.interest.basePoint ?: 0
+        val basicPoint = loanProduct.interestFeature.interest.basePoint ?: BigDecimal.ZERO
         val interestRate =
-            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong(),basePoint)
+            getInterestRate(loanProduct.interestFeature.interestType, agreement.term, ratePlanId.toLong(),basicPoint)
         val schedule = ScheduleService(
             amount,
             interestRate,
