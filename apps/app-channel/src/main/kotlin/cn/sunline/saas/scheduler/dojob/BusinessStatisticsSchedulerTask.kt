@@ -19,24 +19,16 @@ import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Service
 class BusinessStatisticsSchedulerTask(
+    private val tenantDateTime: TenantDateTime,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val loanApplyAppService: LoanApplyAppService,
     actorType:String = ActorType.BUSINESS_STATISTICS.name,
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     private var logger = KotlinLogging.logger {}
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var loanApplyAppService: LoanApplyAppService
-
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())

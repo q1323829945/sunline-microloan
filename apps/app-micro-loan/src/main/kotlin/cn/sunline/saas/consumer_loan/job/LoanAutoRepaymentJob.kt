@@ -23,25 +23,15 @@ import java.math.BigDecimal
  * @author Kevin-Cui
  * @date 2022/5/25 14:44
  */
-@Service
 class LoanAutoRepaymentJob(
-
+    private val tenantDateTime: TenantDateTime,
+    private val invoiceService: InvoiceService,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val consumerLoanService: ConsumerLoanService,
     actorType: String = "LoanAutoRepaymentJob",
     entityConfig: EntityConfig? = null
 ) :
     AbstractActor(actorType, entityConfig) {
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var invoiceService: InvoiceService
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var consumerLoanService: ConsumerLoanService
 
     fun prerequisites(invoices: List<Invoice>): Boolean {
         return filterAutoRepaymentInvoices(invoices).isNotEmpty()

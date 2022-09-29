@@ -30,29 +30,18 @@ import java.math.BigDecimal
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
 
-@Service
 class LoanApplyHandleSchedulerTask (
+    private val loanAgentService: LoanAgentService,
+    private val loanApplyHandleService: LoanApplyHandleService,
+    private val userService: UserService,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    val tenantDateTime: TenantDateTime,
     actorType:String = ActorType.LOAN_APPLY_HANDLE.name,
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
     private var logger = KotlinLogging.logger {}
 
-    val threshold: BigDecimal = BigDecimal(5)
-
-    @Autowired
-    private lateinit var loanAgentService: LoanAgentService
-
-    @Autowired
-    private lateinit var loanApplyHandleService: LoanApplyHandleService
-
-    @Autowired
-    private lateinit var userService: UserService
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
+    private val threshold: BigDecimal = BigDecimal(5)
 
 
     data class DTOUserTask(

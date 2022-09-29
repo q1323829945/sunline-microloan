@@ -25,28 +25,15 @@ import org.springframework.stereotype.Service
  * @author Kevin-Cui
  * @date 2022/5/25 14:52
  */
-@Service
 class LoanInvoiceJob(
+    private val tenantDateTime: TenantDateTime,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val calculateSchedulerTimer: CalculateSchedulerTimer,
+    private val invoiceService: InvoiceService,
+    private val loanAccountService: LoanAccountService,
+    private val loanAgreementService: LoanAgreementService,
     actorType: String = "LoanInvoiceJob", entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
-
-    @Autowired
-    private lateinit var invoiceService: InvoiceService
-
-    @Autowired
-    private lateinit var loanAccountService: LoanAccountService
-
-    @Autowired
-    private lateinit var loanAgreementService: LoanAgreementService
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val agreementId = actorId.toLong()

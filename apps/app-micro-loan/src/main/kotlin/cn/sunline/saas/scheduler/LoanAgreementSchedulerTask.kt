@@ -33,39 +33,20 @@ enum class LoanSchedulerJobOrder(val order: Int) {
     INVOICE_ACCOUNT(1), AUTO_REPAY(2), INVOICE_JOB(3)
 }
 
-@Component
 class LoanAgreementSchedulerTask(
+    private val seq: Sequence,
+    private val calculateSchedulerTimer: CalculateSchedulerTimer,
+    private val loanAgreementService: LoanAgreementService,
+    private val invoiceService: InvoiceService,
+    private val invoiceAccountJob: InvoiceAccountJob,
+    private val loanAutoRepaymentJob: LoanAutoRepaymentJob,
+    private val loanInvoiceJob: LoanInvoiceJob,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val tenantDateTime: TenantDateTime,
     actorType: String = "LoanAgreementSchedulerTask", entityConfig: EntityConfig? = null
 ) : AbstractActor(actorType, entityConfig) {
     // timer job's interval time,the unit is minute
     private val interval: Int = 2
-
-    @Autowired
-    private lateinit var seq: Sequence
-
-    @Autowired
-    private lateinit var calculateSchedulerTimer: CalculateSchedulerTimer
-
-    @Autowired
-    private lateinit var loanAgreementService: LoanAgreementService
-
-    @Autowired
-    private lateinit var invoiceService: InvoiceService
-
-    @Autowired
-    private lateinit var invoiceAccountJob: InvoiceAccountJob
-
-    @Autowired
-    private lateinit var loanAutoRepaymentJob: LoanAutoRepaymentJob
-
-    @Autowired
-    private lateinit var loanInvoiceJob: LoanInvoiceJob
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
 
     override fun doJob(actorId: String, taskId: String, data: ActorCommand) {
         val accountDate = calculateSchedulerTimer.baseDateTime()

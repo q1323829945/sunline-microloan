@@ -17,21 +17,14 @@ import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@Service
 class LoanApplySubmitSchedulerTask(
+    private val tenantDateTime: TenantDateTime,
+    private val schedulerJobLogService: SchedulerJobLogService,
+    private val loanAgentService: LoanAgentService,
     actorType:String = ActorType.LOAN_APPLY_SUBMIT.name,
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
     private var logger = KotlinLogging.logger {}
-
-    @Autowired
-    private lateinit var tenantDateTime: TenantDateTime
-
-    @Autowired
-    private lateinit var schedulerJobLogService: SchedulerJobLogService
-
-    @Autowired
-    private lateinit var loanAgentService: LoanAgentService
 
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {

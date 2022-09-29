@@ -21,16 +21,14 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping
 class ActorUserService(private val daprConfig: DaprConfig) {
-    @Autowired
-    private lateinit var actorContext: ActorContext
 
 
     @GetMapping("/dapr/config")
     fun registeredActor(): DTORegisteredActor {
-        val actorTypes = actorContext.getActorTypes()
+        val actorTypes = ActorContext.getActorTypes()
         val entitiesConfig = mutableListOf<DTOEntitiesConfig>()
         actorTypes.forEach {
-            val actor = actorContext.getActor(it)
+            val actor = ActorContext.getActor(it)
             actor.entityConfig?.run {
                 val dtoEntitiesConfigReentrancy = this.reentrancyEnabled?.run { DTOEntitiesConfigReentrancy(this) }
                 entitiesConfig.add(
@@ -61,7 +59,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "methodName") methodName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        actorContext.getActor(actorType).doJob(actorId,methodName)
+        ActorContext.getActor(actorType).doJob(actorId,methodName)
 
         return DTOResponseSuccess(Unit).response()
     }
@@ -72,7 +70,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "reminderName") reminderName: String,
         @RequestBody data:ActorCommand): ResponseEntity<DTOResponseSuccess<Unit>> {
-        actorContext.getActor(actorType).doJob(actorId,reminderName,data)
+        ActorContext.getActor(actorType).doJob(actorId,reminderName,data)
         return DTOResponseSuccess(Unit).response()
     }
 
@@ -82,7 +80,7 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "timerName") timerName: String
     ): ResponseEntity<DTOResponseSuccess<Unit>> {
-        actorContext.getActor(actorType).doJob(actorId,timerName)
+        ActorContext.getActor(actorType).doJob(actorId,timerName)
 
         return DTOResponseSuccess(Unit).response()
     }
