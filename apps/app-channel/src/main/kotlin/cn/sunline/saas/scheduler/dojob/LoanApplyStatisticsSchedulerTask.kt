@@ -30,6 +30,9 @@ class LoanApplyStatisticsSchedulerTask(
 
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
+            if (schedulerJobLog.retryTimes >= 3) {
+                ActorReminderService.deleteReminders(actorType, actorId, jobId)
+            }
             ContextUtil.setTenant(this.getTenantId().toString())
             this.execute(tenantDateTime.now())
             schedulerJobLogService.save(this)
