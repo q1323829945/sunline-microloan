@@ -133,7 +133,7 @@ class LoanApplyController {
         return DTOResponseSuccess(Unit).response()
     }
 
-    @GetMapping("agent/{applicationId}")
+        @GetMapping("agent/{applicationId}")
     fun getLoanAgentDetail(@PathVariable applicationId:String):ResponseEntity<DTOResponseSuccess<DTOLoanAgent>>{
         val agent = loanApplyAppService.getLoanAgentDetail(applicationId)
         return DTOResponseSuccess(agent).response()
