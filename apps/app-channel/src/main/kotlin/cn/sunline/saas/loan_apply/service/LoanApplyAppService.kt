@@ -14,7 +14,7 @@ import cn.sunline.saas.global.constant.ProductType.CORPORATE
 import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getApplyLoanSubmit
-import cn.sunline.saas.interest.service.InterestRateService
+import cn.sunline.saas.channel.interest.service.InterestRateService
 import cn.sunline.saas.loan.exception.LoanApplyNotFoundException
 import cn.sunline.saas.loan.exception.LoanApplyStatusException
 import cn.sunline.saas.loan.model.db.LoanApply

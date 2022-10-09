@@ -31,7 +31,7 @@ class InterestFeatureModality(
     @Column(name = "adjust_frequency", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     var adjustFrequency: String,
 
-    @Column(name = "basic_point", columnDefinition = "bigint null")
+    @Column(name = "basic_point", columnDefinition = "decimal(9,6) null")
     var basicPoint: BigDecimal?
 
 ) : MultiTenant {

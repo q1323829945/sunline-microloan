@@ -1,5 +1,6 @@
 package cn.sunline.saas.interest.service
 
+import cn.sunline.saas.channel.interest.service.InterestFeatureService
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant

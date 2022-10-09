@@ -1,5 +1,7 @@
 package cn.sunline.saas.interest.model
 
+import cn.sunline.saas.global.constant.LoanAmountTierType
+import cn.sunline.saas.global.constant.LoanTermTierType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
@@ -23,10 +25,21 @@ class InterestRate(
     @Id
     var id: Long? = null,
 
-    @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    var period: LoanTermType,
+    @Column(name="from_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
+    var fromPeriod: LoanTermType? = null,
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name="to_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
+    var toPeriod: LoanTermType? = null,
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "from_amount_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
+    var fromAmountPeriod: LoanAmountTierType? = null,
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "to_amount_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
+    var toAmountPeriod: LoanAmountTierType? = null,
 
     @NotNull
     @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")

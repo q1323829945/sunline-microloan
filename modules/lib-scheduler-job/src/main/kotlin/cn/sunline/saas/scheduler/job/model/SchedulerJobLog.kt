@@ -61,7 +61,10 @@ class SchedulerJobLog(
     var errorContext: String? = null,
 
     @Column(name = "retry_times", nullable = true, columnDefinition = "bigint")
-    var retryTimes: Long = 0L
+    var retryTimes: Long = 0L,
+
+    @Column(name = "execute_times", nullable = true, columnDefinition = "bigint")
+    var executeTimes: Long = 0L
 ): MultiTenant {
 
     @NotNull

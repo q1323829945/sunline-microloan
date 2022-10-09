@@ -459,7 +459,10 @@ class ConsumerLoanService(
             rates.add(
                 InterestRate(
                     id = it.id.toLong(),
-                    period = it.period,
+                    fromPeriod = it.fromPeriod,
+                    toPeriod = it.toPeriod,
+                    fromAmountPeriod = it.fromAmountPeriod,
+                    toAmountPeriod = it.toAmountPeriod,
                     rate = it.rate.toBigDecimal(),
                     ratePlanId = ratePlanId
                 )

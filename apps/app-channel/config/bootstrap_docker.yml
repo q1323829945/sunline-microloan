@@ -64,7 +64,7 @@ minio:
 
 logging:
   file:
-    path: logs/app-channel/
+    path: logs/
   level:
     root: INFO
     cn.sunline.saas: INFO

@@ -4,8 +4,8 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.TermType
-import cn.sunline.saas.interest.service.InterestFeatureService
-import cn.sunline.saas.interest.service.InterestRateService
+import cn.sunline.saas.channel.interest.service.InterestFeatureService
+import cn.sunline.saas.channel.interest.service.InterestRateService
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
@@ -187,9 +187,9 @@ class LoanProductManagerService(
                 ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
             )
         }
-
-        val termTypes = interestRateService.findByRatePlanId(ratePlanId.toLong())?.map {
-            it.period.term
+//TODO
+        val termTypes = interestRateService.findByRatePlanId(ratePlanId.toLong()).map {
+            it.fromPeriod?.term
         }
 
         termTypes?.run {
@@ -271,10 +271,11 @@ class LoanProductManagerService(
         interestFeature.termConfiguration?.run {
             val minValueRange = this.minValueRange
             val maxValueRange = this.maxValueRange
-            interestRateList?.sortedBy { it.period.term }?.forEach {
-                if(minValueRange != null && maxValueRange != null && it.period in minValueRange .. maxValueRange){
-                    interestRates.add(it.period)
-                }
+            interestRateList?.sortedBy { it.fromPeriod?.term }?.forEach {
+                //TODO
+               // if(minValueRange != null && maxValueRange != null && it.fromPeriod!!.term in minValueRange .. maxValueRange){
+                    interestRates.add(it.fromPeriod!!)
+              //  }
 
             }
         }

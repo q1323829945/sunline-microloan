@@ -1,7 +1,7 @@
 package cn.sunline.saas.interest.controller
 
 import cn.sunline.saas.interest.controller.dto.DTOInterestRate
-import cn.sunline.saas.interest.service.InterestRateManagerService
+import cn.sunline.saas.channel.interest.service.InterestRateManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response

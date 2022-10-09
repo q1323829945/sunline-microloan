@@ -12,7 +12,4 @@ import org.springframework.data.jpa.repository.Query
  */
 interface InterestFeatureRepository : BaseRepository<InterestFeature, Long>{
 
-    fun findByProductId(productId:Long):InterestFeature?
-
-    fun findByRatePlanId(ratePlanId:Long): MutableList<InterestFeature>?
 }

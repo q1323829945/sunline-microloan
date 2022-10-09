@@ -11,11 +11,10 @@ dependencies {
     implementation(project(":lib-seq-api"))
     implementation(project(":lib-rule-api"))
     implementation(project(":lib-exceptions"))
-    api(project(":lib-interest"))
+    api(project(":lib-channel-interest"))
     api(project(":lib-repayment"))
     api(project(":lib-fee"))
     implementation(project(":lib-fee-util"))
-    implementation(project(":lib-interest-util"))
     implementation(project(":lib-document-template"))
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

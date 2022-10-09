@@ -14,7 +14,7 @@ import cn.sunline.saas.global.model.TermType
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
-import cn.sunline.saas.interest.service.InterestFeatureService
+import cn.sunline.saas.channel.interest.service.InterestFeatureService
 import cn.sunline.saas.loan.product.component.LoanProductConditionComponent
 import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.loan.product.model.ConditionType

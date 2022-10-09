@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.controller.dto
 
-import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.channel.interest.model.RatePlanType
 
 
 data class DTORatePlan(

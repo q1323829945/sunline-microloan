@@ -143,7 +143,7 @@ class LoanApplyController {
     fun test1(){
         loanApplyAppService.test1()
     }
-    @GetMapping("test2")
+    @DeleteMapping("test2")
     fun test2(@PathParam(value = "actorId")actorId: String,
               @PathParam(value = "jobId")jobId: String){
         ActorReminderService.deleteReminders(ActorType.LOAN_APPLY_STATISTICS.name,actorId,jobId)
