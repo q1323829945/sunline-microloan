@@ -286,22 +286,23 @@ class LoanApplyAppService {
         }?:run { ContextUtil.setTenant("1") }
 
 
-        dtoLoanAgent.fileInformation?.forEach { files ->
-            val obsFiles = mutableListOf<String>()
-            files.path?.forEach {
-                val key = minioService.minioToObs(it, it)
-                key?.run {
-                    obsFiles.add(this)
-                } ?: run {
-                    obsFiles.add(it)
-                }
+//        dtoLoanAgent.fileInformation?.forEach { files ->
+//            val obsFiles = mutableListOf<String>()
+//            files.path?.forEach {
+//                val key = minioService.minioToObs(it, it)
+//                key?.run {
+//                    obsFiles.add(this)
+//                } ?: run {
+//                    obsFiles.add(it)
+//                }
+//
+//            }
+//            files.path?.run {
+//                this.clear()
+//                this.addAll(obsFiles)
+//            }
+//        }
 
-            }
-            files.path?.run {
-                this.clear()
-                this.addAll(obsFiles)
-            }
-        }
         val newData = objectMapper.writeValueAsString(dtoLoanAgent)
         val loanAgent = loanAgentService.addOne(newData)
 
