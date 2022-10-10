@@ -45,8 +45,8 @@ data class DTOTermLoanProductConfiguration(
 )
 
 data class DTOInterestFeature(
-    val id: String,
-    val productId: String,
+    val id: String?,
+    val productId: String?,
     val interestType: InterestType,
     val ratePlanId: String,
     val interest: DTOInterestFeatureModality,
@@ -54,7 +54,7 @@ data class DTOInterestFeature(
 )
 
 data class DTOInterestFeatureModality(
-    val id: String,
+    val id: String?,
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
     val graceDays: Int,
@@ -62,7 +62,7 @@ data class DTOInterestFeatureModality(
 )
 
 data class DTOOverdueInterestFeatureModality(
-    val id: String,
+    val id: String?,
     var overdueInterestRatePercentage: String
 )
 
