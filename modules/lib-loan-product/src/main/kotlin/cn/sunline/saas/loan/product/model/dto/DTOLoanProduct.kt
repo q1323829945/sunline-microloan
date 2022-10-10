@@ -57,7 +57,6 @@ data class DTOInterestFeatureModality(
     val id: String?,
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val graceDays: Int,
     val basicPoint: BigDecimal?
 )
 
