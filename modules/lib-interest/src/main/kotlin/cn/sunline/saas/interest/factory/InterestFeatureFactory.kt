@@ -26,13 +26,13 @@ class InterestFeatureFactory {
         val interestFeatureId = seq.nextId()
         val interestFeatureModality = InterestFeatureModality(
             id = interestFeatureId,
-            baseYearDays = interestFeatureData.baseYearDays,
-            adjustFrequency = interestFeatureData.adjustFrequency,
-            basicPoint = interestFeatureData.basicPoint
+            baseYearDays = interestFeatureData.interest.baseYearDays,
+            adjustFrequency = interestFeatureData.interest.adjustFrequency,
+            basicPoint = interestFeatureData.interest.basicPoint
         )
         val overdueInterestProductFeature = OverdueInterestFeatureModality(
             id = interestFeatureId,
-            overdueInterestRatePercentage = interestFeatureData.overdueInterestRatePercentage
+            overdueInterestRatePercentage = interestFeatureData.overdueInterest.overdueInterestRatePercentage
         )
         return InterestFeature(
             id = interestFeatureId,

@@ -13,8 +13,17 @@ import java.math.BigDecimal
 data class DTOInterestFeatureAdd(
     val interestType: InterestType,
     val ratePlanId: Long,
+    val interest: DTOInterestFeatureModalityAdd,
+    val overdueInterest: DTOOverdueInterestFeatureModalityAdd
+)
+
+data class DTOInterestFeatureModalityAdd(
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val overdueInterestRatePercentage: Long,
+    val graceDays: Int,
     val basicPoint: BigDecimal?
+)
+
+data class DTOOverdueInterestFeatureModalityAdd(
+    var overdueInterestRatePercentage: Long
 )
