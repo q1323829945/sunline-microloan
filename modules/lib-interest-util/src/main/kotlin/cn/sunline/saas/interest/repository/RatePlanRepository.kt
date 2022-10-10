@@ -10,6 +10,4 @@ import cn.sunline.saas.interest.model.RatePlanType
  * @author Kevin-Cui
  * @date 2022/3/8 11:02
  */
-interface RatePlanRepository : BaseRepository<RatePlan, Long>{
-    fun findByTypeAndTenantId(type: RatePlanType,tenantId:Long): RatePlan?
-}
+interface RatePlanRepository : BaseRepository<RatePlan, Long>

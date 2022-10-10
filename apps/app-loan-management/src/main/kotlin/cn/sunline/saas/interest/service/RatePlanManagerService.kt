@@ -38,6 +38,14 @@ class RatePlanManagerService {
         }, Pageable.unpaged())
     }
 
+    fun getAllCustomRatePlan(): List<RatePlan> {
+        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.notEqual(root.get<RatePlanType>("type"), RatePlanType.STANDARD))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged()).content
+    }
+
     fun addOne(dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val typeRatePlan = ratePlanService.findByType(RatePlanType.STANDARD)
@@ -49,7 +57,7 @@ class RatePlanManagerService {
     }
 
     fun updateOne(id: Long,dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid Rate Plan", ManagementExceptionCode.DATA_NOT_FOUND)
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         return objectMapper.convertValue(savedRatePlan)
@@ -57,7 +65,7 @@ class RatePlanManagerService {
 
 
     fun getOne(id: Long): DTORatePlanWithInterestRates {
-        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid Rate Plan", ManagementExceptionCode.DATA_NOT_FOUND)
         return objectMapper.convertValue(ratePlan)
     }
 

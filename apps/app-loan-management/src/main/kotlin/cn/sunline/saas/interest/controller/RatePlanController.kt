@@ -35,6 +35,11 @@ class RatePlanController {
         return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
+    @GetMapping("all/custom")
+    fun getAllCustomer(): ResponseEntity<DTOResponseSuccess<List<DTORatePlan>>> {
+        return DTOResponseSuccess(ratePlanManagerService.getAllCustomRatePlan().map { objectMapper.convertValue<DTORatePlan>(it) }).response()
+    }
+
     @PostMapping
     fun addOne(@RequestBody dtoRatePlan: DTORatePlan): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
         return DTOResponseSuccess(ratePlanManagerService.addOne(dtoRatePlan)).response()
