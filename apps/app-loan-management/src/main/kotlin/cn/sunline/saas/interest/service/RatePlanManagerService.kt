@@ -1,5 +1,6 @@
-package cn.sunline.saas.channel.interest.service
+package cn.sunline.saas.interest.service
 
+import cn.sunline.saas.channel.interest.service.RatePlanService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.interest.controller.dto.DTORatePlan
 import cn.sunline.saas.interest.controller.dto.DTORatePlanWithInterestRates
