@@ -1,10 +1,9 @@
 package cn.sunline.saas.formula
 
-import cn.sunline.saas.formula.constant.CalculatePrecision
+import cn.sunline.saas.global.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
 import org.joda.time.DateTime
 import org.joda.time.Days
-import org.joda.time.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
 

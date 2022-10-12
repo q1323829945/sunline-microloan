@@ -1,18 +1,14 @@
-package cn.sunline.saas.channel.interest.service
+package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.global.constant.Frequency
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
-import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.RatePlan
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.repository.RatePlanRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.util.*
 import javax.persistence.criteria.Predicate
 
 /**
@@ -45,5 +41,22 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
             predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }
+    }
+
+
+    fun getRatePlanPageByType(type: RatePlanType): Page<RatePlan> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+    }
+
+    fun getAllCustomRatePlanPage(): Page<RatePlan> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.notEqual(root.get<RatePlanType>("type"), RatePlanType.STANDARD))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
     }
 }

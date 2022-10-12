@@ -30,13 +30,13 @@ class RatePlanInvokeImpl: RatePlanInvoke {
                 "type" to type.toString()
             ),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
                 Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
-            tenant = ContextUtil.getTenant().toString()
+            tenant = ContextUtil.getTenant()
         )
         // TODO Throw Exception
-        return objectMapper.convertValue<DTOInvokeRatePlanRates>(ratePlanResponse?.data!!)
+        return objectMapper.convertValue(ratePlanResponse?.data!!)
     }
 
     override fun getRatePlanByRatePlanId(ratePlanId: Long): DTOInvokeRatePlanRates {

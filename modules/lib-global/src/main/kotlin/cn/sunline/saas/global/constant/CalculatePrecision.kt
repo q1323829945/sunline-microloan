@@ -1,4 +1,4 @@
-package cn.sunline.saas.formula.constant
+package cn.sunline.saas.global.constant
 
 /**
  * @title: AmountPrecision

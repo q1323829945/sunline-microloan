@@ -1,6 +1,5 @@
 package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.channel.interest.service.RatePlanService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.interest.controller.dto.DTORatePlan
 import cn.sunline.saas.interest.controller.dto.DTORatePlanWithInterestRates
@@ -30,34 +29,26 @@ class RatePlanManagerService {
         return ratePlanService.getPageWithTenant(pageable = pageable)
     }
 
-    fun getAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
+    fun getAll(type: RatePlanType): List<RatePlan>{
+        return ratePlanService.getRatePlanPageByType(type).content
     }
 
     fun getAllCustomRatePlan(): List<RatePlan> {
-        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.notEqual(root.get<RatePlanType>("type"), RatePlanType.STANDARD))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged()).content
+        return ratePlanService.getAllCustomRatePlanPage().content
     }
 
     fun addOne(dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val typeRatePlan = ratePlanService.findByType(RatePlanType.STANDARD)
         if(typeRatePlan != null && ratePlan.type == RatePlanType.STANDARD){
-            throw RatePlanBusinessException("The standard type of rate plan has exist，Only one is allowed", ManagementExceptionCode.DATA_ALREADY_EXIST)
+            throw RatePlanBusinessException("the standard type of rate plan has exist，only one is allowed", ManagementExceptionCode.DATA_ALREADY_EXIST)
         }
         val savedRatePlan = ratePlanService.addOne(ratePlan)
         return objectMapper.convertValue(savedRatePlan)
     }
 
     fun updateOne(id: Long,dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid Rate Plan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("invalid rate plan", ManagementExceptionCode.DATA_NOT_FOUND)
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         return objectMapper.convertValue(savedRatePlan)
@@ -65,15 +56,11 @@ class RatePlanManagerService {
 
 
     fun getOne(id: Long): DTORatePlanWithInterestRates {
-        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid Rate Plan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("invalid rate plan", ManagementExceptionCode.DATA_NOT_FOUND)
         return objectMapper.convertValue(ratePlan)
     }
 
-    fun getInvokeAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
+    fun getInvokeAll(type: RatePlanType): List<RatePlan> {
+        return ratePlanService.getRatePlanPageByType(type).content
     }
 }

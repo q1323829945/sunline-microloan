@@ -30,9 +30,9 @@ class RatePlanController {
     }
 
     @GetMapping("all")
-    fun getAll(@RequestParam("type")type:RatePlanType,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        val page = ratePlanManagerService.getAll(type,pageable)
-        return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
+    fun getAll(@RequestParam("type")type:RatePlanType): ResponseEntity<DTOResponseSuccess<List<DTORatePlan>>> {
+        val page = ratePlanManagerService.getAll(type)
+        return DTOResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
     @GetMapping("all/custom")
@@ -56,9 +56,9 @@ class RatePlanController {
     }
 
     @GetMapping("invokeAll")
-    fun getInvokeAll(@RequestParam("type")type:RatePlanType,pageable: Pageable): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>>{
-        val page = ratePlanManagerService.getInvokeAll(type,pageable)
-        val map = page.content.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
+    fun getInvokeAll(@RequestParam("type")type:RatePlanType): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>>{
+        val page = ratePlanManagerService.getInvokeAll(type)
+        val map = page.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
         return DTOResponseSuccess(map).response()
     }
 }

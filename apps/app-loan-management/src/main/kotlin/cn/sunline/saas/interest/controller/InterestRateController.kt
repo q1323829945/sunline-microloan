@@ -43,8 +43,8 @@ class InterestRateController {
     }
 
     @DeleteMapping("{id}/{ratePlanId}")
-    fun deleteOne(@PathVariable(name = "id") id: String,@PathVariable(name = "ratePlanId") ratePlanId: String): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
-        return DTOResponseSuccess(interestRateManagerService.deleteOne(id.toLong(),ratePlanId.toLong())).response()
+    fun deleteOne(@PathVariable(name = "id") id: Long,@PathVariable(name = "ratePlanId") ratePlanId: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
+        return DTOResponseSuccess(interestRateManagerService.deleteOne(id,ratePlanId)).response()
     }
 
     @GetMapping("all")

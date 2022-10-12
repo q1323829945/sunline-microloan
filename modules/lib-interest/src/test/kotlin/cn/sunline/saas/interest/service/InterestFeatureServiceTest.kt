@@ -1,11 +1,12 @@
 package cn.sunline.saas.interest.service
 
-import cn.sunline.saas.channel.interest.service.InterestFeatureService
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.interest.constant.InterestType
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
+import cn.sunline.saas.interest.model.dto.DTOInterestFeatureModalityAdd
+import cn.sunline.saas.interest.model.dto.DTOOverdueInterestFeatureModalityAdd
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -23,19 +24,23 @@ class InterestFeatureServiceTest(
     @Autowired val interestFeatureService: InterestFeatureService,
 ) {
     @BeforeAll
-    fun init(){
+    fun init() {
         ContextUtil.setTenant("123")
 
         val interestFeature = DTOInterestFeatureAdd(
             interestType = InterestType.FIXED,
             ratePlanId = 1000,
-            baseYearDays = BaseYearDays.ACCOUNT_YEAR,
-            adjustFrequency = "NOW",
-            overdueInterestRatePercentage = 150,
-            basicPoint = null
+            interest = DTOInterestFeatureModalityAdd(
+                baseYearDays = BaseYearDays.ACCOUNT_YEAR,
+                adjustFrequency = "NOW",
+                basicPoint = null
+            ),
+            overdueInterest =  DTOOverdueInterestFeatureModalityAdd(
+                overdueInterestRatePercentage = 10
+            )
         )
 
-        val actual = interestFeatureService.register(1,interestFeature)
+        val actual = interestFeatureService.register(1, interestFeature)
 
         assertThat(actual).isNotNull
         assertThat(actual.interest).isNotNull
@@ -51,6 +56,7 @@ class InterestFeatureServiceTest(
 
         assertThat(interestFeature).isNotNull
     }
+
     @Test
     fun `find by ratePlanId`() {
         val interestFeature = interestFeatureService.findByRatePlanId(1000)

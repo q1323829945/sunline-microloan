@@ -1,7 +1,7 @@
 package cn.sunline.saas.schedule.impl
 
 import cn.sunline.saas.formula.*
-import cn.sunline.saas.formula.constant.CalculatePrecision
+import cn.sunline.saas.global.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType

@@ -15,21 +15,14 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.fee.arrangement.model.db.FeeArrangement
-import cn.sunline.saas.fee.arrangement.model.db.FeeItem
-import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementAdd
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeItemAdd
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.fee.arrangement.service.FeeItemService
-import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.fee.util.FeeUtil
 import cn.sunline.saas.formula.CalculateInterestRate
-import cn.sunline.saas.formula.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.*
-import cn.sunline.saas.global.constant.meta.Header
-import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.arrangement.component.getExecutionRate
@@ -50,14 +43,10 @@ import cn.sunline.saas.invoice.service.InvoiceService
 import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
 import cn.sunline.saas.loan.agreement.model.LoanAgreementInvolvementType
 import cn.sunline.saas.loan.agreement.model.db.LoanAgreement
-import cn.sunline.saas.loan.agreement.model.dto.DTORepaymentArrangementView
 import cn.sunline.saas.loan.agreement.service.LoanAgreementService
-import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
-import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstruction
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.product.service.ProductService
 import cn.sunline.saas.repayment.arrangement.service.RepaymentAccountService
 import cn.sunline.saas.repayment.arrangement.service.RepaymentArrangementService
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
@@ -76,8 +65,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.math.RoundingMode
-import javax.transaction.Transactional
 import kotlin.random.Random
 
 /**

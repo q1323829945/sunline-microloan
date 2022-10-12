@@ -1,12 +1,12 @@
-package cn.sunline.saas.channel.interest.service
+package cn.sunline.saas.interest.service
 
 import cn.sunline.saas.interest.factory.InterestFeatureFactory
-import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.db.InterestFeature
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
 import cn.sunline.saas.interest.repository.InterestFeatureRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate

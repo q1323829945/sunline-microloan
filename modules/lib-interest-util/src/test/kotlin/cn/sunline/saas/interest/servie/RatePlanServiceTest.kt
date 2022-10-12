@@ -1,6 +1,6 @@
 package cn.sunline.saas.interest.servie
 
-import cn.sunline.saas.channel.interest.service.RatePlanService
+import cn.sunline.saas.interest.service.RatePlanService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 

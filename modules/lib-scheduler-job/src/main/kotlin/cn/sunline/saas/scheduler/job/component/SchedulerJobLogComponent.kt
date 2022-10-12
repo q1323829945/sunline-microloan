@@ -26,5 +26,4 @@ fun SchedulerJobLog.failed(date: DateTime, context: String? = null) {
     this.completedDate = date.toDate()
     this.errorContext = context
     this.jobStatus = JobStatus.FAILED
-    this.retryTimes = this.retryTimes + 1L
 }

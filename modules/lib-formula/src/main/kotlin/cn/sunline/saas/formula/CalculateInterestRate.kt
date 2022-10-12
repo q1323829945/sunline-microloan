@@ -1,7 +1,7 @@
 package cn.sunline.saas.formula
 
 import cn.sunline.saas.global.constant.BaseYearDays
-import cn.sunline.saas.formula.constant.CalculatePrecision
+import cn.sunline.saas.global.constant.CalculatePrecision
 import java.math.BigDecimal
 import java.math.RoundingMode
 

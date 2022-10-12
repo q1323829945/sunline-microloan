@@ -4,7 +4,7 @@ import cn.sunline.saas.formula.CalculateEqualPrincipal
 import cn.sunline.saas.formula.CalculateInterest
 import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.formula.CalculatePeriod
-import cn.sunline.saas.formula.constant.CalculatePrecision
+import cn.sunline.saas.global.constant.CalculatePrecision
 import cn.sunline.saas.global.constant.BaseYearDays
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.RepaymentDayType

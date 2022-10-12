@@ -14,7 +14,7 @@ import cn.sunline.saas.global.model.TermType
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
-import cn.sunline.saas.channel.interest.service.InterestFeatureService
+import cn.sunline.saas.interest.service.InterestFeatureService
 import cn.sunline.saas.loan.product.component.LoanProductConditionComponent
 import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.loan.product.model.ConditionType
@@ -88,7 +88,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val documentTemplateList = ArrayList<DocumentTemplate>()
         loanProductData.documentTemplateFeatures?.forEach {
             val documentTemplate =
-                documentTemplateService.getOne(it)?: throw DocumentTemplateNotFoundException("Invalid document template")
+                documentTemplateService.getOne(it)
+                    ?: throw DocumentTemplateNotFoundException("Invalid document template")
             documentTemplateList.add(documentTemplate)
         }
 
@@ -102,7 +103,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.loanPurpose,
             loanProductData.businessUnit.toLong(),
             loanUploadConfigureList,
-            documentTemplateList)
+            documentTemplateList
+        )
 
         loanProductData.amountConfiguration.apply {
             loanProductAdd.configurationOptions.add(
@@ -170,8 +172,10 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
         val feeFeatures = feeProductFeatureService.findByProductId(id)
 
-        dtoLoanProduct.interestFeature = interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }!!
-        dtoLoanProduct.repaymentFeature = repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }!!
+        dtoLoanProduct.interestFeature =
+            interestFeature?.let { objectMapper.convertValue<DTOInterestFeatureView>(it) }!!
+        dtoLoanProduct.repaymentFeature =
+            repaymentFeature?.let { objectMapper.convertValue<DTORepaymentFeatureView>(it) }!!
         dtoLoanProduct.feeFeatures = feeFeatures?.let { objectMapper.convertValue<MutableList<DTOFeeFeatureView>>(it) }
         return dtoLoanProduct
     }
@@ -180,39 +184,26 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         name: String?,
         loanProductType: LoanProductType?,
         loanPurpose: String?,
-        status:BankingProductStatus?,
+        status: BankingProductStatus?,
         pageable: Pageable
     ): Page<LoanProduct> {
-
-        val newPageable = if(pageable.isUnpaged){
+        val newPageable = if (pageable.isUnpaged) {
             Pageable.unpaged()
-        } else{
-            PageRequest.of(pageable.pageNumber,pageable.pageSize, Sort.by(Sort.Order.desc("id")))
+        } else {
+            PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc("id")))
         }
-
-        val page = getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(
-                criteriaBuilder.notEqual(
-                    root.get<BankingProductStatus>("status"),
-                    BankingProductStatus.OBSOLETE
-                )
-            )
-            name?.run { predicates.add(criteriaBuilder.like(root.get("name"), "$name%")) }
-            loanProductType?.run {
-                predicates.add(
-                    criteriaBuilder.equal(
-                        root.get<LoanProductType>("loanProductType"),
-                        loanProductType
-                    )
-                )
-            }
-            loanPurpose?.run { predicates.add(criteriaBuilder.like(root.get("loanPurpose"), "$loanPurpose%")) }
-            status?.run { predicates.add(criteriaBuilder.equal(root.get<BankingProductStatus>("status"), status)) }
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, newPageable)
+        val bankingProductStatus = status ?: BankingProductStatus.OBSOLETE
+        val isEqualBankingProductStatus = status != null
+        val page = getPaged(
+            name,
+            loanProductType,
+            loanPurpose,
+            null,
+            bankingProductStatus,
+            isEqualBankingProductStatus,
+            newPageable
+        )
         val newProduct = getMaxVersionProductList(page)
-
         return rePaged(newProduct, pageable)
     }
 
@@ -220,13 +211,18 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     @Transactional
     fun updateLoanProductStatus(id: Long, status: BankingProductStatus): LoanProduct {
         val nowProduct = this.getOne(id) ?: throw LoanProductNotFoundException(
-            "Invalid loan product",
+            "Invalid Loan Product",
             ManagementExceptionCode.PRODUCT_NOT_FOUND
         )
         if (status == BankingProductStatus.SOLD) {
-            val productList = getPageWithTenant({ root,_,criteriaBuilder ->
+            val productList = getPageWithTenant({ root, _, criteriaBuilder ->
                 val predicates = mutableListOf<Predicate>()
-                predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),nowProduct.identificationCode))
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<String>("identificationCode"),
+                        nowProduct.identificationCode
+                    )
+                )
                 criteriaBuilder.and(*(predicates.toTypedArray()))
             }, Pageable.unpaged())
             for (product in productList) {
@@ -241,54 +237,25 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     }
 
     fun findByIdentificationCode(identificationCode: String): MutableList<DTOLoanProductView> {
-        val productList = getPageWithTenant({ root,_,criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),identificationCode))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-        val list = ArrayList<DTOLoanProductView>()
-        for (product in productList) {
-            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
-            setConfigurationOptions(product, dtoLoanProduct)
-            list.add(dtoLoanProduct)
-        }
-        return list
+        return findByIdentificationCodeAndStatus(identificationCode,null)
     }
 
     fun findByIdentificationCodeAndStatus(
-        identificationCode: String,
-        bankingProductStatus: BankingProductStatus
+        identificationCode: String?,
+        bankingProductStatus: BankingProductStatus?
     ): MutableList<DTOLoanProductView> {
-        val productList = getPageWithTenant({ root,_,criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"),identificationCode))
-            predicates.add(criteriaBuilder.equal(root.get<BankingProductStatus>("status"),bankingProductStatus))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
         val list = ArrayList<DTOLoanProductView>()
-        for (product in productList) {
-            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(product)
-            setConfigurationOptions(product, dtoLoanProduct)
+        getPaged(null, null, null, identificationCode, bankingProductStatus, true, Pageable.unpaged()).content.forEach {
+            val dtoLoanProduct = objectMapper.convertValue<DTOLoanProductView>(it)
+            setConfigurationOptions(it, dtoLoanProduct)
             list.add(dtoLoanProduct)
         }
         return list
     }
 
-    fun getLoanProductListByStatus(bankingProductStatus: String, pageable: Pageable): Page<LoanProduct> {
-
-        val page = getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(
-                criteriaBuilder.notEqual(
-                    root.get<BankingProductStatus>("status"),
-                    bankingProductStatus
-                )
-            )
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
-
+    fun getLoanProductListByStatus(bankingProductStatus: BankingProductStatus, pageable: Pageable): Page<LoanProduct> {
+        val page = getPaged(null, null, null, null, bankingProductStatus, false, Pageable.unpaged())
         val newProduct = getMaxVersionProductList(page)
-
         return rePaged(newProduct, pageable)
     }
 
@@ -307,7 +274,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val documentTemplateList = mutableListOf<DocumentTemplate>()
         loanProductData.documentTemplateFeatures?.forEach {
             val documentTemplate =
-                documentTemplateService.getOne(it)?: throw DocumentTemplateNotFoundException("Invalid document template")
+                documentTemplateService.getOne(it)
+                    ?: throw DocumentTemplateNotFoundException("Invalid document template")
             documentTemplateList.add(documentTemplate)
         }
 
@@ -350,6 +318,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                         this?.minValueRange = it.getMinValueRange().toString()
                     }
                 }
+
                 ConditionType.TERM -> {
                     dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(
                         it.id.toString(),
@@ -375,9 +344,17 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             loanProductData.interestFeature.run {
                 interestFeature.ratePlanId = this.ratePlanId.toLong()
                 interestFeature.interest =
-                    InterestFeatureModality(interestFeature.id, this.interest.baseYearDays, this.interest.adjustFrequency, this.interest.basicPoint)
+                    InterestFeatureModality(
+                        interestFeature.id,
+                        this.interest.baseYearDays,
+                        this.interest.adjustFrequency,
+                        this.interest.basicPoint
+                    )
                 interestFeature.overdueInterest =
-                    OverdueInterestFeatureModality(interestFeature.id, this.overdueInterest.overdueInterestRatePercentage.toLong())
+                    OverdueInterestFeatureModality(
+                        interestFeature.id,
+                        this.overdueInterest.overdueInterestRatePercentage.toLong()
+                    )
                 interestFeature.interestType = this.interestType
                 val updateInterestFeature = interestProductFeatureService.save(interestFeature)
                 dtoLoanProduct.interestFeature = objectMapper.convertValue(updateInterestFeature)
@@ -389,12 +366,13 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val repaymentFeature = repaymentProductFeatureService.findByProductId(id)
         if (repaymentFeature == null) {
 
-            val repaymentFeatureData = loanProductData.repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeatureAdd>(it) }
+            val repaymentFeatureData =
+                loanProductData.repaymentFeature.let { objectMapper.convertValue<DTORepaymentFeatureAdd>(it) }
             val repaymentFeatureResult = repaymentProductFeatureService.register(
                 id,
                 repaymentFeatureData
             )
-            dtoLoanProduct.repaymentFeature =  objectMapper.convertValue<DTORepaymentFeatureView>(repaymentFeatureResult)
+            dtoLoanProduct.repaymentFeature = objectMapper.convertValue<DTORepaymentFeatureView>(repaymentFeatureResult)
 
         } else {
             loanProductData.repaymentFeature.run {
@@ -457,7 +435,6 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         return page.totalElements
     }
 
-
     fun setConfigurationOptions(product: LoanProduct, dtoLoanProduct: DTOLoanProductView) {
         product.configurationOptions.forEach {
             when (ConditionType.valueOf(it.type)) {
@@ -469,6 +446,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                         this?.minValueRange = it.getMinValueRange().toPlainString()
                     }
                 }
+
                 ConditionType.TERM -> {
                     dtoLoanProduct.termConfiguration = DTOTermLoanProductConfigurationView(
                         it.id.toString(),
@@ -483,7 +461,6 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
     private fun getValueRange(value: BigDecimal): LoanTermType? {
         return LoanTermType.values().singleOrNull { it.term == TermType(value.toInt()) }
     }
-
 
     private fun getMaxVersionProductList(page: Page<LoanProduct>): List<LoanProduct> {
         val map = mutableMapOf<String, String>()
@@ -509,5 +486,48 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         }
 
         return newProduct
+    }
+
+    fun getPaged(
+        name: String?,
+        loanProductType: LoanProductType?,
+        loanPurpose: String?,
+        identificationCode: String?,
+        bankingProductStatus: BankingProductStatus?,
+        isEqualBankingProductStatus: Boolean,
+        pageable: Pageable
+    ): Page<LoanProduct> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            identificationCode?.let {
+                predicates.add(criteriaBuilder.equal(root.get<String>("identificationCode"), it))
+            }
+            bankingProductStatus?.let {
+                if (isEqualBankingProductStatus) {
+                    predicates.add(criteriaBuilder.equal(root.get<BankingProductStatus>("status"), it))
+                } else {
+                    predicates.add(criteriaBuilder.notEqual(root.get<BankingProductStatus>("status"), it))
+                }
+            }
+            name?.let { predicates.add(criteriaBuilder.like(root.get("name"), "$name%")) }
+            loanProductType?.run {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<LoanProductType>("loanProductType"),
+                        loanProductType
+                    )
+                )
+            }
+            loanPurpose?.let { predicates.add(criteriaBuilder.like(root.get("loanPurpose"), "$loanPurpose%")) }
+            bankingProductStatus?.let {
+                predicates.add(
+                    criteriaBuilder.equal(
+                        root.get<BankingProductStatus>("status"),
+                        bankingProductStatus
+                    )
+                )
+            }
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, pageable)
     }
 }

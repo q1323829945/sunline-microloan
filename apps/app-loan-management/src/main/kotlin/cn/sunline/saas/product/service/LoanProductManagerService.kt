@@ -2,21 +2,22 @@ package cn.sunline.saas.product.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.BankingProductStatus
+import cn.sunline.saas.global.constant.LoanAmountTierType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.TermType
-import cn.sunline.saas.channel.interest.service.InterestFeatureService
-import cn.sunline.saas.channel.interest.service.InterestRateService
+import cn.sunline.saas.interest.exception.InterestRateBusinessException
+import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.interest.service.InterestRateService
+import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.loan.product.model.LoanProductType
 import cn.sunline.saas.loan.product.model.db.LoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.loan.product.model.dto.DTOLoanProductView
 import cn.sunline.saas.loan.product.service.LoanProductService
-import cn.sunline.saas.product.exception.RepaymentFeatureNotFoundException
 import cn.sunline.saas.product.exception.LoanProductBusinessException
 import cn.sunline.saas.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.product.service.dto.DTOLoanProductResponse
 import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
-import cn.sunline.saas.repayment.service.RepaymentFeatureService
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.rpc.invoke.ProductInvoke
@@ -44,35 +45,42 @@ class LoanProductManagerService(
     @Autowired
     private lateinit var interestRateService: InterestRateService
 
+    @Autowired
+    private lateinit var ratePlanService: RatePlanService
 
     fun getPaged(
         name: String?,
         loanProductType: LoanProductType?,
         loanPurpose: String?,
-        status:BankingProductStatus?,
+        status: BankingProductStatus?,
         pageable: Pageable
     ): Page<DTOLoanProductView> {
-        val paged = loanProductService.getLoanProductPaged(name, loanProductType, loanPurpose,status, pageable)
-
-        return paged.map {
+        return loanProductService.getLoanProductPaged(name, loanProductType, loanPurpose, status, pageable).map {
             val product = objectMapper.convertValue<DTOLoanProductView>(it)
-            loanProductService.setConfigurationOptions(it,product)
+            loanProductService.setConfigurationOptions(it, product)
             product
         }
     }
 
     fun addOne(loanProductData: DTOLoanProduct): DTOLoanProductView {
-        checkTermConditions(
-            loanProductData.interestFeature.ratePlanId,
-            loanProductData.termConfiguration.maxValueRange.term,
-            loanProductData.termConfiguration.minValueRange.term
-        )
-        checkAmountConditions(
-            BigDecimal(loanProductData.amountConfiguration.maxValueRange),
-            BigDecimal(loanProductData.amountConfiguration.maxValueRange)
+
+        checkTermOrAmountConditions(
+            loanProductData.interestFeature.ratePlanId.toLong(),
+            loanProductData.termConfiguration.maxValueRange,
+            loanProductData.termConfiguration.minValueRange,
+            loanProductData.amountConfiguration.maxValueRange.toBigDecimal(),
+            loanProductData.amountConfiguration.maxValueRange.toBigDecimal()
         )
         val oldLoanProduct =
-            loanProductService.findByIdentificationCode(loanProductData.identificationCode).maxByOrNull {
+            loanProductService.getPaged(
+                null,
+                null,
+                null,
+                loanProductData.identificationCode,
+                null,
+                true,
+                Pageable.unpaged()
+            ).content.maxByOrNull {
                 it.version
             }
 
@@ -83,7 +91,7 @@ class LoanProductManagerService(
             )
         }
 
-        loanProductData.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map { it ->
+        loanProductData.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map {
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(
@@ -93,7 +101,7 @@ class LoanProductManagerService(
             }
         }
 
-        loanProductData.feeFeatures?.groupBy { it.feeType }?.map { it ->
+        loanProductData.feeFeatures?.groupBy { it.feeType }?.map {
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(
@@ -104,35 +112,31 @@ class LoanProductManagerService(
         }
 
         loanProductData.version = oldLoanProduct?.run {
-            updateStatus(this.id.toLong(),BankingProductStatus.OBSOLETE)
+            updateStatus(this.id, BankingProductStatus.OBSOLETE)
             (this.version.toInt() + 1).toString()
-        }?: "1"
+        } ?: "1"
 
         return addBusinessUnitType(loanProductService.register(loanProductData))
     }
 
     fun getOne(id: Long): DTOLoanProductView {
         return addBusinessUnitType(loanProductService.getLoanProduct(id))
-        //return loanProductService.getLoanProduct(id)
-
     }
 
     fun updateOne(
         id: Long,
         dtoLoanProduct: DTOLoanProduct
     ): DTOLoanProductView {
-        checkProductStatus(id, false)
-        checkTermConditions(
-            dtoLoanProduct.interestFeature.ratePlanId,
-            dtoLoanProduct.termConfiguration.maxValueRange.term,
-            dtoLoanProduct.termConfiguration.minValueRange.term
-        )
-        checkAmountConditions(
-            BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange),
-            BigDecimal(dtoLoanProduct.amountConfiguration.maxValueRange)
-        )
 
-        dtoLoanProduct.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map { it ->
+        checkProductStatus(id, false)
+        checkTermOrAmountConditions(
+            dtoLoanProduct.interestFeature.ratePlanId.toLong(),
+            dtoLoanProduct.termConfiguration.maxValueRange,
+            dtoLoanProduct.termConfiguration.minValueRange,
+            dtoLoanProduct.amountConfiguration.maxValueRange.toBigDecimal(),
+            dtoLoanProduct.amountConfiguration.maxValueRange.toBigDecimal()
+        )
+        dtoLoanProduct.repaymentFeature.prepaymentFeatureModality.groupBy { it.term }.map {
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(
@@ -141,8 +145,7 @@ class LoanProductManagerService(
                 )
             }
         }
-
-        dtoLoanProduct.feeFeatures?.groupBy { it.feeType }?.map { it ->
+        dtoLoanProduct.feeFeatures?.groupBy { it.feeType }?.map {
             val count = it.value.count()
             if (count > 1) {
                 throw LoanProductBusinessException(
@@ -151,7 +154,6 @@ class LoanProductManagerService(
                 )
             }
         }
-
         return addBusinessUnitType(loanProductService.updateLoanProduct(id, dtoLoanProduct))
     }
 
@@ -164,7 +166,7 @@ class LoanProductManagerService(
         return DTOResponseSuccess(view).response()
     }
 
-    fun getProductInfo(identificationCode: String): List<DTOLoanProductView> {
+    fun getProductInfoList(identificationCode: String): List<DTOLoanProductView> {
         return loanProductService.findByIdentificationCode(identificationCode)
     }
 
@@ -176,40 +178,86 @@ class LoanProductManagerService(
         bankingProductStatus: BankingProductStatus?,
         pageable: Pageable
     ): Page<LoanProduct> {
-        val status = bankingProductStatus?.name ?: BankingProductStatus.SOLD.name
+        val status = bankingProductStatus ?: BankingProductStatus.SOLD
         return loanProductService.getLoanProductListByStatus(status, pageable)
     }
 
-    private fun checkTermConditions(ratePlanId:String,termMaxValueRange: TermType, termMinValueRange: TermType) {
-        if (termMaxValueRange < termMinValueRange) {
+    private fun checkTermOrAmountConditions(
+        ratePlanId: Long,
+        fromPeriod: LoanTermType,
+        toPeriod: LoanTermType,
+        fromAmount: BigDecimal,
+        toAmount: BigDecimal
+    ) {
+        if (toPeriod.term < fromPeriod.term) {
             throw LoanProductBusinessException(
-                "The term's config of product was error",
-                ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                "the maximum term is less than the minimum term",
+                ManagementExceptionCode.PRODUCT_TERM_VALUE_IS_NOT_CORRECT
             )
         }
-//TODO
-        val termTypes = interestRateService.findByRatePlanId(ratePlanId.toLong()).map {
-            it.fromPeriod?.term
+        if (toAmount < fromAmount) {
+            throw LoanProductBusinessException(
+                "the maximum amount is less than the minimum amount",
+                ManagementExceptionCode.PRODUCT_AMOUNT_VALUE_IS_NOT_CORRECT
+            )
         }
+        val ratePlan = ratePlanService.getOne(ratePlanId) ?: throw LoanProductBusinessException(
+            "invalid rate plan",
+            ManagementExceptionCode.RATE_PLAN_NOT_FOUND
+        )
+        val rates = interestRateService.findByRatePlanId(ratePlanId)
 
-        termTypes?.run {
-            if(!this.contains(termMaxValueRange) || !this.contains(termMinValueRange)){
-                throw LoanProductBusinessException(
-                    "The term's config of product was error",
-                    ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
-                )
+        when (ratePlan.type) {
+            RatePlanType.CUSTOMER,
+            RatePlanType.STANDARD -> {
+                rates.map { it.fromPeriod }.let {
+                    if (!it.contains(fromPeriod) || !it.contains(toPeriod)) {
+                        throw LoanProductBusinessException(
+                            "the selected interest rate plan does not contain the entered term value",
+                            ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                        )
+                    }
+                }
+            }
+
+            RatePlanType.LOAN_TERM_TIER_CUSTOMER -> {
+                rates.map { it.fromPeriod }.let {
+                    if (!it.contains(fromPeriod)) {
+                        throw LoanProductBusinessException(
+                            "the selected interest rate plan does not contain the minimum entered term value",
+                            ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                        )
+                    }
+                }
+                rates.map { it.toPeriod }.let {
+                    if (!it.contains(toPeriod)) {
+                        throw LoanProductBusinessException(
+                            "the selected interest rate plan does not contain the maximum entered term value",
+                            ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                        )
+                    }
+                }
+            }
+
+            RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER -> {
+                val minOf = rates.minOf { it.fromAmountPeriod!!.amount }
+                if (fromAmount < minOf) {
+                    throw LoanProductBusinessException(
+                        "the minimum entered amount value is less than the minimum amount of the selected interest rate plan",
+                        ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                    )
+                }
+                val maxOf = rates.maxOf { it.toAmountPeriod!!.amount }
+                if (toAmount > maxOf) {
+                    throw LoanProductBusinessException(
+                        "the maximum entered amount value is greater than the maximum amount of the selected interest rate plan",
+                        ManagementExceptionCode.PRODUCT_TERM_CONFIG_MAX_MIN_ERROR
+                    )
+                }
             }
         }
     }
 
-    private fun checkAmountConditions(amountMaxValueRange: BigDecimal, amountMinValueRange: BigDecimal) {
-        if (amountMaxValueRange < amountMinValueRange) {
-            throw LoanProductBusinessException(
-                "The amount's config of product was error",
-                ManagementExceptionCode.PRODUCT_AMOUNT_CONFIG_MAX_MIN_ERROR
-            )
-        }
-    }
 
     private fun checkProductStatus(id: Long, isUpdateStatus: Boolean) {
         val loanProduct = loanProductService.getLoanProduct(id)
@@ -234,8 +282,7 @@ class LoanProductManagerService(
         }
     }
 
-
-    fun getInvokeOne(productId:Long):DTOLoanProductResponse{
+    fun getInvokeOne(productId: Long): DTOLoanProductResponse {
         val product = loanProductService.getLoanProduct(productId)
         val list = productInvoke.getInterestRate(product.interestFeature!!.ratePlanId.toLong())
         val loanProduct = objectMapper.convertValue<DTOLoanProductResponse>(product)
@@ -244,54 +291,39 @@ class LoanProductManagerService(
     }
 
 
-    fun getUploadConfig(id:Long):List<DTOLoanUploadConfigure>{
-        val product = loanProductService.getOne(id)?: throw LoanProductNotFoundException("Invalid product")
-        return  product.loanUploadConfigureFeatures?.map {
+    fun getUploadConfig(id: Long): List<DTOLoanUploadConfigure> {
+        val product = loanProductService.getOne(id) ?: throw LoanProductNotFoundException("Invalid product")
+        return product.loanUploadConfigureFeatures?.map {
             objectMapper.convertValue(it)
-        }?: listOf()
+        } ?: listOf()
     }
 
-    private fun addBusinessUnitType(product:DTOLoanProductView):DTOLoanProductView{
+    private fun addBusinessUnitType(product: DTOLoanProductView): DTOLoanProductView {
         val businessUnit = productInvoke.getBusinessUnit(product.businessUnit.toLong())
         product.business = objectMapper.convertValue(businessUnit)
         return product
     }
 
 
-    fun getInterestRate(productId: Long):List<LoanTermType>{
+    fun getInterestRate(productId: Long): List<LoanTermType> {
         val interestFeature = loanProductService.getLoanProduct(productId)
-
-        val ratePlanId = interestFeature.interestFeature!!.ratePlanId
-
-        val interestRateList = interestRateService.findByRatePlanId(ratePlanId.toLong())
-
         val interestRates = mutableListOf<LoanTermType>()
-
-
         interestFeature.termConfiguration?.run {
             val minValueRange = this.minValueRange
             val maxValueRange = this.maxValueRange
-            interestRateList?.sortedBy { it.fromPeriod?.term }?.forEach {
-                //TODO
-               // if(minValueRange != null && maxValueRange != null && it.fromPeriod!!.term in minValueRange .. maxValueRange){
-                    interestRates.add(it.fromPeriod!!)
-              //  }
-
+            LoanTermType.values().forEach {
+                if (minValueRange != null && maxValueRange != null && it in minValueRange .. maxValueRange) {
+                    interestRates.add(it)
+                }
             }
         }
-
-
         return interestRates
     }
 
 
-    fun getInvokeProducts(status:BankingProductStatus):List<DTOLoanProductView>{
-        val products = this.getPaged(null,null,null,status,Pageable.unpaged()).content
-
-        products.forEach {
-            it.amountConfiguration
-        }
-
+    fun getInvokeProducts(status: BankingProductStatus): List<DTOLoanProductView> {
+        val products = this.getPaged(null, null, null, status, Pageable.unpaged()).content
+        products.forEach { it.amountConfiguration }
         return products
     }
 }
