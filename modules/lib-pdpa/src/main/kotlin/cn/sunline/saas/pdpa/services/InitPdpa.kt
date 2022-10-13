@@ -38,6 +38,18 @@ class InitPdpa {
             pdpaService.addOne(dtoPdpa)
         }
 
+        val pdpa2 = pdpaService.getByCountryAndLanguage(CountryType.USA,"en-US")
+        pdpa2?:run {
+            val pdpaInformation = objectMapper.readValue<List<DTOPdpaItem>>(json)
+            val dtoPdpa = DTOPdpaAdd(
+                country = CountryType.USA,
+                language = "en-US",
+                pdpaInformation = pdpaInformation
+            )
+
+            pdpaService.addOne(dtoPdpa)
+        }
+
     }
 
     private val json =     """
