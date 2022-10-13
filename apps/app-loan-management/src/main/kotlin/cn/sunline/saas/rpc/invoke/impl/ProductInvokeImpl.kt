@@ -9,9 +9,11 @@ import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.exception.RatePlanNotFoundException
 import cn.sunline.saas.party.organisation.exception.BusinessUnitNotFoundException
+import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.rpc.invoke.ProductInvoke
 import cn.sunline.saas.rpc.invoke.dto.DTOBusinessUnit
 import cn.sunline.saas.rpc.invoke.dto.DTOInterestRate
+import cn.sunline.saas.rpc.invoke.dto.DTORatePlanWithInterestRates
 import org.springframework.stereotype.Component
 
 @Component
@@ -42,5 +44,19 @@ class ProductInvokeImpl: ProductInvoke {
             ),
             tenant = ContextUtil.getTenant().toString()
         )?:throw BusinessUnitNotFoundException("Invalid businessUnit")
+    }
+
+    override fun getRatePlanWithInterestRate(ratePlanId: Long): DTORatePlanWithInterestRates {
+       val result = RPCService.get<DTOResponseSuccess<DTORatePlanWithInterestRates>>(
+            serviceName = APP_LOAN_MANAGEMENT,
+            methodName = "RatePlan/${ratePlanId}",
+            queryParams = mapOf(),
+            headerParams = mapOf(
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
+                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+            ),
+            tenant = ContextUtil.getTenant()
+        )
+        return result?.data?:throw RatePlanNotFoundException("Invalid rate plan")
     }
 }

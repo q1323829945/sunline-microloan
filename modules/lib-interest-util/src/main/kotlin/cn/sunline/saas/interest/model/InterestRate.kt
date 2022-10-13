@@ -1,7 +1,6 @@
 package cn.sunline.saas.interest.model
 
 import cn.sunline.saas.global.constant.LoanAmountTierType
-import cn.sunline.saas.global.constant.LoanTermTierType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant

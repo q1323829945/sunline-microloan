@@ -26,7 +26,7 @@ class InterestArrangement(
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "interest_type", nullable = false, length = 16, columnDefinition = "varchar(16) not null")
+    @Column(name = "interest_type", nullable = false, length = 16, columnDefinition = "varchar(32) not null")
     val interestType: InterestType,
 
     @NotNull
@@ -48,6 +48,9 @@ class InterestArrangement(
 
     @Column(name="base_rate",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) null")
     val baseRate: BigDecimal?,
+
+    @Column(name = "basic_point", columnDefinition = "decimal(9,6) null")
+    var basicPoint: BigDecimal?
 
 ) : MultiTenant {
 

@@ -38,7 +38,7 @@ object ConsumerLoanAssembly {
     fun convertToDTOLoanAgreementAdd(
         customerOffer: DTOCustomerOffer,
         loanProduct: DTOLoanProduct,
-        baseRate: String?
+        baseRate: String?,
     ): DTOLoanAgreementAdd {
         val dtoInterestArrangementAdd = loanProduct.interestFeature.run {
             DTOInterestArrangementAdd(
@@ -47,7 +47,8 @@ object ConsumerLoanAssembly {
                 adjustFrequency = interest.adjustFrequency,
                 overdueInterestRatePercentage = overdueInterest.overdueInterestRatePercentage,
                 planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlan),
-                baseRate = baseRate
+                baseRate = baseRate,
+                basicPoint = interest.basicPoint
             )
         }
 

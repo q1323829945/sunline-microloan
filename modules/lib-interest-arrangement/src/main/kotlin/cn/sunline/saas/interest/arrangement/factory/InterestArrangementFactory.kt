@@ -24,6 +24,7 @@ class InterestArrangementFactory {
 
     fun instance(
         agreementId: Long,
+        amount: BigDecimal,
         term: LoanTermType,
         dtoInterestArrangementAdd: DTOInterestArrangementAdd,
     ): InterestArrangement {
@@ -31,12 +32,14 @@ class InterestArrangementFactory {
         return InterestArrangement(
             id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,
-            rate = InterestRateHelper.getRate(term, planRates)!!,
+            rate = InterestRateHelper.getTermOrAmountRate(amount, term, planRates)!!,
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
             overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage),
-            baseRate = dtoInterestArrangementAdd.baseRate?.run { BigDecimal(this) }
+            baseRate = dtoInterestArrangementAdd.baseRate?.run { BigDecimal(this) },
+            basicPoint = dtoInterestArrangementAdd.basicPoint
         )
     }
+
 
 }

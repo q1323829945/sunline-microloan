@@ -61,4 +61,5 @@ class RatePlanController {
         val map = page.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
         return DTOResponseSuccess(map).response()
     }
+
 }

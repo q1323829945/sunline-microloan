@@ -54,7 +54,7 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
     fun registered(dtoLoanAgreementAdd: DTOLoanAgreementAdd): DTOLoanAgreementView {
         val loanAgreement = save(loanAgreementFactory.instance(dtoLoanAgreementAdd))
         val interestArrangement = interestArrangementService.registered(
-            loanAgreement.id, loanAgreement.term, dtoLoanAgreementAdd.interestArrangement
+            loanAgreement.id, loanAgreement.amount, loanAgreement.term, dtoLoanAgreementAdd.interestArrangement
         )
         val repaymentArrangement =
             repaymentArrangementService.registered(loanAgreement.id, dtoLoanAgreementAdd.repaymentArrangement)
@@ -119,7 +119,7 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
             repaymentArrangement ?: throw RepaymentArrangementNotFoundException("repayment arrangement not found"),
             feeArrangement,
             disbursementArrangement,
-            invoiceArrangement?:throw InvoiceArrangementNotFoundException("invoice arrangement not found")
+            invoiceArrangement ?: throw InvoiceArrangementNotFoundException("invoice arrangement not found")
         )
     }
 
@@ -128,7 +128,10 @@ class LoanAgreementService(private val loanAgreementRepo: LoanAgreementRepositor
     }
 
     @Transactional
-    fun addRepaymentAccount(agreementId: Long, dtoRepaymentAccountList: MutableList<DTORepaymentAccount>): DTORepaymentArrangementView {
+    fun addRepaymentAccount(
+        agreementId: Long,
+        dtoRepaymentAccountList: MutableList<DTORepaymentAccount>
+    ): DTORepaymentArrangementView {
         val repaymentArrangement = repaymentArrangementService.addRepaymentAccount(agreementId, dtoRepaymentAccountList)
         return DTORepaymentArrangementView(repaymentArrangement)
     }

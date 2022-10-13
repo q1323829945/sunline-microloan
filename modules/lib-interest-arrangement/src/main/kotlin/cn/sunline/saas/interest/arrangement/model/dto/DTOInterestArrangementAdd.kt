@@ -1,8 +1,10 @@
 package cn.sunline.saas.interest.arrangement.model.dto
 
 import cn.sunline.saas.global.constant.BaseYearDays
+import cn.sunline.saas.global.constant.LoanAmountTierType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.constant.InterestType
+import java.math.BigDecimal
 
 /**
  * @title: DTOInterestArrangementAdd
@@ -16,11 +18,15 @@ data class DTOInterestArrangementAdd(
     val adjustFrequency: String,
     val overdueInterestRatePercentage: String,
     val planRates: MutableList<DTOInterestRate>,
-    val baseRate: String?
+    val baseRate: String?,
+    val basicPoint: BigDecimal?
 )
 
 data class DTOInterestRate(
     val id: Long,
-    val period: LoanTermType,
-    val rate: String,
+    val fromPeriod: LoanTermType? = null,
+    val toPeriod: LoanTermType? = null,
+    val fromAmountPeriod: LoanAmountTierType? = null,
+    val toAmountPeriod: LoanAmountTierType? = null,
+    val rate: String
 )

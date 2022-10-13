@@ -4,7 +4,9 @@ import cn.sunline.saas.fee.constant.FeeDeductType
 import cn.sunline.saas.fee.constant.FeeMethodType
 import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.loan.product.model.LoanProductType
+import java.math.BigDecimal
 
 /**
  * @title: DTOLoanProduct
@@ -28,19 +30,25 @@ data class DTOInterestFeature(
     val id: Long,
     val interestType: InterestType,
     val ratePlan: MutableList<DTOInterestRate>,
+    val ratePlanType: RatePlanType,
+    val ratePlanId: Long,
     val interest: DTOInterestModality,
     val overdueInterest: DTOOverdueInterest
 )
 
 data class DTOInterestRate(
     val id: Long,
-    val period: LoanTermType,
-    val rate: String,
+    val fromPeriod: LoanTermType? = null,
+    val toPeriod: LoanTermType? = null,
+    val fromAmountPeriod: LoanAmountTierType? = null,
+    val toAmountPeriod: LoanAmountTierType? = null,
+    val rate: String
 )
 
 data class DTOInterestModality(
     val baseYearDays: BaseYearDays,
-    val adjustFrequency: String
+    val adjustFrequency: String,
+    val basicPoint: BigDecimal
 )
 
 data class DTOOverdueInterest(

@@ -17,36 +17,36 @@ import java.math.BigDecimal
  */
 class InterestArrangementComponentTest {
 
-    @Test
-    fun `getExecutionRate when interestType is fixed`() {
-        val interestArrangement = InterestArrangement(
-            id = 1,
-            interestType = InterestType.FIXED,
-            rate = BigDecimal("7.5"),
-            baseYearDays = BaseYearDays.ACTUAL_YEAR,
-            adjustFrequency = "1",
-            overdueInterestRatePercentage = BigDecimal("150"),
-            baseRate = BigDecimal("2.1")
-        )
-        val actual = interestArrangement.getExecutionRate()
+//    @Test
+//    fun `getExecutionRate when interestType is fixed`() {
+//        val interestArrangement = InterestArrangement(
+//            id = 1,
+//            interestType = InterestType.FIXED,
+//            rate = BigDecimal("7.5"),
+//            baseYearDays = BaseYearDays.ACTUAL_YEAR,
+//            adjustFrequency = "1",
+//            overdueInterestRatePercentage = BigDecimal("150"),
+//            baseRate = BigDecimal("2.1")
+//        )
+//        val actual = interestArrangement.getExecutionRate()
+//
+//        assertThat(actual).isEqualTo(BigDecimal("7.5"))
+//    }
 
-        assertThat(actual).isEqualTo(BigDecimal("7.5"))
-    }
-
-    @Test
-    fun `getExecutionRate when interestType is floating`() {
-        val interestArrangement = InterestArrangement(
-            id = 1,
-            interestType = InterestType.FLOATING_RATE_NOTE,
-            rate = BigDecimal("30"),
-            baseYearDays = BaseYearDays.ACTUAL_YEAR,
-            adjustFrequency = "1",
-            overdueInterestRatePercentage = BigDecimal("150"),
-            baseRate = BigDecimal("2.5")
-        )
-
-        val actual = interestArrangement.getExecutionRate()
-
-        assertThat(actual).isEqualTo(BigDecimal("0.032500"))
-    }
+//    @Test
+//    fun `getExecutionRate when interestType is floating`() {
+//        val interestArrangement = InterestArrangement(
+//            id = 1,
+//            interestType = InterestType.FLOATING_RATE_NOTE,
+//            rate = BigDecimal("30"),
+//            baseYearDays = BaseYearDays.ACTUAL_YEAR,
+//            adjustFrequency = "1",
+//            overdueInterestRatePercentage = BigDecimal("150"),
+//            baseRate = BigDecimal("2.5")
+//        )
+//
+//        val actual = interestArrangement.getExecutionRate()
+//
+//        assertThat(actual).isEqualTo(BigDecimal("0.032500"))
+//    }
 }

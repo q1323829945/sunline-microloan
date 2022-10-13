@@ -8,6 +8,7 @@ import cn.sunline.saas.interest.arrangement.repository.InterestArrangementReposi
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 /**
  * @title: InterestArrangementService
@@ -23,9 +24,19 @@ class InterestArrangementService(private val interestArrangementRepo: InterestAr
     private lateinit var interestArrangementFactory: InterestArrangementFactory
 
     fun registered(
-        agreementId: Long, term: LoanTermType, dtoInterestArrangementAdd: DTOInterestArrangementAdd
+        agreementId: Long,
+        amount: BigDecimal,
+        term: LoanTermType,
+        dtoInterestArrangementAdd: DTOInterestArrangementAdd
     ): InterestArrangement {
-        return save(interestArrangementFactory.instance(agreementId, term, dtoInterestArrangementAdd))
+        return save(
+            interestArrangementFactory.instance(
+                agreementId,
+                amount,
+                term,
+                dtoInterestArrangementAdd
+            )
+        )
     }
 
 }

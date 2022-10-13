@@ -298,8 +298,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
             oldLoanProduct.configurationOptions.forEach {
                 if (this.id?.toLong() == it.id) {
                     it.setValue(
-                        this.maxValueRange.term.num.let { it1 -> BigDecimal(it1) },
-                        this.minValueRange.term.num.let { it1 -> BigDecimal(it1) }
+                        this.maxValueRange.term.toMonthUnit().num.let { it1 -> BigDecimal(it1) },
+                        this.minValueRange.term.toMonthUnit().num.let { it1 -> BigDecimal(it1) }
                     )
                 }
             }
@@ -519,14 +519,6 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                 )
             }
             loanPurpose?.let { predicates.add(criteriaBuilder.like(root.get("loanPurpose"), "$loanPurpose%")) }
-            bankingProductStatus?.let {
-                predicates.add(
-                    criteriaBuilder.equal(
-                        root.get<BankingProductStatus>("status"),
-                        bankingProductStatus
-                    )
-                )
-            }
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable)
     }
