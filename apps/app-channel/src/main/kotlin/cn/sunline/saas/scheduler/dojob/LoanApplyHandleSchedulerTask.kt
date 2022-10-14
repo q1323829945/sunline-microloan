@@ -20,6 +20,7 @@ import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
+import cn.sunline.saas.scheduler.job.component.failed
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import mu.KotlinLogging
@@ -53,10 +54,21 @@ class LoanApplyHandleSchedulerTask (
     override fun doJob(applicationId: String, jobId: String, data: ActorCommand) {
 
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
+
         schedulerJobLog?.run {
             ContextUtil.setTenant(this.getTenantId().toString())
             this.execute(tenantDateTime.now())
             schedulerJobLogService.save(this)
+        }
+
+
+        loanAgentService.getOne(applicationId.toLong())?:run {
+            logger.info("loan apply $applicationId lose!")
+            schedulerJobLog?.run {
+                this.failed(tenantDateTime.now(),"loan apply $applicationId lose!")
+            }
+            ActorReminderService.deleteReminders(actorType, applicationId, jobId)
+            return
         }
 
         val loanApplyHandle = loanApplyHandleService.getOne(applicationId.toLong())

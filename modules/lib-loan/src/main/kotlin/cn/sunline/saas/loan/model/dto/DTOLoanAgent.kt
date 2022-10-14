@@ -19,8 +19,7 @@ data class DTOLoanAgent(
     var productId:String? = null,
     var productName: String? = null,
     var productType: ProductType? = null,
-    val channel: DTOChannelInformation,
-    val internal:DTOAgentInternal? = null
+    val agent:DTOAgent
 )
 data class DTOGps(
     val longitude:String? = null,
@@ -29,8 +28,14 @@ data class DTOGps(
     val address:String? = null,
 )
 
-data class DTOAgentInternal(
+data class DTOAgent(
     val gps:DTOGps? = null,
+    val channel: DTOChannelInformation,
+    val teller:DTOTeller? = null
+)
+
+data class DTOTeller(
+    val name:String? = null,
 )
 
 data class DTOBasePersonalInformation(

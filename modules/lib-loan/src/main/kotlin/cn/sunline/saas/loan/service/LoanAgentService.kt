@@ -35,8 +35,8 @@ class LoanAgentService (
                 seq = dtoLoanAgent.seq,
                 name = getName(dtoLoanAgent),
                 data = data,
-                channelCode = dtoLoanAgent.channel.code,
-                channelName = dtoLoanAgent.channel.name
+                channelCode = dtoLoanAgent.agent.channel.code,
+                channelName = dtoLoanAgent.agent.channel.name
             )
         )
     }
