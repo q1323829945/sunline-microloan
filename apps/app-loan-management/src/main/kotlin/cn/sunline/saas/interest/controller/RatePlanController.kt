@@ -30,14 +30,20 @@ class RatePlanController {
     }
 
     @GetMapping("all")
-    fun getAll(@RequestParam("type")type:RatePlanType): ResponseEntity<DTOResponseSuccess<List<DTORatePlan>>> {
+    fun getAll(
+        @RequestParam(
+            name = "type",
+            required = false
+        ) type: RatePlanType?
+    ): ResponseEntity<DTOResponseSuccess<List<DTORatePlan>>> {
         val page = ratePlanManagerService.getAll(type)
         return DTOResponseSuccess(page.map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
     @GetMapping("all/custom")
     fun getAllCustomer(): ResponseEntity<DTOResponseSuccess<List<DTORatePlan>>> {
-        return DTOResponseSuccess(ratePlanManagerService.getAllCustomRatePlan().map { objectMapper.convertValue<DTORatePlan>(it) }).response()
+        return DTOResponseSuccess(
+            ratePlanManagerService.getAllCustomRatePlan().map { objectMapper.convertValue<DTORatePlan>(it) }).response()
     }
 
     @PostMapping
@@ -46,8 +52,11 @@ class RatePlanController {
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id: Long, @RequestBody dtoRatePlan: DTORatePlan): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
-        return DTOResponseSuccess(ratePlanManagerService.updateOne(id,dtoRatePlan)).response()
+    fun updateOne(
+        @PathVariable id: Long,
+        @RequestBody dtoRatePlan: DTORatePlan
+    ): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
+        return DTOResponseSuccess(ratePlanManagerService.updateOne(id, dtoRatePlan)).response()
     }
 
     @GetMapping("{id}")
@@ -56,7 +65,7 @@ class RatePlanController {
     }
 
     @GetMapping("invokeAll")
-    fun getInvokeAll(@RequestParam("type")type:RatePlanType): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>>{
+    fun getInvokeAll(@RequestParam("type") type: RatePlanType): ResponseEntity<DTOResponseSuccess<DTORatePlanWithInterestRates>> {
         val page = ratePlanManagerService.getInvokeAll(type)
         val map = page.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
         return DTOResponseSuccess(map).response()

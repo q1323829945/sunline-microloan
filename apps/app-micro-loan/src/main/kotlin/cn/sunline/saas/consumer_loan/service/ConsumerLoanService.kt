@@ -57,6 +57,7 @@ import cn.sunline.saas.rpc.invoke.impl.ProductInvokeImpl
 import cn.sunline.saas.rpc.invoke.impl.RatePlanInvokeImpl
 import cn.sunline.saas.schedule.Schedule
 import cn.sunline.saas.schedule.ScheduleService
+import cn.sunline.saas.schedule.util.ScheduleHelper
 import cn.sunline.saas.underwriting.arrangement.service.UnderwritingArrangementService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -135,7 +136,7 @@ class ConsumerLoanService(
                 baseRate = InterestRateHelper.getTermOrAmountRate(
                     customerOffer.amount.toBigDecimal(),
                     customerOffer.term,
-                    consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.ratePlanId) // TODO BASE_RATE By TYPE
+                    consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.ratePlanId)
                 )?.toPlainString()
             )
         )
@@ -414,7 +415,7 @@ class ConsumerLoanService(
         )
     }
 
-    fun calculateSchedule(productId: Long, amount: BigDecimal, term: LoanTermType): DTORepaymentScheduleTrialView {
+    fun calculateSchedule(productId: Long, amount: BigDecimal, term: LoanTermType): ScheduleHelper.DTORepaymentScheduleTrialView {
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(productId)
         val feeArrangement = loanProduct.feeFeatures?.run {
@@ -425,8 +426,19 @@ class ConsumerLoanService(
         val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
         val basicPoint = loanProduct.interestFeature.interest.basicPoint ?: BigDecimal.ZERO
+        val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
+        val baseRateModel = baseRateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
+        val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId.toLong())
+        val ratesModel = rateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val interestRate =
-            getInterestRate(loanProduct.interestFeature.interestType, term, amount, ratePlanId.toLong(), basicPoint)
+            InterestRateHelper.getExecutionRate(
+                loanProduct.interestFeature.interestType,
+                term,
+                amount,
+                basicPoint,
+                baseRateModel,
+                ratesModel
+            )
         val schedule = ScheduleService(
             amount,
             interestRate,
@@ -439,78 +451,7 @@ class ConsumerLoanService(
             null,
             feeDeductItem.scheduleFee
         ).getSchedules(loanProduct.repaymentFeature.payment.paymentMethod)
-        return convertToScheduleTrialMapper(schedule, feeDeductItem.immediateFee)
-    }
-
-    private fun convertToInterestRate(list: List<DTOInvokeRates>, ratePlanId: Long): MutableList<InterestRate> {
-        val rates = mutableListOf<InterestRate>()
-        list.forEach {
-            rates.add(
-                InterestRate(
-                    id = it.id.toLong(),
-                    fromPeriod = it.fromPeriod,
-                    toPeriod = it.toPeriod,
-                    fromAmountPeriod = it.fromAmountPeriod,
-                    toAmountPeriod = it.toAmountPeriod,
-                    rate = it.rate.toBigDecimal(),
-                    ratePlanId = ratePlanId
-                )
-            )
-        }
-        return rates
-    }
-
-    private fun getInterestRate(
-        interestType: InterestType,
-        term: LoanTermType,
-        amount: BigDecimal,
-        ratePlanId: Long,
-        basicPoint: BigDecimal
-    ): BigDecimal {
-        //consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.id)
-        val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
-        val baseRateModel = convertToInterestRate(baseRateResult.rates, ratePlanId)
-        val baseRate = InterestRateHelper.getTermOrAmountRate(amount, term, baseRateModel)
-            ?: throw BaseRateNullException("base rate must be not null when interest type is floating rate")
-        val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId)
-        val ratesModel = convertToInterestRate(rateResult.rates, ratePlanId)
-        val rate = InterestRateHelper.getTermOrAmountRate(amount, term, ratesModel)
-            ?: throw BaseRateNullException("base rate must be not null when interest type is floating rate")
-        return when (interestType) {
-            InterestType.FIXED -> baseRate
-            InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
-                CalculateInterestRate(baseRate).calRateWithNoPercent(rate!!, basicPoint)
-            }
-        }
-    }
-
-    private fun convertToScheduleTrialMapper(
-        dtoSchedule: MutableList<Schedule>,
-        immediateFee: BigDecimal
-    ): DTORepaymentScheduleTrialView {
-        val dtoRepaymentScheduleDetailTrialView: MutableList<DTORepaymentScheduleDetailTrialView> = ArrayList()
-
-        val interestRate = dtoSchedule.first().interestRate
-        var installment = dtoSchedule.first().instalment
-        for (schedule in dtoSchedule) {
-//            if (installment != schedule.instalment) {
-//                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
-//            }
-            dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
-                period = schedule.period,
-                installment = schedule.instalment,
-                principal = schedule.principal,
-                interest = schedule.interest,
-                repaymentDate = schedule.dueDate.toString(),
-                fee = schedule.fee
-            )
-        }
-        return DTORepaymentScheduleTrialView(
-            installment = installment,
-            fee = immediateFee,
-            interestRate = interestRate,
-            schedule = dtoRepaymentScheduleDetailTrialView
-        )
+        return ScheduleHelper.convertToScheduleTrialMapper(schedule, feeDeductItem.immediateFee)
     }
 
     fun addRepaymentAccount(dtoRepaymentAccountAdd: DTORepaymentAccountAdd): DTORepaymentAccountView {

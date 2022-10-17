@@ -33,9 +33,10 @@ class InterestFeatureServiceTest(
             interest = DTOInterestFeatureModalityAdd(
                 baseYearDays = BaseYearDays.ACCOUNT_YEAR,
                 adjustFrequency = "NOW",
-                basicPoint = null
+                basicPoint = null,
+                floatRate = null,
             ),
-            overdueInterest =  DTOOverdueInterestFeatureModalityAdd(
+            overdueInterest = DTOOverdueInterestFeatureModalityAdd(
                 overdueInterestRatePercentage = 10
             )
         )
@@ -52,16 +53,12 @@ class InterestFeatureServiceTest(
     @Test
     fun `find by productId`() {
         val interestFeature = interestFeatureService.findByProductId(1)
-
-
         assertThat(interestFeature).isNotNull
     }
 
     @Test
     fun `find by ratePlanId`() {
         val interestFeature = interestFeatureService.findByRatePlanId(1000)
-
-
         assertThat(interestFeature).isNotNull
     }
 

@@ -1,9 +1,10 @@
 package cn.sunline.saas.interest.component
 
+import cn.sunline.saas.formula.CalculateInterestRate
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.interest.exception.InterestRateNullException
 import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.interest.model.RatePlanType
 import java.math.BigDecimal
 
 /**
@@ -14,28 +15,40 @@ import java.math.BigDecimal
  */
 object InterestRateHelper {
 
-    fun getTermOrAmountRate(loanAmount: BigDecimal,loanTerm: LoanTermType, rates: MutableList<InterestRate>?): BigDecimal?{
+    fun getTermOrAmountRate(
+        loanAmount: BigDecimal,
+        loanTerm: LoanTermType,
+        rates: MutableList<InterestRate>?
+    ): BigDecimal? {
         val rate = rates?.firstOrNull()
-        return if(rate?.fromPeriod!=null){
-            rates.sortBy { item -> item.fromPeriod }
-            rates.firstOrNull { it.fromPeriod!!.term >= loanTerm.term }?.rate
-        }else if (rate?.fromAmountPeriod!=null){
-            rates.sortBy { item -> item.fromAmountPeriod }
-            rates.firstOrNull { it.fromAmountPeriod!!.amount >= loanAmount }?.rate
-        }else{
+        return if (rate?.toPeriod != null) {
+            rates.sortBy { item -> item.toPeriod }
+            rates.firstOrNull { it.toPeriod!!.term >= loanTerm.term }?.rate
+        } else if (rate?.toAmountPeriod != null) {
+            rates.sortBy { item -> item.toAmountPeriod }
+            rates.firstOrNull { it.toAmountPeriod!! >= loanAmount }?.rate
+        } else {
             null
         }
     }
 
-    fun getTermRate1(loanTerm: LoanTermType, rates: MutableList<InterestRate>?): BigDecimal? {
-        rates?.sortBy { item -> item.fromPeriod }
-        return rates?.firstOrNull { it.fromPeriod!!.term >= loanTerm.term }?.rate
-
-    }
-
-    fun getAmountRate1(loanAmount: BigDecimal, rates: MutableList<InterestRate>?): BigDecimal? {
-        rates?.sortBy { item -> item.fromAmountPeriod }
-        return rates?.firstOrNull { it.fromAmountPeriod!!.amount >= loanAmount }?.rate
-
+    fun getExecutionRate(
+        interestType: InterestType,
+        term: LoanTermType,
+        amount: BigDecimal,
+        basicPoint: BigDecimal?,
+        baseInterestRate: MutableList<InterestRate>,
+        customInterestRate: MutableList<InterestRate>,
+    ): BigDecimal {
+        val baseRate = getTermOrAmountRate(amount, term, baseInterestRate)
+            ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
+        val rate = getTermOrAmountRate(amount, term, customInterestRate)
+            ?: throw InterestRateNullException("custom rate must be not null when interest type is floating rate")
+        return when (interestType) {
+            InterestType.FIXED -> baseRate
+            InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
+                CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint ?: BigDecimal.ZERO)
+            }
+        }
     }
 }

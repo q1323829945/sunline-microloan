@@ -4,17 +4,23 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.global.constant.LoanAmountTierType
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.controller.dto.DTOInterestRate
+import cn.sunline.saas.interest.controller.dto.DTOInterestRateView
+import cn.sunline.saas.interest.controller.dto.DTORatePlan
 import cn.sunline.saas.interest.exception.InterestRateBusinessException
 import cn.sunline.saas.interest.exception.InterestRateNotFoundException
+import cn.sunline.saas.interest.exception.RatePlanNotFoundException
 import cn.sunline.saas.interest.model.InterestRate
 import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.rpc.invoke.impl.PageInvokeImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
 
 
@@ -32,60 +38,103 @@ class InterestRateManagerService {
     @Autowired
     private lateinit var ratePlanService: RatePlanService
 
-    fun getPaged(ratePlanId: Long?, pageable: Pageable): Page<InterestRate> {
-        return interestRateService.getPage(ratePlanId, pageable)
+    fun getPaged(ratePlanId: Long?, pageable: Pageable): Page<DTOInterestRateView> {
+
+        val interestRates = interestRateService.getPage(ratePlanId, pageable).content
+        val rateViewList = reBuildPeriod(ratePlanId!!, interestRates)
+        return PageInvokeImpl<DTOInterestRateView>().rePaged(rateViewList, pageable)
     }
 
     fun addOne(dtoInterestRate: DTOInterestRate): DTOInterestRate {
         val interestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
+
         checkPackage(
-            interestRate.ratePlanId,
-            interestRate.fromPeriod,
-            interestRate.toPeriod,
-            interestRate.fromAmountPeriod,
-            interestRate.toAmountPeriod
+            dtoInterestRate.ratePlanId.toLong(),
+            dtoInterestRate.toPeriod,
+            dtoInterestRate.toAmountPeriod
         )
         val savedInterestRate = interestRateService.addOne(interestRate)
         return objectMapper.convertValue(savedInterestRate)
     }
 
+    private fun reBuildPeriod(ratePlanId: Long, interestRates: List<InterestRate>): List<DTOInterestRateView> {
+        val ratePlan = ratePlanService.getOne(ratePlanId)
+            ?: throw RatePlanNotFoundException("invalid rate plan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val rates = ArrayList<DTOInterestRateView>()
+        when (ratePlan.type) {
+            RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER -> {
+                var fromAmountPeriod = BigDecimal.ZERO
+                interestRates.sortedBy { it.toAmountPeriod }.forEach {
+                    rates += DTOInterestRateView(
+                        id = it.id.toString(),
+                        fromAmountPeriod = fromAmountPeriod,
+                        toAmountPeriod = it.toAmountPeriod,
+                        ratePlanId = it.ratePlanId.toString(),
+                        rate = it.rate.toPlainString()
+                    )
+                    fromAmountPeriod = it.toAmountPeriod!!
+                }
+            }
+
+            RatePlanType.LOAN_TERM_TIER_CUSTOMER -> {
+                var fromPeriod = LoanTermType.ONE_MONTH
+                interestRates.sortedBy { it.toPeriod!!.term.toMonthUnit().num }.forEach {
+                    rates += DTOInterestRateView(
+                        id = it.id.toString(),
+                        fromPeriod = fromPeriod,
+                        toPeriod = it.toPeriod,
+                        ratePlanId = it.ratePlanId.toString(),
+                        rate = it.rate.toPlainString()
+                    )
+                    fromPeriod = it.toPeriod!!
+                }
+            }
+
+            RatePlanType.CUSTOMER,
+            RatePlanType.STANDARD -> {
+                interestRates.forEach {
+                    rates += DTOInterestRateView(
+                        id = it.id.toString(),
+                        fromPeriod = it.toPeriod,
+                        toPeriod = it.toPeriod,
+                        ratePlanId = it.ratePlanId.toString(),
+                        rate = it.rate.toPlainString()
+                    )
+                }
+            }
+        }
+        return rates
+    }
+
     fun updateOne(id: Long, dtoInterestRate: DTOInterestRate): DTOInterestRate {
-        val oldInterestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException(
+        val interestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException(
             "invalid interest rate",
             ManagementExceptionCode.INTEREST_RATE_NOT_FOUND
         )
-        val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
         checkPackage(
-            newInterestRate.ratePlanId,
-            newInterestRate.fromPeriod,
-            newInterestRate.toPeriod,
-            newInterestRate.fromAmountPeriod,
-            newInterestRate.toAmountPeriod
+            id,
+            dtoInterestRate.toPeriod,
+            dtoInterestRate.toAmountPeriod
         )
-        val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
+        val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
+        val savedInterestRate = interestRateService.updateOne(interestRate,newInterestRate)
         return objectMapper.convertValue(savedInterestRate)
     }
 
     private fun checkPackage(
         ratePlanId: Long,
-        fromPeriod: LoanTermType?,
         toPeriod: LoanTermType?,
-        fromAmountPeriod: LoanAmountTierType?,
-        toAmountPeriod: LoanAmountTierType?
+        toAmountPeriod: BigDecimal?
     ) {
         checkPeriod(
             ratePlanId,
-            fromPeriod,
             toPeriod,
-            fromAmountPeriod,
             toAmountPeriod
         )
         checkRatePlanUseStatus(ratePlanId)
         checkInterestRateExist(
             ratePlanId,
-            fromPeriod,
             toPeriod,
-            fromAmountPeriod,
             toAmountPeriod
         )
     }
@@ -112,17 +161,13 @@ class InterestRateManagerService {
 
     private fun checkInterestRateExist(
         ratePlanId: Long,
-        fromPeriod: LoanTermType?,
         toPeriod: LoanTermType?,
-        fromAmountPeriod: LoanAmountTierType?,
-        toAmountPeriod: LoanAmountTierType?
+        toAmountPeriod: BigDecimal?
     ) {
         val typeInterestRate =
             interestRateService.findByRatePlanIdAndPeriod(
                 ratePlanId,
-                fromPeriod,
                 toPeriod,
-                fromAmountPeriod,
                 toAmountPeriod
             )
         if (typeInterestRate != null) {
@@ -135,10 +180,8 @@ class InterestRateManagerService {
 
     private fun checkPeriod(
         ratePlanId: Long,
-        fromPeriod: LoanTermType?,
         toPeriod: LoanTermType?,
-        fromAmountPeriod: LoanAmountTierType?,
-        toAmountPeriod: LoanAmountTierType?
+        toAmountPeriod: BigDecimal?
     ) {
         val ratePlan = ratePlanService.getOne(ratePlanId) ?: throw InterestRateBusinessException(
             "invalid rate plan",
@@ -146,42 +189,22 @@ class InterestRateManagerService {
         )
         when (ratePlan.type) {
             RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER -> {
-                fromAmountPeriod ?: throw InterestRateBusinessException(
-                    "the fromAmountPeriod is not null",
-                    ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_NULL
-                )
                 toAmountPeriod ?: throw InterestRateBusinessException(
                     "the ToAmountPeriod is not null",
                     ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_NULL
                 )
-                if (toAmountPeriod.amount < fromAmountPeriod.amount) {
-                    throw InterestRateBusinessException(
-                        "the fromAmountPeriod greater than toAmountPeriod",
-                        ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_CORRECT
-                    )
-                }
             }
 
             RatePlanType.LOAN_TERM_TIER_CUSTOMER -> {
-                fromPeriod ?: throw InterestRateBusinessException(
-                    "the fromPeriod is not null",
-                    ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_NULL
-                )
                 toPeriod ?: throw InterestRateBusinessException(
                     "the toPeriod is not null",
                     ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_NULL
                 )
-                if (toPeriod.term < fromPeriod.term) {
-                    throw InterestRateBusinessException(
-                        "the fromPeriod greater than toPeriod",
-                        ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_CORRECT
-                    )
-                }
             }
 
             RatePlanType.STANDARD,
             RatePlanType.CUSTOMER -> {
-                fromPeriod ?: throw InterestRateBusinessException(
+                toPeriod ?: throw InterestRateBusinessException(
                     "the period is not null",
                     ManagementExceptionCode.INTEREST_RATE_PERIOD_IS_NOT_NULL
                 )

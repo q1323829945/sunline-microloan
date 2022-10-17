@@ -11,6 +11,10 @@ import cn.sunline.saas.fee.service.FeeFeatureService
 import cn.sunline.saas.global.constant.BankingProductStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.model.TermType
+import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.interest.constant.InterestType
+import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.model.db.InterestFeatureModality
 import cn.sunline.saas.interest.model.db.OverdueInterestFeatureModality
 import cn.sunline.saas.interest.model.dto.DTOInterestFeatureAdd
@@ -348,7 +352,8 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                         interestFeature.id,
                         this.interest.baseYearDays,
                         this.interest.adjustFrequency,
-                        this.interest.basicPoint
+                        this.interest.basicPoint,
+                        this.interest.floatRate
                     )
                 interestFeature.overdueInterest =
                     OverdueInterestFeatureModality(

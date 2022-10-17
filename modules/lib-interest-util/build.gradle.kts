@@ -8,7 +8,9 @@ dependencies {
     api(project(":lib-base-jpa"))
     api(project(":lib-multi-tenant"))
     implementation(project(":lib-seq-api"))
-    
+    implementation(project(":lib-exceptions"))
+    implementation(project(":lib-formula"))
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("com.h2database:h2:1.4.200")

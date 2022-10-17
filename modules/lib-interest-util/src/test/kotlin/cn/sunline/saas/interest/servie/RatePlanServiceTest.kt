@@ -1,8 +1,18 @@
 package cn.sunline.saas.interest.servie
 
+import cn.sunline.saas.global.constant.LoanTermType
+import cn.sunline.saas.global.util.ContextUtil
+import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.interest.model.RatePlan
+import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanService
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
 
 /**
  * @title: RatePlanServiceTest
@@ -13,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RatePlanServiceTest (@Autowired val ratePlanService: RatePlanService){
 
-    // todo
+//    // todo
 //    var id = 0L
 //
 //    @BeforeAll
@@ -24,7 +34,7 @@ class RatePlanServiceTest (@Autowired val ratePlanService: RatePlanService){
 //        val ratePlanId = 1L
 //        val rate1 = InterestRate(1, LoanTermType.ONE_YEAR, BigDecimal(7.5),ratePlanId)
 //        val rate2 = InterestRate(2,LoanTermType.SIX_MONTHS, BigDecimal(6.5),ratePlanId)
-//        val rate3 = InterestRate(3,LoanTermType.THREE_MONTHS, BigDecimal(3.5),ratePlanId)
+//        val rate3 = InterestRate(3, LoanTermType.THREE_MONTHS, BigDecimal(3.5),ratePlanId)
 //
 //        rates.add(rate1)
 //        rates.add(rate2)
@@ -57,7 +67,7 @@ class RatePlanServiceTest (@Autowired val ratePlanService: RatePlanService){
 //        rates.add(rate3)
 //        rates.add(rate4)
 //
-//        val newOne = RatePlan(ratePlanId,"Test Rate Plan2",RatePlanType.STANDARD,rates)
+//        val newOne = RatePlan(ratePlanId,"Test Rate Plan2", RatePlanType.STANDARD,rates)
 //
 //
 //        val actual = ratePlanService.updateOne(oldOne!!,newOne)

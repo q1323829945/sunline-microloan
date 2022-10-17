@@ -25,20 +25,11 @@ class InterestRate(
     var id: Long? = null,
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name="from_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
-    var fromPeriod: LoanTermType? = null,
-
-    @Enumerated(value = EnumType.STRING)
     @Column(name="to_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
     var toPeriod: LoanTermType? = null,
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "from_amount_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
-    var fromAmountPeriod: LoanAmountTierType? = null,
-
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "to_amount_period", nullable = true, length = 32, columnDefinition = "varchar(32) null")
-    var toAmountPeriod: LoanAmountTierType? = null,
+    @Column(name = "to_amount_period", nullable = true, length = 32, columnDefinition = "decimal(19,2) null")
+    var toAmountPeriod: BigDecimal? = null,
 
     @NotNull
     @Column(nullable = false, scale = 9, precision = 6, columnDefinition = "decimal(9,6) not null")

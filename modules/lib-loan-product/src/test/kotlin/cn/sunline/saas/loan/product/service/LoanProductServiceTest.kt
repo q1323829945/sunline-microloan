@@ -68,7 +68,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             interest = DTOInterestFeatureModalityAdd(
                 baseYearDays = BaseYearDays.ACCOUNT_YEAR,
                 adjustFrequency = "NOW",
-                basicPoint = BigDecimal(0.1)
+                basicPoint = BigDecimal(0.1),
+                floatRate = null
             ),
             overdueInterest = DTOOverdueInterestFeatureModalityAdd(
                 overdueInterestRatePercentage = 150
@@ -200,7 +201,8 @@ class LoanProductServiceTest(@Autowired val loanProductService: LoanProductServi
             interest = DTOInterestFeatureModalityAdd(
                 baseYearDays = BaseYearDays.ACCOUNT_YEAR,
                 adjustFrequency = "NOW",
-                basicPoint = BigDecimal(0.1)
+                basicPoint = BigDecimal(0.1),
+                floatRate = null
             ),
             overdueInterest = DTOOverdueInterestFeatureModalityAdd(
                 overdueInterestRatePercentage = 150

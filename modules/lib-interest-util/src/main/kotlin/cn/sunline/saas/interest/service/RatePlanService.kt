@@ -44,10 +44,10 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
     }
 
 
-    fun getRatePlanPageByType(type: RatePlanType): Page<RatePlan> {
+    fun getRatePlanPageByType(type: RatePlanType?): Page<RatePlan> {
         return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            type?.let { predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), it)) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
     }

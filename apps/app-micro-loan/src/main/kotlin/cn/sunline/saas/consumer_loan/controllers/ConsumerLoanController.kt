@@ -2,9 +2,6 @@ package cn.sunline.saas.consumer_loan.controllers
 
 import cn.sunline.saas.consumer_loan.service.ConsumerLoanService
 import cn.sunline.saas.consumer_loan.service.dto.*
-import cn.sunline.saas.consumer_loan.service.dto.DTOLoanAgreementView
-import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentAccountAdd
-import cn.sunline.saas.consumer_loan.service.dto.DTORepaymentScheduleTrialView
 import cn.sunline.saas.global.constant.AgreementStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.invoice.model.dto.DTOInvoiceInfoView
@@ -12,6 +9,7 @@ import cn.sunline.saas.invoice.model.dto.DTOInvoiceRepay
 import cn.sunline.saas.invoice.model.dto.DTOPreRepaymentTrailView
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.util.ScheduleHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -73,7 +71,7 @@ class ConsumerLoanController {
     }
 
     @GetMapping("{productId}/{amount}/{term}/calculate")
-    fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<DTORepaymentScheduleTrialView>> {
+    fun calculate(@PathVariable productId:Long, @PathVariable amount:String, @PathVariable term: LoanTermType): ResponseEntity<DTOResponseSuccess<ScheduleHelper.DTORepaymentScheduleTrialView>> {
         val repaymentScheduleTrialResult = consumerLoanService.calculateSchedule(productId, amount.toBigDecimal(),term)
         return DTOResponseSuccess(repaymentScheduleTrialResult).response()
     }

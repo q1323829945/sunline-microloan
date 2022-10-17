@@ -81,7 +81,8 @@ data class DTOInterestFeatureModalityView(
     val id: String,
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val basicPoint: BigDecimal?
+    val basicPoint: BigDecimal?,
+    val floatRate: BigDecimal?
 )
 
 data class DTOOverdueInterestFeatureModalityView(

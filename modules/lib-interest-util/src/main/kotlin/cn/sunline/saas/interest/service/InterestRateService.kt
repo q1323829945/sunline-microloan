@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import javax.persistence.criteria.Predicate
+import javax.transaction.Transactional
 
 @Service
 class InterestRateService(private val interestRateRepository: InterestRateRepository) :
@@ -25,9 +27,7 @@ class InterestRateService(private val interestRateRepository: InterestRateReposi
     }
 
     fun updateOne(oldInterestRate: InterestRate, newInterestRate: InterestRate): InterestRate {
-        newInterestRate.fromPeriod?.let { oldInterestRate.fromPeriod = it }
         newInterestRate.toPeriod?.let { oldInterestRate.toPeriod = it }
-        newInterestRate.fromAmountPeriod?.let { oldInterestRate.fromAmountPeriod = it }
         newInterestRate.toAmountPeriod?.let { oldInterestRate.toAmountPeriod = it }
         oldInterestRate.rate = newInterestRate.rate
         return save(oldInterestRate)
@@ -39,24 +39,13 @@ class InterestRateService(private val interestRateRepository: InterestRateReposi
 
     fun findByRatePlanIdAndPeriod(
         ratePlanId: Long,
-        fromPeriod: LoanTermType?,
         toPeriod: LoanTermType?,
-        fromAmountPeriod: LoanAmountTierType?,
-        toAmountPeriod: LoanAmountTierType?
+        toAmountPeriod: BigDecimal?
     ): InterestRate? {
         return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("ratePlanId"), ratePlanId))
-            fromPeriod?.let { predicates.add(criteriaBuilder.equal(root.get<LoanTermType>("fromPeriod"), it)) }
             toPeriod?.let { predicates.add(criteriaBuilder.equal(root.get<LoanTermType>("toPeriod"), it)) }
-            fromAmountPeriod?.let {
-                predicates.add(
-                    criteriaBuilder.equal(
-                        root.get<LoanAmountTierType>("fromAmountPeriod"),
-                        it
-                    )
-                )
-            }
             toAmountPeriod?.let {
                 predicates.add(
                     criteriaBuilder.equal(
@@ -70,7 +59,7 @@ class InterestRateService(private val interestRateRepository: InterestRateReposi
     }
 
     fun findByRatePlanId(ratePlanId: Long): List<InterestRate> {
-        return this.getPage(ratePlanId,Pageable.unpaged()).content
+        return this.getPage(ratePlanId, Pageable.unpaged()).content
     }
 
     fun getPage(ratePlanId: Long?, pageable: Pageable): Page<InterestRate> {

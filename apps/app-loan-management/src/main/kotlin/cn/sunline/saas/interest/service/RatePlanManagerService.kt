@@ -29,7 +29,7 @@ class RatePlanManagerService {
         return ratePlanService.getPageWithTenant(pageable = pageable)
     }
 
-    fun getAll(type: RatePlanType): List<RatePlan>{
+    fun getAll(type: RatePlanType?): List<RatePlan>{
         return ratePlanService.getRatePlanPageByType(type).content
     }
 

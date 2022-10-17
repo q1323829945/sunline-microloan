@@ -12,6 +12,7 @@ import cn.sunline.saas.product.service.dto.DTOLoanUploadConfigure
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.util.ScheduleHelper
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -113,5 +114,15 @@ class LoanProductController {
     @GetMapping("invoke/list")
     fun getInvokeProducts(@RequestParam status: BankingProductStatus): List<DTOLoanProductView> {
         return loanProductManagerService.getInvokeProducts(status)
+    }
+
+    @PostMapping("schedule/{amount}/{term}/calculate")
+    fun calculateTrailSchedule(
+        @PathVariable amount: String,
+        @PathVariable term: LoanTermType,
+        @RequestBody dtoLoanProduct: DTOLoanProduct
+    ): ResponseEntity<DTOResponseSuccess<ScheduleHelper.DTORepaymentScheduleTrialView>>
+    {
+        return DTOResponseSuccess(loanProductManagerService.calculateTrailSchedule(amount,term,dtoLoanProduct)).response()
     }
 }
