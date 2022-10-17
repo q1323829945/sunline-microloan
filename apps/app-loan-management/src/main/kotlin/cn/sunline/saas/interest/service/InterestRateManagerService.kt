@@ -51,7 +51,7 @@ class InterestRateManagerService {
         checkPackage(
             dtoInterestRate.ratePlanId.toLong(),
             dtoInterestRate.toPeriod,
-            dtoInterestRate.toAmountPeriod
+            dtoInterestRate.toAmountPeriod?.toBigDecimal()
         )
         val savedInterestRate = interestRateService.addOne(interestRate)
         return objectMapper.convertValue(savedInterestRate)
@@ -67,8 +67,8 @@ class InterestRateManagerService {
                 interestRates.sortedBy { it.toAmountPeriod }.forEach {
                     rates += DTOInterestRateView(
                         id = it.id.toString(),
-                        fromAmountPeriod = fromAmountPeriod,
-                        toAmountPeriod = it.toAmountPeriod,
+                        fromAmountPeriod = fromAmountPeriod.toPlainString(),
+                        toAmountPeriod = it.toAmountPeriod?.toPlainString(),
                         ratePlanId = it.ratePlanId.toString(),
                         rate = it.rate.toPlainString()
                     )
@@ -114,7 +114,7 @@ class InterestRateManagerService {
         checkPackage(
             id,
             dtoInterestRate.toPeriod,
-            dtoInterestRate.toAmountPeriod
+            dtoInterestRate.toAmountPeriod?.toBigDecimal()
         )
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
         val savedInterestRate = interestRateService.updateOne(interestRate,newInterestRate)

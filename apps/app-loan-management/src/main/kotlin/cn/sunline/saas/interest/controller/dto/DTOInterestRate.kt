@@ -7,7 +7,7 @@ import java.math.BigDecimal
 data class DTOInterestRate(
     val id: String? = null,
     val toPeriod: LoanTermType? = null,
-    val toAmountPeriod: BigDecimal? = null,
+    val toAmountPeriod: String? = null,
     val rate: String,
     val ratePlanId: String
 )
@@ -17,8 +17,8 @@ data class DTOInterestRateView(
     val id: String? = null,
     val fromPeriod: LoanTermType? = null,
     val toPeriod: LoanTermType? = null,
-    val fromAmountPeriod: BigDecimal? = null,
-    val toAmountPeriod: BigDecimal? = null,
+    val fromAmountPeriod: String? = null,
+    val toAmountPeriod: String? = null,
     val rate: String,
     val ratePlanId: String
 )
