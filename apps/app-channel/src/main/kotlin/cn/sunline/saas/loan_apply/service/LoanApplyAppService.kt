@@ -281,7 +281,7 @@ class LoanApplyAppService {
     fun loanRecord(data: String): LoanAgent {
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(data)
 
-        channelCastService.getUniqueChannelCast(dtoLoanAgent.channel.code,dtoLoanAgent.channel.name)?.run {
+        channelCastService.getUniqueChannelCast(dtoLoanAgent.agent.channel.code,dtoLoanAgent.agent.channel.name)?.run {
             ContextUtil.setTenant(this.getTenantId().toString())
         }?:run { ContextUtil.setTenant("1") }
 

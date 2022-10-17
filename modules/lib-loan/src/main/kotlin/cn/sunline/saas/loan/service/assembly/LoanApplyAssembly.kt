@@ -47,7 +47,7 @@ object LoanApplyAssembly {
                     purpose = dtoLoanAgent.loanInformation?.purpose
                 )
             ),
-            channel = dtoLoanAgent.channel,
+            channel = dtoLoanAgent.agent.channel,
             dataPrivacyConsent = DTOSignature(
                 dtoLoanAgent.signature
             ),
@@ -91,7 +91,7 @@ object LoanApplyAssembly {
                     purpose = dtoLoanAgent.loanInformation?.purpose
                 )
             ),
-            channel = dtoLoanAgent.channel,
+            channel = dtoLoanAgent.agent.channel,
             questionnaires = questionnaires
         )
     }
@@ -143,7 +143,7 @@ object LoanApplyAssembly {
                 term = dtoLoanAgent.loanInformation?.term,
                 purpose = dtoLoanAgent.loanInformation?.purpose?.run { mutableListOf(this) }
             ),
-            channel = dtoLoanAgent.channel,
+            channel = dtoLoanAgent.agent.channel,
             signature = dtoLoanAgent.signature
         )
     }
@@ -180,7 +180,7 @@ object LoanApplyAssembly {
                 term = dtoLoanAgent.loanInformation?.term,
                 purpose = dtoLoanAgent.loanInformation?.purpose?.run { mutableListOf(this) }
             ),
-            channel = dtoLoanAgent.channel,
+            channel = dtoLoanAgent.agent.channel,
             signature = dtoLoanAgent.signature,
             questionnaires = questionnaires
         )
@@ -232,7 +232,7 @@ object LoanApplyAssembly {
                 amount = dtoLoanAgent.loanInformation?.amount?.run { BigDecimal(this) },
                 term = dtoLoanAgent.loanInformation?.term,
             ),
-            channel = dtoLoanAgent.channel,
+            channel = dtoLoanAgent.agent.channel,
             undertaking = DTOUndertaking(
                 signature = dtoLoanAgent.signature
             )
