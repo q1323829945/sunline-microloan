@@ -34,8 +34,8 @@ class InterestFeatureModality(
     @Column(name = "basic_point", columnDefinition = "decimal(9,6) null")
     var basicPoint: BigDecimal?,
 
-    @Column(name = "float_rate", columnDefinition = "decimal(9,6) null")
-    var floatRate: BigDecimal?
+    @Column(name = "float_ratio", columnDefinition = "decimal(9,6) null")
+    var floatRatio: BigDecimal?
 
 ) : MultiTenant {
 

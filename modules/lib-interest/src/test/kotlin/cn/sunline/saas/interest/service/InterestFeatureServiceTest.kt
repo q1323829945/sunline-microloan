@@ -34,7 +34,7 @@ class InterestFeatureServiceTest(
                 baseYearDays = BaseYearDays.ACCOUNT_YEAR,
                 adjustFrequency = "NOW",
                 basicPoint = null,
-                floatRate = null,
+                floatRatio = null,
             ),
             overdueInterest = DTOOverdueInterestFeatureModalityAdd(
                 overdueInterestRatePercentage = 10

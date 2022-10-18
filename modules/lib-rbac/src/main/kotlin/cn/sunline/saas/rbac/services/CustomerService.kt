@@ -25,7 +25,7 @@ class CustomerService(
     fun addOne(dtoCustomerAdd: DTOCustomerAdd):Customer{
         getOneWithTenant{ root,_,c ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(c.equal(root.get<String>(""),dtoCustomerAdd.userId))
+            predicates.add(c.equal(root.get<String>("userId"),dtoCustomerAdd.userId))
             c.and(*(predicates.toTypedArray()))
         }?.run {
             this
