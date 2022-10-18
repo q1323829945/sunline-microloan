@@ -37,6 +37,7 @@ object InterestRateHelper {
         term: LoanTermType,
         amount: BigDecimal,
         basicPoint: BigDecimal?,
+        floatRatio: BigDecimal?,
         baseInterestRate: MutableList<InterestRate>,
         customInterestRate: MutableList<InterestRate>,
     ): BigDecimal {
@@ -47,7 +48,11 @@ object InterestRateHelper {
         return when (interestType) {
             InterestType.FIXED -> baseRate
             InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
-                CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint ?: BigDecimal.ZERO)
+                CalculateInterestRate(baseRate).calRateWithNoPercent(
+                    rate,
+                    basicPoint ?: BigDecimal.ZERO,
+                    floatRatio ?: BigDecimal.ZERO
+                )
             }
         }
     }

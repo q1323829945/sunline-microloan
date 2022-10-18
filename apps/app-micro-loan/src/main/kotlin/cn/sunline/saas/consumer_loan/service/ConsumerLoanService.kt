@@ -426,6 +426,7 @@ class ConsumerLoanService(
         val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
         val basicPoint = loanProduct.interestFeature.interest.basicPoint ?: BigDecimal.ZERO
+        val floatRatio = loanProduct.interestFeature.interest.floatRatio ?: BigDecimal.ZERO
         val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
         val baseRateModel = baseRateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId.toLong())
@@ -436,6 +437,7 @@ class ConsumerLoanService(
                 term,
                 amount,
                 basicPoint,
+                floatRatio,
                 baseRateModel,
                 ratesModel
             )

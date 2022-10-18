@@ -24,7 +24,7 @@ class CalculateInterestTest {
 
     @Test
     fun `calculate float interest`() {
-        val rate = CalculateInterestRate(BigDecimal(1.5)).calRateWithNoPercent(BigDecimal(3), BigDecimal(0.66))
+        val rate = CalculateInterestRate(BigDecimal(1.5)).calRateWithNoPercent(BigDecimal(3), BigDecimal(0.66), BigDecimal(0.66))
         Assertions.assertThat(rate).isEqualTo(BigDecimal("4.509999"))
     }
 

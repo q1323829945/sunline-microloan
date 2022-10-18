@@ -21,7 +21,7 @@ fun InterestArrangement.getExecutionRate(): BigDecimal {
         InterestType.FLOATING_RATE_NOTE -> if (baseRate == null) {
             throw BaseRateNullException("base rate must be not null when interest type is floating rate")
         } else {
-            CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint ?: BigDecimal.ZERO)
+            CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint ?: BigDecimal.ZERO, floatRatio ?: BigDecimal.ZERO)
         }
     }
     return executionRate

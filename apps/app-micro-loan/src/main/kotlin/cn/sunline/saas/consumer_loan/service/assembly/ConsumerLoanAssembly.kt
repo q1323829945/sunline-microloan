@@ -48,7 +48,8 @@ object ConsumerLoanAssembly {
                 overdueInterestRatePercentage = overdueInterest.overdueInterestRatePercentage,
                 planRates = objectMapper.convertValue<MutableList<DTOInterestRate>>(ratePlan),
                 baseRate = baseRate,
-                basicPoint = interest.basicPoint
+                basicPoint = interest.basicPoint,
+                floatRatio = interest.floatRatio
             )
         }
 

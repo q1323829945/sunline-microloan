@@ -7,7 +7,7 @@ import cn.sunline.saas.loan.model.enum.*
 import java.math.BigDecimal
 
 object DTOLoanAssembly {
-    fun getNewClientLoan(applicationId:String):DTONewClientLoan{
+    fun getNewClientLoan(applicationId: String): DTONewClientLoan {
         return DTONewClientLoan(
             applicationId = applicationId,
             cif = CIF(
@@ -42,7 +42,7 @@ object DTOLoanAssembly {
                     positionType = PositionType.SELF,
                     positionSubType = PositionSubType.OWNER,
                 ),
-                grossMonthlyIncome =  BigDecimal(100),
+                grossMonthlyIncome = BigDecimal(100),
                 stayAtCurrentHome = getBaseStay(),
                 ownership = Ownership.OWNED,
                 employmentType = EmploymentType.EMPLOYED,
@@ -124,7 +124,7 @@ object DTOLoanAssembly {
         )
     }
 
-    fun getClientLoan(applicationId:String):DTOClientLoan{
+    fun getClientLoan(applicationId: String): DTOClientLoan {
         return DTOClientLoan(
             applicationId = applicationId,
             cifNumber = "123",
@@ -194,7 +194,7 @@ object DTOLoanAssembly {
         )
     }
 
-    fun getTeacherLoan(applicationId: String):DTOTeacherLoan{
+    fun getTeacherLoan(applicationId: String): DTOTeacherLoan {
         return DTOTeacherLoan(
             applicationId = applicationId,
             loanType = TeacherLoanType.SALARY_LOAN,
@@ -276,7 +276,7 @@ object DTOLoanAssembly {
             loanInformation = DTOLoanInformation(
                 amount = BigDecimal(500),
                 term = LoanTermType.ONE_YEAR,
-                purpose = mutableListOf(Purpose.EDUCATION.name,Purpose.EMERGENCY.name),
+                purpose = mutableListOf(Purpose.EDUCATION.name, Purpose.EMERGENCY.name),
             ),
             disbursalMode = DTODisbursalMode(
                 networkBankCASA = "123467",
@@ -300,7 +300,7 @@ object DTOLoanAssembly {
         )
     }
 
-    fun getCorporateLoan(applicationId: String):DTOCorporateLoan{
+    fun getCorporateLoan(applicationId: String): DTOCorporateLoan {
         return DTOCorporateLoan(
             applicationId = applicationId,
             borrowerType = BorrowerType.CO_BORROWER,
@@ -366,9 +366,9 @@ object DTOLoanAssembly {
                 term = LoanTermType.ONE_YEAR,
                 fixingPeriod = "123",
                 purpose = DTOPurposeInformation(
-                    workingCapital = mutableListOf(WorkingCapital.FUNDING_GAP,WorkingCapital.LOAN_TAKE_OUT),
-                    capex = mutableListOf(Capex.CAPEX,Capex.LOAN_TAKE_OUT),
-                    investment = mutableListOf(Investment.LOAN_TAKE_OUT,Investment.ACQUISITION),
+                    workingCapital = mutableListOf(WorkingCapital.FUNDING_GAP, WorkingCapital.LOAN_TAKE_OUT),
+                    capex = mutableListOf(Capex.CAPEX, Capex.LOAN_TAKE_OUT),
+                    investment = mutableListOf(Investment.LOAN_TAKE_OUT, Investment.ACQUISITION),
                 ),
             ),
             collateralInformation = DTOCollateralInformation(
@@ -453,7 +453,7 @@ object DTOLoanAssembly {
         )
     }
 
-    fun getKabuhayanLoan(applicationId: String):DTOKabuhayanLoan{
+    fun getKabuhayanLoan(applicationId: String): DTOKabuhayanLoan {
         return DTOKabuhayanLoan(
             applicationId = applicationId,
             personalInformation = DTOPersonalInformation(
@@ -471,7 +471,7 @@ object DTOLoanAssembly {
             loanInformation = DTOLoanInformation(
                 amount = BigDecimal.ONE,
                 term = LoanTermType.ONE_YEAR,
-                purpose = mutableListOf(Purpose.EMERGENCY.name,Purpose.EDUCATION.name),
+                purpose = mutableListOf(Purpose.EMERGENCY.name, Purpose.EDUCATION.name),
             ),
             questionnaires = mutableListOf(
                 DTOQuestionnaire(
@@ -488,7 +488,7 @@ object DTOLoanAssembly {
         )
     }
 
-    fun getLoanAgent(loanType: LoanType):DTOLoanAgent{
+    fun getLoanAgent(loanType: LoanType): DTOLoanAgent {
         return DTOLoanAgent(
             seq = "seq1",
             applicationId = null,
@@ -545,16 +545,24 @@ object DTOLoanAssembly {
             fileInformation = mutableListOf(
                 DTOBaseFileInformation(
                     key = "file",
-                    path = mutableListOf("p1","p2")
+                    path = mutableListOf("p1", "p2")
                 )
             ),
             signature = "'123",
-            channel = getChannel(),
+            //channel = getChannel(),
+            agent = DTOAgent(
+                null,
+                DTOChannelInformation(
+                    "11",
+                    "11"
+                ),
+                null
+            )
         )
     }
 
 
-    private fun getBaseName():DTONameInformation{
+    private fun getBaseName(): DTONameInformation {
         return DTONameInformation(
             lastName = "las",
             firstName = "fis",
@@ -563,7 +571,7 @@ object DTOLoanAssembly {
         )
     }
 
-    private fun getBaseAddress():DTOAddressInformation{
+    private fun getBaseAddress(): DTOAddressInformation {
         return DTOAddressInformation(
             unit = "unit",
             street = "street",
@@ -586,14 +594,14 @@ object DTOLoanAssembly {
         )
     }
 
-    private fun getBaseStay():DTOStayInformation{
+    private fun getBaseStay(): DTOStayInformation {
         return DTOStayInformation(
             year = 5,
             month = 10,
         )
     }
 
-    private fun getBasePhone():DTOPhoneInformation{
+    private fun getBasePhone(): DTOPhoneInformation {
         return DTOPhoneInformation(
             countryCode = "code",
             areaCode = "area",
@@ -602,8 +610,8 @@ object DTOLoanAssembly {
         )
     }
 
-    private fun getChannel():DTOChannelInformation{
-        return  DTOChannelInformation(
+    private fun getChannel(): DTOChannelInformation {
+        return DTOChannelInformation(
             code = "code",
             name = "name"
         )

@@ -50,7 +50,10 @@ class InterestArrangement(
     val baseRate: BigDecimal?,
 
     @Column(name = "basic_point", columnDefinition = "decimal(9,6) null")
-    var basicPoint: BigDecimal?
+    var basicPoint: BigDecimal?,
+
+    @Column(name = "float_ratio", columnDefinition = "decimal(9,6) null")
+    var floatRatio: BigDecimal?
 
 ) : MultiTenant {
 

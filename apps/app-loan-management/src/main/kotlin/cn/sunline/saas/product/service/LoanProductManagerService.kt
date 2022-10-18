@@ -295,15 +295,16 @@ class LoanProductManagerService(
         }
 
         val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount.toBigDecimal())
-        val baseRateResult = ratePlanService.findByType(RatePlanType.STANDARD) ?:throw LoanProductBusinessException(
+        val baseRateResult = ratePlanService.findByType(RatePlanType.STANDARD) ?: throw LoanProductBusinessException(
             "invalid rate plan",
             ManagementExceptionCode.RATE_PLAN_NOT_FOUND
         )
         val baseRateModel = baseRateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
-        val rateResult = ratePlanService.getOne(dtoLoanProduct.interestFeature.ratePlanId.toLong())?:throw LoanProductBusinessException(
-            "invalid rate plan",
-            ManagementExceptionCode.RATE_PLAN_NOT_FOUND
-        )
+        val rateResult = ratePlanService.getOne(dtoLoanProduct.interestFeature.ratePlanId.toLong())
+            ?: throw LoanProductBusinessException(
+                "invalid rate plan",
+                ManagementExceptionCode.RATE_PLAN_NOT_FOUND
+            )
         val ratesModel = rateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val interestRate =
             InterestRateHelper.getExecutionRate(
@@ -311,6 +312,7 @@ class LoanProductManagerService(
                 term,
                 amount.toBigDecimal(),
                 dtoLoanProduct.interestFeature.interest.basicPoint,
+                dtoLoanProduct.interestFeature.interest.floatRatio,
                 baseRateModel,
                 ratesModel
             )

@@ -19,7 +19,8 @@ data class DTOInterestArrangementAdd(
     val overdueInterestRatePercentage: String,
     val planRates: MutableList<DTOInterestRate>,
     val baseRate: String?,
-    val basicPoint: BigDecimal?
+    val basicPoint: BigDecimal?,
+    val floatRatio: BigDecimal?
 )
 
 data class DTOInterestRate(
