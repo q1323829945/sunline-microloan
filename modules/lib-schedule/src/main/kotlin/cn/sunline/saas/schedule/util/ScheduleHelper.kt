@@ -7,19 +7,19 @@ import java.math.BigDecimal
 object ScheduleHelper {
 
     data class DTORepaymentScheduleTrialView(
-        val installment: BigDecimal? = null,
-        val fee: BigDecimal,
-        val interestRate: BigDecimal,
+        val installment: String? = null,
+        val fee: String,
+        val interestRate: String,
         val schedule: MutableList<DTORepaymentScheduleDetailTrialView>
     )
 
     data class DTORepaymentScheduleDetailTrialView(
-        val period: Int,
+        val period: String,
         val repaymentDate: String,
-        val installment: BigDecimal,
-        val principal: BigDecimal,
-        val interest: BigDecimal,
-        val fee: BigDecimal
+        val installment: String,
+        val principal: String,
+        val interest: String,
+        val fee: String
     )
 
 
@@ -36,18 +36,18 @@ object ScheduleHelper {
 //                installment = BigDecimal.ZERO.setScale(CalculatePrecision.AMOUNT, RoundingMode.HALF_UP)
 //            }
             dtoRepaymentScheduleDetailTrialView += DTORepaymentScheduleDetailTrialView(
-                period = schedule.period,
-                installment = schedule.instalment,
-                principal = schedule.principal,
-                interest = schedule.interest,
+                period = schedule.period.toString(),
+                installment = schedule.instalment.toPlainString(),
+                principal = schedule.principal.toPlainString(),
+                interest = schedule.interest.toPlainString(),
                 repaymentDate = schedule.dueDate.toString(),
-                fee = schedule.fee
+                fee = schedule.fee.toPlainString()
             )
         }
         return DTORepaymentScheduleTrialView(
-            installment = installment,
-            fee = immediateFee,
-            interestRate = interestRate,
+            installment = installment.toPlainString(),
+            fee = immediateFee.toPlainString(),
+            interestRate = interestRate.toPlainString(),
             schedule = dtoRepaymentScheduleDetailTrialView
         )
     }
