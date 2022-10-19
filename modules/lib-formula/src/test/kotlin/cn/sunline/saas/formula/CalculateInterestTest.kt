@@ -14,7 +14,7 @@ import java.math.BigDecimal
  */
 class CalculateInterestTest {
 
-    private val calculateInterest = CalculateInterest(BigDecimal("10000000"),CalculateInterestRate(BigDecimal("7.2")))
+    private val calculateInterest = CalculateInterest(BigDecimal("10000000"), CalculateInterestRate(BigDecimal("7.2")))
 
     @Test
     fun `calculate month interest`() {
@@ -24,8 +24,14 @@ class CalculateInterestTest {
 
     @Test
     fun `calculate float interest`() {
-        val rate = CalculateInterestRate(BigDecimal(1.5)).calRateWithNoPercent(BigDecimal(3), BigDecimal(0.66), BigDecimal(0.66))
-        Assertions.assertThat(rate).isEqualTo(BigDecimal("4.509999"))
+        val rate = CalculateInterestRate(
+            yearInterestRatePercent = BigDecimal(3.55)
+        ).calRateWithNoPercent(
+            floatInterestRate = BigDecimal(2.35),
+            basicPoint = BigDecimal(0.55),
+            floatRatio = BigDecimal(66)
+        )
+        Assertions.assertThat(rate).isEqualTo(BigDecimal("0.632430"))
     }
 
     @Test
@@ -36,8 +42,10 @@ class CalculateInterestTest {
 
     @Test
     fun `calculate days interest`() {
-        val actual = calculateInterest.getDaysInterest(DateTime.now(),
-            DateTime.now().plusDays(3),BaseYearDays.ACCOUNT_YEAR)
+        val actual = calculateInterest.getDaysInterest(
+            DateTime.now(),
+            DateTime.now().plusDays(3), BaseYearDays.ACCOUNT_YEAR
+        )
 
         Assertions.assertThat(actual).isEqualTo(BigDecimal("6000.000000"))
     }

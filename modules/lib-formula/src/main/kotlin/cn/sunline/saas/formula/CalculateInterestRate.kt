@@ -69,9 +69,34 @@ class CalculateInterestRate(private val yearInterestRatePercent: BigDecimal) {
         basicPoint: BigDecimal,
         floatRatio: BigDecimal
     ): BigDecimal {
-        return yearInterestRatePercent.multiply(floatRatio)
-            .divide(BigDecimal(100), CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)
-            .add(yearInterestRatePercent).add(basicPoint).add(floatInterestRate)
+        return yearInterestRatePercent
+            .divide(
+                BigDecimal(100),
+                CalculatePrecision.INTEREST_RATE,
+                RoundingMode.HALF_UP
+            )
+            .multiply(
+                floatRatio.divide(
+                    BigDecimal(100),
+                    CalculatePrecision.INTEREST_RATE,
+                    RoundingMode.HALF_UP
+                )
+            )
+            .add(
+                yearInterestRatePercent.divide(
+                    BigDecimal(100),
+                    CalculatePrecision.INTEREST_RATE,
+                    RoundingMode.HALF_UP
+                )
+            )
+            .add(basicPoint)
+            .add(
+                floatInterestRate.divide(
+                    BigDecimal(100),
+                    CalculatePrecision.INTEREST_RATE,
+                    RoundingMode.HALF_UP
+                )
+            ).setScale(CalculatePrecision.INTEREST_RATE, RoundingMode.HALF_UP)
 
     }
 }
