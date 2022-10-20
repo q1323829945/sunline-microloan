@@ -38,8 +38,8 @@ data class DTOInterestRate(
     val id: String,
     val fromPeriod: LoanTermType? = null,
     val toPeriod: LoanTermType? = null,
-    val fromAmountPeriod: LoanAmountTierType? = null,
-    val toAmountPeriod: LoanAmountTierType? = null,
+    val fromAmountPeriod: BigDecimal? = null,
+    val toAmountPeriod: BigDecimal? = null,
     val rate: String,
 )
 

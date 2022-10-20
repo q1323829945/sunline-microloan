@@ -49,7 +49,7 @@ class InterestRateService(private val interestRateRepository: InterestRateReposi
             toAmountPeriod?.let {
                 predicates.add(
                     criteriaBuilder.equal(
-                        root.get<LoanAmountTierType>("toAmountPeriod"),
+                        root.get<BigDecimal>("toAmountPeriod"),
                         it
                     )
                 )
