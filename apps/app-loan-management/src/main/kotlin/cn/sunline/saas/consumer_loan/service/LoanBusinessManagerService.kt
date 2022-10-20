@@ -43,7 +43,7 @@ class LoanBusinessManagerService(
     private val customerOfferInvoke: CustomerOfferInvoke,
     private val tenantDateTime: TenantDateTime,
 
-) {
+    ) {
 
     @Autowired
     private lateinit var productInvokeImpl: ProductInvokeImpl
@@ -72,7 +72,7 @@ class LoanBusinessManagerService(
         val person = personService.findByIdentification(identificationNo, identificationType)
             ?: throw LoanBusinessException("Invalid Person", ManagementExceptionCode.DATA_NOT_FOUND)
         val filter = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable).content
-            .filter { it.status != ApplyStatus.RECORD  && it.status != ApplyStatus.SUBMIT}
+            .filter { it.status != ApplyStatus.RECORD && it.status != ApplyStatus.SUBMIT }
 
         return customerOfferService.rePaged(filter, pageable).map {
             var repaymentAmount = BigDecimal.ZERO
@@ -85,17 +85,17 @@ class LoanBusinessManagerService(
                     revolvingLoan = YesOrNo.N
                 )
             } else {
-                    val repaymentInstruction = repaymentInstructionService.getPage(
-                        agreementViewInfo.id.toLong(),
-                        null,
-                        MoneyTransferInstructionType.REPAYMENT,
-                        InstructionLifecycleStatus.FULFILLED,
-                        Pageable.unpaged()
-                    )
-                    if (repaymentInstruction.size > 0) {
-                        repaymentAmount =
-                            repaymentInstruction.sumOf { instruction -> instruction.moneyTransferInstructionAmount }
-                    }
+                val repaymentInstruction = repaymentInstructionService.getPage(
+                    agreementViewInfo.id.toLong(),
+                    null,
+                    MoneyTransferInstructionType.REPAYMENT,
+                    InstructionLifecycleStatus.FULFILLED,
+                    Pageable.unpaged()
+                )
+                if (repaymentInstruction.size > 0) {
+                    repaymentAmount =
+                        repaymentInstruction.sumOf { instruction -> instruction.moneyTransferInstructionAmount }
+                }
                 DTOLoanBusinessView(
                     agreementId = agreementViewInfo.id,
                     applicationId = it.id.toString(),
@@ -128,11 +128,11 @@ class LoanBusinessManagerService(
                     DTOFeeItemView(
                         agreementId = loanAgreement.id,
                         applicationId = applicationId,
-                        loanFeeType = it.loanFeeType ,
+                        loanFeeType = it.loanFeeType,
                         loanFeeTypeName = it.loanFeeTypeName,
                         currency = it.currency,
                         feeAmountOrRatio = it.feeAmountOrRatio,
-                        nonPaymentAmount =it.nonPaymentAmount
+                        nonPaymentAmount = it.nonPaymentAmount
                     )
                 )
             }
@@ -216,6 +216,8 @@ class LoanBusinessManagerService(
     ): ScheduleHelper.DTORepaymentScheduleTrialView {
 
         val loanProduct = customerOfferInvoke.getProduct(productId.toLong())
+            ?: throw LoanBusinessException("Invalid loan product", ManagementExceptionCode.DATA_NOT_FOUND)
+
         val feeArrangement = loanProduct.feeFeatures?.run {
             objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
                 this
@@ -224,15 +226,21 @@ class LoanBusinessManagerService(
 
         val feeDeductItem = FeeArrangementHelper.getDisbursementFeeDeductItem(feeArrangement, amount.toBigDecimal())
 
-        val rateResult = productInvokeImpl.getRatePlanWithInterestRate(loanProduct.interestFeature!!.ratePlanId.toLong())
+        val interestFeature = loanProduct.interestFeature ?: throw LoanBusinessException(
+            "Invalid interest feature",
+            ManagementExceptionCode.DATA_NOT_FOUND
+        )
+
+        val rateResult =
+            productInvokeImpl.getRatePlanWithInterestRate(interestFeature.ratePlanId.toLong())
         val rates = rateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val interestRate =
             InterestRateHelper.getExecutionRate(
-                loanProduct.interestFeature!!.interestType,
+                interestFeature.interestType,
                 term,
                 amount.toBigDecimal(),
-                loanProduct.interestFeature!!.interest.floatPoint,
-                loanProduct.interestFeature!!.interest.floatRatio,
+                interestFeature.interest.floatPoint,
+                interestFeature.interest.floatRatio,
                 rates
             )
         val schedule = ScheduleService(

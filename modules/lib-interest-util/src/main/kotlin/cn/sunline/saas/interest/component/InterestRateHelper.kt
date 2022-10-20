@@ -28,7 +28,7 @@ object InterestRateHelper {
             rates.sortBy { item -> item.toAmountPeriod }
             rates.firstOrNull { it.toAmountPeriod!! >= loanAmount }?.rate
         } else {
-            null
+            throw InterestRateNullException("no matching interest rate")
         }
     }
 
@@ -43,15 +43,15 @@ object InterestRateHelper {
 
         return when (interestType) {
             InterestType.FIXED -> { // floatRate
-                val baseRate = getTermOrAmountRate(amount, term, rates)
+                val floatRate = getTermOrAmountRate(amount, term, rates)
                     ?: throw InterestRateNullException("custom rate must be not null when interest type is fixed rate")
-                getExecutionRate(interestType,floatPoint,floatRatio,baseRate,null)?: throw InterestRateNullException("execution rate is null")
+                getExecutionRate(interestType, floatPoint, floatRatio, null, floatRate)
             }
 
             InterestType.FLOATING_RATE_NOTE -> {  // basicRate * ( 1 + floatRatio) + floatPoint
-                val floatRate = getTermOrAmountRate(amount, term, rates)
+                val baseRate = getTermOrAmountRate(amount, term, rates)
                     ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
-                getExecutionRate(interestType,floatPoint,floatRatio,null,floatRate)?: throw InterestRateNullException("execution rate is null")
+                getExecutionRate(interestType, floatPoint, floatRatio, baseRate, null)
             }
         }
     }
@@ -65,10 +65,12 @@ object InterestRateHelper {
     ): BigDecimal {
         return when (interestType) {
             InterestType.FIXED -> { // floatRate
-                floatRate!!
+                floatRate ?: throw InterestRateNullException("custom rate must be not null when interest type is fixed rate")
             }
+
             InterestType.FLOATING_RATE_NOTE -> {  // basicRate * ( 1 + floatRatio) + floatPoint
-                CalculateInterestRate(baseRate!!).calRateWithNoPercent(
+                val rate = baseRate ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
+                CalculateInterestRate(rate).calRateWithNoPercent(
                     floatPoint ?: BigDecimal.ZERO,
                     floatRatio ?: BigDecimal.ZERO
                 )

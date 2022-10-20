@@ -26,7 +26,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    override fun getProduct(productId: Long): DTOLoanProductView {
+    override fun getProduct(productId: Long): DTOLoanProductView? {
         val product =  RPCService.get<RPCResponse<DTOLoanProductView>>(
             serviceName = APP_LOAN_MANAGEMENT,
             methodName = "LoanProduct/$productId",
@@ -38,7 +38,7 @@ class CustomerOfferInvokeImpl: CustomerOfferInvoke {
             tenant = ContextUtil.getTenant()
         )
 
-        return objectMapper.convertValue(product!!.data)
+        return product?.data?.let { objectMapper.convertValue(it) }
     }
 
     override fun getUnderwriting(applicationId: Long): DTOUnderwriting? {

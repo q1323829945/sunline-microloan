@@ -7,7 +7,7 @@ import cn.sunline.saas.rpc.invoke.dto.DTOLoanAgreementViewInfo
 import cn.sunline.saas.rpc.invoke.dto.DTOUnderwriting
 
 interface CustomerOfferInvoke {
-    fun getProduct(productId:Long): DTOLoanProductView
+    fun getProduct(productId:Long): DTOLoanProductView?
 
     fun getUnderwriting(applicationId:Long): DTOUnderwriting?
 

@@ -117,6 +117,7 @@ class AppCustomerOfferService(
             SUBMIT -> if (newStatus != APPROVALED && newStatus != ApplyStatus.REJECTED) throw CustomerOfferStatusException(
                 "status can not be update"
             )
+
             else -> throw CustomerOfferStatusException("status can not be update")
         }
     }
@@ -141,8 +142,9 @@ class AppCustomerOfferService(
         }
 
         val customerOffer = customerOfferService.getOne(id)
-        val product = customerOfferInvoke.getProduct(customerOffer!!.productId)
-        managementCustomerOffer.product = objectMapper.convertValue(product)
+        val product = customerOfferInvoke.getProduct(customerOffer!!.productId)?: throw CustomerOfferNotFoundException("Invalid product")
+        managementCustomerOffer.product =
+            objectMapper.convertValue(product)
         managementCustomerOffer.product!!.productId = product.id
 
         val underwriting =
@@ -174,7 +176,7 @@ class AppCustomerOfferService(
 
         val customerOffer =
             customerOfferService.getOne(id) ?: throw CustomerOfferNotFoundException("Invalid customer offer")
-        val product = customerOfferInvoke.getProduct(customerOffer.productId)
+        val product = customerOfferInvoke.getProduct(customerOffer.productId)?: throw CustomerOfferNotFoundException("Invalid product")
 
         return DTOInvokeCustomerOfferView(
             id.toString(),
