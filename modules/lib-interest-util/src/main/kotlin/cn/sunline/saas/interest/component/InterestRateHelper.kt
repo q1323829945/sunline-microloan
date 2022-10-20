@@ -36,21 +36,40 @@ object InterestRateHelper {
         interestType: InterestType,
         term: LoanTermType,
         amount: BigDecimal,
-        basicPoint: BigDecimal?,
+        floatPoint: BigDecimal?,
         floatRatio: BigDecimal?,
-        baseInterestRate: MutableList<InterestRate>,
-        customInterestRate: MutableList<InterestRate>,
+        rates: MutableList<InterestRate>,
     ): BigDecimal {
-        val baseRate = getTermOrAmountRate(amount, term, baseInterestRate)
-            ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
-        val rate = getTermOrAmountRate(amount, term, customInterestRate)
-            ?: throw InterestRateNullException("custom rate must be not null when interest type is floating rate")
+
         return when (interestType) {
-            InterestType.FIXED -> baseRate
-            InterestType.FLOATING_RATE_NOTE -> {  // baseRate * (1+basePoint) + customRate
-                CalculateInterestRate(baseRate).calRateWithNoPercent(
-                    rate,
-                    basicPoint ?: BigDecimal.ZERO,
+            InterestType.FIXED -> { // floatRate
+                val baseRate = getTermOrAmountRate(amount, term, rates)
+                    ?: throw InterestRateNullException("custom rate must be not null when interest type is fixed rate")
+                getExecutionRate(interestType,floatPoint,floatRatio,baseRate,null)?: throw InterestRateNullException("execution rate is null")
+            }
+
+            InterestType.FLOATING_RATE_NOTE -> {  // basicRate * ( 1 + floatRatio) + floatPoint
+                val floatRate = getTermOrAmountRate(amount, term, rates)
+                    ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
+                getExecutionRate(interestType,floatPoint,floatRatio,null,floatRate)?: throw InterestRateNullException("execution rate is null")
+            }
+        }
+    }
+
+    fun getExecutionRate(
+        interestType: InterestType,
+        floatPoint: BigDecimal?,
+        floatRatio: BigDecimal?,
+        baseRate: BigDecimal?,
+        floatRate: BigDecimal?,
+    ): BigDecimal {
+        return when (interestType) {
+            InterestType.FIXED -> { // floatRate
+                floatRate!!
+            }
+            InterestType.FLOATING_RATE_NOTE -> {  // basicRate * ( 1 + floatRatio) + floatPoint
+                CalculateInterestRate(baseRate!!).calRateWithNoPercent(
+                    floatPoint ?: BigDecimal.ZERO,
                     floatRatio ?: BigDecimal.ZERO
                 )
             }

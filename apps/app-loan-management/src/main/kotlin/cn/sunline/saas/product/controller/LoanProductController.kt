@@ -115,14 +115,4 @@ class LoanProductController {
     fun getInvokeProducts(@RequestParam status: BankingProductStatus): List<DTOLoanProductView> {
         return loanProductManagerService.getInvokeProducts(status)
     }
-
-    @PostMapping("schedule/{amount}/{term}/calculate")
-    fun calculateTrailSchedule(
-        @PathVariable amount: String,
-        @PathVariable term: LoanTermType,
-        @RequestBody dtoLoanProduct: DTOLoanProduct
-    ): ResponseEntity<DTOResponseSuccess<ScheduleHelper.DTORepaymentScheduleTrialView>>
-    {
-        return DTOResponseSuccess(loanProductManagerService.calculateTrailSchedule(amount,term,dtoLoanProduct)).response()
-    }
 }

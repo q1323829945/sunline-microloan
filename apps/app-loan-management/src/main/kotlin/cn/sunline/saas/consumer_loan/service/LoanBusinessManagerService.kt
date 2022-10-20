@@ -6,18 +6,30 @@ import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.fee.arrangement.component.FeeArrangementHelper
+import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
+import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.interest.model.InterestRate
+import cn.sunline.saas.interest.model.RatePlanType
+import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.person.model.PersonIdentificationType
 import cn.sunline.saas.party.person.service.PersonService
+import cn.sunline.saas.product.exception.LoanProductBusinessException
 import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import cn.sunline.saas.rpc.invoke.impl.PageInvokeImpl
+import cn.sunline.saas.rpc.invoke.impl.ProductInvokeImpl
+import cn.sunline.saas.schedule.ScheduleService
+import cn.sunline.saas.schedule.util.ScheduleHelper
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -29,9 +41,12 @@ import java.math.BigDecimal
 @Service
 class LoanBusinessManagerService(
     private val customerOfferInvoke: CustomerOfferInvoke,
-    private val tenantDateTime: TenantDateTime
+    private val tenantDateTime: TenantDateTime,
+
 ) {
 
+    @Autowired
+    private lateinit var productInvokeImpl: ProductInvokeImpl
 
     @Autowired
     private lateinit var personService: PersonService
@@ -192,6 +207,47 @@ class LoanBusinessManagerService(
                 executeDateTime = record.executeDateTime?.let { tenantDateTime.toTenantDateTime(it) }.toString()
             )
         }
+    }
+
+    fun calculateTrailSchedule(
+        productId: String,
+        amount: String,
+        term: LoanTermType
+    ): ScheduleHelper.DTORepaymentScheduleTrialView {
+
+        val loanProduct = customerOfferInvoke.getProduct(productId.toLong())
+        val feeArrangement = loanProduct.feeFeatures?.run {
+            objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
+                this
+            )
+        }
+
+        val feeDeductItem = FeeArrangementHelper.getDisbursementFeeDeductItem(feeArrangement, amount.toBigDecimal())
+
+        val rateResult = productInvokeImpl.getRatePlanWithInterestRate(loanProduct.interestFeature!!.ratePlanId.toLong())
+        val rates = rateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
+        val interestRate =
+            InterestRateHelper.getExecutionRate(
+                loanProduct.interestFeature!!.interestType,
+                term,
+                amount.toBigDecimal(),
+                loanProduct.interestFeature!!.interest.floatPoint,
+                loanProduct.interestFeature!!.interest.floatRatio,
+                rates
+            )
+        val schedule = ScheduleService(
+            amount.toBigDecimal(),
+            interestRate,
+            term,
+            loanProduct.repaymentFeature?.payment?.frequency!!,
+            loanProduct.repaymentFeature?.payment?.repaymentDayType,
+            loanProduct.interestFeature?.interest?.baseYearDays!!,
+            tenantDateTime.now(),
+            null,
+            null,
+            feeDeductItem.scheduleFee
+        ).getSchedules(loanProduct.repaymentFeature?.payment?.paymentMethod!!)
+        return ScheduleHelper.convertToScheduleTrialMapper(schedule, feeDeductItem.immediateFee)
     }
 
 }

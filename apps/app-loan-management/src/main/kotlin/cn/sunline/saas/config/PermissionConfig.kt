@@ -62,7 +62,7 @@ enum class PermissionConfig (
     LOAN_PRODUCT_GET_LIST_BY_CODE("LoanProduct","LoanProduct/(.*?)/retrieve",RequestMethod.GET,"View identificationCode loanProduct version list"),
     LOAN_PRODUCT_GET_HISTORY_VERSION_LIST("LoanProduct","LoanProduct/(.*?)/history",RequestMethod.GET,"View identificationCode loanProduct history version list"),
     LOAN_PRODUCT_GET_BASE_INFO_LIST("LoanProduct","LoanProduct/allByStatus",RequestMethod.GET,"View identificationCode loanProduct base info list"),
-    LOAN_PRODUCT_GET_TRAIL_SCHEDULE("LoanProduct","LoanProduct/schedule/(.*?)/(.*?)/calculate",RequestMethod.POST,"View loanProduct  trail schedule"),
+
 
     LOAN_UPLOAD_CONFIGURE_ADD("LoanUploadConfigure", "LoanUploadConfigure\$", RequestMethod.POST, "Add LoanUploadConfigure"),
     LOAN_UPLOAD_ALL_LIST("LoanUploadConfigure", "LoanUploadConfigure/all", RequestMethod.GET, "View loanUploadConfigure list"),
@@ -147,6 +147,8 @@ enum class PermissionConfig (
     LOAN_BUSINESS_HISTORY_EVENT_RETRIEVE("LoanBusiness","LoanBusiness/history/event/(.*?)/retrieve",RequestMethod.GET,"view loan history event record"),
     LOAN_BUSINESS_REPAYMENT_RECORD_RETRIEVE("LoanBusiness", "LoanBusiness/repayment/record/(.*?)/retrieve", RequestMethod.GET, "view repayment record"),
     LOAN_BUSINESS_DISBURSEMENT_RETRIEVE("LoanBusiness", "LoanBusiness/disbursement/(.*?)/retrieve", RequestMethod.GET, "view disbursement disbursement"),
+    LOAN__BUSINESS_GET_TRAIL_SCHEDULE("LoanBusiness","LoanBusiness/schedule/(.*?)/(.*?)/(.*?)/calculate",RequestMethod.GET,"View trail schedule"),
+
 
 
     LOAN_APPLICATION_STATISTICS_GET_LIST("LoanApplicationStatistics","LoanApplicationStatistics(\\?.*|\$)",RequestMethod.GET,"View loan application statistics"),

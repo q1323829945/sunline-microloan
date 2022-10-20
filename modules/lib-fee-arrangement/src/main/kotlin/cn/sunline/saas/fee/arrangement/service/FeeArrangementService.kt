@@ -28,8 +28,6 @@ import javax.persistence.criteria.Root
 class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepository) :
     BaseMultiTenantRepoService<FeeArrangement, Long>(feeArrangementRepos) {
 
-    data class FeeDeductItem(val immediateFee: BigDecimal, val scheduleFee: BigDecimal)
-
     @Autowired
     private lateinit var seq: Sequence
 
@@ -64,104 +62,5 @@ class FeeArrangementService(private val feeArrangementRepos: FeeArrangementRepos
             }
 
         return getPageWithTenant(agreementIdSpecification, Pageable.unpaged()).toMutableList()
-    }
-
-
-    fun getDisbursementFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
-        var feeImmediateAmount = BigDecimal.ZERO
-        var feeScheduleAmount = BigDecimal.ZERO
-        feeArrangement?.filter {
-            it.feeType == LoanFeeType.DISBURSEMENT && it.feeDeductType == FeeDeductType.IMMEDIATE
-        }?.forEach {
-            feeImmediateAmount = when (it.feeMethodType) {
-                FeeMethodType.FEE_RATIO -> {
-                    feeImmediateAmount.add(FeeUtil.calFeeAmount(amount, it.feeRate!!, it.feeMethodType))
-                }
-                FeeMethodType.FIX_AMOUNT -> {
-                    feeImmediateAmount.add(it.feeAmount)
-                }
-                else -> {
-                    feeImmediateAmount
-                }
-            }
-        }
-
-        feeArrangement?.filter {
-            it.feeType == LoanFeeType.DISBURSEMENT && it.feeDeductType == FeeDeductType.SCHEDULE
-        }?.forEach {
-            feeScheduleAmount = when (it.feeMethodType) {
-                FeeMethodType.FEE_RATIO -> {
-                    feeScheduleAmount.add(FeeUtil.calFeeAmount(amount, it.feeRate!!, it.feeMethodType))
-                }
-                FeeMethodType.FIX_AMOUNT -> {
-                    feeScheduleAmount.add(it.feeAmount)
-                }
-                else -> {
-                    feeScheduleAmount
-                }
-            }
-        }
-
-        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
-    }
-
-    fun getPrepaymentFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
-        var feeImmediateAmount = BigDecimal.ZERO
-        val feeScheduleAmount = BigDecimal.ZERO
-        feeArrangement?.filter {
-            it.feeType == LoanFeeType.PREPAYMENT
-        }?.forEach {
-            feeImmediateAmount = when (it.feeMethodType) {
-                FeeMethodType.FEE_RATIO -> {
-                    feeImmediateAmount.add(FeeUtil.calFeeAmount(amount, it.feeRate!!, it.feeMethodType))
-                }
-                FeeMethodType.FIX_AMOUNT -> {
-                    feeImmediateAmount.add(it.feeAmount)
-                }
-                else -> {
-                    feeImmediateAmount
-                }
-            }
-        }
-
-        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
-    }
-
-    fun getOverdueFeeDeductItem(feeArrangement: MutableList<DTOFeeArrangementView>?, amount: BigDecimal): FeeDeductItem {
-        var feeImmediateAmount = BigDecimal.ZERO
-        var feeScheduleAmount = BigDecimal.ZERO
-        feeArrangement?.filter {
-            it.feeType == LoanFeeType.OVERDUE && it.feeDeductType == FeeDeductType.IMMEDIATE
-        }?.forEach {
-            feeImmediateAmount = when (it.feeMethodType) {
-                FeeMethodType.FEE_RATIO -> {
-                    feeImmediateAmount.add(FeeUtil.calFeeAmount(amount, it.feeRate!!, it.feeMethodType))
-                }
-                FeeMethodType.FIX_AMOUNT -> {
-                    feeImmediateAmount.add(it.feeAmount)
-                }
-                else -> {
-                    feeImmediateAmount
-                }
-            }
-        }
-
-        feeArrangement?.filter {
-            it.feeType == LoanFeeType.OVERDUE && it.feeDeductType == FeeDeductType.SCHEDULE
-        }?.forEach {
-            feeScheduleAmount = when (it.feeMethodType) {
-                FeeMethodType.FEE_RATIO -> {
-                    feeScheduleAmount.add(FeeUtil.calFeeAmount(amount, it.feeRate!!, it.feeMethodType))
-                }
-                FeeMethodType.FIX_AMOUNT -> {
-                    feeScheduleAmount.add(it.feeAmount)
-                }
-                else -> {
-                    feeScheduleAmount
-                }
-            }
-        }
-
-        return FeeDeductItem(feeImmediateAmount, feeScheduleAmount)
     }
 }

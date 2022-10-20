@@ -15,6 +15,7 @@ import cn.sunline.saas.disbursement.arrangement.service.DisbursementArrangementS
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstructionAdd
 import cn.sunline.saas.disbursement.instruction.service.DisbursementInstructionService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
+import cn.sunline.saas.fee.arrangement.component.FeeArrangementHelper
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeItemAdd
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
@@ -154,7 +155,7 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(
+        val feeDeductItem = FeeArrangementHelper.getDisbursementFeeDeductItem(
             feeArrangement,
             customerOffer.amount.toBigDecimal()
         )
@@ -423,12 +424,10 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeDeductItem = feeArrangementService.getDisbursementFeeDeductItem(feeArrangement, amount)
+        val feeDeductItem = FeeArrangementHelper.getDisbursementFeeDeductItem(feeArrangement, amount)
         val ratePlanId = loanProduct.interestFeature.ratePlanId
-        val basicPoint = loanProduct.interestFeature.interest.basicPoint ?: BigDecimal.ZERO
+        val floatPoint = loanProduct.interestFeature.interest.floatPoint ?: BigDecimal.ZERO
         val floatRatio = loanProduct.interestFeature.interest.floatRatio ?: BigDecimal.ZERO
-        val baseRateResult = ratePlanInvokeImpl.getRatePlanByType(RatePlanType.STANDARD)
-        val baseRateModel = baseRateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val rateResult = ratePlanInvokeImpl.getRatePlanByRatePlanId(ratePlanId.toLong())
         val ratesModel = rateResult.rates.map { objectMapper.convertValue<InterestRate>(it) }.toMutableList()
         val interestRate =
@@ -436,9 +435,8 @@ class ConsumerLoanService(
                 loanProduct.interestFeature.interestType,
                 term,
                 amount,
-                basicPoint,
+                floatPoint,
                 floatRatio,
-                baseRateModel,
                 ratesModel
             )
         val schedule = ScheduleService(
@@ -650,7 +648,7 @@ class ConsumerLoanService(
                 this
             )
         }
-        val feeDeductItem = feeArrangementService.getPrepaymentFeeDeductItem(feeArrangement, amount)
+        val feeDeductItem = FeeArrangementHelper.getPrepaymentFeeDeductItem(feeArrangement, amount)
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(agreement.loanAgreement.productId)
 

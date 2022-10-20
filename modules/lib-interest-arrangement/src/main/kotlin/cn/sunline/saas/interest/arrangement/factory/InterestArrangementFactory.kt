@@ -37,7 +37,7 @@ class InterestArrangementFactory {
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
             overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage),
             baseRate = dtoInterestArrangementAdd.baseRate?.run { BigDecimal(this) },
-            basicPoint = dtoInterestArrangementAdd.basicPoint,
+            floatPoint = dtoInterestArrangementAdd.floatPoint,
             floatRatio = dtoInterestArrangementAdd.floatRatio,
         )
     }

@@ -28,7 +28,7 @@ class InterestFeatureFactory {
             id = interestFeatureId,
             baseYearDays = interestFeatureData.interest.baseYearDays,
             adjustFrequency = interestFeatureData.interest.adjustFrequency,
-            basicPoint = interestFeatureData.interest.basicPoint,
+            floatPoint = interestFeatureData.interest.floatPoint,
             floatRatio =  interestFeatureData.interest.floatRatio,
         )
         val overdueInterestProductFeature = OverdueInterestFeatureModality(

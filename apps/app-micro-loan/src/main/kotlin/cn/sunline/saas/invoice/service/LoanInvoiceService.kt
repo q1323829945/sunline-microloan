@@ -1,5 +1,6 @@
 package cn.sunline.saas.invoice.service
 
+import cn.sunline.saas.fee.arrangement.component.FeeArrangementHelper
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
 import cn.sunline.saas.fee.arrangement.service.FeeArrangementService
 import cn.sunline.saas.global.constant.PaymentMethodType
@@ -50,7 +51,7 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
                 this
             )
         }
-        val feeDeductItem = feeArrangementService.getOverdueFeeDeductItem(feeArrangement, invoiceTotalAmount)
+        val feeDeductItem = FeeArrangementHelper.getOverdueFeeDeductItem(feeArrangement, invoiceTotalAmount)
 
         invoice.invoiceLines.forEach {
             lines += if (it.invoiceAmountType == InvoiceAmountType.FEE) {

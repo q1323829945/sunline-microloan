@@ -1,9 +1,12 @@
 package cn.sunline.saas.consumer_loan.controller
 
 import cn.sunline.saas.consumer_loan.service.LoanBusinessManagerService
+import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.party.person.model.PersonIdentificationType
 import cn.sunline.saas.response.DTOPagedResponseSuccess
+import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.schedule.util.ScheduleHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -55,5 +58,14 @@ class LoanBusinessController {
     fun getRepaymentRecordPaged(@PathVariable agreementId: String,pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess>{
         val page = loanBusinessManagerService.getRepaymentRecordPaged(agreementId,pageable)
         return DTOPagedResponseSuccess(page.map { it }).response()
+    }
+
+    @GetMapping("schedule/{productId}/{amount}/{term}/calculate")
+    fun calculateTrailSchedule(
+        @PathVariable productId: String,
+        @PathVariable amount: String,
+        @PathVariable term: LoanTermType
+    ): ResponseEntity<DTOResponseSuccess<ScheduleHelper.DTORepaymentScheduleTrialView>> {
+        return DTOResponseSuccess(loanBusinessManagerService.calculateTrailSchedule(productId, amount, term)).response()
     }
 }

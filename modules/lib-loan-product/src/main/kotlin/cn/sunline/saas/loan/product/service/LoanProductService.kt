@@ -352,7 +352,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
                         interestFeature.id,
                         this.interest.baseYearDays,
                         this.interest.adjustFrequency,
-                        this.interest.basicPoint,
+                        this.interest.floatPoint,
                         this.interest.floatRatio
                     )
                 interestFeature.overdueInterest =

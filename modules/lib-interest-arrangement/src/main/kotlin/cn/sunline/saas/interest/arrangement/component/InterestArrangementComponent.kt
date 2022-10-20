@@ -16,14 +16,12 @@ import java.math.BigDecimal
  * @date 2022/3/23 15:30
  */
 fun InterestArrangement.getExecutionRate(): BigDecimal {
-    val executionRate = when (interestType) {
-        InterestType.FIXED -> baseRate
-        InterestType.FLOATING_RATE_NOTE -> if (baseRate == null) {
-            throw BaseRateNullException("base rate must be not null when interest type is floating rate")
-        } else {
-            CalculateInterestRate(baseRate).calRateWithNoPercent(rate, basicPoint ?: BigDecimal.ZERO, floatRatio ?: BigDecimal.ZERO)
-        }
-    }
-    return executionRate
-        ?: throw BaseRateNullException("execution rate is null")
+    val executionRate = InterestRateHelper.getExecutionRate(
+        interestType,
+        floatPoint ?: BigDecimal.ZERO,
+        floatRatio ?: BigDecimal.ZERO,
+        baseRate,
+        rate
+    )
+    return executionRate ?: throw BaseRateNullException("execution rate is null")
 }

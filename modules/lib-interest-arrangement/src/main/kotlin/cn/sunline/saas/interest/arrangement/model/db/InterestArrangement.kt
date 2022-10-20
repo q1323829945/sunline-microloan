@@ -49,8 +49,8 @@ class InterestArrangement(
     @Column(name="base_rate",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) null")
     val baseRate: BigDecimal?,
 
-    @Column(name = "basic_point", columnDefinition = "decimal(9,6) null")
-    var basicPoint: BigDecimal?,
+    @Column(name = "float_point", columnDefinition = "decimal(9,6) null")
+    var floatPoint: BigDecimal?,
 
     @Column(name = "float_ratio", columnDefinition = "decimal(9,6) null")
     var floatRatio: BigDecimal?
