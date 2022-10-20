@@ -2,7 +2,7 @@ package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.dapr_wrapper.invoke.response.RPCResponse
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.LanguageType
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.model.CountryType

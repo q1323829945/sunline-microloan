@@ -5,7 +5,7 @@ import cn.sunline.saas.consumer_loan.invoke.ConsumerLoanInvoke
 import cn.sunline.saas.consumer_loan.invoke.dto.DTOCustomerOffer
 import cn.sunline.saas.consumer_loan.invoke.dto.DTOLoanProduct
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant

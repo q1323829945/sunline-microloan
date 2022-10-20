@@ -1,10 +1,9 @@
 package cn.sunline.saas.underwriting.invoke.impl.dto
 
 import cn.sunline.saas.dapr_wrapper.invoke.request.RPCRequestWithTenant
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 

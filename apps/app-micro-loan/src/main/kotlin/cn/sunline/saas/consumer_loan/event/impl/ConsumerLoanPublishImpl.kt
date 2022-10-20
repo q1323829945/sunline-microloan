@@ -5,7 +5,7 @@ import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublish
 import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublishTopic
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
 import cn.sunline.saas.disbursement.instruction.model.dto.DTODisbursementInstruction
-import cn.sunline.saas.global.constant.APP_MICRO_LOAN_PUB_SUB
+import cn.sunline.saas.dapr_wrapper.constant.APP_MICRO_LOAN_PUB_SUB
 import cn.sunline.saas.repayment.instruction.model.dto.DTORepaymentInstruction
 import org.springframework.stereotype.Component
 

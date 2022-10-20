@@ -3,6 +3,7 @@ package cn.sunline.saas.webhook.service.impl
 import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.setUUID
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaAdd
@@ -49,6 +50,7 @@ class SubscriptionOnBoard(
         val saveOne = tenantService.save(tenant)
 
         ContextUtil.setTenant(saveOne.id.toString())
+        ContextUtil.setUUID(saveOne.uuid.toString())
 
         appCommandRunner.run()
 

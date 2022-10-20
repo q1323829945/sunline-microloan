@@ -70,6 +70,17 @@ class RPCService {
                 rpcRequest.tenant)
         }
 
+        inline fun <reified T> delete(rpcRequest: RPCRequest): T? {
+            return makeRequest<T>(
+                HttpMethod.Delete,
+                rpcRequest.getModuleName(),
+                rpcRequest.getMethodName(),
+                rpcRequest.getQueryParams(),
+                rpcRequest.getPayload(),
+                rpcRequest.getHeaderParams(),
+                rpcRequest.tenant)
+        }
+
         /**
          * Make a POST request for RPC invocation
          * @param[serviceName]  Name of the calling service
@@ -102,6 +113,23 @@ class RPCService {
          */
         inline fun <reified T> get(serviceName: String, methodName: String, queryParams: Map<String, String> = mapOf(), headerParams: Map<String, String> = mapOf(), tenant: String? = null): T? {
             return makeRequest<T>(HttpMethod.Get, serviceName, methodName, queryParams, null, headerParams, tenant)
+        }
+
+        /**
+         * Make a GET request for RPC invocation
+         * @param[serviceName]  Name of the calling service
+         * @param[methodName]   Name of the calling method
+         * @param[queryParams]  Data to be used as query parameters (optional, default to empty map)
+         * @param[headerParams] Additional data to be used in header (optional, default to empty map)
+         * @param[tenant]       Tenant identifier (optional, default to null)
+         * @return              Return a mapped response data
+         * @throws ManagementException
+         *                      When an empty response is received, throws `ManagementExceptionCode.DAPR_INVOCATION_EMPTY_RESPONSE`. For downstream exceptions,
+         *                      error code and error message are extracted and placed in the `error` block. For other Dapr specific errors,
+         *                      `ManagementExceptionCode.DAPR_INVOCATION_POST_ERROR` is thrown.
+         */
+        inline fun <reified T> delete(serviceName: String, methodName: String, queryParams: Map<String, String> = mapOf(), headerParams: Map<String, String> = mapOf(), tenant: String? = null): T? {
+            return makeRequest<T>(HttpMethod.Delete, serviceName, methodName, queryParams, null, headerParams, tenant)
         }
 
         inline fun <reified T> makeRequest(httpMethod: HttpMethod, serviceName: String, methodName: String, queryParams: Map<String, String>? = mapOf(), payload: Any? = null, headerParams: Map<String, String> = mapOf(), tenant: String? = null): T? {

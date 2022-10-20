@@ -6,11 +6,7 @@ import cn.sunline.saas.account.service.LoanAccountService
 import cn.sunline.saas.banking.transaction.model.db.BankingTransaction
 import cn.sunline.saas.banking.transaction.model.dto.DTOBankingTransaction
 import cn.sunline.saas.banking.transaction.service.BankingTransactionService
-import cn.sunline.saas.consumer_loan.event.ConsumerLoanPublishTopic
-import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
-import cn.sunline.saas.global.constant.APP_MICRO_LOAN_PUB_SUB
 import cn.sunline.saas.global.constant.TransactionStatus
-import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.rpc.pubsub.PositionKeepingPublish
 import cn.sunline.saas.rpc.pubsub.dto.DTOBusinessDetail
 import cn.sunline.saas.multi_tenant.util.TenantDateTime

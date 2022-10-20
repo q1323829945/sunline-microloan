@@ -1,7 +1,9 @@
 package cn.sunline.saas.underwriting.event.impl
 
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT_PUB_SUB
+import cn.sunline.saas.dapr_wrapper.constant.APP_MICRO_LOAN_PUB_SUB
+import cn.sunline.saas.dapr_wrapper.constant.APP_WRAPPER_PUB_SUB
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
-import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.underwriting.event.UnderwritingPublish
 import cn.sunline.saas.underwriting.event.UnderwritingPublishTopic
 import cn.sunline.saas.underwriting.db.Underwriting

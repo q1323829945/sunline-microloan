@@ -32,7 +32,6 @@ class ConsumerLoanController {
     @Autowired
     private lateinit var consumerLoanService: ConsumerLoanService
 
-
     @PostMapping("/LoanAgreement/Initiate")
     fun initiateLoanAgreement(@RequestBody application:Long) {
         consumerLoanService.createLoanAgreement(application)

@@ -51,7 +51,9 @@ dependencies {
     implementation(project(":lib-filter"))
     implementation(project(":lib-schedule"))
     implementation(project(":lib-invoice"))
-    implementation(project(":lib-formula"))
+
+    implementation(project(":lib-formula")) 
+   implementation(project(":lib-apig-saas"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
 }

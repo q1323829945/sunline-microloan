@@ -12,10 +12,12 @@ import cn.sunline.saas.channel.rbac.services.RoleService
 import cn.sunline.saas.channel.rbac.services.UserService
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
+import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.pdpa.services.InitPdpa
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
 import cn.sunline.saas.scheduler.job.model.SchedulerTimer
 import cn.sunline.saas.scheduler.job.service.SchedulerTimerService
+import mu.KotlinLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -30,6 +32,7 @@ class AppCommandRunner(
         val schedulerTimerService: SchedulerTimerService,
         val initPdpa: InitPdpa
 ){
+    private var logger = KotlinLogging.logger {  }
     private val adminUsername = "admin"
     private val adminRole = "ROLE_ADMIN"
 

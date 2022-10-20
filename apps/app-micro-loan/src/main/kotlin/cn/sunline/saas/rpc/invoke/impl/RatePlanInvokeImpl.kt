@@ -1,14 +1,13 @@
 package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.model.RatePlanType
-import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.rpc.invoke.RatePlanInvoke
 import cn.sunline.saas.rpc.invoke.dto.DTOInvokeRatePlanRates

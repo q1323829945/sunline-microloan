@@ -40,6 +40,7 @@ class SubscriptionFactory {
     @Autowired
     private lateinit var obsApi: ObsApi
 
+
     fun instance(webhookType: WebhookType):Subscription{
         return when(webhookType){
             SUBSCRIPTION_ONBOARD -> SubscriptionOnBoard(tenantService, appCommandRunner)

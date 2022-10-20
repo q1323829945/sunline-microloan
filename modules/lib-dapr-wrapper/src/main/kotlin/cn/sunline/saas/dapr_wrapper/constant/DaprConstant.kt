@@ -1,9 +1,10 @@
-package cn.sunline.saas.global.constant
+package cn.sunline.saas.dapr_wrapper.constant
 
 //applicationId
 const val APP_LOAN_MANAGEMENT = "app-loan-management"
 const val APP_MICRO_LOAN = "app-micro-loan"
 const val APP_WRAPPER = "app-wrapper"
+const val APP_GATEWAY = "app-gateway"
 
 //pubsub
 const val APP_LOAN_MANAGEMENT_PUB_SUB = "app-loan-management-pub-sub"

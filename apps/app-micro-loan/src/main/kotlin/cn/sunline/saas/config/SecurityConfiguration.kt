@@ -9,20 +9,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 class SecurityConfiguration () : WebSecurityConfigurerAdapter() {
-
-
-    override fun configure(web: WebSecurity?) {
-        web!!.ignoring().antMatchers("/auth/login","/users","/**","/snowflake","ConsumerLoan/**")
-    }
-
     override fun configure(http: HttpSecurity?) {
         http!!
             .cors().and()
             .httpBasic().disable().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests()
-            .anyRequest().authenticated().and()
-            .addFilterBefore(ExternalTuneFilter(), UsernamePasswordAuthenticationFilter::class.java)
+            .authorizeRequests().anyRequest().permitAll()
     }
 
 }

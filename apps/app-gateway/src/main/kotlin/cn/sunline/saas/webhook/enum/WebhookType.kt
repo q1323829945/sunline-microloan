@@ -1,0 +1,5 @@
+package cn.sunline.saas.webhook.enum
+
+enum class WebhookType {
+    SUBSCRIPTION_ONBOARD,SUBSCRIPTION_ADD,SUBSCRIPTION_REMOVE,SUBSCRIPTION_GET_INFO,BILLING_GET_INFO
+}

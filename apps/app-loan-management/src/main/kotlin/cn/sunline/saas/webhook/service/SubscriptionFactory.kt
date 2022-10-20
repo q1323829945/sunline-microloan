@@ -1,5 +1,6 @@
 package cn.sunline.saas.webhook.service
 
+import cn.sunline.saas.gateway.api.GatewayServer
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
@@ -33,6 +34,9 @@ class SubscriptionFactory {
 
     @Autowired
     private lateinit var customerDetailService: CustomerDetailService
+
+    @Autowired
+    private lateinit var gatewayServer: GatewayServer
 
     fun instance(webhookType: WebhookType):Subscription{
         return when(webhookType){

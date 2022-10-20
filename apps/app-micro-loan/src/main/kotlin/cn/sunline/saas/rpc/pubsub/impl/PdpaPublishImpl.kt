@@ -1,7 +1,7 @@
 package cn.sunline.saas.rpc.pubsub.impl
 
 import cn.sunline.saas.dapr_wrapper.pubsub.PubSubService
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT_PUB_SUB
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT_PUB_SUB
 import cn.sunline.saas.rpc.pubsub.PdpaPublish
 import cn.sunline.saas.rpc.pubsub.PdpaPublishTopic
 import org.springframework.stereotype.Component

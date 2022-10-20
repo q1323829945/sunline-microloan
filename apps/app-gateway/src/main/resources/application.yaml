@@ -1,0 +1,54 @@
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  main:
+    banner-mode: "off"
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: true
+    show-sql: true
+    use_sql_comments: true
+  datasource:
+    #    url: "jdbc:mysql://localhost:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    url: "jdbc:log4jdbc:mysql://localhost:3306/db_saas_gateway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    username: "root"
+    password: "123456"
+    #    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    driver-class-name: "net.sf.log4jdbc.DriverSpy"
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
+
+gateway:
+  send: http
+
+
+server:
+  port : 8102
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*:
+
+
+redis:
+  server: 127.0.0.1:6379
+  useCluster: false
+  useSentinel: false
+  password:
+
+
+logging:
+  level:
+    cn.sunline.saas.huaweicloud: trace
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS} [%t] [%c]-[%p] %m%n"

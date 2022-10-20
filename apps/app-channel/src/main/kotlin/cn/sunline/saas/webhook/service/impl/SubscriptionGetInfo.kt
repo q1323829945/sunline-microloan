@@ -49,6 +49,7 @@ class SubscriptionGetInfo(
             "password" to "from 'Channel Management Portal'",
             "client_id" to "nothing"
         ))
+
         return WebhookResponse(
             true,
             mutableMapOf(

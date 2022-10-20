@@ -28,7 +28,7 @@ class CustomerService(
             predicates.add(c.equal(root.get<String>("userId"),dtoCustomerAdd.userId))
             c.and(*(predicates.toTypedArray()))
         }?.run {
-            this
+            return this
         }
 
         return save(

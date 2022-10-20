@@ -11,15 +11,14 @@ import cn.sunline.saas.channel.rbac.services.PositionService
 import cn.sunline.saas.channel.rbac.services.RoleService
 import cn.sunline.saas.channel.rbac.services.UserService
 import cn.sunline.saas.global.model.CountryType
-import cn.sunline.saas.global.util.ContextUtil
-import cn.sunline.saas.global.util.getTenant
-import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.global.util.*
 import cn.sunline.saas.multi_tenant.model.Tenant
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.pdpa.services.InitPdpa
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
 import cn.sunline.saas.scheduler.job.model.SchedulerTimer
 import cn.sunline.saas.scheduler.job.service.SchedulerTimerService
+import mu.KotlinLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
@@ -35,6 +34,8 @@ class InitTenantRunner(
         val schedulerTimerService: SchedulerTimerService,
         val initPdpa: InitPdpa
 ) : CommandLineRunner {
+    private var logger = KotlinLogging.logger {  }
+
     private val adminUsername = "admin"
     private val adminRole = "ROLE_ADMIN"
     private val uuid = UUID.fromString("fd02ab50-c56a-447d-b8ee-0b8429779c15")
@@ -60,7 +61,7 @@ class InitTenantRunner(
                 )
             )
         }
-
+        ContextUtil.setUUID(tenant.uuid.toString())
         ContextUtil.setTenant(tenant.id.toString())
     }
 

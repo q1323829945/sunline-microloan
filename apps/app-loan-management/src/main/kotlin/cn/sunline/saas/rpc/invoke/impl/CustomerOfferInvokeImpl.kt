@@ -2,8 +2,8 @@ package cn.sunline.saas.rpc.invoke.impl
 
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.dapr_wrapper.invoke.response.RPCResponse
-import cn.sunline.saas.global.constant.APP_LOAN_MANAGEMENT
-import cn.sunline.saas.global.constant.APP_MICRO_LOAN
+import cn.sunline.saas.dapr_wrapper.constant.APP_LOAN_MANAGEMENT
+import cn.sunline.saas.dapr_wrapper.constant.APP_MICRO_LOAN
 import cn.sunline.saas.global.constant.meta.Header
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.GetMapping
 
 @Component
 class CustomerOfferInvokeImpl: CustomerOfferInvoke {
