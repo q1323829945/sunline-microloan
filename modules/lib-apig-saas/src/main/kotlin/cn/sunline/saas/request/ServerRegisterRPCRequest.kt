@@ -25,6 +25,6 @@ class ServerRegisterRPCRequest(
     }
 
     override fun getMethodName(): String {
-        return "/instance"
+        return "/server"
     }
 }

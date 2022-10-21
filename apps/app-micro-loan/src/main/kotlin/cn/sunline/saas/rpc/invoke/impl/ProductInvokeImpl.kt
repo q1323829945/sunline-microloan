@@ -29,7 +29,6 @@ class ProductInvokeImpl: ProductInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()
         )
@@ -45,7 +44,6 @@ class ProductInvokeImpl: ProductInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()
         )
@@ -61,8 +59,7 @@ class ProductInvokeImpl: ProductInvoke {
                 "status" to status
             ),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID()
             ),
             tenant = ContextUtil.getTenant()
         )
@@ -77,8 +74,7 @@ class ProductInvokeImpl: ProductInvoke {
             "LoanProduct/interestRate/$productId",
             mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant().toString(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant()
             ),
             tenant = ContextUtil.getTenant().toString()
         )!!

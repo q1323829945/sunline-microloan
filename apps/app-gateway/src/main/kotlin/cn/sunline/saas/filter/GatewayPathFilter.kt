@@ -18,7 +18,7 @@ class GatewayPathFilter: Filter {
 
     val ignoreStartsWith = mutableListOf(
         "/instance","/api"
-        ,"/test","/healthz","/dapr","/actors","/test","/webhook","/server"
+        ,"/test","/healthz","/dapr","/actors","/test","/webhook","/server","/doc"
     )
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {

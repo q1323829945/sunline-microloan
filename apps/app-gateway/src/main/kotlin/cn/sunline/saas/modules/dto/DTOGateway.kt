@@ -14,6 +14,8 @@ data class SendContext(
     var method:String,
     val formatType: FormatType,
     val body:InputStream? = null,
+    val tenant:String,
+    val queryString:String? = null
 )
 
 data class DTOGateway(
@@ -21,11 +23,13 @@ data class DTOGateway(
     val path:String,
     val server:String,
     val secretKey:String,
+    val tenant:String,
 )
 
 data class TenantInstance(
     val instanceId:String,
     val secretKey: String,
+    val tenant:String,
     val server:MutableList<TenantServer>
 )
 

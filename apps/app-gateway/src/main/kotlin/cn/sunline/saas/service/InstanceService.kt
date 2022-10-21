@@ -52,16 +52,19 @@ class InstanceService (private val instanceRepository: InstanceRepository
 
     fun getInstance(id:String):Instance?{
         return instanceMap[id]?: run {
-            getOne(id)?.apply { instanceMap[this.tenant] = this }
+            getOne(id)?.apply { instanceMap[this.id] = this }
         }
     }
 
     fun findByTenant(tenant:String):Instance?{
-        return get{ root,_,criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("tenant"),tenant))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
+        return instanceMap.values.firstOrNull { it.tenant == tenant }?:run {
+            get{ root,_,criteriaBuilder ->
+                val predicates = mutableListOf<Predicate>()
+                predicates.add(criteriaBuilder.equal(root.get<String>("tenant"),tenant))
+                criteriaBuilder.and(*(predicates.toTypedArray()))
+            }?.apply { instanceMap[this.id] = this }
         }
+
     }
 
     fun findAll():List<Instance>{

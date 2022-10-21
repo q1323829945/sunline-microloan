@@ -25,7 +25,6 @@ class PdpaInvokeImpl: PdpaInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
         )
@@ -38,7 +37,6 @@ class PdpaInvokeImpl: PdpaInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
         )
@@ -51,7 +49,6 @@ class PdpaInvokeImpl: PdpaInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
         )
@@ -64,7 +61,6 @@ class PdpaInvokeImpl: PdpaInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant()
         )

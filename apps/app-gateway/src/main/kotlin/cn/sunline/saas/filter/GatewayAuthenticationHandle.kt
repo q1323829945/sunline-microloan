@@ -7,6 +7,7 @@ import cn.sunline.saas.filter.exception.FilterException
 import cn.sunline.saas.modules.dto.DTOGateway
 import cn.sunline.saas.modules.dto.SendContext
 import cn.sunline.saas.modules.enum.FormatType
+import cn.sunline.saas.service.StatisticsService
 import cn.sunline.saas.tools.ApiVerificationTools
 import cn.sunline.saas.tools.RSASecretTools
 import mu.KotlinLogging
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 @Order(2)
-class GatewayAuthenticationHandle(private val client: Client): Filter {
+class GatewayAuthenticationHandle(private val client: Client,private val statisticsService: StatisticsService): Filter {
     var logger = KotlinLogging.logger {}
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
@@ -39,7 +40,7 @@ class GatewayAuthenticationHandle(private val client: Client): Filter {
             FilterException.handleException(response!!, ManagementExceptionCode.AUTHORIZATION_TOKEN_VALIDATION_FAILED, "accessKey error,please check your accessKey!!")
             return
         }
-        RoutingDelegate(client,setSendContext(httpServletRequest,gateway)).response(response!!)
+        RoutingDelegate(client,setSendContext(httpServletRequest,gateway),statisticsService).response(response!!)
     }
 
     private fun setSendContext(httpServletRequest: HttpServletRequest, gateway: DTOGateway): SendContext {
@@ -65,7 +66,9 @@ class GatewayAuthenticationHandle(private val client: Client): Filter {
             parts = parts.ifEmpty { null },
             method = httpServletRequest.method,
             formatType = formatType,
-            body = httpServletRequest.inputStream
+            body = httpServletRequest.inputStream,
+            tenant = gateway.tenant,
+            queryString = httpServletRequest.queryString
         )
     }
 

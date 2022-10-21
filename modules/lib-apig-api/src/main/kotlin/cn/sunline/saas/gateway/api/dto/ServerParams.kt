@@ -8,5 +8,8 @@ data class ServerParams(
 
 data class ServerView(
     val id:String,
-    val accessKey:String
+    val instanceId:String,
+    val server:String,
+    val domain:String,
+    var accessKey:String
 )

@@ -1,5 +1,6 @@
 package cn.sunline.saas.webhook.service.impl
 
+import cn.sunline.saas.gateway.api.GatewayServer
 import cn.sunline.saas.multi_tenant.services.TenantService
 import cn.sunline.saas.webhook.dto.DTOWebhookRequest
 import cn.sunline.saas.webhook.dto.WebhookResponse
@@ -7,7 +8,8 @@ import cn.sunline.saas.webhook.service.Subscription
 import java.util.*
 
 class SubscriptionRemove(
-    private val tenantService: TenantService
+    private val tenantService: TenantService,
+    private val gatewayServer: GatewayServer
 ): Subscription {
 
     override fun run(dtoWebhookRequest: DTOWebhookRequest): WebhookResponse {
@@ -15,6 +17,12 @@ class SubscriptionRemove(
         tenant?.run {
             this.enabled = false
             val updateOne = tenantService.save(tenant)
+
+
+            val server = gatewayServer.getOne(tenant.uuid.toString(),"app-micro-loan")
+            server?.run {
+                gatewayServer.remove(this.id)
+            }
 
             return WebhookResponse(
                 true,
@@ -24,6 +32,8 @@ class SubscriptionRemove(
                 )
             )
         }
+
+
 
         return WebhookResponse(
             false,
