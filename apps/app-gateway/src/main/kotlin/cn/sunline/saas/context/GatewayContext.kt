@@ -19,13 +19,11 @@ class GatewayContext(private var redisClient: RedisClient) {
     private val gatewayHashMap = "gateway_hash_map"
 
     fun put(id: String, instance: TenantInstance) {
-        val instanceStr = objectMapper.writeValueAsString(instance)
-        redisClient.addToMap(gatewayHashMap,id,instanceStr)
+        redisClient.addToMap(gatewayHashMap,id,instance)
     }
 
     fun get(id: String): TenantInstance? {
-        val instanceStr =  redisClient.getMapItem<String>(gatewayHashMap,id)
-        return instanceStr?.run { objectMapper.readValue(this) }
+        return  redisClient.getMapItem<TenantInstance>(gatewayHashMap,id)
     }
 
     fun remove(id: String) {
@@ -33,57 +31,48 @@ class GatewayContext(private var redisClient: RedisClient) {
     }
 
     fun addServer(instanceId: String,tenantServer: TenantServer){
-        val instanceStr = redisClient.getMapItem<String>(gatewayHashMap,instanceId)?: return
-        val instance = objectMapper.readValue<TenantInstance>(instanceStr)
+        val instance = redisClient.getMapItem<TenantInstance>(gatewayHashMap,instanceId)?: return
         instance.server.add(tenantServer)
-        redisClient.addToMap(gatewayHashMap,instanceId,objectMapper.writeValueAsString(instance))
+        redisClient.addToMap(gatewayHashMap,instanceId,instance)
     }
 
     fun removeServer(instanceId: String, serverId: String) {
-        val instanceStr = redisClient.getMapItem<String>(gatewayHashMap,instanceId)?: return
-        val instance = objectMapper.readValue<TenantInstance>(instanceStr)
+        val instance = redisClient.getMapItem<TenantInstance>(gatewayHashMap,instanceId)?: return
         instance.server.removeIf { it.serverId == serverId }
-        redisClient.addToMap(gatewayHashMap,instanceId,objectMapper.writeValueAsString(instance))
+        redisClient.addToMap(gatewayHashMap,instanceId,instance)
     }
 
     fun getServer(serverId: String): TenantServer? {
-        redisClient.getMapAllItems<String>(gatewayHashMap).forEach { instanceStr ->
-            val instance = objectMapper.readValue<TenantInstance>(instanceStr)
+        redisClient.getMapAllItems<TenantInstance>(gatewayHashMap).forEach { instance ->
             return instance.server.firstOrNull { it.serverId == serverId }
         }
         return null
     }
 
     fun getServer(instanceId: String, server: String): TenantServer? {
-        val instanceStr = redisClient.getMapItem<String>(gatewayHashMap,instanceId)?: return null
-        val instance = objectMapper.readValue<TenantInstance>(instanceStr)
-
+        val instance = redisClient.getMapItem<TenantInstance>(gatewayHashMap,instanceId)?: return null
         return instance.server.firstOrNull { it.server == server }
     }
 
     fun addApi(serverId: String,tenantApi: TenantApi){
-        val instances = redisClient.getMapAllItems<String>(gatewayHashMap).map {
-            objectMapper.readValue<TenantInstance>(it)
-        }
+        val instances = redisClient.getMapAllItems<TenantInstance>(gatewayHashMap)
 
         instances.forEach {  instance ->
             instance.server.firstOrNull { it.serverId == serverId }?.run {
                 this.apis.add(tenantApi)
-                redisClient.addToMap(gatewayHashMap,instance.instanceId,objectMapper.writeValueAsString(instance))
+                redisClient.addToMap(gatewayHashMap,instance.instanceId,instance)
                 return
             }
         }
     }
 
     fun removeApi(serverId: String,api:String,method:String){
-        val instances = redisClient.getMapAllItems<String>(gatewayHashMap).map {
-            objectMapper.readValue<TenantInstance>(it)
-        }
+        val instances = redisClient.getMapAllItems<TenantInstance>(gatewayHashMap)
 
         instances.forEach {  instance ->
             instance.server.firstOrNull { it.serverId == serverId }?.run {
                 this.apis.removeIf { it.path == api && it.method == method }
-                redisClient.addToMap(gatewayHashMap,instance.instanceId,objectMapper.writeValueAsString(instance))
+                redisClient.addToMap(gatewayHashMap,instance.instanceId,instance)
                 return
             }
         }
@@ -91,13 +80,7 @@ class GatewayContext(private var redisClient: RedisClient) {
     }
 
     fun getAll(): List<TenantInstance> {
-        val instanceStrs = redisClient.getMapAllItems<String>(gatewayHashMap)
-        val instances:MutableList<TenantInstance> = mutableListOf()
-        instanceStrs.forEach {
-            instances.add(objectMapper.readValue(it))
-        }
-        return instances
+        return redisClient.getMapAllItems(gatewayHashMap)
     }
-
 
 }
