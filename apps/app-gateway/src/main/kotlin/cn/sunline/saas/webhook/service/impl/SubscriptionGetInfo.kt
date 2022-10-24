@@ -27,9 +27,18 @@ class SubscriptionGetInfo(
         val gatewayApi = "Gateway"
         val apiMap = objectMapper.writeValueAsString(
             mapOf(
-                "url" to "http://quickloan-gateway.saas.finline.app",
+                "endpoint" to "http://quickloan-gateway.saas.finline.app",
                 "access_key" to instance.accessKey,
                 "client_id" to instance.id
+            )
+        )
+
+        val microloanApiDoc = "Microloan_Api_Doc"
+        val microloanApiDocMap = objectMapper.writeValueAsString(
+            mapOf(
+                "url" to "https://quickloan-gateway.saas.finline.app/doc?type=Microloan",
+                "username" to "nothing",
+                "password" to "nothing"
             )
         )
 
@@ -42,6 +51,13 @@ class SubscriptionGetInfo(
                 "${gatewayApi}_TYPE" to "api",
                 "${gatewayApi}_NAME" to "MicroLoan Server Api",
                 "${gatewayApi}_VALUE" to apiMap,
+
+
+                "SUBSCRIPTION_META_KEY_2" to microloanApiDoc,
+                "${microloanApiDoc}_DESCRIPTION" to "Here you will find Microloan developer and interface documentation",
+                "${microloanApiDoc}_TYPE" to "api_doc",
+                "${microloanApiDoc}_NAME" to "MicroLoan Server API Doc",
+                "${microloanApiDoc}_VALUE" to microloanApiDocMap,
 
             )
         )

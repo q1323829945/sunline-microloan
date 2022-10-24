@@ -26,7 +26,8 @@ object ApiVerificationTools {
             url = server.domain + mapping.path,
             path = mapping.path,
             server = server.server,
-            secretKey = instance.secretKey
+            secretKey = instance.secretKey,
+            tenant = instance.tenant
         )
     }
 

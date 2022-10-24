@@ -22,6 +22,6 @@ class ServerGetOneRPCRequest(private val client:String, private val server:Strin
     }
 
     override fun getMethodName(): String {
-        return "/instance/${client}/${server}"
+        return "/server/${client}/${server}"
     }
 }

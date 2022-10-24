@@ -23,7 +23,6 @@ class ScheduleInvokeImpl: ScheduleInvoke {
             queryParams = mapOf(),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()
         )
@@ -37,7 +36,6 @@ class ScheduleInvokeImpl: ScheduleInvoke {
             queryParams = mapOf("type" to "$ratePlanType"),
             headerParams = mapOf(
                 Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
-                Header.USER_AUTHORIZATION.key to ContextUtil.getUserId()
             ),
             tenant = ContextUtil.getTenant().toString()
         )

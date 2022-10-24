@@ -59,6 +59,9 @@ class SubscriptionAdd(
         tenant.enabled = true
         val updateOne = tenantService.save(tenant)
 
+        ContextUtil.setTenant(tenant.id.toString())
+        ContextUtil.setUUID(tenant.uuid.toString())
+        appCommandRunner.run()
         return WebhookResponse(
             true,
             mutableMapOf(

@@ -22,6 +22,6 @@ class ServerRemoveRPCRequest(private val client:String): RPCRequest(client) {
     }
 
     override fun getMethodName(): String {
-        return "/instance/${client}"
+        return "/server/${client}"
     }
 }

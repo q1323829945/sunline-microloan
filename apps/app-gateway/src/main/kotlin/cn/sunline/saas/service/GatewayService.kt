@@ -73,7 +73,7 @@ class GatewayService(
             tenantServers.add(TenantServer(server.domain,server.server,server.id.toString(),tenantApis))
         }
 
-        GatewayContext.put(instance.id, TenantInstance(instance.id,instance.secretKey,tenantServers) )
+        GatewayContext.put(instance.id, TenantInstance(instance.id,instance.secretKey,instance.tenant,tenantServers) )
     }
 
     fun addApi(api: Api){

@@ -146,9 +146,9 @@ class RPCService {
                             append("X-Sequence", seq)
                             tenant?.run { append("X-Tenant-Id", tenant) }
                         }
-//                        if (httpMethod == HttpMethod.Post) {
-//                            contentType(ContentType.Application.Json)
-//                        }
+                        if (httpMethod == HttpMethod.Post) {
+                            contentType(ContentType.Application.Json)
+                        }
                         accept(ContentType.Application.Json)
                         queryParams?.forEach { (t, u) -> parameter(t, u) }
                         payload?.run { setBody(objectMapper.writeValueAsString(payload)) }

@@ -33,7 +33,7 @@ class AppCommandRunner(
 ){
     private val adminUsername = "admin"
     private val adminRole = "ROLE_ADMIN"
-    var logger = KotlinLogging.logger {  }
+    var logger = KotlinLogging.logger {}
 
     fun run() {
         reloadPermissions()
@@ -42,9 +42,10 @@ class AppCommandRunner(
         reloadSchedulerTimer()
         reloadPdpaAuthority()
         try {
+            logger.info("reload gateway !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
             reloadGateway()
         }catch (e:Exception){
-            logger.error { e.message }
+            logger.error(e.message)
         }
     }
 

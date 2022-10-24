@@ -42,7 +42,7 @@ class SubscriptionFactory {
         return when(webhookType){
             SUBSCRIPTION_ONBOARD -> SubscriptionOnBoard(tenantService, appCommandRunner)
             SUBSCRIPTION_ADD -> SubscriptionAdd(tenantService, appCommandRunner)
-            SUBSCRIPTION_REMOVE -> SubscriptionRemove(tenantService)
+            SUBSCRIPTION_REMOVE -> SubscriptionRemove(tenantService,gatewayServer)
             SUBSCRIPTION_GET_INFO -> SubscriptionGetInfo(tenantService)
             BILLING_GET_INFO -> BillingGetInfo(tenantService, tenantDateTime, apiDetailService, businessDetailService, customerDetailService)
         }
