@@ -53,8 +53,9 @@ class InstanceController {
     }
 
     @DeleteMapping("{id}")
-    fun deleteOne(@PathVariable id:String){
+    fun deleteOne(@PathVariable id:String):ResponseEntity<DTOResponseSuccess<Boolean>>{
         instanceService.deleteInstance(id)
         gatewayService.remove(id)
+        return DTOResponseSuccess(true).response()
     }
 }

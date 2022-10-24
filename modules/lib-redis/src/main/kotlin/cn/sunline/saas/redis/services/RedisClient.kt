@@ -97,6 +97,11 @@ class RedisClient(private var redisConfig: RedisConfig) {
         return hashOps[key]
     }
 
+    fun <T> getMapAllItems(hash:String):List<T>{
+        val hashOps = redissonClient.getMap<String,T>(hash, JsonJacksonCodec())
+        return hashOps.map { it.value }
+    }
+
 
 
     fun mapContains(hash: String, key: String): Boolean {

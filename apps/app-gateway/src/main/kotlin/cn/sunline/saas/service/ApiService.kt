@@ -63,7 +63,7 @@ class ApiService (private val apiRepository: ApiRepository,
     fun findByParams(instanceId:String,api:String,httpMethod: String):Api?{
         return get{ root,_,criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("instanceId"),instanceId))
+            predicates.add(criteriaBuilder.equal(root.get<String>("serverId"),instanceId))
             predicates.add(criteriaBuilder.equal(root.get<String>("api"),api))
             predicates.add(criteriaBuilder.equal(root.get<String>("method"),httpMethod))
             criteriaBuilder.and(*(predicates.toTypedArray()))
@@ -73,7 +73,7 @@ class ApiService (private val apiRepository: ApiRepository,
     fun getPagedByInstanceId(instanceId: String):Page<Api>{
         return getPaged({root,_,criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<String>("instanceId"),instanceId))
+            predicates.add(criteriaBuilder.equal(root.get<String>("serverId"),instanceId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
     }

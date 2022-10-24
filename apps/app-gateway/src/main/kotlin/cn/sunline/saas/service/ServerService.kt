@@ -13,7 +13,6 @@ import javax.persistence.criteria.Predicate
 class ServerService(private val serverRepository: ServerRepository,
                     private val sequence: Sequence,
 ) : BaseRepoService<Server, Long>(serverRepository) {
-    private val serverMap = mutableMapOf<Long,Server>()
 
     fun register(instance: Instance,dtoServer: DTOServer):Server{
         return findByInstanceAndServer(instance.id,dtoServer.server)?.run {
@@ -32,33 +31,27 @@ class ServerService(private val serverRepository: ServerRepository,
             enabled = dtoServer.enabled
         ))
 
-        serverMap[server.id] = server
-
         return server
     }
 
     private fun updateServer(dtoServer: DTOServer,server: Server):Server{
         server.domain = dtoServer.domain
         val update = save(server)
-        serverMap[update.id] = update
         return update
     }
 
     fun findByInstanceAndServer(instanceId:String,server:String):Server?{
-        return serverMap.values.firstOrNull { it.instanceId == instanceId && it.server == server }?: run{
-            get{ root,_,criteriaBuilder ->
-                val predicates = mutableListOf<Predicate>()
-                predicates.add(criteriaBuilder.equal(root.get<String>("instanceId"),instanceId))
-                predicates.add(criteriaBuilder.equal(root.get<String>("server"),server))
-                criteriaBuilder.and(*(predicates.toTypedArray()))
-            }?.apply { serverMap[this.id] = this }
+        return get{ root,_,criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<String>("instanceId"),instanceId))
+            predicates.add(criteriaBuilder.equal(root.get<String>("server"),server))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
         }
     }
 
     fun remove(id:Long):Server?{
         val server = getOne(id)?: return null
         serverRepository.delete(server)
-        serverMap.remove(id)
         return server
     }
 }

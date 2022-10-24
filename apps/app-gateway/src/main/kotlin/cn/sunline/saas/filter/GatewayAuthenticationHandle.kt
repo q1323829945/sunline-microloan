@@ -2,6 +2,7 @@ package cn.sunline.saas.filter
 
 import cn.sunline.saas.client.Client
 import cn.sunline.saas.client.RoutingDelegate
+import cn.sunline.saas.context.GatewayContext
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.filter.exception.FilterException
 import cn.sunline.saas.modules.dto.DTOGateway
@@ -22,7 +23,9 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 @Order(2)
-class GatewayAuthenticationHandle(private val client: Client,private val statisticsService: StatisticsService): Filter {
+class GatewayAuthenticationHandle(private val client: Client,
+                                  private val statisticsService: StatisticsService,
+                                  private val gatewayContext: GatewayContext): Filter {
     var logger = KotlinLogging.logger {}
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
@@ -32,7 +35,7 @@ class GatewayAuthenticationHandle(private val client: Client,private val statist
         val accessKey = httpServletRequest.getHeader("access_key")
 
         val path = httpServletRequest.requestURI
-        val gateway = ApiVerificationTools.verificationAndGet(clientId,path,httpServletRequest.method)?: run{
+        val gateway = ApiVerificationTools(gatewayContext).verificationAndGet(clientId,path,httpServletRequest.method)?: run{
             FilterException.handleException(response!!, ManagementExceptionCode.AUTHORIZATION_TOKEN_VALIDATION_FAILED, "Tenant/Api is not register!!")
             return
         }

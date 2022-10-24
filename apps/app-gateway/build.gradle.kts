@@ -27,5 +27,6 @@ dependencies {
     implementation(project(":lib-global"))
     implementation(project(":lib-seq-snowflake"))
     implementation(project(":lib-response"))
+    implementation(project(":lib-redis"))
     api(project(":lib-base-jpa"))
 }

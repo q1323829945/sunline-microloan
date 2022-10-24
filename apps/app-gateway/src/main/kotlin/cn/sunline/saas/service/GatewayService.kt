@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class GatewayService(
     private val instanceService: InstanceService,
-    private val serverService: ServerService
+    private val gatewayContext: GatewayContext
 ) {
     private var logger = KotlinLogging.logger {}
 
@@ -35,18 +35,17 @@ class GatewayService(
 
     fun remove(id:String){
         logger.info { "remove tenant ..." }
-        GatewayContext.remove(id)
+        gatewayContext.remove(id)
         logger.info { "remove tenant finish!" }
     }
 
     fun addServer(instanceId: String,server:Server){
-        val instance = GatewayContext.get(instanceId)?: return
-        instance.server.add(TenantServer(server.domain,server.server,server.id.toString(), mutableListOf()))
+        gatewayContext.addServer(instanceId,TenantServer(server.domain,server.server,server.id.toString(), mutableListOf()))
     }
 
     fun removeServer(instanceId:String,serverId:String){
         logger.info { "remove server ..." }
-        GatewayContext.removeServer(instanceId, serverId)
+        gatewayContext.removeServer(instanceId, serverId)
         logger.info { "remove server finish!" }
     }
 
@@ -73,30 +72,18 @@ class GatewayService(
             tenantServers.add(TenantServer(server.domain,server.server,server.id.toString(),tenantApis))
         }
 
-        GatewayContext.put(instance.id, TenantInstance(instance.id,instance.secretKey,instance.tenant,tenantServers) )
+        gatewayContext.put(instance.id, TenantInstance(instance.id,instance.secretKey,instance.tenant,tenantServers) )
     }
 
     fun addApi(api: Api){
-        val server = GatewayContext.getServer(api.serverId)?:return
-
-
         logger.info { "add api ${api.serverId} ${api.api} ${api.method} ..." }
-        server.apis.add(
-            TenantApi(
-                api.api,
-                api.api.split("/"),
-                api.method,
-                api.formatType
-            )
-        )
-
+        gatewayContext.addApi(api.serverId,TenantApi(api.api, api.api.split("/"), api.method, api.formatType))
         logger.info { "add api ${api.serverId} ${api.api} ${api.method} finish!" }
     }
 
     fun removeApi(api: Api){
-        val server = GatewayContext.getServer(api.serverId)?: return
         logger.info { "remove api ${api.serverId} ${api.api} ${api.method} ..." }
-        server.apis.removeIf { it.path == api.api && it.method == api.method}
+        gatewayContext.removeApi(api.serverId,api.api,api.method)
         logger.info { "remove api ${api.serverId} ${api.api} ${api.method} finish!" }
     }
 }
