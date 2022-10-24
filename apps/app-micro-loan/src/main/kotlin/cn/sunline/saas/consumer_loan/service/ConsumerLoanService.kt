@@ -134,7 +134,7 @@ class ConsumerLoanService(
             ConsumerLoanAssembly.convertToDTOLoanAgreementAdd(
                 customerOffer = customerOffer,
                 loanProduct = loanProduct,
-                baseRate = InterestRateHelper.getTermOrAmountRate(
+                baseRate = InterestRateHelper.getRate(
                     customerOffer.amount.toBigDecimal(),
                     customerOffer.term,
                     consumerLoanInvoke.retrieveBaseInterestRate(loanProduct.interestFeature.ratePlanId)

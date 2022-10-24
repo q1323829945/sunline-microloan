@@ -15,7 +15,7 @@ import java.math.BigDecimal
  */
 object InterestRateHelper {
 
-    fun getTermOrAmountRate(
+    fun getRate(
         loanAmount: BigDecimal,
         loanTerm: LoanTermType,
         rates: MutableList<InterestRate>?
@@ -43,13 +43,13 @@ object InterestRateHelper {
 
         return when (interestType) {
             InterestType.FIXED -> { // floatRate
-                val floatRate = getTermOrAmountRate(amount, term, rates)
+                val floatRate = getRate(amount, term, rates)
                     ?: throw InterestRateNullException("custom rate must be not null when interest type is fixed rate")
                 getExecutionRate(interestType, floatPoint, floatRatio, null, floatRate)
             }
 
             InterestType.FLOATING_RATE_NOTE -> {  // basicRate * ( 1 + floatRatio) + floatPoint
-                val baseRate = getTermOrAmountRate(amount, term, rates)
+                val baseRate = getRate(amount, term, rates)
                     ?: throw InterestRateNullException("base rate must be not null when interest type is floating rate")
                 getExecutionRate(interestType, floatPoint, floatRatio, baseRate, null)
             }

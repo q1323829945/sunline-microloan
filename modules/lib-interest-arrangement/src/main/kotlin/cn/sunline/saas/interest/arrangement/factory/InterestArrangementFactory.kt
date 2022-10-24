@@ -32,7 +32,7 @@ class InterestArrangementFactory {
         return InterestArrangement(
             id = agreementId,
             interestType = dtoInterestArrangementAdd.interestType,
-            rate = InterestRateHelper.getTermOrAmountRate(amount, term, planRates)!!,
+            rate = InterestRateHelper.getRate(amount, term, planRates)!!,
             baseYearDays = dtoInterestArrangementAdd.baseYearDays,
             adjustFrequency = dtoInterestArrangementAdd.adjustFrequency,
             overdueInterestRatePercentage = BigDecimal(dtoInterestArrangementAdd.overdueInterestRatePercentage),

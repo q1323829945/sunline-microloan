@@ -75,16 +75,16 @@ class RatePlanServiceTest(@Autowired val ratePlanService: RatePlanService) {
         amountTierCustomerRates.add(amountTierCustomerRate3)
 
 
-        val standardRatePlan = RatePlan(standardRatePlanId, "Test STANDARD Rate Plan", RatePlanType.STANDARD, standardRates)
+        val standardRatePlan = RatePlan(standardRatePlanId, "STANDARD_Rate_Plan", RatePlanType.STANDARD, standardRates)
         val standardActual = ratePlanService.save(standardRatePlan)
 
-        val customerRatePlan = RatePlan(customerRatePlanId, "Test CUSTOMER Rate Plan", RatePlanType.CUSTOMER, customerRates)
+        val customerRatePlan = RatePlan(customerRatePlanId, "CUSTOMER_Rate_Plan", RatePlanType.CUSTOMER, customerRates)
         val customerActual = ratePlanService.save(customerRatePlan)
 
-        val termTierCustomerRatePlan = RatePlan(termTierCustomerRatePlanId, "Test LOAN_TERM_TIER_CUSTOMER Rate Plan", RatePlanType.LOAN_TERM_TIER_CUSTOMER, termTierCustomerRates)
+        val termTierCustomerRatePlan = RatePlan(termTierCustomerRatePlanId, "TERM_TIER_CUSTOMER_Rate_Plan", RatePlanType.LOAN_TERM_TIER_CUSTOMER, termTierCustomerRates)
         val termTierCustomerActual = ratePlanService.save(termTierCustomerRatePlan)
 
-        val amountTierCustomerRatePlan = RatePlan(amountTierCustomerRatePlanId, "Test LOAN_AMOUNT_TIER_CUSTOMER Rate Plan", RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER, amountTierCustomerRates)
+        val amountTierCustomerRatePlan = RatePlan(amountTierCustomerRatePlanId, "AMOUNT_TIER_CUSTOMER_Rate_Plan", RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER, amountTierCustomerRates)
         val amountTierCustomerActual = ratePlanService.save(amountTierCustomerRatePlan)
 
         assertThat(standardActual).isNotNull
@@ -124,14 +124,14 @@ class RatePlanServiceTest(@Autowired val ratePlanService: RatePlanService) {
     }
 
     @Test
-    fun `update rate plan2`() {
+    fun `update customer Rate plan`() {
         val oldOne = ratePlanService.getOne(customerId)
 
         assertThat(oldOne).isNotNull
 
 
         val rates: MutableList<InterestRate> = mutableListOf()
-        val customerRatePlanId = 1L
+        val customerRatePlanId = 2L
         val customerRate1 = InterestRate(4, LoanTermType.ONE_YEAR, null, BigDecimal(7.5), customerRatePlanId)
         val customerRate2 = InterestRate(5, LoanTermType.SIX_MONTHS, null, BigDecimal(6.5), customerRatePlanId)
         val customerRate3 = InterestRate(6, LoanTermType.THREE_MONTHS, null, BigDecimal(3.5), customerRatePlanId)
@@ -139,11 +139,10 @@ class RatePlanServiceTest(@Autowired val ratePlanService: RatePlanService) {
 
         rates.add(customerRate1)
         rates.add(customerRate2)
-        rates.add(customerRate2)
+        rates.add(customerRate3)
         rates.add(customerRate4)
 
-        val newOne = RatePlan(customerRatePlanId, "Test Rate Plan1", RatePlanType.CUSTOMER, rates)
-
+        val newOne = RatePlan(customerRatePlanId, "Test CUSTOMER Rate Plan", RatePlanType.CUSTOMER, rates)
 
         val actual = ratePlanService.updateOne(oldOne!!, newOne)
 
@@ -153,8 +152,103 @@ class RatePlanServiceTest(@Autowired val ratePlanService: RatePlanService) {
     }
 
     @Test
-    fun `find by type`() {
+    fun `update term tier customer Rate plan`() {
+        val oldOne = ratePlanService.getOne(termTierCustomerId)
+
+        assertThat(oldOne).isNotNull
+
+
+        val rates: MutableList<InterestRate> = mutableListOf()
+        val termTierCustomerRatePlanId = 3L
+        val termTierCustomerRate1 = InterestRate(7, LoanTermType.ONE_YEAR, null, BigDecimal(7.5), termTierCustomerRatePlanId)
+        val termTierCustomerRate2 = InterestRate(8, LoanTermType.SIX_MONTHS, null, BigDecimal(6.5), termTierCustomerRatePlanId)
+        val termTierCustomerRate3 = InterestRate(9, LoanTermType.THREE_MONTHS, null, BigDecimal(3.5), termTierCustomerRatePlanId)
+        val termTierCustomerRate4 = InterestRate(15, LoanTermType.TWO_YEAR, null, BigDecimal(8.5), termTierCustomerRatePlanId)
+
+        rates.add(termTierCustomerRate1)
+        rates.add(termTierCustomerRate2)
+        rates.add(termTierCustomerRate3)
+        rates.add(termTierCustomerRate4)
+
+        val newOne = RatePlan(termTierCustomerRatePlanId, "TERM_TIER_CUSTOMER_Rate_Plan", RatePlanType.CUSTOMER, rates)
+
+        val actual = ratePlanService.updateOne(oldOne!!, newOne)
+
+        assertThat(actual).isNotNull
+
+        assertThat(actual.rates.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `update amount tier customer Rate plan`() {
+        val oldOne = ratePlanService.getOne(amountTierCustomerId)
+
+        assertThat(oldOne).isNotNull
+
+
+        val rates: MutableList<InterestRate> = mutableListOf()
+        val amountTierCustomerRatePlanId = 4L
+        val amountTierCustomerRate1 = InterestRate(10, null, BigDecimal(100000), BigDecimal(7.5), amountTierCustomerRatePlanId)
+        val amountTierCustomerRate2 = InterestRate(11, null, BigDecimal(300000), BigDecimal(6.5), amountTierCustomerRatePlanId)
+        val amountTierCustomerRate3 = InterestRate(12, null, BigDecimal(200000), BigDecimal(3.5), amountTierCustomerRatePlanId)
+        val amountTierCustomerRate4 = InterestRate(16, null, BigDecimal(400000), BigDecimal(4.5), amountTierCustomerRatePlanId)
+
+        rates.add(amountTierCustomerRate1)
+        rates.add(amountTierCustomerRate2)
+        rates.add(amountTierCustomerRate3)
+        rates.add(amountTierCustomerRate4)
+
+        val newOne = RatePlan(amountTierCustomerRatePlanId, "AMOUNT_TIER_CUSTOMER_Rate_Plan", RatePlanType.CUSTOMER, rates)
+
+        val actual = ratePlanService.updateOne(oldOne!!, newOne)
+
+        assertThat(actual).isNotNull
+
+        assertThat(actual.rates.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `update standard Rate plan info`() {
+        val oldOne = ratePlanService.getOne(standardId)
+        assertThat(oldOne).isNotNull
+
+        val rates: MutableList<InterestRate> = mutableListOf()
+        val standardRatePlanId = 1L
+        val rate1 = InterestRate(17, LoanTermType.ONE_YEAR, null, BigDecimal(8.5), standardRatePlanId)
+
+        rates.add(rate1)
+
+        val newOne = RatePlan(standardRatePlanId, "Test Update STANDARD Rate Plan", RatePlanType.STANDARD, rates)
+        val actual = ratePlanService.updateOne(oldOne!!, newOne)
+
+        assertThat(actual).isNotNull
+        assertThat(actual.rates.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `find by standard type`() {
         val actual = ratePlanService.findByType(RatePlanType.STANDARD)
+
+        assertThat(actual).isNotNull
+    }
+
+    @Test
+    fun `find by customer type`() {
+        val actual = ratePlanService.findByType(RatePlanType.CUSTOMER)
+
+        assertThat(actual).isNotNull
+    }
+
+    @Test
+    fun `find by loan amount tier customer type`() {
+        val actual = ratePlanService.findByType(RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER)
+
+        assertThat(actual).isNotNull
+    }
+
+    @Test
+    fun `find by loan term tier customer type`() {
+        val actual = ratePlanService.findByType(RatePlanType.LOAN_TERM_TIER_CUSTOMER)
 
         assertThat(actual).isNotNull
     }
