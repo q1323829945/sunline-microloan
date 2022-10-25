@@ -76,7 +76,6 @@ class GatewayContext(private var redisClient: RedisClient) {
                 return
             }
         }
-
     }
 
     fun getAll(): List<TenantInstance> {

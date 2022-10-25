@@ -90,6 +90,15 @@ enum class PermissionConfig (
     CHANNEL_AGREEMENT_TYPE_LIST("channel", "channel/agreement/agreementType\$", RequestMethod.GET, "channel get agreementType"),
     CHANNEL_CAST_TYPE_LIST("channel", "channel/channelCastType\$", RequestMethod.GET, "channel get castType"),
 
+    //workflow
+    PROCESS_DEFINITION_ADD("workflow","definition/process\$",RequestMethod.POST,"add process definition"),
+    PROCESS_DEFINITION_MODIFY("workflow","definition/process/[0-9]+\$",RequestMethod.PUT,"update process definition"),
+    PROCESS_DEFINITION_GET_LIST("workflow","definition/process(\\?.*|\$)",RequestMethod.GET,"get process definition page list"),
+    PROCESS_DEFINITION_MODIFY_STATUS("workflow","definition/process/[A-Z]+/[0-9]+\$",RequestMethod.PUT,"update process definition status"),
+    ACTIVITY_DEFINITION_ADD("workflow","definition/activity\$",RequestMethod.POST,"add activity definition"),
+    ACTIVITY_DEFINITION_MODIFY("workflow","definition/activity/[0-9]+\$",RequestMethod.PUT,"update activity definition"),
+    ACTIVITY_DEFINITION_GET_LIST("workflow","definition/activity/[0-9]+\$",RequestMethod.GET,"get activity definition page list"),
+    EVENT_DEFINITION_GET_LIST("workflow","definition/event",RequestMethod.GET,"get activity definition all list"),
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -106,5 +115,7 @@ enum class PermissionConfig (
     CHANNEL_QUERY_MENU("menu","channelQueryConfig", RequestMethod.GET,"View channel query menu"),
     POSITION_MENU("menu","positionConfig",RequestMethod.GET,"View position menu"),
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
+    WORKFLOW_MENU("menu","workflowConfig", RequestMethod.GET,"View workflowConfig menu"),
+
 }
 

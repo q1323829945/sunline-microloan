@@ -45,6 +45,7 @@ dependencies {
     implementation(project(":lib-channel-arrangement"))
     implementation(project(":lib-minio"))
     implementation(project(":lib-pdpa"))
+    implementation(project(":lib-workflow"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
 }
