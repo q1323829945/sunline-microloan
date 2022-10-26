@@ -9,7 +9,7 @@ data class DTOActivityDefinition(
     val name: String,
     val position: String? = null,
     val description: String? = null,
-    val eventIds:MutableList<String> = mutableListOf()
+    val sort:Long,
 )
 
 data class DTOActivityDefinitionView(
@@ -18,5 +18,5 @@ data class DTOActivityDefinitionView(
     val name: String,
     val position: String? = null,
     val description: String? = null,
-    val events:MutableList<DTOEventDefinitionView> = mutableListOf()
+    val sort:Long
 )

@@ -44,7 +44,7 @@ class AppActivityDefinitionService{
     }
 
     fun getPaged(processId:Long,pageable: Pageable):Page<DTOActivityDefinitionView>{
-        val paged = activityDefinitionService.getPagedByProcess(processId, pageable)
+        val paged = activityDefinitionService.findPagedByProcess(processId, pageable)
         return paged.map { objectMapper.convertValue<DTOActivityDefinitionView>(it) }
     }
 }

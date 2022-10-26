@@ -1,6 +1,7 @@
 package cn.sunline.saas.workflow.defintion.modules.dto
 
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
+import java.util.*
 
 data class DTOProcessDefinition(
     val name: String,
@@ -12,5 +13,5 @@ data class DTOProcessDefinitionView(
     val name: String,
     val status: DefinitionStatus,
     val description:String?,
-    val activities:MutableList<DTOActivityDefinitionView> = mutableListOf()
+    var created: String,
 )

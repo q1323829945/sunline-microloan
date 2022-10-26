@@ -8,11 +8,21 @@ import javax.validation.constraints.NotNull
 
 
 @Entity
-@Table(name = "event_definition")
+@Table(
+    name = "event_definition",
+    indexes = [
+        Index(name = "idx_event_definition_sort", columnList = "sort"),
+    ]
+)
 @EntityListeners(TenantListener::class)
+
 class EventDefinition (
     @Id
-    val id: String,
+    val id: Long,
+
+    @NotNull
+    @Column(name = "activity_id", nullable = false, columnDefinition = "bigint not null")
+    val activityId: Long,
 
     @NotNull
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
@@ -25,6 +35,10 @@ class EventDefinition (
 
     @Column(nullable = true, length = 1024, columnDefinition = "varchar(1024) default null")
     val description: String? = null,
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "bigint not null")
+    var sort: Long,
 
 ): MultiTenant {
 

@@ -98,7 +98,9 @@ enum class PermissionConfig (
     ACTIVITY_DEFINITION_ADD("workflow","definition/activity\$",RequestMethod.POST,"add activity definition"),
     ACTIVITY_DEFINITION_MODIFY("workflow","definition/activity/[0-9]+\$",RequestMethod.PUT,"update activity definition"),
     ACTIVITY_DEFINITION_GET_LIST("workflow","definition/activity/[0-9]+\$",RequestMethod.GET,"get activity definition page list"),
-    EVENT_DEFINITION_GET_LIST("workflow","definition/event",RequestMethod.GET,"get activity definition all list"),
+    EVENT_DEFINITION_ADD("workflow","definition/event\$",RequestMethod.POST,"add event definition"),
+    EVENT_DEFINITION_MODIFY("workflow","definition/event/[0-9]+\$",RequestMethod.PUT,"update event definition"),
+    EVENT_DEFINITION_GET_LIST("workflow","definition/event/[0-9]+\$",RequestMethod.GET,"get event definition list"),
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),

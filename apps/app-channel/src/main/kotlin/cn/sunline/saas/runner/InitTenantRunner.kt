@@ -18,7 +18,6 @@ import cn.sunline.saas.pdpa.services.InitPdpa
 import cn.sunline.saas.pdpa.services.PdpaAuthorityService
 import cn.sunline.saas.scheduler.job.model.SchedulerTimer
 import cn.sunline.saas.scheduler.job.service.SchedulerTimerService
-import cn.sunline.saas.workflow.defintion.runner.EventRunner
 import mu.KotlinLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.data.domain.Pageable
@@ -34,7 +33,6 @@ class InitTenantRunner(
         val tenantService: TenantService,
         val schedulerTimerService: SchedulerTimerService,
         val initPdpa: InitPdpa,
-        val eventRunner: EventRunner
 ) : CommandLineRunner {
     private var logger = KotlinLogging.logger {  }
 
@@ -50,7 +48,6 @@ class InitTenantRunner(
         reloadAdminUser(positions)
         reloadSchedulerTimer()
         reloadPdpa()
-        eventRunner.run()
     }
 
     private fun reloadTenant(){

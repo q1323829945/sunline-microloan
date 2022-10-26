@@ -3,6 +3,7 @@ package cn.sunline.saas.workflow.defintion.modules.db
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -31,7 +32,11 @@ class ProcessDefinition (
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "process_id")
-    val activities: MutableList<ActivityDefinition> = mutableListOf()
+    val activities: MutableList<ActivityDefinition> = mutableListOf(),
+
+    @Temporal(TemporalType.TIMESTAMP)
+    var created: Date,
+
 ): MultiTenant {
 
     @NotNull
@@ -46,10 +51,4 @@ class ProcessDefinition (
         tenantId = o
     }
 
-//    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH], orphanRemoval = true, mappedBy = "processId")
-//    var activities: MutableList<ProcessActivity> = mutableListOf()
-//        set(value) {
-//            this.activities.clear()
-//            field.addAll(value)
-//        }
 }

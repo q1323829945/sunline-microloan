@@ -1,7 +1,9 @@
 package cn.sunline.saas.workflow.definition.service
 
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionUpdateException
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
+import cn.sunline.saas.workflow.defintion.modules.db.ProcessDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOProcessDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOProcessDefinitionView
 import cn.sunline.saas.workflow.defintion.services.ActivityDefinitionService
@@ -16,7 +18,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class AppProcessDefinitionService {
+class AppProcessDefinitionService(
+    private val tenantDateTime: TenantDateTime
+) {
     @Autowired
     private lateinit var processDefinitionService: ProcessDefinitionService
 
@@ -25,23 +29,29 @@ class AppProcessDefinitionService {
 
     fun addOne(dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {
         val process = processDefinitionService.addOne(dtoProcessDefinition)
-        return objectMapper.convertValue(process)
+        return convertProcessDefinition(process)
     }
 
     fun getPaged(status: DefinitionStatus?, pageable: Pageable): Page<DTOProcessDefinitionView> {
         return processDefinitionService.getProcessPaged(status, pageable).map {
-            objectMapper.convertValue(it)
+            convertProcessDefinition(it)
         }
     }
 
     fun updateStatus(id: Long, status: DefinitionStatus): DTOProcessDefinitionView {
         val process = processDefinitionService.updateStatus(id, status)
-        return objectMapper.convertValue(process)
+        return convertProcessDefinition(process)
     }
 
     fun updateOne(id: Long, dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {
         val oldOne = processDefinitionService.preflightCheckProcessStatus(id)
         val process = processDefinitionService.updateOne(oldOne, dtoProcessDefinition)
-        return objectMapper.convertValue(process)
+        return convertProcessDefinition(process)
+    }
+
+    private fun convertProcessDefinition(processDefinition: ProcessDefinition):DTOProcessDefinitionView{
+        val dtoProcessDefinition = objectMapper.convertValue<DTOProcessDefinitionView>(processDefinition)
+        dtoProcessDefinition.created = tenantDateTime.toTenantDateTime(processDefinition.created).toString()
+        return dtoProcessDefinition
     }
 }

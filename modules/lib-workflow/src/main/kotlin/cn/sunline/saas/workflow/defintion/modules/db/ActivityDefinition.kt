@@ -7,7 +7,12 @@ import javax.validation.constraints.NotNull
 
 
 @Entity
-@Table(name = "activity_definition")
+@Table(
+    name = "activity_definition",
+    indexes = [
+        Index(name = "idx_activity_definition_sort", columnList = "sort"),
+    ]
+)
 @EntityListeners(TenantListener::class)
 class ActivityDefinition (
     @Id
@@ -27,13 +32,13 @@ class ActivityDefinition (
     @Column(nullable = true, length = 1024, columnDefinition = "varchar(1024) default null")
     var description: String? = null,
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "activity_event_definition_mapping",
-        joinColumns = [JoinColumn(name = "activity_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "event_id", referencedColumnName = "id")]
-    )
-    var events: MutableList<EventDefinition> = mutableListOf()
+    @NotNull
+    @Column(nullable = false, columnDefinition = "bigint not null")
+    var sort: Long,
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "activity_id")
+    val events: MutableList<EventDefinition> = mutableListOf()
 ): MultiTenant {
 
     @NotNull

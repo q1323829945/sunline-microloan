@@ -1,6 +1,7 @@
 package cn.sunline.saas.workflow.defintion.services
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionAlreadyExistException
 import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionCodeException
@@ -18,7 +19,8 @@ import javax.persistence.criteria.Predicate
 @Service
 class ProcessDefinitionService (
     private val processDefinitionRepository: ProcessDefinitionRepository,
-    private val sequence: Sequence
+    private val sequence: Sequence,
+    private val tenantDateTime: TenantDateTime
 ): BaseMultiTenantRepoService<ProcessDefinition, Long>(processDefinitionRepository) {
 
     fun addOne(dtoProcessDefinition: DTOProcessDefinition):ProcessDefinition{
@@ -27,6 +29,7 @@ class ProcessDefinitionService (
                 id = sequence.nextId(),
                 name = dtoProcessDefinition.name,
                 description = dtoProcessDefinition.description,
+                created = tenantDateTime.now().toDate()
             )
         )
     }

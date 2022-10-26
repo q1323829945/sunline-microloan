@@ -23,7 +23,6 @@ class ActivityDefinitionService (
 ): BaseMultiTenantRepoService<ActivityDefinition, Long>(activityDefinitionRepository) {
 
     fun addOne(dtoActivityDefinition: DTOActivityDefinition):ActivityDefinition{
-        val events = getEvents(dtoActivityDefinition.eventIds)
         return save(
             ActivityDefinition(
                 id = sequence.nextId(),
@@ -31,18 +30,19 @@ class ActivityDefinitionService (
                 name = dtoActivityDefinition.name,
                 position = dtoActivityDefinition.position,
                 description = dtoActivityDefinition.description,
-                events = events
+                sort = dtoActivityDefinition.sort
             )
         )
     }
 
 
-    fun getPagedByProcess(processId:Long,pageable: Pageable):Page<ActivityDefinition>{
+    fun findPagedByProcess(processId:Long,pageable: Pageable):Page<ActivityDefinition>{
         return getPageWithTenant({ root, criteriaQuery, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("processId"),processId))
-            val orderBy = criteriaBuilder.desc(root.get<Long>("id"))
-            criteriaQuery.orderBy(orderBy).where(*(predicates.toTypedArray())).restriction
+            val orderBySort = criteriaBuilder.asc(root.get<Long>("sort"))
+            val orderById = criteriaBuilder.desc(root.get<Long>("id"))
+            criteriaQuery.orderBy(orderBySort,orderById).where(*(predicates.toTypedArray())).restriction
         },pageable)
     }
 
@@ -51,20 +51,8 @@ class ActivityDefinitionService (
         oldOne.name = dtoActivityDefinition.name
         oldOne.description = dtoActivityDefinition.description
         oldOne.position = dtoActivityDefinition.position
-
-        val events = getEvents(dtoActivityDefinition.eventIds)
-        oldOne.events = events
+        oldOne.sort = dtoActivityDefinition.sort
         return save(oldOne)
     }
 
-
-    private fun getEvents(ids:List<String>):MutableList<EventDefinition>{
-        val events = mutableListOf<EventDefinition>()
-        ids.forEach { id ->
-            eventDefinitionService.getOne(id)?.run {
-                events.add(this)
-            }
-        }
-        return events
-    }
 }
