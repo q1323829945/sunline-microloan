@@ -5,7 +5,7 @@ import cn.sunline.saas.modules.dto.DTOGateway
 import cn.sunline.saas.modules.dto.TenantServer
 import mu.KotlinLogging
 
-object ApiVerificationTools {
+class ApiVerificationTools(private val gatewayContext: GatewayContext) {
 
     private var logger = KotlinLogging.logger {}
 
@@ -14,11 +14,11 @@ object ApiVerificationTools {
     fun verificationAndGet(instanceId:String,path:String,method:String): DTOGateway?{
         val mapping = PathMappingTools.mapping(path) ?: return null
 
-        val instance = GatewayContext.get(instanceId)?: return null
+        val instance = gatewayContext.get(instanceId)?: return null
 
-        val server = GatewayContext.getServer(instanceId,mapping.server)?: return null
+        val server = gatewayContext.getServer(instanceId,mapping.server)?: return null
 
-        if(server.apis.isNotEmpty() && !checkApi(server, path, method)){
+        if(server.apis.isNotEmpty() && !checkApi(server, mapping.path, method)){
             return null
         }
 

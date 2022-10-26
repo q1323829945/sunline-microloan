@@ -61,10 +61,11 @@ class ServerController {
     }
 
     @DeleteMapping("{id}")
-    fun delete(@PathVariable id:String){
+    fun delete(@PathVariable id:String):ResponseEntity<DTOResponseSuccess<Boolean>>{
         serverService.remove(id.toLong())?.run {
             gatewayService.removeServer(this.instanceId,this.id.toString())
         }
 
+        return DTOResponseSuccess(true).response()
     }
 }

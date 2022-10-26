@@ -1,6 +1,7 @@
 package cn.sunline.saas.modules.dto
 
 import cn.sunline.saas.modules.enum.FormatType
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import org.apache.catalina.core.ApplicationPart
 import java.io.InputStream
 
@@ -26,6 +27,7 @@ data class DTOGateway(
     val tenant:String,
 )
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 data class TenantInstance(
     val instanceId:String,
     val secretKey: String,

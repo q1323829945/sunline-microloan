@@ -1,7 +1,6 @@
 package cn.sunline.saas.modules.db
 
 import com.sun.istack.NotNull
-import kotlinx.coroutines.*
 import java.util.*
 import javax.persistence.*
 

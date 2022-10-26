@@ -4,10 +4,10 @@ import cn.sunline.saas.base_jpa.services.BaseRepoService
 import cn.sunline.saas.modules.db.Statistics
 import cn.sunline.saas.modules.dto.DTOStatistics
 import cn.sunline.saas.repository.StatisticsRepository
-import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
 import org.joda.time.DateTime
 import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
 @Service

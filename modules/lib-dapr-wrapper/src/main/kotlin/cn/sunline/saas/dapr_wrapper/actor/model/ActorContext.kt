@@ -1,5 +1,13 @@
 package cn.sunline.saas.dapr_wrapper.actor.model
 
+import cn.sunline.saas.dapr_wrapper.actor.model.ActorContext.deepCopy
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.isAccessible
+
 /**
  * @title: ActorContext
  * @description: TODO
@@ -8,27 +16,35 @@ package cn.sunline.saas.dapr_wrapper.actor.model
  */
 object ActorContext {
 
-    private val context = ThreadLocal<MutableMap<String, AbstractActor>>()
-
+    private val context: MutableMap<String, AbstractActor> = mutableMapOf()
 
     fun registerActor(actorType: String, actor: AbstractActor) {
-        context.get()?.run {
-            context.get()[actorType] = actor
-        }?:run {
-            context.set(mutableMapOf(actorType to actor))
-        }
+        context[actorType] = actor
     }
 
     fun getActorTypes(): MutableSet<String> {
-        return context.get().keys
+        return context.keys
     }
 
     fun getActor(actorType: String): AbstractActor {
-        return context.get()[actorType]!!
+        return context[actorType]!!.deepCopy()
     }
 
     fun getActors():List<AbstractActor>{
-        return context.get().values.toList()
+        return context.values.map { it.deepCopy() }
+    }
+
+    private fun <T:Any>T.deepCopy():T{
+        return this::class.primaryConstructor!!.let { primaryConstructor ->
+            primaryConstructor.parameters.associateWith { params ->
+                (this::class as KClass<T>).memberProperties.first {
+                    it.isAccessible = true
+                    it.name == params.name
+                }.get(this)
+            }.let {
+                primaryConstructor.callBy(it)
+            }
+        }
     }
 }
 

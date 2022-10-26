@@ -13,7 +13,6 @@ import javax.persistence.criteria.Predicate
 @Service
 class InstanceService (private val instanceRepository: InstanceRepository
 ) : BaseRepoService<Instance, String>(instanceRepository){
-    private val instanceMap = mutableMapOf<String,Instance>()
 
     fun register(dtoInstance: DTOInstance):Instance{
         return findByTenant(dtoInstance.tenant)?.run {
@@ -51,18 +50,14 @@ class InstanceService (private val instanceRepository: InstanceRepository
     }
 
     fun getInstance(id:String):Instance?{
-        return instanceMap[id]?: run {
-            getOne(id)?.apply { instanceMap[this.id] = this }
-        }
+        return getOne(id)
     }
 
     fun findByTenant(tenant:String):Instance?{
-        return instanceMap.values.firstOrNull { it.tenant == tenant }?:run {
-            get{ root,_,criteriaBuilder ->
-                val predicates = mutableListOf<Predicate>()
-                predicates.add(criteriaBuilder.equal(root.get<String>("tenant"),tenant))
-                criteriaBuilder.and(*(predicates.toTypedArray()))
-            }?.apply { instanceMap[this.id] = this }
+        return get{ root,_,criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<String>("tenant"),tenant))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
         }
 
     }
@@ -73,6 +68,5 @@ class InstanceService (private val instanceRepository: InstanceRepository
 
     fun deleteInstance(id:String){
         instanceRepository.deleteById(id)
-        instanceMap.remove(id)
     }
 }

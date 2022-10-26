@@ -8,7 +8,8 @@ object PathMappingTools {
 
     private val map = mutableMapOf(
         "/microloan" to "app-micro-loan",
-        "/gateway" to "app-gateway"
+        "/gateway" to "app-gateway",
+        "/management" to "app-loan-management"
     )
 
     fun mapping(path:String):DTOMapping?{

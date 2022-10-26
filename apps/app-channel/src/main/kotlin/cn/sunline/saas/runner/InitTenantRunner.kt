@@ -32,7 +32,7 @@ class InitTenantRunner(
         val positionService:PositionService,
         val tenantService: TenantService,
         val schedulerTimerService: SchedulerTimerService,
-        val initPdpa: InitPdpa
+        val initPdpa: InitPdpa,
 ) : CommandLineRunner {
     private var logger = KotlinLogging.logger {  }
 

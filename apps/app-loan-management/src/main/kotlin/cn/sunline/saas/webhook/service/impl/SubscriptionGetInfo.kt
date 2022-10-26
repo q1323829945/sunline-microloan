@@ -24,8 +24,6 @@ class SubscriptionGetInfo(
                 )
             )
         }
-        val api = "API"
-        val apiDoc = "API_DOC"
         val management = "MANAGEMENT"
         val managementMap = objectMapper.writeValueAsString(mutableMapOf(
             "url" to "https://quickloan-management-demo.saas.finline.app",
