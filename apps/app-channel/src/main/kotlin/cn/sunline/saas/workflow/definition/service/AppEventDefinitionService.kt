@@ -1,7 +1,9 @@
 package cn.sunline.saas.workflow.definition.service
 
 import cn.sunline.saas.workflow.defintion.exception.ActivityDefinitionNotFoundException
+import cn.sunline.saas.workflow.defintion.exception.EventDefinitionNotFoundException
 import cn.sunline.saas.workflow.defintion.exception.EventTypeHasBeenUsedException
+import cn.sunline.saas.workflow.defintion.modules.db.EventDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOActivityDefinitionView
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinitionView
@@ -47,21 +49,35 @@ class AppEventDefinitionService {
         return paged.map { objectMapper.convertValue<DTOEventDefinitionView>(it) }
     }
 
+    fun delete(id:Long):DTOEventDefinitionView{
+        val event = preflightEventCheck(id)
+        eventDefinitionService.remove(event)
+        return objectMapper.convertValue(event)
+    }
+
+    private fun preflightEventCheck(id:Long):EventDefinition{
+        val event = eventDefinitionService.detail(id)
+        val activity = activityDefinitionService.detail(id)
+        preflightEventCheck(DTOEventDefinition(activity.processId,activity.id,event.type,event.sort))
+        return event
+    }
+
     private fun preflightEventCheckType(dtoEventDefinition: DTOEventDefinition){
         val activities = activityDefinitionService.findPagedByProcess(dtoEventDefinition.processId, Pageable.unpaged())
-        activities.forEach { activity ->
-            activity.events.forEach {
-                if(it.type == dtoEventDefinition.type){
-                    throw EventTypeHasBeenUsedException("The type has been used")
-                }
-            }
+        activities.flatMap {
+            it.events.stream()
+        }.firstOrNull {
+            it.type == dtoEventDefinition.type
+        }?.run {
+            throw EventTypeHasBeenUsedException("The type has been used")
         }
+
 
         preflightEventCheck(dtoEventDefinition)
     }
 
     private fun preflightEventCheck(dtoEventDefinition: DTOEventDefinition){
         processDefinitionService.preflightCheckProcessStatus(dtoEventDefinition.processId)
-        activityDefinitionService.getOne(dtoEventDefinition.activityId)?:throw ActivityDefinitionNotFoundException("Invalid activity")
+        activityDefinitionService.getOne(dtoEventDefinition.activityId)?:throw ActivityDefinitionNotFoundException("Invalid activity definition !!")
     }
 }

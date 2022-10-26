@@ -25,13 +25,13 @@ class EventDefinitionController {
     private lateinit var eventDefinitionService: AppEventDefinitionService
 
     @PostMapping
-    fun addOne(@RequestBody dtoEventDefinition: DTOEventDefinition):ResponseEntity<DTOResponseSuccess<DTOEventDefinitionView>>{
+    fun add(@RequestBody dtoEventDefinition: DTOEventDefinition):ResponseEntity<DTOResponseSuccess<DTOEventDefinitionView>>{
         val event = eventDefinitionService.addOne(dtoEventDefinition)
         return DTOResponseSuccess(event).response()
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id:Long, @RequestBody dtoEventDefinition: DTOEventDefinition):ResponseEntity<DTOResponseSuccess<DTOEventDefinitionView>>{
+    fun update(@PathVariable id:Long, @RequestBody dtoEventDefinition: DTOEventDefinition):ResponseEntity<DTOResponseSuccess<DTOEventDefinitionView>>{
         val event = eventDefinitionService.updateOne(id, dtoEventDefinition)
         return DTOResponseSuccess(event).response()
     }
@@ -40,5 +40,11 @@ class EventDefinitionController {
     fun paged(@PathVariable activityId:Long, pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = eventDefinitionService.getPaged(activityId, pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
+    }
+
+    @DeleteMapping("{id}")
+    fun delete(@PathVariable id:Long):ResponseEntity<DTOResponseSuccess<DTOEventDefinitionView>>{
+        val event = eventDefinitionService.delete(id)
+        return DTOResponseSuccess(event).response()
     }
 }

@@ -3,7 +3,8 @@ package cn.sunline.saas.workflow.step.modules.db
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.workflow.defintion.modules.db.EventDefinition
-import cn.sunline.saas.workflow.step.modules.ProcessStatus
+import cn.sunline.saas.workflow.step.modules.StepStatus
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -26,7 +27,20 @@ class EventStep (
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    val status: ProcessStatus,
+    var status: StepStatus = StepStatus.WAITING,
+
+    @NotNull
+    @Column(nullable = false, columnDefinition = "bigint not null")
+    var sort: Long,
+
+    @Column(name = "next", nullable = true, columnDefinition = "bigint default null")
+    var next: Long? = null,
+
+    @Temporal(TemporalType.TIMESTAMP)
+    var start: Date? = null,
+
+    @Temporal(TemporalType.TIMESTAMP)
+    var end: Date? = null,
 
     ): MultiTenant {
 

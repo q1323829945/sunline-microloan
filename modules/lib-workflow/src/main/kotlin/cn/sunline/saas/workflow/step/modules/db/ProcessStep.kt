@@ -3,7 +3,8 @@ package cn.sunline.saas.workflow.step.modules.db
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
 import cn.sunline.saas.workflow.defintion.modules.db.ProcessDefinition
-import cn.sunline.saas.workflow.step.modules.ProcessStatus
+import cn.sunline.saas.workflow.step.modules.StepStatus
+import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -21,13 +22,22 @@ class ProcessStep(
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
-    val status: ProcessStatus,
+    var status: StepStatus = StepStatus.START,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "process_step_id")
-    val activities: MutableList<ActivityStep> = mutableListOf()
+    val activities: MutableList<ActivityStep> = mutableListOf(),
 
-): MultiTenant {
+    @Column(name = "start_activity", nullable = true, columnDefinition = "bigint default null")
+    var startActivity: Long? = null,
+
+    @Temporal(TemporalType.TIMESTAMP)
+    val start: Date,
+
+    @Temporal(TemporalType.TIMESTAMP)
+    var end: Date? = null,
+
+    ): MultiTenant {
 
     @NotNull
     @Column(name = "tenant_id", columnDefinition = "bigint not null")

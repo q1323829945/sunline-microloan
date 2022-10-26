@@ -29,27 +29,27 @@ class AppProcessDefinitionService(
 
     fun addOne(dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {
         val process = processDefinitionService.addOne(dtoProcessDefinition)
-        return convertProcessDefinition(process)
+        return convert(process)
     }
 
     fun getPaged(status: DefinitionStatus?, pageable: Pageable): Page<DTOProcessDefinitionView> {
         return processDefinitionService.getProcessPaged(status, pageable).map {
-            convertProcessDefinition(it)
+            convert(it)
         }
     }
 
     fun updateStatus(id: Long, status: DefinitionStatus): DTOProcessDefinitionView {
         val process = processDefinitionService.updateStatus(id, status)
-        return convertProcessDefinition(process)
+        return convert(process)
     }
 
     fun updateOne(id: Long, dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {
         val oldOne = processDefinitionService.preflightCheckProcessStatus(id)
         val process = processDefinitionService.updateOne(oldOne, dtoProcessDefinition)
-        return convertProcessDefinition(process)
+        return convert(process)
     }
 
-    private fun convertProcessDefinition(processDefinition: ProcessDefinition):DTOProcessDefinitionView{
+    private fun convert(processDefinition: ProcessDefinition):DTOProcessDefinitionView{
         val dtoProcessDefinition = objectMapper.convertValue<DTOProcessDefinitionView>(processDefinition)
         dtoProcessDefinition.created = tenantDateTime.toTenantDateTime(processDefinition.created).toString()
         return dtoProcessDefinition

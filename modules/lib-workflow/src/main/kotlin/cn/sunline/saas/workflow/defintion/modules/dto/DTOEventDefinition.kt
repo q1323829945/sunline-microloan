@@ -10,8 +10,8 @@ data class DTOEventDefinition(
 )
 
 data class DTOEventDefinitionView(
-    val id: Long,
-    val activityId:Long,
+    val id: String,
+    val activityId:String,
     val name: String,
     val type: EventType,
     val sort:Long,

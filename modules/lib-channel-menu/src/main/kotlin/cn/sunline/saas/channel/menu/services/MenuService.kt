@@ -34,6 +34,7 @@ class MenuService {
         val pdpaConfig = Menu("pdpaConfig","businessConfig","","/dashboard/pdpaConfig",13)
         val pdpaAuthorityConfig = Menu("pdpaAuthorityConfig","businessConfig","","/dashboard/pdpaAuthorizationConfig",14)
         val workflowConfig = Menu("workflowConfig","businessConfig","","/dashboard/workflowConfig",15)
+        val workflowQuery = Menu("workflowQuery","businessConfig","","/dashboard/workflowQuery",16)
 
 
         menuList = listOf(businessConfig,sysConfig,enterpriseConfig,businessHandling,businessQuery,statisticsQuery,channelConfig
@@ -51,7 +52,8 @@ class MenuService {
             ,positionConfig
             ,pdpaConfig
             ,pdpaAuthorityConfig
-            ,workflowConfig)
+            ,workflowConfig
+            ,workflowQuery)
 
     }
 

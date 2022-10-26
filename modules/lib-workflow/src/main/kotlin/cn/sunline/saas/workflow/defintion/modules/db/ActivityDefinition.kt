@@ -35,10 +35,6 @@ class ActivityDefinition (
     @NotNull
     @Column(nullable = false, columnDefinition = "bigint not null")
     var sort: Long,
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "activity_id")
-    val events: MutableList<EventDefinition> = mutableListOf()
 ): MultiTenant {
 
     @NotNull
@@ -52,4 +48,11 @@ class ActivityDefinition (
     override fun setTenantId(o: Long) {
         tenantId = o
     }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH], orphanRemoval = true, mappedBy = "activityId")
+    var events: MutableList<EventDefinition> = mutableListOf()
+        set(value) {
+            this.events.clear()
+            field.addAll(value)
+        }
 }

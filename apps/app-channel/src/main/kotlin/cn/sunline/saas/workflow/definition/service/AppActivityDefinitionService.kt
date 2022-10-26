@@ -2,6 +2,7 @@ package cn.sunline.saas.workflow.definition.service
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.workflow.defintion.exception.ActivityDefinitionException
+import cn.sunline.saas.workflow.defintion.exception.ActivityDefinitionNotFoundException
 import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionNotFoundException
 import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionUpdateException
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
 class AppActivityDefinitionService{
@@ -46,5 +48,13 @@ class AppActivityDefinitionService{
     fun getPaged(processId:Long,pageable: Pageable):Page<DTOActivityDefinitionView>{
         val paged = activityDefinitionService.findPagedByProcess(processId, pageable)
         return paged.map { objectMapper.convertValue<DTOActivityDefinitionView>(it) }
+    }
+
+    @Transactional
+    fun delete(id:Long):DTOActivityDefinitionView{
+        val activity = activityDefinitionService.detail(id)
+        processDefinitionService.preflightCheckProcessStatus(activity.processId)
+        activityDefinitionService.remove(activity)
+        return objectMapper.convertValue(activity)
     }
 }

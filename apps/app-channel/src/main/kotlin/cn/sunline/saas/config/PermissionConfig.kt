@@ -101,6 +101,11 @@ enum class PermissionConfig (
     EVENT_DEFINITION_ADD("workflow","definition/event\$",RequestMethod.POST,"add event definition"),
     EVENT_DEFINITION_MODIFY("workflow","definition/event/[0-9]+\$",RequestMethod.PUT,"update event definition"),
     EVENT_DEFINITION_GET_LIST("workflow","definition/event/[0-9]+\$",RequestMethod.GET,"get event definition list"),
+    ACTIVITY_DEFINITION_REMOVE("workflow","definition/activity/[0-9]+\$",RequestMethod.DELETE,"remove activity definition"),
+    EVENT_DEFINITION_REMOVE("workflow","definition/event/[0-9]+\$",RequestMethod.DELETE,"remove event definition"),
+    PROCESS_STEP_GET_LIST("workflow","step/process/(\\?.*|\$)",RequestMethod.GET,"get process step page list"),
+    ACTIVITY_STEP_GET_LIST("workflow","step/activity/[0-9]+\$",RequestMethod.GET,"get activity step page list"),
+    EVENT_STEP_GET_LIST("workflow","step/event/[0-9]+\$",RequestMethod.GET,"get event step page list"),
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -118,6 +123,7 @@ enum class PermissionConfig (
     POSITION_MENU("menu","positionConfig",RequestMethod.GET,"View position menu"),
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
     WORKFLOW_MENU("menu","workflowConfig", RequestMethod.GET,"View workflowConfig menu"),
+    WORKFLOW_QUERY_MENU("menu","workflowQuery", RequestMethod.GET,"View workflowQuery menu"),
 
 }
 

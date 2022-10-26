@@ -69,7 +69,7 @@ class ProcessDefinitionService (
     }
 
     fun preflightCheckProcess(id: Long): ProcessDefinition {
-        return getOne(id) ?: throw ProcessDefinitionNotFoundException("Invalid process!!")
+        return detail(id)
     }
 
     fun preflightCheckProcessStatus(id: Long):ProcessDefinition{
@@ -78,5 +78,9 @@ class ProcessDefinitionService (
             throw ProcessDefinitionUpdateException("Status is not NOT_START!!")
         }
         return process
+    }
+
+    fun detail(id: Long):ProcessDefinition{
+        return getOne(id)?:throw ProcessDefinitionNotFoundException("Invalid process definition !!")
     }
 }

@@ -18,8 +18,7 @@ import javax.persistence.criteria.Predicate
 @Service
 class ActivityDefinitionService (
     private val activityDefinitionRepository: ActivityDefinitionRepository,
-    private val sequence: Sequence,
-    private val eventDefinitionService: EventDefinitionService,
+    private val sequence: Sequence
 ): BaseMultiTenantRepoService<ActivityDefinition, Long>(activityDefinitionRepository) {
 
     fun addOne(dtoActivityDefinition: DTOActivityDefinition):ActivityDefinition{
@@ -47,12 +46,20 @@ class ActivityDefinitionService (
     }
 
     fun updateOne(id: Long,dtoActivityDefinition: DTOActivityDefinition):ActivityDefinition{
-        val oldOne = getOne(id)?: throw ActivityDefinitionNotFoundException("Invalid activity!!")
+        val oldOne = detail(id)
         oldOne.name = dtoActivityDefinition.name
         oldOne.description = dtoActivityDefinition.description
         oldOne.position = dtoActivityDefinition.position
         oldOne.sort = dtoActivityDefinition.sort
         return save(oldOne)
+    }
+
+    fun remove(activityDefinition: ActivityDefinition){
+        activityDefinitionRepository.delete(activityDefinition)
+    }
+
+    fun detail(id:Long):ActivityDefinition{
+        return getOne(id)?: throw ActivityDefinitionNotFoundException("Invalid activity definition !!")
     }
 
 }

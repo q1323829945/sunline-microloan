@@ -36,7 +36,7 @@ class EventDefinitionService (
     }
 
     fun updateOne(id: Long,dtoEventDefinition: DTOEventDefinition):EventDefinition{
-        val event = getOne(id)?: throw EventDefinitionNotFoundException("Invalid event definition !!")
+        val event = detail(id)
         event.sort = dtoEventDefinition.sort
         return save(event)
     }
@@ -49,6 +49,14 @@ class EventDefinitionService (
             val orderById = criteriaBuilder.desc(root.get<Long>("id"))
             criteriaQuery.orderBy(orderBySort,orderById).where(*(predicates.toTypedArray())).restriction
         },pageable)
+    }
+
+    fun remove(eventDefinition: EventDefinition){
+        eventDefinitionRepository.delete(eventDefinition)
+    }
+
+    fun detail(id: Long):EventDefinition{
+        return getOne(id)?: throw EventDefinitionNotFoundException("Invalid event definition !!")
     }
 
 }

@@ -9,6 +9,7 @@ import cn.sunline.saas.workflow.defintion.modules.dto.DTOActivityDefinitionView
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,13 +26,13 @@ class ActivityDefinitionController {
     private lateinit var appActivityDefinitionService: AppActivityDefinitionService
 
     @PostMapping
-    fun addOne(@RequestBody dtoActivityDefinition: DTOActivityDefinition):ResponseEntity<DTOResponseSuccess<DTOActivityDefinitionView>>{
+    fun add(@RequestBody dtoActivityDefinition: DTOActivityDefinition):ResponseEntity<DTOResponseSuccess<DTOActivityDefinitionView>>{
         val activity = appActivityDefinitionService.addOne(dtoActivityDefinition)
         return DTOResponseSuccess(activity).response()
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id:Long, @RequestBody dtoActivityDefinition: DTOActivityDefinition):ResponseEntity<DTOResponseSuccess<DTOActivityDefinitionView>>{
+    fun update(@PathVariable id:Long, @RequestBody dtoActivityDefinition: DTOActivityDefinition):ResponseEntity<DTOResponseSuccess<DTOActivityDefinitionView>>{
         val activity = appActivityDefinitionService.updateOne(id, dtoActivityDefinition)
         return DTOResponseSuccess(activity).response()
     }
@@ -40,5 +41,11 @@ class ActivityDefinitionController {
     fun paged(@PathVariable processId:Long,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = appActivityDefinitionService.getPaged(processId,pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
+    }
+
+    @DeleteMapping("{id}")
+    fun delete(@PathVariable id:Long):ResponseEntity<DTOResponseSuccess<DTOActivityDefinitionView>>{
+        val activity = appActivityDefinitionService.delete(id)
+        return DTOResponseSuccess(activity).response()
     }
 }
