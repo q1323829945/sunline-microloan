@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.persistence.criteria.Predicate
+import javax.transaction.Transactional
 
 @Service
 class CommissionDetailService(
@@ -23,21 +24,10 @@ class CommissionDetailService(
 ) : BaseMultiTenantRepoService<CommissionDetail, Long>(CommissionDetailRepository) {
 
 
-    fun saveCommissionDetail(dtoCommissionDetail: DTOCommissionDetail) {
-        save(
-            CommissionDetail(
-                id = sequence.nextId(),
-                channelCode = dtoCommissionDetail.channelCode,
-                channelName = dtoCommissionDetail.channelName,
-                applicationId = dtoCommissionDetail.applicationId,
-                commissionAmount = dtoCommissionDetail.commissionAmount,
-                ratio = dtoCommissionDetail.ratio,
-                statisticsAmount = dtoCommissionDetail.statisticsAmount,
-                datetime = tenantDateTime.now().toDate(),
-                currency = dtoCommissionDetail.currency,
-                status = dtoCommissionDetail.status
-            )
-        )
+    @Transactional
+    fun saveCommissionDetail(commissionDetails: List<CommissionDetail>) {
+        commissionDetails.forEach { it.id = it.id ?: sequence.nextId() }
+        save(commissionDetails)
     }
 
     fun getGroupByStatusCount(dtoCommissionDetailQueryParams: DTOCommissionDetailQueryParams): List<DTOCommissionCount> {
@@ -46,7 +36,8 @@ class CommissionDetailService(
             DTOCommissionCount(
                 channelCode = it.key,
                 channelName = it.value.first().channelName,
-                commissionAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.commissionAmount },
+                commissionAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }
+                    .sumOf { it.commissionAmount },
                 statisticsAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.statisticsAmount }
             )
         }

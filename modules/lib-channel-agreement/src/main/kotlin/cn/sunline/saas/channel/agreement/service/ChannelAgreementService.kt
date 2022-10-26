@@ -46,13 +46,13 @@ class ChannelAgreementService(
         )
     }
 
-    fun getOneByChannelIdAndAgreementType(channelId: Long, agreementType: AgreementType): ChannelAgreement? {
-        return getOneWithTenant { root, _, criteriaBuilder ->
+    fun getListByChannelIdAndAgreementType(channelId: Long, agreementType: AgreementType): List<ChannelAgreement> {
+        return getPageWithTenant( { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelId"), channelId))
             predicates.add(criteriaBuilder.equal(root.get<AgreementType>("agreementType"), agreementType))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }
+        }, Pageable.unpaged()).content
     }
 
     fun getDetail(agreementId: Long): DTOChannelAgreementView? {
@@ -81,7 +81,8 @@ class ChannelAgreementService(
                 agreementType = it.agreementType,
                 signedDate = tenantDateTime.toTenantDateTime(it.signedDate).toString(),
                 fromDateTime = tenantDateTime.toTenantDateTime(it.fromDateTime).toString(),
-                toDateTime = tenantDateTime.toTenantDateTime(it.toDateTime).toString()
+                toDateTime = tenantDateTime.toTenantDateTime(it.toDateTime).toString(),
+                status = it.status
             )
         }
     }

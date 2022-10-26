@@ -10,40 +10,24 @@ class ChannelCommissionCalculator(
 
     fun calculate(range: BigDecimal, rangeValues: List<RangeValue>): BigDecimal? {
         return when (commissionMethodType) {
-            CommissionMethodType.APPLY_COUNT_FIX_AMOUNT -> calculateApplyCountFixAmount(range, rangeValues)
-            CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT -> calculateApprovalCountFixAmount(range, rangeValues)
-            CommissionMethodType.APPLY_AMOUNT_RATIO -> calculateApplyAmountRatio(range, rangeValues)
-            CommissionMethodType.APPROVAL_AMOUNT_RATIO -> calculateApprovalAmountRatio(range, rangeValues)
+            CommissionMethodType.AMOUNT_RATIO -> calculateRatioAmount(range, rangeValues)
+            CommissionMethodType.COUNT_FIX_AMOUNT -> calculateCountFixAmount(range, rangeValues)
         }
     }
 
 
-    private fun calculateApplyCountFixAmount(
+    private fun calculateCountFixAmount(
         applyCount: BigDecimal,
         countRangeAmounts: List<RangeValue>
     ): BigDecimal? {
         return calculateRangeValue(applyCount, countRangeAmounts)
     }
 
-    private fun calculateApprovalCountFixAmount(
+    private fun calculateRatioAmount(
         approvalCount: BigDecimal,
         countRangeAmounts: List<RangeValue>
     ): BigDecimal? {
         return calculateRangeValue(approvalCount, countRangeAmounts)
-    }
-
-    private fun calculateApplyAmountRatio(
-        applyAmount: BigDecimal,
-        amountRangeAmount: List<RangeValue>
-    ): BigDecimal? {
-        return calculateRangeValue(applyAmount, amountRangeAmount)
-    }
-
-    private fun calculateApprovalAmountRatio(
-        approvalAmount: BigDecimal,
-        amountRangeAmount: List<RangeValue>
-    ): BigDecimal? {
-        return calculateRangeValue(approvalAmount, amountRangeAmount)
     }
 
 
@@ -51,19 +35,14 @@ class ChannelCommissionCalculator(
         range: BigDecimal,
         countRangeAmounts: List<RangeValue>
     ): BigDecimal? {
+        var rangeValue = countRangeAmounts.firstOrNull()?.rangeValue
         countRangeAmounts.forEach {
-            return if (it.lowerLimit == null && it.upperLimit == null) {
+            rangeValue = if (range > it.lowerLimit && range < it.upperLimit) {
                 it.rangeValue
             } else {
-                if (it.lowerLimit != null && it.upperLimit == null && range > it.lowerLimit) {
-                    it.rangeValue
-                } else if (it.lowerLimit != null && it.upperLimit != null && range > it.lowerLimit && range < it.upperLimit) {
-                    it.rangeValue
-                } else {
-                    it.rangeValue
-                }
+                null
             }
         }
-        return null
+        return rangeValue
     }
 }

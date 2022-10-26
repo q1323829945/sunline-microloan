@@ -34,5 +34,6 @@ data class DTOChannelAgreementPageView(
     val agreementType: AgreementType,
     val signedDate: String,
     val fromDateTime: String,
-    val toDateTime: String
+    val toDateTime: String,
+    val status : AgreementStatus
 )

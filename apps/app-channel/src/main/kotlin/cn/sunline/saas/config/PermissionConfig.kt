@@ -71,6 +71,7 @@ enum class PermissionConfig (
     LOAN_AGENT_GET("loan", "loan/agent/[0-9]+\$", RequestMethod.GET, "get loan agent"),
     LOAN_TEST1("loan", "loan/test1(\\?.*|\$)", RequestMethod.GET, "get loan agent"),
     LOAN_TEST2("loan", "loan/test2(\\?.*|\$)", RequestMethod.GET, "get loan agent"),
+    LOAN_APPLY_STATUS_LIST("loan", "loan/applyStatus\$", RequestMethod.GET, " get applyStatus"),
 
 
     POSITION_GET("position", "position/[0-9A-Za-z]+\$", RequestMethod.GET, "View position profile"),
@@ -89,7 +90,6 @@ enum class PermissionConfig (
     CHANNEL_AGREEMENT_COMMISSION_DETAIL("channel", "channel/agreement/commission/[0-9]+\$", RequestMethod.GET, "channel get agreement detail"),
     CHANNEL_AGREEMENT_TYPE_LIST("channel", "channel/agreement/agreementType\$", RequestMethod.GET, "channel get agreementType"),
     CHANNEL_CAST_TYPE_LIST("channel", "channel/channelCastType\$", RequestMethod.GET, "channel get castType"),
-
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),

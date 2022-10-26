@@ -7,6 +7,7 @@ import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.persistence.criteria.Predicate
 
 /**
  * @title: RatePlanService
@@ -33,6 +34,19 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
     }
 
     fun findByType(type: RatePlanType): RatePlan? {
-        return ratePlanRepository.findByType(type)
+        return getOneWithTenant { root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }
     }
+
+
+//    fun getRatePlanPageByType(type: RatePlanType?): Page<RatePlan> {
+//        return getPageWithTenant({ root, _, criteriaBuilder ->
+//            val predicates = mutableListOf<Predicate>()
+//            type?.let { predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), it)) }
+//            criteriaBuilder.and(*(predicates.toTypedArray()))
+//        }, Pageable.unpaged())
+//    }
 }

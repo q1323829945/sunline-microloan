@@ -157,74 +157,63 @@ class LoanApplyAppService {
                 channelCast.id,
                 Pageable.unpaged()
             ).content.first()
-            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
-            loanApplicationStatisticsManagerService.addLoanApplicationDetail(
-                DTOLoanApplicationDetail(
-                    channelCode = loanAgent.channelCode,
-                    channelName = loanAgent.channelName,
-                    productId = loanAgent.productId ?: 0,
-                    productName = loanAgent.loanApply?.productType?.name ?: "",
-                    applicationId = applicationId.toLong(),
-                    applyAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
-                    approvalAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), //TODO new approval amount
-                    status = loanAgent.status,
-                    currency = dtoLoanAgent.loanInformation?.currency
-                )
-            )
-            loanApplicationStatisticsManagerService.addLoanApplicationStatistics(tenantDateTime.toTenantDateTime(loanAgent.created!!))
+//            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
+//            loanApplicationStatisticsManagerService.addLoanApplicationDetail(
+//                DTOLoanApplicationDetail(
+//                    channelCode = loanAgent.channelCode,
+//                    channelName = loanAgent.channelName,
+//                    productId = loanAgent.productId ?: 0,
+//                    productName = loanAgent.loanApply?.productType?.name ?: "",
+//                    applicationId = applicationId.toLong(),
+//                    applyAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+//                    approvalAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(
+//                        2,
+//                        RoundingMode.HALF_UP
+//                    ), //TODO new approval amount
+//                    status = loanAgent.status,
+//                    currency = dtoLoanAgent.loanInformation?.currency
+//                )
+//            )
+//            loanApplicationStatisticsManagerService.addLoanApplicationStatistics(
+//                tenantDateTime.toTenantDateTime(
+//                    loanAgent.created!!
+//                )
+//            )
 
             var commissionAmount = BigDecimal.ZERO
             var ratio: BigDecimal? = BigDecimal.ZERO
-            val statisticsAmount = loanAgent.loanApply?.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
-            val rangeValues = channelArrangementService.getRangeValuesByChannelAgreementId(
+            val statisticsAmount = loanAgent.loanApply?.amount ?: BigDecimal(2000000).setScale(2, RoundingMode.HALF_UP)
+            val rangeValuesMap = channelArrangementService.getRangeValuesByChannelAgreementId(
                 channelAgreement.id.toLong(),
                 Pageable.unpaged()
             )
-            rangeValues.forEach { it ->
-                commissionAmount = when (it.commissionMethodType) {
-                    CommissionMethodType.APPLY_COUNT_FIX_AMOUNT -> {
-                        val applyCount =
-                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.size + 1
+            val dto = arrayListOf<DTOCommissionDetail>()
+
+            rangeValuesMap.forEach { (t, u) ->
+
+                val details = commissionDetailService.getListByStatus(t)
+
+                commissionAmount = when (u.first().commissionMethodType) {
+
+                    CommissionMethodType.COUNT_FIX_AMOUNT -> {
+                        val count = details.size + 1
                         ratio = null
-                        ChannelCommissionCalculator(it.commissionMethodType).calculate(
-                            applyCount.toBigDecimal(),
-                            rangeValues
+                        ChannelCommissionCalculator(u.first().commissionMethodType).calculate(
+                            count.toBigDecimal(),
+                            u
                         ) ?: BigDecimal.ZERO
                     }
 
-                    CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT -> {
-                        val approvalCount = commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).size + 1
-                        ratio = null
-                        ChannelCommissionCalculator(it.commissionMethodType).calculate(
-                            approvalCount.toBigDecimal(),
-                            rangeValues
-                        ) ?: BigDecimal.ZERO
-                    }
-
-                    CommissionMethodType.APPLY_AMOUNT_RATIO -> {
-                        val applyAmount =
-                            commissionDetailService.getPaged(pageable = Pageable.unpaged()).content.sumOf { it.commissionAmount }
-                                .add(statisticsAmount)
-                        ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(applyAmount, rangeValues)
+                    CommissionMethodType.AMOUNT_RATIO -> {
+                        ratio = ChannelCommissionCalculator(u.first().commissionMethodType).calculate(statisticsAmount, u)
                             ?: BigDecimal.ZERO
                         statisticsAmount.multiply(ratio)
                     }
-
-                    CommissionMethodType.APPROVAL_AMOUNT_RATIO -> {
-                        val approvalAmount =
-                            commissionDetailService.getListByStatus(ApplyStatus.APPROVALED).sumOf { it.commissionAmount }
-                                .add(statisticsAmount)
-                        ratio = ChannelCommissionCalculator(it.commissionMethodType).calculate(
-                            approvalAmount,
-                            rangeValues
-                        ) ?: BigDecimal.ZERO
-                        statisticsAmount.multiply(ratio)
+                    else->{
+                        TODO()
                     }
                 }
-            }
-
-            commissionStatisticsManagerService.addCommissionDetail(
-                DTOCommissionDetail(
+                dto += DTOCommissionDetail(
                     channelCode = loanAgent.channelCode,
                     channelName = loanAgent.channelName,
                     applicationId = applicationId.toLong(),
@@ -234,7 +223,9 @@ class LoanApplyAppService {
                     ratio = ratio,
                     statisticsAmount = statisticsAmount
                 )
-            )
+            }
+
+            commissionStatisticsManagerService.addCommissionDetail(dto)
 
             commissionStatisticsManagerService.addCommissionStatistics(tenantDateTime.toTenantDateTime(loanAgent.created!!))
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
@@ -281,9 +272,9 @@ class LoanApplyAppService {
     fun loanRecord(data: String): LoanAgent {
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(data)
 
-        channelCastService.getUniqueChannelCast(dtoLoanAgent.agent.channel.code,dtoLoanAgent.agent.channel.name)?.run {
+        channelCastService.getUniqueChannelCast(dtoLoanAgent.agent.channel.code, dtoLoanAgent.agent.channel.name)?.run {
             ContextUtil.setTenant(this.getTenantId().toString())
-        }?:run { ContextUtil.setTenant("1") }
+        } ?: run { ContextUtil.setTenant("1") }
 
 
 //        dtoLoanAgent.fileInformation?.forEach { files ->
@@ -429,10 +420,11 @@ class LoanApplyAppService {
             DTOLoanApplyPageView(
                 applicationId = it.applicationId.toString(),
                 name = it.name,
-                amount = it.loanApply?.amount?:run { loanAgentData.loanInformation?.amount?.run { BigDecimal(this) } },
+                amount = it.loanApply?.amount
+                    ?: run { loanAgentData.loanInformation?.amount?.run { BigDecimal(this) } },
                 productName = product?.name,
                 productType = it.loanApply?.productType,
-                term = it.loanApply?.term?:run { loanAgentData.loanInformation?.term },
+                term = it.loanApply?.term ?: run { loanAgentData.loanInformation?.term },
                 date = it.created?.run { tenantDateTime.toTenantDateTime(this).toString() },
                 status = it.status,
                 channelCode = it.channelCode,
@@ -471,8 +463,8 @@ class LoanApplyAppService {
         }
     }
 
-    fun test1(){
-        loanAgentService.getPageWithTenant(null, Pageable.unpaged() ).content.forEach {
+    fun test1() {
+        loanAgentService.getPageWithTenant(null, Pageable.unpaged()).content.forEach {
             syncLoanApplicationStatistics(it.applicationId.toString())
         }
     }

@@ -1,20 +1,18 @@
 package cn.sunline.saas.loan_apply.controller
 
+import cn.sunline.saas.channel.product.model.dto.DTOProductAppView
 import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.ProductType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.loan.model.dto.DTOLoanAgent
 import cn.sunline.saas.loan.model.dto.DTOLoanApplyStatus
-import cn.sunline.saas.channel.product.model.dto.DTOProductAppView
-import cn.sunline.saas.dapr_wrapper.actor.ActorReminderService
 import cn.sunline.saas.loan.service.LoanAgentService
 import cn.sunline.saas.loan.service.LoanApplyService
 import cn.sunline.saas.loan_apply.service.LoanApplyAppService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.scheduler.ActorType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -55,6 +53,10 @@ class LoanApplyController {
     data class DTOLoanApplyProduct(
         val applicationId: String,
         val productId:String,
+    )
+
+    data class DTOLoanApplyStatusView(
+        val applyStatus: ApplyStatus
     )
 
     @GetMapping("product/{productType}")
@@ -133,19 +135,22 @@ class LoanApplyController {
         return DTOResponseSuccess(Unit).response()
     }
 
-        @GetMapping("agent/{applicationId}")
+    @GetMapping("agent/{applicationId}")
     fun getLoanAgentDetail(@PathVariable applicationId:String):ResponseEntity<DTOResponseSuccess<DTOLoanAgent>>{
         val agent = loanApplyAppService.getLoanAgentDetail(applicationId)
         return DTOResponseSuccess(agent).response()
     }
 
-    @GetMapping("test1")
-    fun test1(){
-        loanApplyAppService.test1()
-    }
-    @DeleteMapping("test2")
-    fun test2(@PathParam(value = "actorId")actorId: String,
-              @PathParam(value = "jobId")jobId: String){
-        ActorReminderService.deleteReminders(ActorType.LOAN_APPLY_STATISTICS.name,actorId,jobId)
+
+    @GetMapping("applyStatus")
+    fun getChannelApplyStatus(): ResponseEntity<DTOResponseSuccess<List<DTOLoanApplyStatusView>>> {
+        val list = ArrayList<DTOLoanApplyStatusView>()
+        list += DTOLoanApplyStatusView(
+            ApplyStatus.RECORD
+        )
+        list += DTOLoanApplyStatusView(
+            ApplyStatus.APPROVALED
+        )
+        return DTOResponseSuccess(list.toList()).response()
     }
 }

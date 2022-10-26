@@ -26,8 +26,8 @@ class CommissionStatisticsController {
     private lateinit var commissionStatisticsManagerService: CommissionStatisticsManagerService
 
     @PostMapping("addDetail")
-    fun addCommissionDetail(@RequestBody dtoCommissionDetail: DTOCommissionDetail): ResponseEntity<DTOResponseSuccess<Any>> {
-        commissionStatisticsManagerService.addCommissionDetail(dtoCommissionDetail)
+    fun addCommissionDetail(@RequestBody dtoCommissionDetails: List<DTOCommissionDetail>): ResponseEntity<DTOResponseSuccess<Any>> {
+        commissionStatisticsManagerService.addCommissionDetail(dtoCommissionDetails)
         return DTOResponseSuccess<Any>().response()
     }
 

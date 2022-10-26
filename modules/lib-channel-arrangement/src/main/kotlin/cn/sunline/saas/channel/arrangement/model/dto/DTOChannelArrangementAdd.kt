@@ -1,9 +1,6 @@
 package cn.sunline.saas.channel.arrangement.model.dto
 
-import cn.sunline.saas.global.constant.CommissionAmountRangeType
-import cn.sunline.saas.global.constant.CommissionCountRangeType
-import cn.sunline.saas.global.constant.CommissionMethodType
-import cn.sunline.saas.global.constant.CommissionType
+import cn.sunline.saas.global.constant.*
 import java.math.BigDecimal
 import javax.persistence.Column
 import javax.persistence.EnumType
@@ -13,11 +10,12 @@ import javax.validation.constraints.NotNull
 
 data class DTOChannelArrangementAdd(
     val commissionMethodType: CommissionMethodType,
+    val applyStatus: ApplyStatus,
     val commissionType: CommissionType = CommissionType.LOAN_APPLICATION,
     val commissionAmount: BigDecimal?,
     val commissionRatio: BigDecimal?,
-    val commissionAmountRangeType: CommissionAmountRangeType?,
-    val commissionCountRangeType: CommissionCountRangeType?
+    val commissionAmountRange: BigDecimal?,
+    val commissionCountRange: Long?
 )
 
 
@@ -28,12 +26,14 @@ data class DTOChannelArrangementView(
     val commissionType: CommissionType,
     val commissionAmount: BigDecimal?,
     val commissionRatio: BigDecimal?,
-    val commissionAmountRangeType: CommissionAmountRangeType?,
-    val commissionCountRangeType: CommissionCountRangeType?
+    val commissionAmountRange: BigDecimal?,
+    val commissionCountRange: Long?,
+    val applyStatus: ApplyStatus
 )
 
 data class RangeValue(
     val commissionMethodType: CommissionMethodType,
+    val applyStatus: ApplyStatus,
     val lowerLimit: BigDecimal?,
     val upperLimit: BigDecimal?,
     val rangeValue: BigDecimal

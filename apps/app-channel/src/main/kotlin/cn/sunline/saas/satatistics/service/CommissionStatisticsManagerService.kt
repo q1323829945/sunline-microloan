@@ -3,6 +3,7 @@ package cn.sunline.saas.satatistics.service
 import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
 import cn.sunline.saas.channel.arrangement.service.ChannelArrangementService
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
+import cn.sunline.saas.channel.statistics.modules.db.CommissionDetail
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
@@ -92,10 +93,25 @@ class CommissionStatisticsManagerService(
         }
     }
 
-    fun addCommissionDetail(dtoCommissionDetail: DTOCommissionDetail) {
-        commissionDetailService.getByApplicationId(dtoCommissionDetail.applicationId) ?: run {
-            commissionDetailService.saveCommissionDetail(dtoCommissionDetail)
+    fun addCommissionDetail(dtoCommissionDetail: List<DTOCommissionDetail>) {
+        val detail = arrayListOf<CommissionDetail>()
+        dtoCommissionDetail.forEach {
+            commissionDetailService.getByApplicationId(it.applicationId) ?: run {
+                detail += CommissionDetail(
+                    id = null,
+                    channelCode = it.channelCode,
+                    channelName = it.channelName,
+                    applicationId = it.applicationId,
+                    commissionAmount = it.commissionAmount,
+                    ratio = it.ratio,
+                    statisticsAmount = it.statisticsAmount,
+                    datetime = tenantDateTime.now().toDate(),
+                    currency = it.currency,
+                    status = it.status
+                )
+            }
         }
+        commissionDetailService.saveCommissionDetail(detail)
     }
 
     fun addCommissionStatistics(dateTime: DateTime? = null) {

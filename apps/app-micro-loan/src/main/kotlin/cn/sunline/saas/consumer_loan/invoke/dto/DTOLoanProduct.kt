@@ -48,8 +48,8 @@ data class DTOInterestRate(
 data class DTOInterestModality(
     val baseYearDays: BaseYearDays,
     val adjustFrequency: String,
-    val floatPoint: BigDecimal,
-    val floatRatio: BigDecimal
+    val floatPoint: BigDecimal?,
+    val floatRatio: BigDecimal?
 )
 
 data class DTOOverdueInterest(

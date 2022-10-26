@@ -6,6 +6,7 @@ import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.math.BigDecimal
 
 @Component
 class ChannelArrangementFactory(
@@ -25,15 +26,14 @@ class ChannelArrangementFactory(
                 ChannelArrangement(
                     id = seq.nextId(),
                     channelAgreementId = channelAgreementId,
+                    applyStatus = it.applyStatus,
                     commissionType = it.commissionType,
                     commissionMethodType = it.commissionMethodType,
-                    commissionAmountRangeType = it.commissionAmountRangeType,
+                    commissionAmountRange = it.commissionAmountRange,
                     commissionAmount = it.commissionAmount,
-                    commissionCountRangeType = it.commissionCountRangeType,
+                    commissionCountRange = it.commissionCountRange,
                     commissionRatio = it.commissionRatio,
-                    lowerLimit = if (it.commissionAmountRangeType != null) it.commissionAmountRangeType.lowerLimit else it.commissionCountRangeType?.lowerLimit,
-                    upperLimit = if (it.commissionAmountRangeType != null) it.commissionAmountRangeType.upperLimit else it.commissionCountRangeType?.upperLimit
-                )
+                 )
             )
         }
         return channelArrangements

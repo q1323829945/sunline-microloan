@@ -38,20 +38,16 @@ class ChannelArrangement(
     @Column(name = "commission_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) default null")
     val commissionRatio: BigDecimal?,
 
-    @Column(name = "commission_amount_range_type", nullable = true, length = 32, columnDefinition = "varchar(32) default null")
+    @Column(name = "commission_amount_range", nullable = true, columnDefinition = "decimal(19,2) default null")
+    val commissionAmountRange: BigDecimal?,
+
+    @Column(name = "commission_count_range", nullable = true, columnDefinition =  "bigint default null")
+    val commissionCountRange: Long?,
+
+    @NotNull
+    @Column(name = "apply_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     @Enumerated(value = EnumType.STRING)
-    val commissionAmountRangeType: CommissionAmountRangeType?,
-
-    @Column(name = "commission_count_range_type", nullable = true, length = 32, columnDefinition = "varchar(32) default null")
-    @Enumerated(value = EnumType.STRING)
-    val commissionCountRangeType: CommissionCountRangeType?,
-
-    @Column(name = "lower_limit", nullable = true, columnDefinition = "decimal(19,2) default null")
-    val lowerLimit: BigDecimal?,
-
-    @Column(name = "upper_limit", nullable = true, columnDefinition = "decimal(19,2) default null")
-    val upperLimit: BigDecimal?,
-
+    val applyStatus: ApplyStatus
 
     ) : MultiTenant {
 

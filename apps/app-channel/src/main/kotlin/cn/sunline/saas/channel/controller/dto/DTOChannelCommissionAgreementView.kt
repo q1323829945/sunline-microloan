@@ -4,6 +4,7 @@ import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementAdd
 import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementView
 import cn.sunline.saas.global.constant.AgreementType
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
+import cn.sunline.saas.global.constant.ApplyStatus
 import java.math.BigDecimal
 
 data class DTOChannelCommissionAgreementView(

@@ -10,8 +10,7 @@ import cn.sunline.saas.channel.exception.ChannelAgreementBusinessException
 import cn.sunline.saas.channel.exception.ChannelBusinessException
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.CommissionAmountRangeType
-import cn.sunline.saas.global.constant.CommissionCountRangeType
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -45,61 +44,57 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
             "Invalid Channel", ManagementExceptionCode.CHANNEL_NOT_FOUND
         )
 
-        val oldAgreement = channelAgreementService.getOneByChannelIdAndAgreementType(
+        val oldAgreement = channelAgreementService.getListByChannelIdAndAgreementType(
             dtoChannelAgreementAdd.channelId,
             dtoChannelAgreementAdd.agreementType
         )
-        if (oldAgreement != null) {
+        oldAgreement.forEach {
             val now = tenantDateTime.now()
-            if (now.isBefore(tenantDateTime.toTenantDateTime(oldAgreement.toDateTime))) {
+            if (now.isBefore(tenantDateTime.toTenantDateTime(it.toDateTime))) {
                 throw ChannelAgreementBusinessException(
                     "This channel has effective agreement",
                     ManagementExceptionCode.DATA_ALREADY_EXIST
                 )
             }
         }
+        if(dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionMethodType }.size>1){
+            throw ChannelAgreementBusinessException(
+                "more than one same commission method type",
+                ManagementExceptionCode.DATA_ALREADY_EXIST
+            )
+        }
         dtoChannelAgreementAdd.channelCommissionArrangement.forEach {
-            if (it.commissionMethodType == CommissionMethodType.APPROVAL_AMOUNT_RATIO || it.commissionMethodType == CommissionMethodType.APPLY_AMOUNT_RATIO) {
-                val rangeType =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionAmountRangeType }
-                rangeType.forEach {
-                    val chooseSize = it.value.size
-                    if (chooseSize > 1) {
-                        throw ChannelAgreementBusinessException(
-                            "more than one same config",
-                            ManagementExceptionCode.DATA_ALREADY_EXIST
-                        )
-                    }
-                }
-                val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
-                val defaultSize =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionAmountRangeType == CommissionAmountRangeType.DEFAULT }.size
-                if (size > 1 && defaultSize > 0) {
+            if (it.commissionMethodType == CommissionMethodType.AMOUNT_RATIO) {
+                if(dtoChannelAgreementAdd.channelCommissionArrangement.any { f -> f.commissionAmountRange == null || f.commissionRatio == null }){
                     throw ChannelAgreementBusinessException(
-                        "please choose default or others config",
+                        "amount range or ratio is not null",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+                val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.filter { f ->
+                    f.applyStatus == it.applyStatus && f.commissionRatio == it.commissionRatio
+                }
+                if (amountItem.size > 1) {
+                    throw ChannelAgreementBusinessException(
+                        "more than one same config",
                         ManagementExceptionCode.DATA_ALREADY_EXIST
                     )
                 }
             }
 
-            if (it.commissionMethodType == CommissionMethodType.APPROVAL_COUNT_FIX_AMOUNT || it.commissionMethodType == CommissionMethodType.APPLY_COUNT_FIX_AMOUNT) {
-                val rangeType =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.groupBy { it.commissionCountRangeType }
-                rangeType.forEach {
-                    val chooseSize = it.value.size
-                    if (chooseSize > 1) {
-                        throw ChannelAgreementBusinessException(
-                            "more than one same config",
-                            ManagementExceptionCode.DATA_ALREADY_EXIST
-                        )
-                    }
-                }
-                val size = dtoChannelAgreementAdd.channelCommissionArrangement.size
-                val defaultSize =
-                    dtoChannelAgreementAdd.channelCommissionArrangement.filter { it.commissionCountRangeType == CommissionCountRangeType.DEFAULT }.size
-                if (size > 1 && defaultSize > 0) {
+            if (it.commissionMethodType == CommissionMethodType.COUNT_FIX_AMOUNT) {
+                if(dtoChannelAgreementAdd.channelCommissionArrangement.any { f -> f.commissionCountRange == null || f.commissionAmount == null }){
                     throw ChannelAgreementBusinessException(
-                        "please choose default or others config",
+                        "count range or amount is not null",
+                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                    )
+                }
+                val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.filter { f ->
+                    f.applyStatus == it.applyStatus && f.commissionAmount == it.commissionAmount
+                }
+                if (amountItem.size > 1) {
+                    throw ChannelAgreementBusinessException(
+                        "more than one same config",
                         ManagementExceptionCode.DATA_ALREADY_EXIST
                     )
                 }
@@ -114,11 +109,12 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 id = it.id.toString(),
                 channelAgreementId = it.channelAgreementId.toString(),
                 commissionMethodType = it.commissionMethodType,
+                applyStatus = it.applyStatus,
                 commissionType = it.commissionType,
                 commissionAmount = it.commissionAmount,
                 commissionRatio = it.commissionRatio,
-                commissionAmountRangeType = it.commissionAmountRangeType,
-                commissionCountRangeType = it.commissionCountRangeType
+                commissionAmountRange = it.commissionAmountRange,
+                commissionCountRange = it.commissionCountRange
             )
         }
         return DTOChannelCommissionAgreementView(
@@ -145,11 +141,12 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 id = it.id.toString(),
                 channelAgreementId = it.channelAgreementId.toString(),
                 commissionMethodType = it.commissionMethodType,
+                applyStatus = it.applyStatus,
                 commissionType = it.commissionType,
                 commissionAmount = it.commissionAmount,
                 commissionRatio = it.commissionRatio,
-                commissionAmountRangeType = it.commissionAmountRangeType,
-                commissionCountRangeType = it.commissionCountRangeType
+                commissionAmountRange = it.commissionAmountRange,
+                commissionCountRange = it.commissionCountRange
             )
         }
 
