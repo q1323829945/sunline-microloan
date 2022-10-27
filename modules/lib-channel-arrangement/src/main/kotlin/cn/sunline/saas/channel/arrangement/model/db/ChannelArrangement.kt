@@ -45,9 +45,9 @@ class ChannelArrangement(
     val commissionCountRange: Long?,
 
     @NotNull
-    @Column(name = "status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Column(name = "apply_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     @Enumerated(value = EnumType.STRING)
-    val status: ApplyStatus
+    val applyStatus: ApplyStatus
 
     ) : MultiTenant {
 

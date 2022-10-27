@@ -26,7 +26,7 @@ class ChannelArrangementFactory(
                 ChannelArrangement(
                     id = seq.nextId(),
                     channelAgreementId = channelAgreementId,
-                    status = it.status,
+                    applyStatus = it.applyStatus,
                     commissionType = it.commissionType,
                     commissionMethodType = it.commissionMethodType,
                     commissionAmountRange = it.commissionAmountRange,

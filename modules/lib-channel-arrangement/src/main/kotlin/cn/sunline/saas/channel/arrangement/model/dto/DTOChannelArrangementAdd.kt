@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull
 
 data class DTOChannelArrangementAdd(
     val commissionMethodType: CommissionMethodType,
-    val status: ApplyStatus,
+    val applyStatus: ApplyStatus,
     val commissionType: CommissionType = CommissionType.LOAN_APPLICATION,
     val commissionAmount: BigDecimal?,
     val commissionRatio: BigDecimal?,
@@ -28,12 +28,12 @@ data class DTOChannelArrangementView(
     val commissionRatio: BigDecimal?,
     val commissionAmountRange: BigDecimal?,
     val commissionCountRange: Long?,
-    val status: ApplyStatus
+    val applyStatus: ApplyStatus
 )
 
 data class RangeValue(
     val commissionMethodType: CommissionMethodType,
-    val status: ApplyStatus,
+    val applyStatus: ApplyStatus,
     val lowerLimit: BigDecimal?,
     val upperLimit: BigDecimal?,
     val rangeValue: BigDecimal
