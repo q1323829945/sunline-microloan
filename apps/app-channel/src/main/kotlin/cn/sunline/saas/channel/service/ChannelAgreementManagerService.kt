@@ -72,7 +72,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                     )
                 }
                 val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.filter { f ->
-                    f.applyStatus == it.applyStatus && f.commissionRatio == it.commissionRatio
+                    f.status == it.status && f.commissionRatio == it.commissionRatio
                 }
                 if (amountItem.size > 1) {
                     throw ChannelAgreementBusinessException(
@@ -90,7 +90,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                     )
                 }
                 val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.filter { f ->
-                    f.applyStatus == it.applyStatus && f.commissionAmount == it.commissionAmount
+                    f.status == it.status && f.commissionAmount == it.commissionAmount
                 }
                 if (amountItem.size > 1) {
                     throw ChannelAgreementBusinessException(
@@ -109,7 +109,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 id = it.id.toString(),
                 channelAgreementId = it.channelAgreementId.toString(),
                 commissionMethodType = it.commissionMethodType,
-                applyStatus = it.applyStatus,
+                status = it.status,
                 commissionType = it.commissionType,
                 commissionAmount = it.commissionAmount,
                 commissionRatio = it.commissionRatio,
@@ -141,7 +141,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 id = it.id.toString(),
                 channelAgreementId = it.channelAgreementId.toString(),
                 commissionMethodType = it.commissionMethodType,
-                applyStatus = it.applyStatus,
+                status = it.status,
                 commissionType = it.commissionType,
                 commissionAmount = it.commissionAmount,
                 commissionRatio = it.commissionRatio,

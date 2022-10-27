@@ -46,7 +46,7 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
             "channel commission method type is null",
             ManagementExceptionCode.CHANNEL_COMMISSION_NOT_FOUND
         )
-        val groupBy = pages.groupBy { it.applyStatus }
+        val groupBy = pages.groupBy { it.status }
         groupBy.forEach { (t, u) ->
             var firstRange = BigDecimal.ZERO
             val rangeValues = mutableListOf<RangeValue>()
@@ -55,7 +55,7 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
                     u.sortedBy { it.commissionCountRange }.forEach {
                         rangeValues+= RangeValue(
                             commissionMethodType = it.commissionMethodType,
-                            applyStatus = t,
+                            status = t,
                             lowerLimit = firstRange,
                             upperLimit = it.commissionCountRange?.toBigDecimal(),
                             rangeValue = (it.commissionRatio ?: it.commissionAmount)
@@ -71,7 +71,7 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
                     u.sortedBy { it.commissionAmountRange }.forEach {
                         rangeValues+= RangeValue(
                             commissionMethodType = it.commissionMethodType,
-                            applyStatus = t,
+                            status = t,
                             lowerLimit = firstRange,
                             upperLimit = it.commissionAmountRange,
                             rangeValue = (it.commissionRatio ?: it.commissionAmount)
