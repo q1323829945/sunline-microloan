@@ -23,8 +23,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 
 class ChannelSyncSchedulerTask(
     private val tenantDateTime: TenantDateTime,

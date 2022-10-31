@@ -4,15 +4,8 @@ import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.workflow.definition.service.AppEventDefinitionService
-import cn.sunline.saas.workflow.defintion.modules.dto.DTOActivityDefinition
-import cn.sunline.saas.workflow.defintion.modules.dto.DTOActivityDefinitionView
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinitionView
-import cn.sunline.saas.workflow.defintion.services.EventDefinitionService
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity

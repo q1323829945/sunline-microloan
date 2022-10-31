@@ -1,7 +1,6 @@
 package cn.sunline.saas.dapr_wrapper.actor.model
 
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
-import org.springframework.stereotype.Component
 
 /**
  * @title: RegisteredActor

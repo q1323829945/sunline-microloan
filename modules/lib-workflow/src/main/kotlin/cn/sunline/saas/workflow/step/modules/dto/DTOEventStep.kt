@@ -7,11 +7,12 @@ import java.util.*
 data class DTOEventStepAdd(
     val activityStepId:Long,
     val eventId:Long,
+    val next: Long? = null,
+    val user:String? = null,
 )
 
 data class DTOEventStepChange(
-    val id:Long,
-    val next: Long? = null,
+    val user:String? = null,
     val status: StepStatus? = null,
     val start: Date? = null,
     val end: Date? = null,
@@ -22,6 +23,7 @@ data class DTOEventStepView(
     val name:String,
     val type: EventType,
     val description:String? = null,
+    val user:String? = null,
     val status: StepStatus,
     val next:String? = null,
     val start:String? = null,

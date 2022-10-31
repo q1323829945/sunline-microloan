@@ -12,9 +12,7 @@ import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 /**

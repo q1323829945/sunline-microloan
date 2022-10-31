@@ -1,0 +1,82 @@
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  main:
+    banner-mode: "off"
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: true
+    show-sql: true
+    use_sql_comments: true
+  flyway:
+    baseline-on-migrate: true
+    enabled: false
+  datasource:
+    #    url: "jdbc:mysql://10.18.106.176:3306/db_saas?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    url: "jdbc:log4jdbc:mysql://10.18.106.151:3306/db_agent?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+    username: "root"
+    password: "123456"
+    #    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    driver-class-name: "net.sf.log4jdbc.DriverSpy"
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 200MB
+
+
+server:
+  port : 8101
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*:
+
+huawei:
+  cloud:
+    obs:
+      accessKey: "MBP2MCNEYM4S016MIVWS"
+      securityKey: "DBWVHqLdiC2WU4BoaHlK5w5nYeJwGHMkBwZcwoBh"
+      region: "ap-southeast-3"
+      bucketName: "test-saas-micro-loan"
+      style: "style1"
+
+redis:
+  server: 10.18.106.151:6379
+  useCluster: false
+  useSentinel: false
+  password:
+
+minio:
+  endpoint: "https://minio.saas.finline.app"
+  #  if endpointType = IP,open this
+  port: "30109"
+  accessKey: "AKIAIOSFODNN7EXAMPLE"
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  endpointType: URL  # 'URL' or 'IP'
+  bucket: "public-bucket"
+
+logging:
+  file:
+    path: logs/
+  level:
+    root: INFO
+    cn.sunline.saas: INFO
+    jdbc:
+      sqlonly: OFF
+      audit: OFF
+      resultsettable: OFF
+      connection: OFF
+      sqltiming: INFO #INFO
+      resultset: OFF
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%t] [%c]-[%p] %m%n"
+
+

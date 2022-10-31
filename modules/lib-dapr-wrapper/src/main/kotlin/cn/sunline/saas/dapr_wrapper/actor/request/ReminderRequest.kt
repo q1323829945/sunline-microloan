@@ -18,8 +18,13 @@ data class Timer(
     val minutes: Int = 0,
     val seconds: Int = 0,
     val milliseconds: Int = 0
-) {
-    override fun toString(): String {
+)
+
+fun Timer?.toTimerString():String{
+    this?.run {
         return "${hours}h${minutes}m${seconds}s${milliseconds}ms"
+    }?: run{
+        return ""
     }
+
 }

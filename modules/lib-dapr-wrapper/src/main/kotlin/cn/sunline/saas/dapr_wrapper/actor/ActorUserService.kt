@@ -8,7 +8,10 @@ import cn.sunline.saas.dapr_wrapper.actor.request.DTORegisteredActor
 import cn.sunline.saas.dapr_wrapper.config.DaprConfig
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import org.springframework.beans.factory.annotation.Autowired
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import mu.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping
 class ActorUserService(private val daprConfig: DaprConfig) {
+    val logger = KotlinLogging.logger {  }
 
+    val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping("/dapr/config")
     fun registeredActor(): DTORegisteredActor {
@@ -69,8 +74,8 @@ class ActorUserService(private val daprConfig: DaprConfig) {
         @PathVariable(name = "actorType") actorType: String,
         @PathVariable(name = "actorId") actorId: String,
         @PathVariable(name = "reminderName") reminderName: String,
-        @RequestBody data:ActorCommand): ResponseEntity<DTOResponseSuccess<Unit>> {
-        ActorContext.getActor(actorType).doJob(actorId,reminderName,data)
+        @RequestBody data:ActorCommand?): ResponseEntity<DTOResponseSuccess<Unit>> {
+        ActorContext.getActor(actorType).doJob(actorId,reminderName, data?:ActorCommand())
         return DTOResponseSuccess(Unit).response()
     }
 
