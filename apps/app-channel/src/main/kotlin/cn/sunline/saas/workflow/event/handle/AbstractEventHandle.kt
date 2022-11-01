@@ -37,7 +37,7 @@ abstract class AbstractEventHandle(
         setCurrentEventStepStart(user, eventStep, applicationId, data)
     }
 
-    fun handleNext(user: String?,eventStep: EventStep,applicationId:Long,data:Any? = null){
+    protected fun handleNext(user: String?,eventStep: EventStep,applicationId:Long,data:Any? = null){
         if(user!= null){
             setNext(user,eventStep,applicationId,data)
         } else {

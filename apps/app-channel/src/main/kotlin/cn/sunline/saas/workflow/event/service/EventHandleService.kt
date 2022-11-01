@@ -87,10 +87,15 @@ class EventHandleService(
         val event = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
         val activity = activityStepService.getOne(event.activityStepId)?: throw ActivityStepNotFoundException("Invalid activity !!")
         var nextPosition:String? = null
-        activity.next?.run {
-            val nextActivity = activityStepService.getOne(this)?: throw ActivityStepNotFoundException("Invalid next activity !!")
-            nextPosition = nextActivity.activityDefinition.position
+        event.next?.run {
+            nextPosition = activity.activityDefinition.position
+        }?: run {
+            activity.next?.run {
+                val nextActivity = activityStepService.getOne(this)?: throw ActivityStepNotFoundException("Invalid next activity !!")
+                nextPosition = nextActivity.activityDefinition.position
+            }
         }
+
 
         val data = getData(event.data!!.applicationId,event.data!!.data)
 
@@ -100,7 +105,8 @@ class EventHandleService(
             nextPosition = nextPosition,
             data = data.data,
             productType = data.productType,
-            status = event.status
+            status = event.status,
+            user = event.user
         )
     }
 
@@ -113,7 +119,7 @@ class EventHandleService(
         val apply = loanApplyService.getOne(applicationId)
         data?.let { dataString ->
             apply?.run {
-                val convert = when(this.productType){
+                val convert:Any = when(this.productType){
                     ProductType.NEW_CLIENT -> LoanApplyAssembly.convertToNewClientLoanView(dataString)
                     ProductType.CLIENT -> LoanApplyAssembly.convertToClientLoanView(dataString)
                     ProductType.TEACHER -> LoanApplyAssembly.convertToTeacherLoanView(dataString)
