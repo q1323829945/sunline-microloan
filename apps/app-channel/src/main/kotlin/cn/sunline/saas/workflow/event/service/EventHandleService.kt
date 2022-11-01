@@ -99,7 +99,8 @@ class EventHandleService(
             applicationId = event.data!!.applicationId.toString(),
             nextPosition = nextPosition,
             data = data.data,
-            productType = data.productType
+            productType = data.productType,
+            status = event.status
         )
     }
 

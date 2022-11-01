@@ -1,7 +1,9 @@
 package cn.sunline.saas.workflow.definition.service
 
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.workflow.defintion.exception.ProcessDefinitionUpdateException
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
+import cn.sunline.saas.workflow.defintion.modules.EventType
 import cn.sunline.saas.workflow.defintion.modules.db.ProcessDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOProcessDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOProcessDefinitionView
@@ -37,12 +39,34 @@ class AppProcessDefinitionService(
     }
 
     fun updateStatus(id: Long, status: DefinitionStatus): DTOProcessDefinitionView {
+        preflightCheckEvent(id)
         val process = processDefinitionService.updateStatus(id, status)
         return convert(process)
     }
 
     fun preflightCheckEvent(id: Long){
         val process = processDefinitionService.detail(id)
+        val sortList = process.activities.flatMap { it.events }.sortedWith { eventA, eventB ->
+            if (eventA.sort != eventB.sort) {
+                eventA.sort.compareTo(eventB.sort)   //asc sort
+            } else {
+                eventB.id.compareTo(eventA.id)   //desc id
+            }
+        }
+        val recommendProduct = sortList.firstOrNull { it.type == EventType.RECOMMEND_PRODUCT }?:run {
+            throw ProcessDefinitionUpdateException("Invalid event recommendProduct!!Status can not be update !!!")
+        }
+
+
+        val recommendProductIndex = sortList.indexOf(recommendProduct)
+        val indexMap = sortList.associateBy { sortList.indexOf(it) }
+        val checkTypes = mutableListOf(EventType.ASSETS_ARCHIVE,EventType.CUSTOMER_ARCHIVE,EventType.COLLECT_INFORMATION,EventType.PRE_APPROVAL)
+        indexMap.forEach { (index, eventDefinition) ->
+            if(index < recommendProductIndex && checkTypes.contains(eventDefinition.type)){
+                throw ProcessDefinitionUpdateException("Event recommendProduct must before event ${eventDefinition.type.id}")
+
+            }
+        }
     }
 
     fun updateOne(id: Long, dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {

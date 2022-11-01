@@ -29,5 +29,6 @@ data class DTOEventHandleDetail(
     val applicationId: String,
     val nextPosition:String? = null,
     val data:Any? = null,
-    val productType: ProductType? = null
+    val productType: ProductType? = null,
+    val status: StepStatus,
 )
