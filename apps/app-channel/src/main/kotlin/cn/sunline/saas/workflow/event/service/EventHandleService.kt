@@ -132,9 +132,10 @@ class EventHandleService(
                 )
             }
         }?:run { return GetData(
-            productType = null,
-            data = null
-        ) }
+                productType = null,
+                data = null
+            )
+        }
     }
 
     private fun rePaged(content:MutableList<DTOEventHandleView>,pageable: Pageable):Page<DTOEventHandleView>{

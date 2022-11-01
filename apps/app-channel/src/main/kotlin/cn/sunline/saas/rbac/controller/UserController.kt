@@ -48,4 +48,10 @@ class UserController {
         val page = userManagerService.getPaged(username,position,unPosition,Pageable.unpaged())
         return DTOPagedResponseSuccess(page.map { it }).response()
     }
+
+    @GetMapping("position/{position}")
+    fun getByPosition(@PathVariable("position")position: String): ResponseEntity<DTOPagedResponseSuccess> {
+        val page = userManagerService.getPagedByPosition(position,Pageable.unpaged())
+        return DTOPagedResponseSuccess(page.map { it }).response()
+    }
 }
