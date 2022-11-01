@@ -70,7 +70,7 @@ class CommissionStatisticsScheduler(
             if (business != null) {
                 business.commissionAmount = it.statisticsAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
                 business.statisticsAmount =  it.statisticsAmount
-                business.datetime = tenantDateTime.now().toDate()
+                business.datetime = dateTime.toDate()
                 commissionStatisticsService.save(business)
             } else {
                 commissionStatisticsService.saveCommissionStatistics(
@@ -79,7 +79,9 @@ class CommissionStatisticsScheduler(
                         channelName = it.channelName,
                         statisticsAmount =  it.statisticsAmount,
                         commissionAmount = it.commissionAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
-                        frequency = frequency
+                        frequency = frequency,
+                        applyStatus = it.applyStatus,
+                        dateTime = dateTime
                     )
                 )
             }

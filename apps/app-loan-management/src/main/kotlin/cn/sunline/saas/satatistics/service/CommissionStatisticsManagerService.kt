@@ -83,7 +83,6 @@ class CommissionStatisticsManagerService(
                 statisticsAmount = it.statisticsAmount,
                 amount = it.amount,
                 ratio = ratio,
-                commissionFeatureId = it.commissionFeatureId,
                 dateTime = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(it.datetime))
             )
         }

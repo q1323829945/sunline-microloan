@@ -109,7 +109,7 @@ class CommissionStatisticsService(
 
 
     fun saveCommissionStatistics(dtoCommissionStatistics: DTOCommissionStatistics): CommissionStatistics {
-        val nowDateTime = tenantDateTime.now()
+        val nowDateTime = dtoCommissionStatistics.dateTime?: tenantDateTime.now()
         return save(
             CommissionStatistics(
                 id = sequence.nextId(),
@@ -121,7 +121,9 @@ class CommissionStatisticsService(
                 year = nowDateTime.year.toLong(),
                 month = nowDateTime.monthOfYear.toLong(),
                 day = nowDateTime.dayOfMonth.toLong(),
-                datetime = nowDateTime.toDate()
+                datetime = nowDateTime.toDate(),
+                applyStatus = dtoCommissionStatistics.applyStatus,
+                created = tenantDateTime.now().toDate()
             )
         )
     }
@@ -139,7 +141,9 @@ class CommissionStatisticsService(
                 year = lastDateTime.year.toLong(),
                 month = lastDateTime.monthOfYear.toLong(),
                 day = lastDateTime.dayOfMonth.toLong(),
-                datetime = tenantDateTime.now().toDate()
+                datetime = tenantDateTime.now().toDate(),
+                applyStatus = dtoCommissionStatistics.applyStatus,
+                created = tenantDateTime.now().toDate()
             )
         )
     }

@@ -116,7 +116,6 @@ class CommissionStatisticsService(
         return save(
             CommissionStatistics(
                 id = sequence.nextId(),
-                commissionFeatureId = dtoCommissionStatistics.commissionFeatureId,
                 channelCode = dtoCommissionStatistics.channelCode,
                 channelName = dtoCommissionStatistics.channelName,
                 statisticsAmount = dtoCommissionStatistics.statisticsAmount,
@@ -135,7 +134,6 @@ class CommissionStatisticsService(
         return save(
             CommissionStatistics(
                 id = sequence.nextId(),
-                commissionFeatureId = dtoCommissionStatistics.commissionFeatureId,
                 channelCode = dtoCommissionStatistics.channelCode,
                 channelName = dtoCommissionStatistics.channelName,
                 statisticsAmount = dtoCommissionStatistics.statisticsAmount,

@@ -37,11 +37,14 @@ enum class PermissionConfig (
     RATE_PLAN_GET_LIST_BY_TYPE("ratePlan", "RatePlan/all(\\?.*|\$)", RequestMethod.GET, "View ratePlan list by type"),
     RATE_PLAN_GET_ALL_CUSTOM_LIST("ratePlan", "RatePlan/all/custom", RequestMethod.GET, "View aLL custom ratePlan list"),
     RATE_PLAN_ADD("ratePlan", "RatePlan\$", RequestMethod.POST, "Add ratePlan role"),
+    RATE_TEMPLATE_DATA("ratePlan", "RatePlan/template/data\$", RequestMethod.GET, "get ratePlan template data"),
+
 
     INTEREST_RATE_ADD("interestRate", "InterestRate\$", RequestMethod.POST, "Add interestRate"),
     INTEREST_RATE_GET_LIST("interestRate", "InterestRate(\\?.*|\$)", RequestMethod.GET, "View interestRate list"),
     INTEREST_RATE_MODIFY("interestRate", "InterestRate/[0-9]+\$", RequestMethod.PUT, "Modify interestRate"),
     INTEREST_RATE_DELETE("interestRate", "InterestRate/[0-9]+/[0-9]+\$", RequestMethod.DELETE, "Delete interestRate"),
+    INTEREST_TEMPLATE_DATA("interestRate", "InterestRate/template/data/[0-9]+\$", RequestMethod.GET, "get interest rate template data"),
 
     DOCUMENT_TEMPLATE_ADD("documentTemplate", "DocumentTemplate\$", RequestMethod.POST, "Add documentTemplate"),
     DOCUMENT_TEMPLATE_GET_LIST("documentTemplate", "DocumentTemplate(\\?.*|\$)", RequestMethod.GET, "View documentTemplate list"),

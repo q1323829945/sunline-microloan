@@ -96,7 +96,7 @@ class CommissionStatisticsManagerService(
     fun addCommissionDetail(dtoCommissionDetail: List<DTOCommissionDetail>) {
         val detail = arrayListOf<CommissionDetail>()
         dtoCommissionDetail.forEach {
-            commissionDetailService.getByApplicationId(it.applicationId) ?: run {
+            commissionDetailService.getByApplicationIdAndStatus(it.applicationId,it.applyStatus) ?: run {
                 detail += CommissionDetail(
                     id = null,
                     channelCode = it.channelCode,
@@ -105,9 +105,10 @@ class CommissionStatisticsManagerService(
                     commissionAmount = it.commissionAmount,
                     ratio = it.ratio,
                     statisticsAmount = it.statisticsAmount,
-                    datetime = tenantDateTime.now().toDate(),
+                    datetime = it.dateTime.toDate(),
                     currency = it.currency,
-                    status = it.status
+                    applyStatus = it.applyStatus,
+                    created = tenantDateTime.now().toDate()
                 )
             }
         }
@@ -162,7 +163,7 @@ class CommissionStatisticsManagerService(
             if (business != null) {
                 business.commissionAmount = it.commissionAmount
                 business.statisticsAmount = it.statisticsAmount
-                business.datetime = tenantDateTime.now().toDate()
+                business.datetime = dateTime.toDate()
                 commissionStatisticsService.save(business)
             } else {
                 commissionStatisticsService.saveCommissionStatistics(
@@ -171,7 +172,9 @@ class CommissionStatisticsManagerService(
                         channelName = it.channelName,
                         statisticsAmount = it.statisticsAmount,
                         commissionAmount = it.commissionAmount,
-                        frequency = frequency
+                        frequency = frequency,
+                        applyStatus = it.applyStatus,
+                        dateTime = dateTime
                     )
                 )
             }

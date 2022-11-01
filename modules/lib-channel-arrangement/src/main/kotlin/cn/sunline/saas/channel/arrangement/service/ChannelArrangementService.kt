@@ -35,10 +35,11 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
         }, pageable)
     }
 
-    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): MutableMap<ApplyStatus,List<RangeValue>> {
+    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long,applyStatus: ApplyStatus?, pageable: Pageable): MutableMap<ApplyStatus,List<RangeValue>> {
         val pages = getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
+            applyStatus?.let{predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("applyStatus"), it))}
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable).content
         val rangeMap = mutableMapOf<ApplyStatus,List<RangeValue>>()

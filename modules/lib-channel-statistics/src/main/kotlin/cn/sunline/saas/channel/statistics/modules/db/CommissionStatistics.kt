@@ -1,5 +1,6 @@
 package cn.sunline.saas.channel.statistics.modules.db
 
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.Frequency
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
@@ -36,6 +37,10 @@ class CommissionStatistics(
     @Column(name = "frequency",length = 128, columnDefinition = "varchar(128) not null")
     var frequency: Frequency,
 
+    @NotNull
+    @Column(name = "apply_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Enumerated(value = EnumType.STRING)
+    val applyStatus: ApplyStatus,
 
     @NotNull
     @Column(name = "year", columnDefinition = "bigint not null")
@@ -52,6 +57,10 @@ class CommissionStatistics(
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     var datetime: Date,
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    var created: Date,
 
     ): MultiTenant {
 

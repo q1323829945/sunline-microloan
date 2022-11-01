@@ -159,8 +159,21 @@ class LoanApplyAppService {
             ).content.first()
 //            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
 
-            //test2()
-            //test1()
+            val syncData = SyncData(
+                amount = BigDecimal(2000000),
+                channelAgreementId = channelAgreement.id.toLong(),
+                channelCode = channelCast.channelCode,
+                channelName = channelCast.channelName,
+                applicationId = applicationId.toLong(),
+                status = ApplyStatus.RECORD,
+                created = tenantDateTime.toTenantDateTime(loanAgent.created!!).toString(),
+                productId = loanAgent.productId,
+                productType = loanAgent.loanApply?.productType?.name,
+                currency = CurrencyType.USD
+            )
+
+            syncLoanApplicationStatistics(syncData)
+            //syncCommissionStatistics(syncData)
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
         } catch (e: Exception) {
             logger.error("[syncLoanApplicationStatistics]: sync applicationId:$applicationId , error massage : ${e.message}")
@@ -177,42 +190,43 @@ class LoanApplyAppService {
         val applicationId: Long,
         val status: ApplyStatus,
         val created: String,
-        val productId:Long?,
+        val productId: Long?,
         val productType: String?,
-        val currency:CurrencyType?,
+        val currency: CurrencyType?,
     )
 
-    private fun test2(syncData: SyncData){
-            loanApplicationStatisticsManagerService.addLoanApplicationDetail(
-                DTOLoanApplicationDetail(
-                    channelCode = syncData.channelCode,
-                    channelName = syncData.channelName,
-                    productId = syncData.productId ?: 0,
-                    productName = syncData.productType ?: "",
-                    applicationId = syncData.applicationId,
-                    applyAmount = syncData.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
-                    approvalAmount = syncData.amount ?: BigDecimal.ZERO.setScale(
-                        2,
-                        RoundingMode.HALF_UP
-                    ), //TODO new approval amount
-                    status = syncData.status,
-                    currency = syncData.currency
-                )
+    private fun syncLoanApplicationStatistics(syncData: SyncData) {
+        loanApplicationStatisticsManagerService.addLoanApplicationDetail(
+            DTOLoanApplicationDetail(
+                channelCode = syncData.channelCode,
+                channelName = syncData.channelName,
+                productId = syncData.productId ?: 0,
+                productName = syncData.productType ?: "",
+                applicationId = syncData.applicationId,
+                applyAmount = syncData.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP),
+                approvalAmount = syncData.amount ?: BigDecimal.ZERO.setScale(
+                    2,
+                    RoundingMode.HALF_UP
+                ), //TODO new approval amount
+                status = syncData.status,
+                currency = syncData.currency
             )
-            loanApplicationStatisticsManagerService.addLoanApplicationStatistics(
-                tenantDateTime.toTenantDateTime(
-                    syncData.created
-                )
+        )
+        loanApplicationStatisticsManagerService.addLoanApplicationStatistics(
+            tenantDateTime.toTenantDateTime(
+                syncData.created
             )
+        )
 
     }
 
-    private fun test1(syncData: SyncData) {
+    private fun syncCommissionStatistics(syncData: SyncData) {
         var commissionAmount = BigDecimal.ZERO
         var ratio: BigDecimal? = BigDecimal.ZERO
-        val statisticsAmount = syncData.amount ?: BigDecimal(2000000).setScale(2, RoundingMode.HALF_UP)
+        val statisticsAmount = syncData.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
         val rangeValuesMap = channelArrangementService.getRangeValuesByChannelAgreementId(
             syncData.channelAgreementId,
+            syncData.status,
             Pageable.unpaged()
         )
         val dto = arrayListOf<DTOCommissionDetail>()
@@ -247,10 +261,11 @@ class LoanApplyAppService {
                 channelName = syncData.channelName,
                 applicationId = syncData.applicationId,
                 commissionAmount = commissionAmount,
-                status = syncData.status,
+                applyStatus = syncData.status,
                 currency = CurrencyType.USD,
                 ratio = ratio,
-                statisticsAmount = statisticsAmount
+                statisticsAmount = statisticsAmount,
+                dateTime = tenantDateTime.toTenantDateTime(syncData.created)
             )
         }
 

@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":lib-filter"))
     implementation(project(":lib-schedule"))
     implementation(project(":lib-invoice"))
+    implementation(project(":lib-template-data"))
 
     implementation(project(":lib-formula")) 
    implementation(project(":lib-apig-saas"))

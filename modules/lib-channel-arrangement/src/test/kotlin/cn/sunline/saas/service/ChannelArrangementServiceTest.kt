@@ -48,7 +48,7 @@ class ChannelArrangementServiceTest(@Autowired private val channelArrangementSer
     @Test
     @Order(2)
     fun `get channel arrangement`() {
-        val organisation = channelArrangementService.getRangeValuesByChannelAgreementId(channelAgreementId, Pageable.unpaged())
+        val organisation = channelArrangementService.getRangeValuesByChannelAgreementId(channelAgreementId, null,Pageable.unpaged())
 
         Assertions.assertThat(organisation).isNotNull
     }

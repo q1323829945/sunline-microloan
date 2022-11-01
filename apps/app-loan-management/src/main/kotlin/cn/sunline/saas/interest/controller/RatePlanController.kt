@@ -6,6 +6,8 @@ import cn.sunline.saas.interest.service.RatePlanManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.templatedata.service.TemplateDataService
+import cn.sunline.saas.templatedata.service.impl.CommonTemplateDataServiceImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -20,6 +22,9 @@ class RatePlanController {
 
     @Autowired
     private lateinit var ratePlanManagerService: RatePlanManagerService
+
+    @Autowired
+    private lateinit var commonTemplateDataServiceImpl: CommonTemplateDataServiceImpl
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -69,6 +74,18 @@ class RatePlanController {
         val page = ratePlanManagerService.getInvokeAll(type)
         val map = page.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
         return DTOResponseSuccess(map).response()
+    }
+
+
+    @GetMapping("template/data")
+    fun getTemplateRatePlanData(): ResponseEntity<DTOResponseSuccess<DTORatePlan>> {
+        return DTOResponseSuccess(
+            commonTemplateDataServiceImpl.getTemplateData<DTORatePlan>(
+                DTORatePlan::class,
+                null,
+                false
+            )
+        ).response()
     }
 
 }

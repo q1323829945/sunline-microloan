@@ -2,10 +2,13 @@ package cn.sunline.saas.interest.controller
 
 import cn.sunline.saas.interest.controller.dto.DTOInterestRate
 import cn.sunline.saas.interest.controller.dto.DTOInterestRateView
+import cn.sunline.saas.interest.controller.dto.DTORatePlan
 import cn.sunline.saas.interest.service.InterestRateManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
+import cn.sunline.saas.templatedata.service.impl.CommonTemplateDataServiceImpl
+import cn.sunline.saas.templatedata.service.impl.InterestRateTemplateDataServiceImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -21,6 +24,9 @@ class InterestRateController {
 
     @Autowired
     private lateinit var interestRateManagerService: InterestRateManagerService
+
+    @Autowired
+    private lateinit var interestRateTemplateDataServiceImpl: InterestRateTemplateDataServiceImpl
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -60,5 +66,15 @@ class InterestRateController {
         return page.content.map { objectMapper.convertValue(it) }
     }
 
+    @GetMapping("template/data/{ratePlanId}")
+    fun getTemplateRatePlanData(@PathVariable(name = "ratePlanId") ratePlanId: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
+        return DTOResponseSuccess(
+            interestRateTemplateDataServiceImpl.getTemplateData<DTOInterestRate>(
+                DTOInterestRate::class,
+                ratePlanId.toString(),
+                false
+            )
+        ).response()
+    }
 
 }

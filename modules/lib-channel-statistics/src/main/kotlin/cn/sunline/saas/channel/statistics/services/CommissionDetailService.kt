@@ -35,26 +35,18 @@ class CommissionDetailService(
         val list = arrayListOf<DTOCommissionCount>()
         val channelCodeGroupBy = statusList.content.groupBy { it.channelCode }
         channelCodeGroupBy.forEach { (t, u) ->
-            val statusGroupBy = u.groupBy { it.status }
+            val statusGroupBy = u.groupBy { it.applyStatus }
             list += statusGroupBy.map { it ->
                 DTOCommissionCount(
                     channelCode = t,
                     channelName = it.value.first().channelName,
                     commissionAmount = it.value.sumOf { it.commissionAmount },
-                    statisticsAmount = it.value.sumOf { it.statisticsAmount }
+                    statisticsAmount = it.value.sumOf { it.statisticsAmount },
+                    applyStatus = it.key
                 )
             }
         }
         return list
-//        return statusList.content.groupBy { it.channelCode }.map { it ->
-//            DTOCommissionCount(
-//                channelCode = it.key,
-//                channelName = it.value.first().channelName,
-//                commissionAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }
-//                    .sumOf { it.commissionAmount },
-//                statisticsAmount = it.value.filter { it.status == ApplyStatus.APPROVALED }.sumOf { it.statisticsAmount }
-//            )
-//        }
     }
 
 
@@ -73,19 +65,28 @@ class CommissionDetailService(
         }, Pageable.unpaged())
     }
 
-    fun getByApplicationId(applicationId: Long): CommissionDetail? {
-        return getOneWithTenant { root, _, criteriaBuilder ->
+    fun getByApplicationId(applicationId: Long): List<CommissionDetail> {
+        return getPageWithTenant( { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("applicationId"), applicationId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }
+        }, Pageable.unpaged()).content
     }
 
-    fun getListByStatus(status: ApplyStatus): List<CommissionDetail> {
+    fun getListByStatus(applyStatus: ApplyStatus): List<CommissionDetail> {
         return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("status"), status))
+            predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("applyStatus"), applyStatus))
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged()).content
+    }
+
+    fun getByApplicationIdAndStatus(applicationId: Long,applyStatus:ApplyStatus): CommissionDetail? {
+        return getOneWithTenant { root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<Long>("applicationId"), applicationId))
+            predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("applyStatus"), applyStatus))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }
     }
 }

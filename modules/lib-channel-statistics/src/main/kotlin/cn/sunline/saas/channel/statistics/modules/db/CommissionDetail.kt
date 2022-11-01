@@ -43,12 +43,17 @@ class CommissionDetail (
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status", length = 256, columnDefinition = "varchar(256) not null")
-    var status: ApplyStatus,
+    @Column(name = "apply_status", length = 256, columnDefinition = "varchar(256) not null")
+    var applyStatus: ApplyStatus,
 
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     var datetime: Date,
+
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    var created: Date,
+
 
     ): MultiTenant {
 
