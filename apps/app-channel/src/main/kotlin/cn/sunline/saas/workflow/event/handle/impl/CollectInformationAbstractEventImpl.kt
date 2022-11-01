@@ -29,16 +29,16 @@ class CollectInformationAbstractEventImpl(
             setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
             rejected(eventHandleCommand.eventStep)
             return
-        }else {
-            eventStepService.updateOne(
-                eventHandleCommand.eventStep.id,
-                DTOEventStepChange(
-                    status = eventHandleCommand.status,
-                    end = tenantDateTime.now().toDate()
-                )
-            )
-            setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
         }
+
+        eventStepService.updateOne(
+            eventHandleCommand.eventStep.id,
+            DTOEventStepChange(
+                status = eventHandleCommand.status,
+                end = tenantDateTime.now().toDate()
+            )
+        )
+        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
 
         val loanApply = loanApplyService.getOne(eventHandleCommand.applicationId)?: throw LoanApplyNotFoundException("Invalid loan apply !!")
         handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)

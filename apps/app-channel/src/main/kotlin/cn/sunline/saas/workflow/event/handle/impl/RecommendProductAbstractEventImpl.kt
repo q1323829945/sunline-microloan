@@ -87,7 +87,7 @@ class RecommendProductAbstractEventImpl(
                 end = tenantDateTime.now().toDate(),
             )
         )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanApply.data)
+        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanAgent.data)
 
         handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
     }

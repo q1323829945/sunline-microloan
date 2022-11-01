@@ -59,7 +59,7 @@ class CustomerArchiveAbstractEventImpl(
                 end = tenantDateTime.now().toDate(),
             )
         )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,eventHandleCommand.data)
+        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanApply.data)
 
         handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
     }
