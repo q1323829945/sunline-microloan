@@ -29,10 +29,7 @@ class ActivityStep (
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
     var status: StepStatus = StepStatus.WAITING,
 
-    @Column(name = "user", nullable = true, length = 128, columnDefinition = "varchar(128) default null")
-    var user: String? = null,
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "activity_step_id")
     val events: MutableList<EventStep> = mutableListOf(),
 

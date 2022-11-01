@@ -1,20 +1,13 @@
 package cn.sunline.saas.workflow.step.services
 
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
-import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.workflow.defintion.modules.db.ProcessDefinition
-import cn.sunline.saas.workflow.defintion.repositories.ProcessDefinitionRepository
 import cn.sunline.saas.workflow.defintion.services.EventDefinitionService
 import cn.sunline.saas.workflow.step.exception.EventStepNotFoundException
-import cn.sunline.saas.workflow.step.modules.StepStatus
-import cn.sunline.saas.workflow.step.modules.db.ActivityStep
 import cn.sunline.saas.workflow.step.modules.db.EventStep
-import cn.sunline.saas.workflow.step.modules.db.ProcessStep
 import cn.sunline.saas.workflow.step.modules.dto.DTOEventStepAdd
 import cn.sunline.saas.workflow.step.modules.dto.DTOEventStepChange
 import cn.sunline.saas.workflow.step.repositories.EventStepRepository
-import cn.sunline.saas.workflow.step.repositories.ProcessStepRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -34,15 +27,17 @@ class EventStepService (
                 id = sequence.nextId(),
                 activityStepId = dtoEventStepAdd.activityStepId,
                 eventDefinition = eventDefinition,
+                next = dtoEventStepAdd.next,
+                user = dtoEventStepAdd.user,
                 sort = eventDefinition.sort,
             )
         )
     }
 
-    fun updateOne(dtoEventStepChange: DTOEventStepChange):EventStep{
-        val event = getOne(dtoEventStepChange.id)?: throw EventStepNotFoundException("Invalid event !!")
+    fun updateOne(id:Long,dtoEventStepChange: DTOEventStepChange):EventStep{
+        val event = getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
+        dtoEventStepChange.user?.run { event.user = this }
         dtoEventStepChange.status?.run { event.status = this }
-        dtoEventStepChange.next?.run { event.next = this }
         dtoEventStepChange.start?.run { event.start = this }
         dtoEventStepChange.end?.run { event.end = this }
         return save(event)

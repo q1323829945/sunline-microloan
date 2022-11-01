@@ -24,9 +24,7 @@ import cn.sunline.saas.scheduler.job.component.failed
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import javax.persistence.criteria.JoinType
 import javax.persistence.criteria.Predicate
@@ -52,7 +50,6 @@ class LoanApplyHandleSchedulerTask (
     )
 
     override fun doJob(applicationId: String, jobId: String, data: ActorCommand) {
-
         val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
 
         schedulerJobLog?.run {

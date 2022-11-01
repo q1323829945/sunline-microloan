@@ -1,11 +1,8 @@
 package cn.sunline.saas.workflow.step.service
 
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.workflow.step.modules.StepStatus
 import cn.sunline.saas.workflow.step.modules.db.ActivityStep
-import cn.sunline.saas.workflow.step.modules.db.ProcessStep
 import cn.sunline.saas.workflow.step.modules.dto.DTOActivityStepView
-import cn.sunline.saas.workflow.step.modules.dto.DTOProcessStepView
 import cn.sunline.saas.workflow.step.services.ActivityStepService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -32,7 +29,6 @@ class AppActivityStepService(private val tenantDateTime: TenantDateTime) {
             processStepId = activityStep.processStepId.toString(),
             activityId = activityStep.activityDefinition.id.toString(),
             status = activityStep.status,
-            user = activityStep.user,
             next = activityStep.next?.toString(),
             start = activityStep.start?.run { tenantDateTime.toTenantDateTime(this).toString() },
             end = activityStep.end?.run { tenantDateTime.toTenantDateTime(this).toString() }

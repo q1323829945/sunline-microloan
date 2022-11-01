@@ -104,9 +104,13 @@ enum class PermissionConfig (
     EVENT_DEFINITION_GET_LIST("workflow","definition/event/[0-9]+\$",RequestMethod.GET,"get event definition list"),
     ACTIVITY_DEFINITION_REMOVE("workflow","definition/activity/[0-9]+\$",RequestMethod.DELETE,"remove activity definition"),
     EVENT_DEFINITION_REMOVE("workflow","definition/event/[0-9]+\$",RequestMethod.DELETE,"remove event definition"),
-    PROCESS_STEP_GET_LIST("workflow","step/process/(\\?.*|\$)",RequestMethod.GET,"get process step page list"),
+    PROCESS_STEP_GET_LIST("workflow","step/process(\\?.*|\$)",RequestMethod.GET,"get process step page list"),
     ACTIVITY_STEP_GET_LIST("workflow","step/activity/[0-9]+\$",RequestMethod.GET,"get activity step page list"),
     EVENT_STEP_GET_LIST("workflow","step/event/[0-9]+\$",RequestMethod.GET,"get event step page list"),
+    EVENT_HANDLE_GET_USER_LIST("workflow","event/handle/user(\\?.*|\$)",RequestMethod.GET,"get event handle user list"),
+    EVENT_HANDLE_GET_LEST("workflow","event/handle(\\?.*|\$)",RequestMethod.GET,"get event handle list"),
+    EVENT_HANDLE_GET_ONE("workflow","event/handle/[0-9]+\$",RequestMethod.GET,"get event handle detail"),
+    EVENT_HANDLE_MODIFY("workflow","event/handle/[0-9]+\$",RequestMethod.PUT,"modify event handle "),
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),
@@ -125,6 +129,7 @@ enum class PermissionConfig (
     PDPA_MENU("menu","pdpaConfig", RequestMethod.GET,"View pdpaConfig menu"),
     WORKFLOW_MENU("menu","workflowConfig", RequestMethod.GET,"View workflowConfig menu"),
     WORKFLOW_QUERY_MENU("menu","workflowQuery", RequestMethod.GET,"View workflowQuery menu"),
-
+    EVENT_HANDLE_MENU("menu","eventHandle", RequestMethod.GET,"View eventHandle menu"),
+    EVENT_HANDLE_QUERY_MENU("menu","eventHandleQuery", RequestMethod.GET,"View eventHandleQuery menu"),
 }
 

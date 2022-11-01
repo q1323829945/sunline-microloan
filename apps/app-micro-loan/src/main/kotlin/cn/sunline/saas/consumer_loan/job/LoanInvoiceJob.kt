@@ -15,9 +15,7 @@ import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import org.joda.time.DateTime
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Service
 
 /**
  * @title: LoanInvoiceJob

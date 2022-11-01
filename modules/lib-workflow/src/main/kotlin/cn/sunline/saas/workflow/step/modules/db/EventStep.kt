@@ -24,6 +24,10 @@ class EventStep (
     @JoinColumn(name="event_id", nullable=false, updatable=false)
     val eventDefinition: EventDefinition,
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "id")
+    var data: EventStepData? = null,
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
@@ -32,6 +36,9 @@ class EventStep (
     @NotNull
     @Column(nullable = false, columnDefinition = "bigint not null")
     var sort: Long,
+
+    @Column(name = "user", nullable = true, length = 128, columnDefinition = "varchar(128) default null")
+    var user: String? = null,
 
     @Column(name = "next", nullable = true, columnDefinition = "bigint default null")
     var next: Long? = null,

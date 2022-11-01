@@ -25,7 +25,7 @@ class CreateScheduler {
     @Autowired
     private lateinit var seq: Sequence
 
-    fun create(actorType: ActorType, applicationId:String) {
+    fun create(actorType: ActorType, applicationId:String,data:Any? = null) {
         val accountDate = calculateSchedulerTimer.baseDateTime()
         val targetDateTime = accountDate.plusMinutes(interval)
 
@@ -46,7 +46,7 @@ class CreateScheduler {
 
         val periodTime = actorType.periodTime
 
-        ActorReminderService.createReminders(actorType.name, applicationId, jobId.toString(), dueTime, periodTime)
+        ActorReminderService.createReminders(actorType.name, applicationId, jobId.toString(), dueTime, periodTime,data)
     }
 
 }

@@ -49,6 +49,9 @@ import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.minio.MinioService
 import cn.sunline.saas.obs.api.GetParams
 import cn.sunline.saas.obs.api.ObsApi
+import cn.sunline.saas.scheduler.dojob.dto.DTOCreateEventScheduler
+import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
+import cn.sunline.saas.workflow.defintion.services.ProcessDefinitionService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -103,9 +106,6 @@ class LoanApplyAppService {
     private lateinit var businessStatisticsManagerService: BusinessStatisticsManagerService
 
     @Autowired
-    private lateinit var minioService: MinioService
-
-    @Autowired
     private lateinit var channelCastService: ChannelCastService
 
     @Autowired
@@ -117,9 +117,6 @@ class LoanApplyAppService {
     @Autowired
     private lateinit var commissionDetailService: CommissionDetailService
 
-
-    @Autowired
-    private lateinit var obsApi: ObsApi
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getProduct(productType: ProductType): DTOProductAppView {
@@ -314,28 +311,17 @@ class LoanApplyAppService {
             ContextUtil.setTenant(this.getTenantId().toString())
         } ?: run { ContextUtil.setTenant("1") }
 
-
-//        dtoLoanAgent.fileInformation?.forEach { files ->
-//            val obsFiles = mutableListOf<String>()
-//            files.path?.forEach {
-//                val key = minioService.minioToObs(it, it)
-//                key?.run {
-//                    obsFiles.add(this)
-//                } ?: run {
-//                    obsFiles.add(it)
-//                }
-//
-//            }
-//            files.path?.run {
-//                this.clear()
-//                this.addAll(obsFiles)
-//            }
-//        }
-
         val newData = objectMapper.writeValueAsString(dtoLoanAgent)
         val loanAgent = loanAgentService.addOne(newData)
 
-        createScheduler.create(ActorType.LOAN_APPLY_HANDLE, loanAgent.applicationId.toString())
+
+        createScheduler.create(
+            ActorType.CREATE_EVENT,
+            loanAgent.applicationId.toString(),
+            DTOCreateEventScheduler(
+                applicationId = loanAgent.applicationId.toString(),
+                body = dtoLoanAgent
+            ))
         return loanAgent
     }
 

@@ -14,8 +14,6 @@ import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 
 class LoanApplySubmitSchedulerTask(
     private val tenantDateTime: TenantDateTime,

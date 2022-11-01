@@ -1,7 +1,6 @@
 package cn.sunline.saas.workflow.defintion.modules.dto
 
 import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
-import java.util.*
 
 data class DTOProcessDefinition(
     val name: String,

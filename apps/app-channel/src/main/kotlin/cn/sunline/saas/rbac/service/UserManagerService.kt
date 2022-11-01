@@ -39,6 +39,17 @@ class UserManagerService  {
     @Autowired
     private lateinit var roleService: RoleService
 
+    fun getPagedByPosition(position: String,pageable: Pageable): Page<DTOUserView> {
+        return userService.getPageWithTenant({ root,_,criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            val positionTable = root.join<User,Position>("position",JoinType.LEFT)
+            predicates.add(criteriaBuilder.equal(positionTable.get<String>("id"),position))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        },pageable = pageable).map {
+            convertToDTOUserView(it)
+        }
+    }
+
     fun getPaged(username:String?,position: String?,unPosition:Boolean,pageable: Pageable): Page<DTOUserView> {
         val page = userService.getPageWithTenant({ root,_,criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()

@@ -1,10 +1,8 @@
 package cn.sunline.saas.workflow.definition.service
 
 import cn.sunline.saas.workflow.defintion.exception.ActivityDefinitionNotFoundException
-import cn.sunline.saas.workflow.defintion.exception.EventDefinitionNotFoundException
 import cn.sunline.saas.workflow.defintion.exception.EventTypeHasBeenUsedException
 import cn.sunline.saas.workflow.defintion.modules.db.EventDefinition
-import cn.sunline.saas.workflow.defintion.modules.dto.DTOActivityDefinitionView
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinition
 import cn.sunline.saas.workflow.defintion.modules.dto.DTOEventDefinitionView
 import cn.sunline.saas.workflow.defintion.services.ActivityDefinitionService
@@ -33,7 +31,9 @@ class AppEventDefinitionService {
     val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun addOne(dtoEventDefinition: DTOEventDefinition):DTOEventDefinitionView{
-        preflightEventCheckType(dtoEventDefinition)
+//        preflightEventCheckType(dtoEventDefinition)
+
+        preflightEventCheck(dtoEventDefinition)
         val event = eventDefinitionService.addOne(dtoEventDefinition)
         return objectMapper.convertValue(event)
     }
@@ -57,7 +57,7 @@ class AppEventDefinitionService {
 
     private fun preflightEventCheck(id:Long):EventDefinition{
         val event = eventDefinitionService.detail(id)
-        val activity = activityDefinitionService.detail(id)
+        val activity = activityDefinitionService.detail(event.activityId)
         preflightEventCheck(DTOEventDefinition(activity.processId,activity.id,event.type,event.sort))
         return event
     }

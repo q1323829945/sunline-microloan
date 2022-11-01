@@ -24,12 +24,9 @@ class ProcessStep(
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
     var status: StepStatus = StepStatus.START,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "process_step_id")
     val activities: MutableList<ActivityStep> = mutableListOf(),
-
-    @Column(name = "start_activity", nullable = true, columnDefinition = "bigint default null")
-    var startActivity: Long? = null,
 
     @Temporal(TemporalType.TIMESTAMP)
     val start: Date,

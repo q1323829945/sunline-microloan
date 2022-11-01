@@ -26,8 +26,9 @@ class ActivityDefinition (
     @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
     var name: String,
 
-    @Column(nullable = true, length = 64, columnDefinition = "varchar(64) default null")
-    var position: String? = null,
+    @NotNull
+    @Column(nullable = false, length = 64, columnDefinition = "varchar(64) not null")
+    var position: String,
 
     @Column(nullable = true, length = 1024, columnDefinition = "varchar(1024) default null")
     var description: String? = null,

@@ -2,6 +2,7 @@ package cn.sunline.saas.dapr_wrapper.actor
 
 import cn.sunline.saas.dapr_wrapper.actor.request.ReminderRequest
 import cn.sunline.saas.dapr_wrapper.actor.request.Timer
+import cn.sunline.saas.dapr_wrapper.actor.request.toTimerString
 import cn.sunline.saas.dapr_wrapper.invoke.RPCService
 import cn.sunline.saas.exceptions.ManagementException
 import cn.sunline.saas.exceptions.ManagementExceptionCode
@@ -51,7 +52,7 @@ class ActorReminderService {
         fun createReminders(
             actorType: String, actorId: String, name: String, dueTime: Timer?, period: Timer?,data:Any? = null
         ) {
-            val body = ReminderRequest(dueTime.toString(), period.toString(),data)
+            val body = ReminderRequest(dueTime.toTimerString(), period.toTimerString(),data)
             makeRequest(actorType, actorId, name, HttpMethod.Post, body)
         }
 
@@ -67,9 +68,11 @@ class ActorReminderService {
                     logger.info { "[$actorId] Started Actor Reminders [$httpMethod] request: $requestUrl" }
                     daprClient.request(requestUrl) {
                         method = httpMethod
-                        contentType(ContentType.Application.Json)
+                        if(httpMethod != HttpMethod.Delete){
+                            contentType(ContentType.Application.Json)
+                        }
                         accept(ContentType.Application.Json)
-                        setBody(objectMapper.writeValueAsString(body))
+                        body?.run { setBody(objectMapper.writeValueAsString(body)) }
                     }
                 }
             } catch (ex: Exception) {

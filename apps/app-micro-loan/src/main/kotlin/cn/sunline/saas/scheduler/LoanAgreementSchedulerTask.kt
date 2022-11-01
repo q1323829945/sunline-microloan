@@ -17,9 +17,7 @@ import cn.sunline.saas.scheduler.job.model.SchedulerType
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import cn.sunline.saas.seq.Sequence
 import org.joda.time.DateTime
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Component
 
 
 /**

@@ -6,7 +6,7 @@ data class DTOEventDefinition(
     val processId:Long,
     val activityId:Long,
     val type: EventType,
-    val sort:Long,
+    val sort:Long = 1,
 )
 
 data class DTOEventDefinitionView(
