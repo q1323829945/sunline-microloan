@@ -38,6 +38,8 @@ class EventHandleService(
     @Autowired
     private lateinit var loanApplyService:LoanApplyService
 
+
+
     fun getEventHandlePaged(user:String? = null,status: StepStatus? = null,pageable: Pageable):Page<DTOEventHandleView>{
         val processes = processStepService.getPageWithTenant({ root, query, builder ->
             val predicates = mutableListOf<Predicate>()
@@ -90,29 +92,48 @@ class EventHandleService(
             nextPosition = nextActivity.activityDefinition.position
         }
 
+        val data = getData(event.data!!.applicationId,event.data!!.data)
+
         return DTOEventHandleDetail(
             event.id.toString(),
             applicationId = event.data!!.applicationId.toString(),
             nextPosition = nextPosition,
-            data = getData(event.data!!.applicationId,event.data!!.data),
+            data = data.data,
+            productType = data.productType
         )
     }
 
-    private fun getData(applicationId:Long,data:String?):Any?{
+    private data class GetData(
+        val productType:ProductType? = null,
+        val data:Any?
+    )
+
+    private fun getData(applicationId:Long,data:String?):GetData{
         val apply = loanApplyService.getOne(applicationId)
         data?.let { dataString ->
             apply?.run {
-                return when(this.productType){
+                val convert = when(this.productType){
                     ProductType.NEW_CLIENT -> LoanApplyAssembly.convertToNewClientLoanView(dataString)
                     ProductType.CLIENT -> LoanApplyAssembly.convertToClientLoanView(dataString)
                     ProductType.TEACHER -> LoanApplyAssembly.convertToTeacherLoanView(dataString)
                     ProductType.KABUHAYAN -> LoanApplyAssembly.convertToKabuhayanLoanView(dataString)
                     ProductType.CORPORATE -> LoanApplyAssembly.convertToCorporateLoanView(dataString)
                 }
+
+                return GetData(
+                    productType = this.productType,
+                    data = convert
+                )
             }?:run {
-                return LoanApplyAssembly.convertToLoanAgent(dataString)
+                return GetData(
+                    productType = null,
+                    data = LoanApplyAssembly.convertToLoanAgent(dataString)
+                )
             }
-        }?:run { return null }
+        }?:run { return GetData(
+            productType = null,
+            data = null
+        ) }
     }
 
     private fun rePaged(content:MutableList<DTOEventHandleView>,pageable: Pageable):Page<DTOEventHandleView>{

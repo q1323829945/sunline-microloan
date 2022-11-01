@@ -41,6 +41,10 @@ class AppProcessDefinitionService(
         return convert(process)
     }
 
+    fun preflightCheckEvent(id: Long){
+        val process = processDefinitionService.detail(id)
+    }
+
     fun updateOne(id: Long, dtoProcessDefinition: DTOProcessDefinition): DTOProcessDefinitionView {
         val oldOne = processDefinitionService.preflightCheckProcessStatus(id)
         val process = processDefinitionService.updateOne(oldOne, dtoProcessDefinition)

@@ -1,5 +1,6 @@
 package cn.sunline.saas.workflow.event.service.dto
 
+import cn.sunline.saas.global.constant.ProductType
 import cn.sunline.saas.workflow.defintion.modules.EventType
 import cn.sunline.saas.workflow.step.modules.StepStatus
 import java.util.*
@@ -27,5 +28,6 @@ data class DTOEventHandleDetail(
     val id:String,
     val applicationId: String,
     val nextPosition:String? = null,
-    val data:Any? = null
+    val data:Any? = null,
+    val productType: ProductType? = null
 )
