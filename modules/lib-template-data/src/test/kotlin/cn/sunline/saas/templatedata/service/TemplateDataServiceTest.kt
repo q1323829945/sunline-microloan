@@ -12,9 +12,10 @@ class TemplateDataServiceTest {
 
     @Autowired
     private lateinit var templateDataService: TemplateDataService
+
     @Test
-    fun `get template data`(){
-        val templateData = templateDataService.getTemplateData<TestClass>(TestClass::class, false)
+    fun `get template data`() {
+        val templateData = templateDataService.getTemplateData<TestClass>(TestClass::class, null, false)
         val i = 0
     }
 }
