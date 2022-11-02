@@ -5,6 +5,7 @@ import cn.sunline.saas.loan.service.LoanApplyService
 import cn.sunline.saas.loan.service.assembly.LoanApplyAssembly
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.create.CreateScheduler
+import cn.sunline.saas.workflow.defintion.modules.EventType
 import cn.sunline.saas.workflow.event.handle.factory.EventFactory
 import cn.sunline.saas.workflow.event.handle.helper.EventHandleCommand
 import cn.sunline.saas.workflow.event.service.dto.DTOEventHandle
@@ -97,7 +98,7 @@ class EventHandleService(
         }
 
 
-        val data = getData(event.data!!.applicationId,event.data!!.data)
+        val data = getData(event.data!!.applicationId,event.data!!.data,event.eventDefinition.type)
 
         return DTOEventHandleDetail(
             event.id.toString(),
@@ -115,29 +116,35 @@ class EventHandleService(
         val data:Any?
     )
 
-    private fun getData(applicationId:Long,data:String?):GetData{
-        val apply = loanApplyService.getOne(applicationId)
-        data?.let { dataString ->
-            apply?.run {
-                val convert:Any = when(this.productType){
-                    ProductType.NEW_CLIENT -> LoanApplyAssembly.convertToNewClientLoanView(dataString)
-                    ProductType.CLIENT -> LoanApplyAssembly.convertToClientLoanView(dataString)
-                    ProductType.TEACHER -> LoanApplyAssembly.convertToTeacherLoanView(dataString)
-                    ProductType.KABUHAYAN -> LoanApplyAssembly.convertToKabuhayanLoanView(dataString)
-                    ProductType.CORPORATE -> LoanApplyAssembly.convertToCorporateLoanView(dataString)
-                }
-
-                return GetData(
-                    productType = this.productType,
-                    data = convert
-                )
-            }?:run {
+    private fun getData(applicationId:Long,data:String?,eventType: EventType):GetData{
+        if(data != null){
+            if(eventType == EventType.CHECK_CUSTOMER || eventType == EventType.CHECK_DATA|| eventType == EventType.PRE_APPROVAL){
                 return GetData(
                     productType = null,
-                    data = LoanApplyAssembly.convertToLoanAgent(dataString)
+                    data = LoanApplyAssembly.convertToLoanAgent(data)
+                )
+            }else {
+                val apply = loanApplyService.getOne(applicationId)
+                apply?.run {
+                    val convert:Any = when(this.productType){
+                        ProductType.NEW_CLIENT -> LoanApplyAssembly.convertToNewClientLoanView(data)
+                        ProductType.CLIENT -> LoanApplyAssembly.convertToClientLoanView(data)
+                        ProductType.TEACHER -> LoanApplyAssembly.convertToTeacherLoanView(data)
+                        ProductType.KABUHAYAN -> LoanApplyAssembly.convertToKabuhayanLoanView(data)
+                        ProductType.CORPORATE -> LoanApplyAssembly.convertToCorporateLoanView(data)
+                    }
+                    return GetData(
+                        productType = this.productType,
+                        data = convert
+                    )
+                }
+                return GetData(
+                    productType = null,
+                    data = null
                 )
             }
-        }?:run { return GetData(
+        } else {
+            return GetData(
                 productType = null,
                 data = null
             )
