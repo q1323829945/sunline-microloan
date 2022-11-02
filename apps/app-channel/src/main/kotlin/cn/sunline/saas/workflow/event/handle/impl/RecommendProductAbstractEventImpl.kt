@@ -45,8 +45,17 @@ class RecommendProductAbstractEventImpl(
             return
         }
 
-        val loanAgent = loanAgentService.updateOne(data.applicationId, data.productId)
+        val oldLoanAgent = loanAgentService.getOne(data.applicationId)?: throw LoanApplyNotFoundException("Invalid loan apply")
         val product = productService.getProduct(data.productId)
+        val loanAgentData = LoanApplyAssembly.convertToLoanAgent(oldLoanAgent.data)
+        loanAgentData.applicationId = oldLoanAgent.applicationId.toString()
+        loanAgentData.productType = product.productType
+        loanAgentData.productId = product.id
+        loanAgentData.productName = product.name
+
+        val loanAgent = loanAgentService.updateOne(oldLoanAgent, data.productId,objectMapper.writeValueAsString(loanAgentData))
+
+
 
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
         dtoLoanAgent.applicationId = loanAgent.applicationId.toString()
@@ -80,12 +89,6 @@ class RecommendProductAbstractEventImpl(
 
         audit(loanApply.applicationId)
 
-        val loanAgentData = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
-        loanAgentData.applicationId = loanAgent.applicationId.toString()
-        loanAgentData.productType = product.productType
-        loanAgentData.productId = product.id
-        loanAgentData.productName = product.name
-
         eventStepService.updateOne(
             eventHandleCommand.eventStep.id,
             DTOEventStepChange(
@@ -93,7 +96,7 @@ class RecommendProductAbstractEventImpl(
                 end = tenantDateTime.now().toDate(),
             )
         )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,objectMapper.writeValueAsString(loanAgentData))
+        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanAgent.data)
 
         handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
     }

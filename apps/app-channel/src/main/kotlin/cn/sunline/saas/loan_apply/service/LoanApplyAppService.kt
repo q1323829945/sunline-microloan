@@ -46,12 +46,7 @@ import cn.sunline.saas.channel.statistics.modules.dto.DTOLoanApplicationDetail
 import cn.sunline.saas.channel.statistics.services.CommissionDetailService
 import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.global.util.setTenant
-import cn.sunline.saas.minio.MinioService
-import cn.sunline.saas.obs.api.GetParams
-import cn.sunline.saas.obs.api.ObsApi
 import cn.sunline.saas.scheduler.dojob.dto.DTOCreateEventScheduler
-import cn.sunline.saas.workflow.defintion.modules.DefinitionStatus
-import cn.sunline.saas.workflow.defintion.services.ProcessDefinitionService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -371,8 +366,18 @@ class LoanApplyAppService {
 
     @Transactional(rollbackFor = [Exception::class])
     fun addProduct(applicationId: String, productId: String) {
-        val loanAgent = loanAgentService.updateOne(applicationId.toLong(), productId.toLong())
+        val oldLoanAgent = loanAgentService.getOne(applicationId.toLong())?: throw LoanApplyNotFoundException("Invalid loan apply")
         val product = productService.getProduct(productId.toLong())
+        val loanAgentData = LoanApplyAssembly.convertToLoanAgent(oldLoanAgent.data)
+        loanAgentData.applicationId = oldLoanAgent.applicationId.toString()
+        loanAgentData.productType = product.productType
+        loanAgentData.productId = product.id
+        loanAgentData.productName = product.name
+
+        val loanAgent = loanAgentService.updateOne(oldLoanAgent, productId.toLong(),objectMapper.writeValueAsString(loanAgentData))
+
+
+
 
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
         dtoLoanAgent.applicationId = loanAgent.applicationId.toString()
@@ -408,15 +413,7 @@ class LoanApplyAppService {
     }
 
     fun getLoanAgentDetail(applicationId: String): DTOLoanAgent {
-        val loanAgent = loanAgentService.getDetails(applicationId.toLong())
-        loanAgent.productId?.run {
-            val product = productService.getOne(this.toLong())
-            product?.run {
-                loanAgent.productName = this.name
-            }
-        }
-
-        return loanAgent
+        return loanAgentService.getDetails(applicationId.toLong())
     }
 
     fun getPaged(
