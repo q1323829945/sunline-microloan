@@ -117,8 +117,9 @@ class EventHandleService(
     )
 
     private fun getData(applicationId:Long,data:String?,eventType: EventType):GetData{
+        println(data)
         if(data != null){
-            if(eventType == EventType.CHECK_CUSTOMER || eventType == EventType.CHECK_DATA|| eventType == EventType.PRE_APPROVAL){
+            if(eventType == EventType.CHECK_CUSTOMER || eventType == EventType.CHECK_DATA|| eventType == EventType.RECOMMEND_PRODUCT){
                 return GetData(
                     productType = null,
                     data = LoanApplyAssembly.convertToLoanAgent(data)

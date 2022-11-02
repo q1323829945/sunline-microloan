@@ -67,7 +67,7 @@ abstract class AbstractEventStepHandle(
     }
 
     protected fun setEventStepData(eventStepId:Long,applicationId: Long,data:Any? = null){
-        eventStepDataService.addOne(
+        eventStepDataService.addData(
             DTOEventStepData(
                 eventStepId,
                 applicationId,
