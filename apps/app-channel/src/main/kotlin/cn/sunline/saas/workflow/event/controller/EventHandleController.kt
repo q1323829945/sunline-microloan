@@ -32,8 +32,9 @@ class EventHandleController {
     }
 
     @PutMapping("{id}")
-    fun updateOne(@PathVariable id:Long,@RequestBody dtoEventHandle: DTOEventHandle){
+    fun updateOne(@PathVariable id:Long,@RequestBody dtoEventHandle: DTOEventHandle):ResponseEntity<DTOResponseSuccess<Boolean>>{
         eventHandleService.updateEventStep(id, dtoEventHandle)
+        return DTOResponseSuccess(true).response()
     }
 
     @GetMapping("{id}")

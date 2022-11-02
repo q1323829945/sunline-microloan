@@ -80,6 +80,12 @@ class RecommendProductAbstractEventImpl(
 
         audit(loanApply.applicationId)
 
+        val loanAgentData = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
+        loanAgentData.applicationId = loanAgent.applicationId.toString()
+        loanAgentData.productType = product.productType
+        loanAgentData.productId = product.id
+        loanAgentData.productName = product.name
+
         eventStepService.updateOne(
             eventHandleCommand.eventStep.id,
             DTOEventStepChange(
@@ -87,7 +93,7 @@ class RecommendProductAbstractEventImpl(
                 end = tenantDateTime.now().toDate(),
             )
         )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanAgent.data)
+        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,objectMapper.writeValueAsString(loanAgentData))
 
         handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
     }

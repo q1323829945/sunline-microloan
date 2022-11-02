@@ -73,7 +73,7 @@ class EventHandleService(
             }
         }
 
-        dtoEventHandles.sortByDescending { it.id }
+        dtoEventHandles.sortByDescending { it.start }
 
         return rePaged(dtoEventHandles,pageable)
     }
