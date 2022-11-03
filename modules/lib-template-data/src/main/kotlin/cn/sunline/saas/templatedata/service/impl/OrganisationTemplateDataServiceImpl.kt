@@ -86,6 +86,9 @@ class OrganisationTemplateDataServiceImpl : TemplateDataService() {
                     mapData[param] = "org_" + sequence.nextId().toString().substring(6, 9)
                 }
             }
+            if (param.name!! == "parentOrganisationId") {
+                mapData[param] = null
+            }
             if (param.name!! == "organisationRegistrationDate") {
                 mapData[param] = tenantDateTime.getYearMonthDay(tenantDateTime.now())
             }
