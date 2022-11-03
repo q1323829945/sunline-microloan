@@ -20,7 +20,7 @@ class EventStepDataService (
         }
     }
 
-    fun addOne(dtoEventStepData: DTOEventStepData):EventStepData{
+    private fun addOne(dtoEventStepData: DTOEventStepData):EventStepData{
         return save(
             EventStepData(
                 id = dtoEventStepData.id,
@@ -31,7 +31,7 @@ class EventStepDataService (
     }
 
 
-    fun updateOne(eventStepData: EventStepData,dtoEventStepData: DTOEventStepData):EventStepData{
+    private fun updateOne(eventStepData: EventStepData,dtoEventStepData: DTOEventStepData):EventStepData{
         dtoEventStepData.data?.run { eventStepData.data = this }
         return save(eventStepData)
     }

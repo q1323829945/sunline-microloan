@@ -111,6 +111,7 @@ enum class PermissionConfig (
     EVENT_HANDLE_GET_LEST("workflow","event/handle(\\?.*|\$)",RequestMethod.GET,"get event handle list"),
     EVENT_HANDLE_GET_ONE("workflow","event/handle/[0-9]+\$",RequestMethod.GET,"get event handle detail"),
     EVENT_HANDLE_MODIFY("workflow","event/handle/[0-9]+\$",RequestMethod.PUT,"modify event handle "),
+    EVENT_HANDLE_USER_MODIFY("workflow","event/handle/user\$",RequestMethod.PUT,"modify event handle user"),
 
     //menu
     MENU_GET_LIST("menu","menus(\\?.*|\$)",RequestMethod.GET,"View menu"),

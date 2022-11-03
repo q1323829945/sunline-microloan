@@ -32,6 +32,7 @@ class ProcessDefinition (
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "process_id")
+    @OrderBy("sort asc,id desc")
     val activities: MutableList<ActivityDefinition> = mutableListOf(),
 
     @Temporal(TemporalType.TIMESTAMP)

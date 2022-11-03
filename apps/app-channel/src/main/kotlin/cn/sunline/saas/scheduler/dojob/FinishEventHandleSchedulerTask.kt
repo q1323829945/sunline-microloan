@@ -26,8 +26,7 @@ class FinishEventHandleSchedulerTask (
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobHelper.getSchedulerJobLog(jobId.toLong())
-        schedulerJobHelper.execute(schedulerJobLog)
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         val process = processStepService.getOne(actorId.toLong())?: run {
             schedulerJobHelper.failed(schedulerJobLog,"process $jobId lose!")

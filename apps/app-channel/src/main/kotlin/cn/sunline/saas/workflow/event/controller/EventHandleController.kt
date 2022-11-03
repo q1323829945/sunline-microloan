@@ -19,6 +19,11 @@ class EventHandleController {
     @Autowired
     private lateinit var eventHandleService: EventHandleService
 
+    data class DTOSetUser(
+        val id:Long,
+        val user:String
+    )
+
     @GetMapping
     fun paged(@PathParam("status")status: StepStatus?,pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = eventHandleService.getEventHandlePaged(null,status, pageable)
@@ -29,6 +34,12 @@ class EventHandleController {
     fun userPaged(@RequestHeader(required = true, name = "X-Authorization-Username") user: String, @PathParam("status")status: StepStatus?, pageable: Pageable):ResponseEntity<DTOPagedResponseSuccess>{
         val paged = eventHandleService.getEventHandlePaged(user,status, pageable)
         return DTOPagedResponseSuccess(paged.map { it }).response()
+    }
+
+    @PutMapping("user")
+    fun setUser(@RequestBody dtoSetUser: DTOSetUser):ResponseEntity<DTOResponseSuccess<Boolean>>{
+        eventHandleService.setUser(dtoSetUser.id,dtoSetUser.user)
+        return DTOResponseSuccess(true).response()
     }
 
     @PutMapping("{id}")

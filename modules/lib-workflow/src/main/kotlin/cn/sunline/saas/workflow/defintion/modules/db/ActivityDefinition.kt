@@ -51,6 +51,7 @@ class ActivityDefinition (
     }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.MERGE,CascadeType.REFRESH], orphanRemoval = true, mappedBy = "activityId")
+    @OrderBy("sort asc,id desc")
     var events: MutableList<EventDefinition> = mutableListOf()
         set(value) {
             this.events.clear()

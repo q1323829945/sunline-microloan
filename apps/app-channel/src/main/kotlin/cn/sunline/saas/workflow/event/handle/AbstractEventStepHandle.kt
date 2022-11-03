@@ -25,26 +25,54 @@ abstract class AbstractEventStepHandle(
 
     private val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    protected fun setNextEventStepStart(user:String,eventStep: EventStep,applicationId:Long,data:Any? = null){
+    protected fun setNextEventStepProcessing(user:String,eventStep: EventStep,applicationId:Long){
         eventStep.next?.let {
             val nextEventStep = getNextStep(it)
-            nextEventStep?.run { setEventStepStart(user, this,applicationId,data) }
+            nextEventStep?.run { setEventStepProcessing(user, this,applicationId) }
         }?: run {
-            setNextActivityFirstEventStart(user, eventStep.activityStepId,applicationId,data)
+            setNextActivityFirstEventProcessing(user, eventStep.activityStepId,applicationId)
         }
     }
 
-    protected fun setCurrentEventStepStart(user:String, eventStep: EventStep,applicationId:Long,data:Any? = null){
-        setEventStepStart(user, eventStep, applicationId, data)
+    protected fun setCurrentEventStepProcessing(user:String, eventStep: EventStep,applicationId:Long){
+        setEventStepProcessing(user, eventStep, applicationId)
         setCurrentActivityStart(eventStep.activityStepId)
     }
 
-    private fun setNextActivityFirstEventStart(user: String,activityStepId:Long,applicationId:Long,data:Any? = null){
+    protected fun setNextEventStepStart(eventStep: EventStep,applicationId: Long,data: Any? = null){
+        eventStep.next?.let {
+            val nextEventStep = getNextStep(it)
+            nextEventStep?.run { setEventStepStart(this.id,applicationId,data) }
+        }?:run {
+            setNextActivityFirstEventStart(eventStep.activityStepId,applicationId,data)
+        }
+    }
+
+    private fun setEventStepStart(eventStepId :Long,applicationId: Long,data: Any? = null){
+        eventStepService.updateOne(eventStepId,
+            DTOEventStepChange(
+                status = StepStatus.START,
+            )
+        )
+        setEventStepData(eventStepId,applicationId,data)
+    }
+
+    private fun setNextActivityFirstEventStart(activityStepId:Long,applicationId: Long,data: Any? = null){
+        val nextActivity = setNextActivityStart(activityStepId)
+        nextActivity?.run {
+            val event = getFirstEvent(this.id)
+            event?.run {
+                setEventStepStart(event.id,applicationId,data)
+            }
+        }
+    }
+
+    private fun setNextActivityFirstEventProcessing(user: String,activityStepId:Long,applicationId:Long){
         val nextActivity = setActivityFinishAndGetNextActivity(activityStepId)
         nextActivity?.run {
             val event = getFirstEvent(this.id)
             event?.run {
-                setEventStepStart(user,event,applicationId,data)
+                setEventStepProcessing(user,event,applicationId)
             }?: run {
                 setActivityFinish(this.id)
             }
@@ -54,7 +82,7 @@ abstract class AbstractEventStepHandle(
     private fun getNextStep(nextEventStepId:Long):EventStep?{
         return eventStepService.getOne(nextEventStepId)
     }
-    private fun setEventStepStart(user:String, eventStep: EventStep,applicationId:Long,data:Any? = null){
+    private fun setEventStepProcessing(user:String, eventStep: EventStep,applicationId:Long){
         eventStepService.updateOne(eventStep.id,
             DTOEventStepChange(
                 user = user,
@@ -63,7 +91,7 @@ abstract class AbstractEventStepHandle(
             )
         )
 
-        setEventStepData(eventStep.id,applicationId,data)
+        setEventStepData(eventStep.id,applicationId)
     }
 
     protected fun setEventStepData(eventStepId:Long,applicationId: Long,data:Any? = null){

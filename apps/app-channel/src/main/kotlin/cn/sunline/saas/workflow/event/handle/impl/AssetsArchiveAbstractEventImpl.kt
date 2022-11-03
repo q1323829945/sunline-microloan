@@ -33,8 +33,7 @@ class AssetsArchiveAbstractEventImpl(
 
     override fun doHandle(eventHandleCommand: EventHandleCommand){
         if(eventHandleCommand.status == StepStatus.REJECTED){
-            rejected(eventHandleCommand.eventStep)
-            setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
+            rejected(eventHandleCommand.eventStep,eventHandleCommand.applicationId)
             return
         }
 
@@ -52,16 +51,9 @@ class AssetsArchiveAbstractEventImpl(
 
         audit(loanApply.applicationId)
 
-        eventStepService.updateOne(
-            eventHandleCommand.eventStep.id,
-            DTOEventStepChange(
-                status = eventHandleCommand.status,
-                end = tenantDateTime.now().toDate(),
-            )
-        )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanApply.data)
+        passed(eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
 
-        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
+        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId)
     }
 
     private fun audit(applicationId: Long) {

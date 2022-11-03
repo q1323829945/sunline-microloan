@@ -73,7 +73,11 @@ class EventHandleService(
             }
         }
 
-        dtoEventHandles.sortByDescending { it.start }
+        if(user != null){
+            dtoEventHandles.sortByDescending { it.start }
+        } else {
+            dtoEventHandles.sortByDescending { it.id }
+        }
 
         return rePaged(dtoEventHandles,pageable)
     }
@@ -81,7 +85,17 @@ class EventHandleService(
 
     fun updateEventStep(id:Long,dtoEventHandle: DTOEventHandle){
         val event = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
-        eventFactory.instance(event.eventDefinition.type).doHandle(EventHandleCommand(dtoEventHandle.applicationId,event,dtoEventHandle.status,dtoEventHandle.user,dtoEventHandle.data))
+        val user = if(dtoEventHandle.user.isNullOrEmpty()){
+            null
+        } else {
+            dtoEventHandle.user
+        }
+        eventFactory.instance(event.eventDefinition.type).doHandle(EventHandleCommand(dtoEventHandle.applicationId,event,dtoEventHandle.status,user,dtoEventHandle.data))
+    }
+
+    fun setUser(id:Long,user: String){
+        val eventStep = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
+        eventFactory.instance(eventStep.eventDefinition.type).setCurrent(user,eventStep,eventStep.data!!.applicationId)
     }
 
     fun detail(id: Long): DTOEventHandleDetail {

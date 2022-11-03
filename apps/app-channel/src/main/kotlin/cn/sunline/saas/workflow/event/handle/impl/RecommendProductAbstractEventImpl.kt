@@ -40,8 +40,7 @@ class RecommendProductAbstractEventImpl(
         val data = eventHandleCommand.payload<DTORecommendProduct>()!!
 
         if(eventHandleCommand.status == StepStatus.REJECTED){
-            rejected(eventHandleCommand.eventStep)
-            setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
+            rejected(eventHandleCommand.eventStep,eventHandleCommand.applicationId)
             return
         }
 
@@ -54,9 +53,6 @@ class RecommendProductAbstractEventImpl(
         loanAgentData.productName = product.name
 
         val loanAgent = loanAgentService.updateOne(oldLoanAgent, data.productId,objectMapper.writeValueAsString(loanAgentData))
-
-
-
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
         dtoLoanAgent.applicationId = loanAgent.applicationId.toString()
 
@@ -89,23 +85,16 @@ class RecommendProductAbstractEventImpl(
 
         audit(loanApply.applicationId)
 
-        eventStepService.updateOne(
-            eventHandleCommand.eventStep.id,
-            DTOEventStepChange(
-                status = eventHandleCommand.status,
-                end = tenantDateTime.now().toDate(),
-            )
-        )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanAgent.data)
+        passed(eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
 
-        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply.data)
+        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId)
     }
 
 
     private fun audit(applicationId: Long) {
         val loanAgent = loanAgentService.getOne(applicationId) ?: throw LoanApplyNotFoundException("Invalid loan apply")
         loanApplyAuditService.addLoanApplyAudit(
-            dtoLoanApplyAuditAdd = DTOLoanApplyAuditAdd(
+            DTOLoanApplyAuditAdd(
                 applicationId = loanAgent.applicationId.toString(),
                 name = loanAgent.name,
                 productId = loanAgent.productId,

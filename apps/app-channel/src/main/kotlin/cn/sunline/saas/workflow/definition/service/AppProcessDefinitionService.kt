@@ -46,20 +46,17 @@ class AppProcessDefinitionService(
 
     fun preflightCheckEvent(id: Long){
         val process = processDefinitionService.detail(id)
-        val sortList = process.activities.flatMap { it.events }.sortedWith { eventA, eventB ->
-            if (eventA.sort != eventB.sort) {
-                eventA.sort.compareTo(eventB.sort)   //asc sort
-            } else {
-                eventB.id.compareTo(eventA.id)   //desc id
-            }
-        }
+
+
+        val sortList = process.activities.flatMap { it.events }
+
         val recommendProduct = sortList.firstOrNull { it.type == EventType.RECOMMEND_PRODUCT }?:run {
             throw ProcessDefinitionUpdateException("Invalid event recommendProduct!!Status can not be update !!!")
         }
 
-
         val recommendProductIndex = sortList.indexOf(recommendProduct)
         val indexMap = sortList.associateBy { sortList.indexOf(it) }
+
         val checkTypes = mutableListOf(EventType.ASSETS_ARCHIVE,EventType.CUSTOMER_ARCHIVE,EventType.COLLECT_INFORMATION,EventType.PRE_APPROVAL)
         indexMap.forEach { (index, eventDefinition) ->
             if(index < recommendProductIndex && checkTypes.contains(eventDefinition.type)){

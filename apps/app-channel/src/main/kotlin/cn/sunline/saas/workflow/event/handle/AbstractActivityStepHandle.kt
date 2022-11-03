@@ -31,6 +31,22 @@ abstract class AbstractActivityStepHandle(
         return activityStep.next?.run { activityStepService.getOne(this) }
     }
 
+    protected fun setNextActivityStart(activityStepId: Long):ActivityStep?{
+        val activity = getActivity(activityStepId)
+        return activity?.run {
+            setActivityStart(this)
+        }
+    }
+
+    private fun setActivityStart(activityStep: ActivityStep):ActivityStep?{
+        return activityStep.next?.run {
+            activityStepService.updateOne(
+                this,
+                DTOActivityStepChange(status = StepStatus.START)
+            )
+        }
+    }
+
     protected fun setActivityFinishAndGetNextActivity(activityStepId:Long):ActivityStep?{
         val activity = getActivity(activityStepId)
         activity?.run {
@@ -48,11 +64,11 @@ abstract class AbstractActivityStepHandle(
             setProcessFinish(activityStep.processStepId)
             null
         }else {
-            setNextActivityStart(activityStep)
+            setNextActivityProcessing(activityStep)
         }
     }
 
-    private fun setNextActivityStart(activityStep: ActivityStep):ActivityStep?{
+    private fun setNextActivityProcessing(activityStep: ActivityStep):ActivityStep?{
         val nextActivity = getNextActivity(activityStep)
         nextActivity?.run {
             activityStepService.updateOne(this.id,

@@ -5,7 +5,6 @@ data class DTOSetEventUserScheduler (
     val applicationId:String,
     val eventStepId: String,
     val position:String,
-    val body:Any? = null,
     val isCurrentEventStep:Boolean = false
 )
 

@@ -43,8 +43,7 @@ class SetEventUserSchedulerTask(
     )
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobHelper.getSchedulerJobLog(jobId.toLong())
-        schedulerJobHelper.execute(schedulerJobLog)
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         val payload = data.payload<DTOSetEventUserScheduler>()?: run {
             logger.error { "data error" }
@@ -88,9 +87,9 @@ class SetEventUserSchedulerTask(
                         supplement = user
                     )
                 )
-                eventFactory.instance(event.eventDefinition.type).setCurrent(user,event,payload.applicationId.toLong(),payload.body)
+                eventFactory.instance(event.eventDefinition.type).setCurrent(user,event,payload.applicationId.toLong())
             } else {
-                eventFactory.instance(event.eventDefinition.type).setNext(user,event,payload.applicationId.toLong(),payload.body)
+                eventFactory.instance(event.eventDefinition.type).setNext(user,event,payload.applicationId.toLong())
             }
 
             schedulerJobHelper.succeed(schedulerJobLog)
