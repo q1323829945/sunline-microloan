@@ -1,6 +1,8 @@
 package cn.sunline.saas.workflow.event.service
 
 import cn.sunline.saas.global.constant.ProductType
+import cn.sunline.saas.loan.model.dto.DTOLoanApplyHandle
+import cn.sunline.saas.loan.service.LoanApplyHandleService
 import cn.sunline.saas.loan.service.LoanApplyService
 import cn.sunline.saas.loan.service.assembly.LoanApplyAssembly
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
@@ -38,6 +40,8 @@ class EventHandleService(
     private lateinit var activityStepService: ActivityStepService
     @Autowired
     private lateinit var loanApplyService:LoanApplyService
+    @Autowired
+    private lateinit var loanApplyHandleService: LoanApplyHandleService
 
 
 
@@ -73,7 +77,11 @@ class EventHandleService(
             }
         }
 
-        dtoEventHandles.sortByDescending { it.id }
+        if(user != null){
+            dtoEventHandles.sortByDescending { it.start }
+        } else {
+            dtoEventHandles.sortByDescending { it.id }
+        }
 
         return rePaged(dtoEventHandles,pageable)
     }
@@ -81,7 +89,26 @@ class EventHandleService(
 
     fun updateEventStep(id:Long,dtoEventHandle: DTOEventHandle){
         val event = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
-        eventFactory.instance(event.eventDefinition.type).doHandle(EventHandleCommand(dtoEventHandle.applicationId,event,dtoEventHandle.status,dtoEventHandle.user,dtoEventHandle.data))
+        val user = if(dtoEventHandle.user.isNullOrEmpty()){
+            null
+        } else {
+            dtoEventHandle.user
+        }
+        eventFactory.instance(event.eventDefinition.type).doHandle(EventHandleCommand(dtoEventHandle.applicationId,event,dtoEventHandle.status,user,dtoEventHandle.data))
+    }
+
+    fun setUser(id:Long,user: String){
+        val eventStep = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
+        eventStep.user?.run {
+            return
+        }
+        loanApplyHandleService.saveOne(
+            DTOLoanApplyHandle(
+                applicationId = eventStep.data!!.applicationId.toString(),
+                supplement = user
+            )
+        )
+        eventFactory.instance(eventStep.eventDefinition.type).setCurrent(user,eventStep,eventStep.data!!.applicationId)
     }
 
     fun detail(id: Long): DTOEventHandleDetail {
@@ -117,8 +144,9 @@ class EventHandleService(
     )
 
     private fun getData(applicationId:Long,data:String?,eventType: EventType):GetData{
+        println(data)
         if(data != null){
-            if(eventType == EventType.CHECK_CUSTOMER || eventType == EventType.CHECK_DATA|| eventType == EventType.PRE_APPROVAL){
+            if(eventType == EventType.CHECK_CUSTOMER || eventType == EventType.CHECK_DATA|| eventType == EventType.RECOMMEND_PRODUCT){
                 return GetData(
                     productType = null,
                     data = LoanApplyAssembly.convertToLoanAgent(data)

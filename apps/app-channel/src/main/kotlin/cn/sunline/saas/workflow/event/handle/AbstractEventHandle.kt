@@ -29,43 +29,55 @@ abstract class AbstractEventHandle(
 
     val objectMapper: ObjectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    fun setNext(user:String,eventStep: EventStep,applicationId:Long,data:Any? = null){
-        setNextEventStepStart(user, eventStep,applicationId, data)
+    fun setNext(user:String,eventStep: EventStep,applicationId:Long){
+        setNextEventStepProcessing(user, eventStep,applicationId)
     }
 
-    fun setCurrent(user:String,eventStep: EventStep,applicationId:Long,data:Any? = null){
-        setCurrentEventStepStart(user, eventStep, applicationId, data)
+    fun setCurrent(user:String,eventStep: EventStep,applicationId:Long){
+        setCurrentEventStepProcessing(user, eventStep, applicationId)
     }
 
-    protected fun handleNext(user: String?,eventStep: EventStep,applicationId:Long,data:Any? = null){
+    protected fun handleNext(user: String?,eventStep: EventStep,applicationId:Long){
         if(user!= null){
-            setNext(user,eventStep,applicationId,data)
+            setNext(user,eventStep,applicationId)
         } else {
-            toActorEventHandle(eventStep,applicationId,data)
+            toActorEventHandle(eventStep,applicationId)
         }
     }
 
-    private fun toActorEventHandle(eventStep: EventStep,applicationId:Long,data:Any? = null){
+    private fun toActorEventHandle(eventStep: EventStep,applicationId:Long){
         val activity = getActivity(eventStep.activityStepId)!!
 
         val dtoSetEventUserScheduler = DTOSetEventUserScheduler(
             applicationId = applicationId.toString(),
             eventStepId = eventStep.id.toString(),
             position = activity.activityDefinition.position,
-            body = data,
             isCurrentEventStep = false
         )
 
         createScheduler.create(ActorType.SET_EVENT_USER,eventStep.id.toString(),dtoSetEventUserScheduler)
     }
 
-    protected fun rejected(eventStep: EventStep){
+    protected fun passed(eventStep: EventStep,applicationId: Long,data:Any? = null){
+        eventStepService.updateOne(eventStep.id,
+            DTOEventStepChange(
+                status = StepStatus.PASSED,
+                end = tenantDateTime.now().toDate()
+            )
+        )
+        setEventStepData(eventStep.id,applicationId)
+        setNextEventStepStart(eventStep,applicationId, data)
+    }
+
+    protected fun rejected(eventStep: EventStep,applicationId: Long,data:Any? = null){
         eventStepService.updateOne(eventStep.id,
             DTOEventStepChange(
                 status = StepStatus.REJECTED,
                 end = tenantDateTime.now().toDate()
             )
         )
+        setEventStepData(eventStep.id,applicationId,data)
+
         getProcess(eventStep)?.run {
             createScheduler.create(ActorType.FINISH_EVENT_HANDLE,this.id.toString())
         }

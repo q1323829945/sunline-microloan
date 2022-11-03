@@ -11,7 +11,16 @@ class EventStepDataService (
     private val eventStepDataRepository: EventStepDataRepository,
 ): BaseMultiTenantRepoService<EventStepData, Long>(eventStepDataRepository) {
 
-    fun addOne(dtoEventStepData: DTOEventStepData):EventStepData{
+    fun addData(dtoEventStepData: DTOEventStepData):EventStepData{
+        val eventStepData = getOne(dtoEventStepData.id)
+        return if(eventStepData != null){
+            updateOne(eventStepData,dtoEventStepData)
+        } else {
+            addOne(dtoEventStepData)
+        }
+    }
+
+    private fun addOne(dtoEventStepData: DTOEventStepData):EventStepData{
         return save(
             EventStepData(
                 id = dtoEventStepData.id,
@@ -19,5 +28,11 @@ class EventStepDataService (
                 data = dtoEventStepData.data
             )
         )
+    }
+
+
+    private fun updateOne(eventStepData: EventStepData,dtoEventStepData: DTOEventStepData):EventStepData{
+        dtoEventStepData.data?.run { eventStepData.data = this }
+        return save(eventStepData)
     }
 }

@@ -25,23 +25,14 @@ class CheckDataAbstractEventImpl(
 
     override fun doHandle(eventHandleCommand: EventHandleCommand){
         if(eventHandleCommand.status == StepStatus.REJECTED){
-            setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
-            rejected(eventHandleCommand.eventStep)
+            rejected(eventHandleCommand.eventStep,eventHandleCommand.applicationId)
             return
         }
-
-        eventStepService.updateOne(
-            eventHandleCommand.eventStep.id,
-            DTOEventStepChange(
-                status = eventHandleCommand.status,
-                end = tenantDateTime.now().toDate()
-            )
-        )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId)
-
         val loanAgent = loanAgentService.getOne(eventHandleCommand.applicationId)?:throw LoanApplyNotFoundException("Invalid loan !!")
 
-        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanAgent.data)
+        passed(eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanAgent.data)
+
+        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId)
     }
 
 }

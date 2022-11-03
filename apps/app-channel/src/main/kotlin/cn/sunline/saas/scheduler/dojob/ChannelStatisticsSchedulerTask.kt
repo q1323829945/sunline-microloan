@@ -15,13 +15,14 @@ import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import cn.sunline.saas.dapr_wrapper.actor.ActorCommand
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.setTenant
+import cn.sunline.saas.scheduler.job.helper.SchedulerJobHelper
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
 
 class ChannelStatisticsSchedulerTask(
     private val tenantDateTime: TenantDateTime,
-    private val schedulerJobLogService: SchedulerJobLogService,
+    private val schedulerJobHelper: SchedulerJobHelper,
     private val organisationService: OrganisationService,
     private val customerDetailService: CustomerDetailService,
     actorType:String = ActorType.CHANNEL_STATISTICS.name,
@@ -32,12 +33,7 @@ class ChannelStatisticsSchedulerTask(
     private var logger = KotlinLogging.logger {}
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
-        schedulerJobLog?.run {
-            ContextUtil.setTenant(this.getTenantId().toString())
-            this.execute(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         try {
             val organisation = organisationService.getDetail(actorId.toLong())
@@ -64,10 +60,7 @@ class ChannelStatisticsSchedulerTask(
         }
 
         logger.info("[doJob]:  add channel $actorId statistic Success")
-        schedulerJobLog?.run {
-            this.succeed(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        schedulerJobHelper.succeed(schedulerJobLog)
         //delete reminder
         ActorReminderService.deleteReminders(actorType, actorId, jobId)
     }

@@ -33,10 +33,8 @@ class PreApprovalAbstractEventImpl(
     override fun doHandle(eventHandleCommand: EventHandleCommand){
         val data = eventHandleCommand.payload<DTOPreApproval>()!!
 
-
         if(eventHandleCommand.status == StepStatus.REJECTED){
-            rejected(eventHandleCommand.eventStep)
-            setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,eventHandleCommand.data)
+            rejected(eventHandleCommand.eventStep,eventHandleCommand.applicationId,eventHandleCommand.data)
             return
         }
 
@@ -52,16 +50,10 @@ class PreApprovalAbstractEventImpl(
 
         val loanApply = loanApplyService.getLoanApplyDetails(data.applicationId)
 
-        eventStepService.updateOne(
-            eventHandleCommand.eventStep.id,
-            DTOEventStepChange(
-                status = eventHandleCommand.status,
-                end = tenantDateTime.now().toDate(),
-            )
-        )
-        setEventStepData(eventHandleCommand.eventStep.id,eventHandleCommand.applicationId,loanApply)
 
-        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply)
+        passed(eventHandleCommand.eventStep,eventHandleCommand.applicationId,loanApply)
+
+        handleNext(eventHandleCommand.user,eventHandleCommand.eventStep,eventHandleCommand.applicationId)
     }
 
 }

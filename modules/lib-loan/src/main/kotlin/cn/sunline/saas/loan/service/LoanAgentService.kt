@@ -42,14 +42,13 @@ class LoanAgentService (
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun updateOne(applicationId:Long,productId:Long):LoanAgent{
-        val loanAgent = getOne(applicationId)?: throw LoanApplyNotFoundException("Invalid loan apply")
-
-        loanAgent.productId?.run {
+    fun updateOne(oldLoanAgent:LoanAgent,productId:Long,data:String? = null):LoanAgent{
+        oldLoanAgent.productId?.run {
             throw LoanAgentHasBeenProductTypeException("The loan apply has been product!")
         }
-        loanAgent.productId = productId
-        return save(loanAgent)
+        oldLoanAgent.productId = productId
+        data?.run { oldLoanAgent.data = this }
+        return save(oldLoanAgent)
     }
 
     fun updateStatus(applicationId: Long,status: ApplyStatus): LoanAgent {

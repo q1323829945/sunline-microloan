@@ -15,16 +15,14 @@ class SchedulerJobHelper(
     private val schedulerJobLogService: SchedulerJobLogService,
     private val tenantDateTime: TenantDateTime,
 ) {
-    fun getSchedulerJobLog(jobId:Long): SchedulerJobLog?{
-        return schedulerJobLogService.getOne(jobId)
-    }
-
-    fun execute(schedulerJobLog: SchedulerJobLog?){
+    fun execute(jobId:String): SchedulerJobLog?{
+        val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
         schedulerJobLog?.run {
             ContextUtil.setTenant(this.getTenantId().toString())
             this.execute(tenantDateTime.now())
             schedulerJobLogService.save(this)
         }
+        return schedulerJobLog
     }
 
     fun failed(schedulerJobLog: SchedulerJobLog?,log:String?){

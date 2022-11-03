@@ -19,6 +19,7 @@ import cn.sunline.saas.workflow.defintion.services.EventDefinitionService
 import cn.sunline.saas.workflow.defintion.services.ProcessDefinitionService
 import cn.sunline.saas.workflow.event.handle.factory.EventFactory
 import cn.sunline.saas.workflow.step.services.ActivityStepService
+import cn.sunline.saas.workflow.step.services.EventStepDataService
 import cn.sunline.saas.workflow.step.services.EventStepService
 import cn.sunline.saas.workflow.step.services.ProcessStepService
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +31,6 @@ class JobRunner(
     private val loanAgentService: LoanAgentService,
     private val loanApplyHandleService: LoanApplyHandleService,
     private val userService: UserService,
-    private val schedulerJobLogService: SchedulerJobLogService,
     private val tenantDateTime: TenantDateTime,
     private val loanApplyAppService: LoanApplyAppService,
     private val organisationService: OrganisationService,
@@ -42,6 +42,7 @@ class JobRunner(
     private val activityStepService: ActivityStepService,
     private val eventDefinitionService: EventDefinitionService,
     private val eventStepService: EventStepService,
+    private val eventStepDataService: EventStepDataService,
     private val schedulerJobHelper: SchedulerJobHelper,
     private val createScheduler: CreateScheduler,
     private val eventFactory: EventFactory,
@@ -49,13 +50,13 @@ class JobRunner(
 
     @PostConstruct
     fun run() {
-        ActorContext.registerActor(ActorType.LOAN_APPLY_HANDLE.name,LoanApplyHandleSchedulerTask(loanAgentService, loanApplyHandleService, userService, schedulerJobLogService, tenantDateTime))
-        ActorContext.registerActor(ActorType.LOAN_APPLY_SUBMIT.name,LoanApplySubmitSchedulerTask(tenantDateTime, schedulerJobLogService, loanAgentService))
-        ActorContext.registerActor(ActorType.LOAN_APPLY_STATISTICS.name,LoanApplyStatisticsSchedulerTask(tenantDateTime,schedulerJobLogService,loanApplyAppService))
-        ActorContext.registerActor(ActorType.BUSINESS_STATISTICS.name,BusinessStatisticsSchedulerTask(tenantDateTime, schedulerJobLogService, loanApplyAppService))
-        ActorContext.registerActor(ActorType.CHANNEL_STATISTICS.name,ChannelStatisticsSchedulerTask(tenantDateTime, schedulerJobLogService, organisationService, customerDetailService))
-        ActorContext.registerActor(ActorType.SYNC_CHANNEL.name,ChannelSyncSchedulerTask(tenantDateTime, schedulerJobLogService, organisationService, channelBindingsImpl))
-        ActorContext.registerActor(ActorType.CREATE_EVENT.name,CreateEventSchedulerTask(processDefinitionService, processStepService, activityDefinitionService, activityStepService, eventDefinitionService, eventStepService, schedulerJobHelper, createScheduler))
+        ActorContext.registerActor(ActorType.LOAN_APPLY_HANDLE.name,LoanApplyHandleSchedulerTask(loanAgentService, loanApplyHandleService, userService, schedulerJobHelper, tenantDateTime))
+        ActorContext.registerActor(ActorType.LOAN_APPLY_SUBMIT.name,LoanApplySubmitSchedulerTask(tenantDateTime, schedulerJobHelper, loanAgentService))
+        ActorContext.registerActor(ActorType.LOAN_APPLY_STATISTICS.name,LoanApplyStatisticsSchedulerTask(tenantDateTime,schedulerJobHelper,loanApplyAppService))
+        ActorContext.registerActor(ActorType.BUSINESS_STATISTICS.name,BusinessStatisticsSchedulerTask(tenantDateTime, schedulerJobHelper, loanApplyAppService))
+        ActorContext.registerActor(ActorType.CHANNEL_STATISTICS.name,ChannelStatisticsSchedulerTask(tenantDateTime, schedulerJobHelper, organisationService, customerDetailService))
+        ActorContext.registerActor(ActorType.SYNC_CHANNEL.name,ChannelSyncSchedulerTask(tenantDateTime, schedulerJobHelper, organisationService, channelBindingsImpl))
+        ActorContext.registerActor(ActorType.CREATE_EVENT.name,CreateEventSchedulerTask(processDefinitionService, processStepService, activityDefinitionService, activityStepService, eventDefinitionService, eventStepService, eventStepDataService, schedulerJobHelper, createScheduler))
         ActorContext.registerActor(ActorType.SET_EVENT_USER.name,SetEventUserSchedulerTask(userService, eventStepService, eventFactory, schedulerJobHelper, loanApplyHandleService))
         ActorContext.registerActor(ActorType.FINISH_EVENT_HANDLE.name,FinishEventHandleSchedulerTask(processStepService, activityStepService, eventStepService, tenantDateTime, schedulerJobHelper))
     }

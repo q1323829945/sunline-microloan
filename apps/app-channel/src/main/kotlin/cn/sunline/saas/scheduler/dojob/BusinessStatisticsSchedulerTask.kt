@@ -11,6 +11,7 @@ import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
+import cn.sunline.saas.scheduler.job.helper.SchedulerJobHelper
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -18,7 +19,7 @@ import mu.KotlinLogging
 
 class BusinessStatisticsSchedulerTask(
     private val tenantDateTime: TenantDateTime,
-    private val schedulerJobLogService: SchedulerJobLogService,
+    private val schedulerJobHelper: SchedulerJobHelper,
     private val loanApplyAppService: LoanApplyAppService,
     actorType:String = ActorType.BUSINESS_STATISTICS.name,
     entityConfig: EntityConfig? = null
@@ -28,12 +29,7 @@ class BusinessStatisticsSchedulerTask(
     private var logger = KotlinLogging.logger {}
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
-        schedulerJobLog?.run {
-            ContextUtil.setTenant(this.getTenantId().toString())
-            this.execute(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         try {
 
@@ -51,10 +47,7 @@ class BusinessStatisticsSchedulerTask(
         }
 
         logger.info("[doJob]: save business  $actorId statistic Success")
-        schedulerJobLog?.run {
-            this.succeed(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        schedulerJobHelper.succeed(schedulerJobLog)
         //delete reminder
         ActorReminderService.deleteReminders(actorType, actorId, jobId)
     }

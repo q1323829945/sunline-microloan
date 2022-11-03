@@ -21,6 +21,7 @@ import cn.sunline.saas.workflow.step.modules.db.EventStep
 import cn.sunline.saas.workflow.step.modules.db.ProcessStep
 import cn.sunline.saas.workflow.step.modules.dto.*
 import cn.sunline.saas.workflow.step.services.ActivityStepService
+import cn.sunline.saas.workflow.step.services.EventStepDataService
 import cn.sunline.saas.workflow.step.services.EventStepService
 import cn.sunline.saas.workflow.step.services.ProcessStepService
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -35,6 +36,7 @@ class CreateEventSchedulerTask (
     private val activityStepService: ActivityStepService,
     private val eventDefinitionService: EventDefinitionService,
     private val eventStepService: EventStepService,
+    private val eventStepDataService: EventStepDataService,
     private val schedulerJobHelper: SchedulerJobHelper,
     private val createScheduler: CreateScheduler,
     actorType:String = ActorType.CREATE_EVENT.name,
@@ -46,8 +48,8 @@ class CreateEventSchedulerTask (
 
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobHelper.getSchedulerJobLog(jobId.toLong())
-        schedulerJobHelper.execute(schedulerJobLog)
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
+
         val payload = data.payload<DTOCreateEventScheduler>()?: run {
             logger.error { "data error" }
             schedulerJobHelper.failed(schedulerJobLog,"data error")
@@ -63,7 +65,7 @@ class CreateEventSchedulerTask (
         val processStep = createProcessStep(processDefinition)
 
         val startActivityStep = activityStepStart(processStep.id)!!
-        val startEventStep = eventStepStart(startActivityStep.id)!!
+        val startEventStep = eventStepStart(startActivityStep.id,payload.applicationId.toLong(),payload.body)!!
 
         //set user
         createScheduler.create(
@@ -73,7 +75,6 @@ class CreateEventSchedulerTask (
                 applicationId = payload.applicationId,
                 eventStepId = startEventStep.id.toString(),
                 position = startActivityStep.activityDefinition.position,
-                body = payload.body,
                 isCurrentEventStep = true
             )
         )
@@ -90,14 +91,18 @@ class CreateEventSchedulerTask (
         }
     }
 
-    private fun eventStepStart(activityStepId: Long):EventStep?{
+    private fun eventStepStart(activityStepId: Long,applicationId:Long,data:Any? = null):EventStep?{
         return eventStepService.getPaged(activityStepId,Pageable.unpaged()).firstOrNull()?.run {
-            eventStepService.updateOne(
+            val eventStep = eventStepService.updateOne(
                 this.id,
                 DTOEventStepChange(
                     status = StepStatus.START
                 )
             )
+
+            eventStepDataService.addData(DTOEventStepData(this.id,applicationId,objectMapper.writeValueAsString(data)))
+
+            eventStep
         }
     }
 

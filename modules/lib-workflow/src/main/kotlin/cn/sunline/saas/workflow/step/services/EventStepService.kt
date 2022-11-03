@@ -36,9 +36,7 @@ class EventStepService (
 
     fun updateOne(id:Long,dtoEventStepChange: DTOEventStepChange):EventStep{
         val event = getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
-        if(!dtoEventStepChange.user.isNullOrEmpty()){
-            event.user = dtoEventStepChange.user
-        }
+        dtoEventStepChange.user?.run { event.user = this }
         dtoEventStepChange.status?.run { event.status = this }
         dtoEventStepChange.start?.run { event.start = this }
         dtoEventStepChange.end?.run { event.end = this }

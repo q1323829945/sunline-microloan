@@ -22,6 +22,7 @@ import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.failed
 import cn.sunline.saas.scheduler.job.component.succeed
+import cn.sunline.saas.scheduler.job.helper.SchedulerJobHelper
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import mu.KotlinLogging
 import org.springframework.data.domain.Pageable
@@ -33,7 +34,7 @@ class LoanApplyHandleSchedulerTask (
     private val loanAgentService: LoanAgentService,
     private val loanApplyHandleService: LoanApplyHandleService,
     private val userService: UserService,
-    private val schedulerJobLogService: SchedulerJobLogService,
+    private val schedulerJobHelper: SchedulerJobHelper,
     val tenantDateTime: TenantDateTime,
     actorType:String = ActorType.LOAN_APPLY_HANDLE.name,
     entityConfig: EntityConfig? = null
@@ -50,20 +51,11 @@ class LoanApplyHandleSchedulerTask (
     )
 
     override fun doJob(applicationId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
-
-        schedulerJobLog?.run {
-            ContextUtil.setTenant(this.getTenantId().toString())
-            this.execute(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
-
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         loanAgentService.getOne(applicationId.toLong())?:run {
             logger.info("loan apply $applicationId lose!")
-            schedulerJobLog?.run {
-                this.failed(tenantDateTime.now(),"loan apply $applicationId lose!")
-            }
+            schedulerJobHelper.failed(schedulerJobLog,"loan apply $applicationId lose!")
             ActorReminderService.deleteReminders(actorType, applicationId, jobId)
             return
         }
@@ -72,11 +64,7 @@ class LoanApplyHandleSchedulerTask (
 
         if(loanApplyHandle != null){
             logger.info("The loan apply has been manually assigned!")
-            schedulerJobLog?.run {
-                ContextUtil.setTenant(this.getTenantId().toString())
-                this.succeed(tenantDateTime.now())
-                schedulerJobLogService.save(this)
-            }
+            schedulerJobHelper.succeed(schedulerJobLog)
             ActorReminderService.deleteReminders(actorType, applicationId, jobId)
             return
         }
@@ -93,11 +81,7 @@ class LoanApplyHandleSchedulerTask (
                 supplement = userTasks.first().username
             )
         )
-
-        schedulerJobLog?.run {
-            this.succeed(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        schedulerJobHelper.succeed(schedulerJobLog)
 
         ActorReminderService.deleteReminders(actorType, applicationId, jobId)
     }

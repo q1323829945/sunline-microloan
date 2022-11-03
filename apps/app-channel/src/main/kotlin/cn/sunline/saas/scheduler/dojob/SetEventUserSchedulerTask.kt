@@ -32,7 +32,7 @@ class SetEventUserSchedulerTask(
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
 
-    private val threshold: BigDecimal = BigDecimal(20)
+    private val threshold: BigDecimal = BigDecimal(10)
 
     private val logger = KotlinLogging.logger {  }
 
@@ -43,8 +43,7 @@ class SetEventUserSchedulerTask(
     )
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobHelper.getSchedulerJobLog(jobId.toLong())
-        schedulerJobHelper.execute(schedulerJobLog)
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         val payload = data.payload<DTOSetEventUserScheduler>()?: run {
             logger.error { "data error" }
@@ -88,9 +87,9 @@ class SetEventUserSchedulerTask(
                         supplement = user
                     )
                 )
-                eventFactory.instance(event.eventDefinition.type).setCurrent(user,event,payload.applicationId.toLong(),payload.body)
+                eventFactory.instance(event.eventDefinition.type).setCurrent(user,event,payload.applicationId.toLong())
             } else {
-                eventFactory.instance(event.eventDefinition.type).setNext(user,event,payload.applicationId.toLong(),payload.body)
+                eventFactory.instance(event.eventDefinition.type).setNext(user,event,payload.applicationId.toLong())
             }
 
             schedulerJobHelper.succeed(schedulerJobLog)
@@ -117,7 +116,7 @@ class SetEventUserSchedulerTask(
                 userBuilder.value(it.username)
             }
             predicates.add(userBuilder)
-            predicates.add(builder.equal(root.get<StepStatus>("status"),StepStatus.START))
+            predicates.add(builder.equal(root.get<StepStatus>("status"),StepStatus.PROCESSING))
             builder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
 

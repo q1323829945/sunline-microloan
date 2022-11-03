@@ -18,6 +18,7 @@ import cn.sunline.saas.global.util.setTenant
 import cn.sunline.saas.scheduler.ActorType
 import cn.sunline.saas.scheduler.job.component.execute
 import cn.sunline.saas.scheduler.job.component.succeed
+import cn.sunline.saas.scheduler.job.helper.SchedulerJobHelper
 import cn.sunline.saas.scheduler.job.service.SchedulerJobLogService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
@@ -26,7 +27,7 @@ import mu.KotlinLogging
 
 class ChannelSyncSchedulerTask(
     private val tenantDateTime: TenantDateTime,
-    private val schedulerJobLogService: SchedulerJobLogService,
+    private val schedulerJobHelper: SchedulerJobHelper,
     private val organisationService: OrganisationService,
     private val channelBindingsImpl: ChannelBindingsImpl,
     actorType: String = ActorType.SYNC_CHANNEL.name,
@@ -38,12 +39,7 @@ class ChannelSyncSchedulerTask(
 
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
-        val schedulerJobLog = schedulerJobLogService.getOne(jobId.toLong())
-        schedulerJobLog?.run {
-            ContextUtil.setTenant(this.getTenantId().toString())
-            this.execute(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        val schedulerJobLog = schedulerJobHelper.execute(jobId)
 
         try {
             val organisation = organisationService.getDetail(actorId.toLong())
@@ -64,10 +60,7 @@ class ChannelSyncSchedulerTask(
         }
 
         logger.info("[doJob]: sync $actorId channel Success")
-        schedulerJobLog?.run {
-            this.succeed(tenantDateTime.now())
-            schedulerJobLogService.save(this)
-        }
+        schedulerJobHelper.succeed(schedulerJobLog)
         //delete reminder
         ActorReminderService.deleteReminders(actorType, actorId, jobId)
     }
