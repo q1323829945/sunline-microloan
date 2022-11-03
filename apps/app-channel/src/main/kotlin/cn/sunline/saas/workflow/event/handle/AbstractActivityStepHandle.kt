@@ -31,31 +31,38 @@ abstract class AbstractActivityStepHandle(
         return activityStep.next?.run { activityStepService.getOne(this) }
     }
 
-    protected fun setNextActivityStart(activityStepId: Long):ActivityStep?{
-        val activity = getActivity(activityStepId)
-        return activity?.run {
-            setActivityStart(this)
+    protected fun setActivityFinishAndSetNextActivityStart(activityStepId: Long):ActivityStep?{
+        val activityStep = activityStepService.updateOne(
+            activityStepId,
+            DTOActivityStepChange(status = StepStatus.PASSED, end = tenantDateTime.now().toDate())
+        )
+
+        return if(activityStep.next != null){
+            setActivityStart(activityStep.next!!)
+        }else {
+            setProcessFinish(activityStep.processStepId)
+            null
         }
+
     }
 
-    private fun setActivityStart(activityStep: ActivityStep):ActivityStep?{
-        return activityStep.next?.run {
-            activityStepService.updateOne(
-                this,
-                DTOActivityStepChange(status = StepStatus.START)
-            )
-        }
+    private fun setActivityStart(activityStepId: Long):ActivityStep?{
+        return activityStepService.updateOne(
+            activityStepId,
+            DTOActivityStepChange(status = StepStatus.START)
+        )
     }
+
 
     protected fun setActivityFinishAndGetNextActivity(activityStepId:Long):ActivityStep?{
         val activity = getActivity(activityStepId)
         activity?.run {
-            return setActivityFinish(this.id)
+            return setActivityFinishAndSetNextActivityProcessing(this.id)
         }
         return null
     }
 
-    protected fun setActivityFinish(activityStepId: Long):ActivityStep?{
+    protected fun setActivityFinishAndSetNextActivityProcessing(activityStepId: Long):ActivityStep?{
         val activityStep = activityStepService.updateOne(
             activityStepId,
             DTOActivityStepChange(status = StepStatus.PASSED, end = tenantDateTime.now().toDate())
@@ -67,6 +74,7 @@ abstract class AbstractActivityStepHandle(
             setNextActivityProcessing(activityStep)
         }
     }
+
 
     private fun setNextActivityProcessing(activityStep: ActivityStep):ActivityStep?{
         val nextActivity = getNextActivity(activityStep)

@@ -32,7 +32,7 @@ class SetEventUserSchedulerTask(
     entityConfig: EntityConfig? = null
 ): AbstractActor(actorType, entityConfig) {
 
-    private val threshold: BigDecimal = BigDecimal(20)
+    private val threshold: BigDecimal = BigDecimal(10)
 
     private val logger = KotlinLogging.logger {  }
 
@@ -116,7 +116,7 @@ class SetEventUserSchedulerTask(
                 userBuilder.value(it.username)
             }
             predicates.add(userBuilder)
-            predicates.add(builder.equal(root.get<StepStatus>("status"),StepStatus.START))
+            predicates.add(builder.equal(root.get<StepStatus>("status"),StepStatus.PROCESSING))
             builder.and(*(predicates.toTypedArray()))
         }, Pageable.unpaged())
 

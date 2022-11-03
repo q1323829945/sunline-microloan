@@ -58,7 +58,7 @@ abstract class AbstractEventStepHandle(
     }
 
     private fun setNextActivityFirstEventStart(activityStepId:Long,applicationId: Long,data: Any? = null){
-        val nextActivity = setNextActivityStart(activityStepId)
+        val nextActivity = setActivityFinishAndSetNextActivityStart(activityStepId)
         nextActivity?.run {
             val event = getFirstEvent(this.id)
             event?.run {
@@ -74,7 +74,7 @@ abstract class AbstractEventStepHandle(
             event?.run {
                 setEventStepProcessing(user,event,applicationId)
             }?: run {
-                setActivityFinish(this.id)
+                setActivityFinishAndSetNextActivityProcessing(this.id)
             }
         }
     }
