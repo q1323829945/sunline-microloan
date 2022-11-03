@@ -23,9 +23,6 @@ class RatePlanController {
     @Autowired
     private lateinit var ratePlanManagerService: RatePlanManagerService
 
-    @Autowired
-    private lateinit var commonTemplateDataServiceImpl: CommonTemplateDataServiceImpl
-
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     @GetMapping
@@ -74,18 +71,6 @@ class RatePlanController {
         val page = ratePlanManagerService.getInvokeAll(type)
         val map = page.map { objectMapper.convertValue<DTORatePlanWithInterestRates>(it) }.first()
         return DTOResponseSuccess(map).response()
-    }
-
-
-    @GetMapping("template/data")
-    fun getTemplateRatePlanData(): ResponseEntity<DTOResponseSuccess<DTORatePlan>> {
-        return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<DTORatePlan>(
-                DTORatePlan::class,
-                null,
-                false
-            )
-        ).response()
     }
 
 }

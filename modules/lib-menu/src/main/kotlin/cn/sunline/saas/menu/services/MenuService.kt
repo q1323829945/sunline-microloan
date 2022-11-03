@@ -36,6 +36,7 @@ class MenuService {
         val loanQuery = Menu("loanQuery","businessQuery","","/dashboard/businessQuery",16)
         val commissionStatisticsConfig = Menu("commissionStatisticsConfig","statisticsQuery","","/dashboard/commissionStatisticsConfig",17)
         val loanApplicationStatisticsConfig = Menu("loanApplicationStatisticsConfig","statisticsQuery","","/dashboard/loanApplicationStatisticsConfig",18)
+        val scheduleCalculatorTrailConfig = Menu("scheduleCalculatorTrailConfig","businessQuery","","/dashboard/scheduleCalculatorTrailConfig",19)
 
 
 
@@ -56,7 +57,8 @@ class MenuService {
             ,pdpaConfig
             ,loanQuery
             ,commissionStatisticsConfig
-            ,loanApplicationStatisticsConfig)
+            ,loanApplicationStatisticsConfig
+            ,scheduleCalculatorTrailConfig)
 
     }
 
