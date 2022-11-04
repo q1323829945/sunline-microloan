@@ -27,7 +27,7 @@ class SubscriptionGetInfo(
         val gatewayApi = "Gateway"
         val apiMap = objectMapper.writeValueAsString(
             mapOf(
-                "endpoint" to "http://quickloan-gateway.saas.finline.app",
+                "endpoint" to "https://quickloan-gateway.saas.finline.app",
                 "access_key" to instance.accessKey,
                 "client_id" to instance.id
             )
