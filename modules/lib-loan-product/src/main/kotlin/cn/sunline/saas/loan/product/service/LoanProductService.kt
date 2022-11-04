@@ -86,13 +86,13 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
         loanProductData.loanUploadConfigureFeatures?.forEach {
             val loanUploadConfigure =
-                loanUploadConfigureService.getOne(it) ?: throw Exception("loanUploadConfigure Not Found")
+                loanUploadConfigureService.getOne(it.toLong()) ?: throw Exception("loanUploadConfigure Not Found")
             loanUploadConfigureList.add(loanUploadConfigure)
         }
         val documentTemplateList = ArrayList<DocumentTemplate>()
         loanProductData.documentTemplateFeatures?.forEach {
             val documentTemplate =
-                documentTemplateService.getOne(it)
+                documentTemplateService.getOne(it.toLong())
                     ?: throw DocumentTemplateNotFoundException("Invalid document template")
             documentTemplateList.add(documentTemplate)
         }
@@ -270,7 +270,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val loanUploadConfigureList = ArrayList<LoanUploadConfigure>()
         loanProductData.loanUploadConfigureFeatures?.forEach {
             val loanUploadConfigure =
-                loanUploadConfigureService.getOne(it) ?: throw Exception("loanUploadConfigure Not Found")
+                loanUploadConfigureService.getOne(it.toLong()) ?: throw Exception("loanUploadConfigure Not Found")
             loanUploadConfigureList.add(loanUploadConfigure)
         }
         oldLoanProduct.loanUploadConfigureFeatures = loanUploadConfigureList
@@ -278,7 +278,7 @@ class LoanProductService(private var loanProductRepos: LoanProductRepository) :
         val documentTemplateList = mutableListOf<DocumentTemplate>()
         loanProductData.documentTemplateFeatures?.forEach {
             val documentTemplate =
-                documentTemplateService.getOne(it)
+                documentTemplateService.getOne(it.toLong())
                     ?: throw DocumentTemplateNotFoundException("Invalid document template")
             documentTemplateList.add(documentTemplate)
         }

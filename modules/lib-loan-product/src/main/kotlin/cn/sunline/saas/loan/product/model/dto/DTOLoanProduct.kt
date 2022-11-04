@@ -28,8 +28,8 @@ data class DTOLoanProduct(
     var interestFeature: DTOInterestFeature,
     var repaymentFeature: DTORepaymentFeature,
     var feeFeatures: MutableList<DTOFeeFeature>?,
-    var loanUploadConfigureFeatures: List<Long>? = listOf(),
-    var documentTemplateFeatures:List<Long>? = listOf()
+    var loanUploadConfigureFeatures: List<String>? = listOf(),
+    var documentTemplateFeatures:List<String>? = listOf()
 )
 
 data class DTOAmountLoanProductConfiguration(
