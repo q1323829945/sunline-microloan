@@ -42,26 +42,26 @@ class LoanProductTemplateDataServiceImpl : TemplateDataService() {
     @Autowired
     private lateinit var organisationService: OrganisationService
 
-    private fun getDTOLoanUploadConfigure(): List<Long> {
+    private fun getDTOLoanUploadConfigure(): List<String> {
         val content = loanUploadConfigureService.getPaged(pageable = Pageable.unpaged()).content
         if (content.isEmpty()) {
             throw TemplateDataBusinessException("loan upload configure is empty")
         }
-        val loanUploadConfigures = mutableListOf<Long>()
+        val loanUploadConfigures = mutableListOf<String>()
         content.forEach {
-            loanUploadConfigures += it.id
+            loanUploadConfigures += it.id.toString()
         }
         return loanUploadConfigures
     }
 
-    private fun getDTODocumentTemplate(): List<Long> {
+    private fun getDTODocumentTemplate(): List<String> {
         val content = documentTemplateService.getPageWithTenant(pageable = Pageable.unpaged()).content
         if (content.isEmpty()) {
             throw TemplateDataBusinessException("loan document template is empty")
         }
-        val documentTemplates = mutableListOf<Long>()
+        val documentTemplates = mutableListOf<String>()
         content.forEach {
-            documentTemplates += it.id!!
+            documentTemplates += it.id!!.toString()
         }
         return documentTemplates
     }
