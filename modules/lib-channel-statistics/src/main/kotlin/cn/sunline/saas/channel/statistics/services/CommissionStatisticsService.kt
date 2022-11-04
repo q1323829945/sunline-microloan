@@ -42,48 +42,59 @@ class CommissionStatisticsService(
             channelName?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), it)) }
             frequency?.let { predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), it)) }
 
-            //            val star = startYear!!.toString() + startMonth!!.toString() + startDay!!.toString()
-//            val end = endYear!!.toString() + endMonth!!.toString() + endDay!!.toString()
-            val star = tenantDateTime.toTenantDateTime(startYear!!.toInt(), startMonth!!.toInt(), startDay!!.toInt()).toDate()
-            val end = tenantDateTime.toTenantDateTime(endYear!!.toInt(), endMonth!!.toInt(), endDay!!.toInt()).plusDays(1).toDate()
-            predicates.add(
-                criteriaBuilder.between(
-                    root.get("datetime"), star, end
-                )
-            )
-//            startYear?.let {
-//                endYear?.let {
-//                    predicates.add(
-//                        criteriaBuilder.between(
-//                            root.get("year"),
-//                            startYear,
-//                            endYear
-//                        )
-//                    )
-//                }
-//            }
-//            startMonth?.let {
-//                endMonth?.let {
-//                    predicates.add(
-//                        criteriaBuilder.between(
-//                            root.get("month"),
-//                            startMonth,
-//                            endMonth
-//                        )
-//                    )
-//                }
-//            }
-//            startDay?.let {
-//                endDay?.let {
-//                    predicates.add(
-//                        criteriaBuilder.between(
-//                            root.get("day"),
-//                            startDay,
-//                            endDay
-//                        )
-//                    )
-//                }
-//            }
+            startYear?.let {
+                endYear?.let {
+                    predicates.add(
+                        criteriaBuilder.between(
+                            root.get("year"),
+                            startYear,
+                            endYear
+                        )
+                    )
+                }
+            }
+            startMonth?.let {
+                endMonth?.let {
+                    if (startMonth > endMonth) {
+                        predicates.add(
+                            criteriaBuilder.between(
+                                root.get("month"),
+                                endMonth,
+                                startMonth
+                            ).not()
+                        )
+                    } else {
+                        predicates.add(
+                            criteriaBuilder.between(
+                                root.get("month"),
+                                startMonth,
+                                endMonth
+                            )
+                        )
+                    }
+                }
+            }
+            startDay?.let {
+                endDay?.let {
+                    if (startDay > endDay) {
+                        predicates.add(
+                            criteriaBuilder.between(
+                                root.get("day"),
+                                endDay,
+                                startDay
+                            ).not()
+                        )
+                    } else {
+                        predicates.add(
+                            criteriaBuilder.between(
+                                root.get("day"),
+                                startDay,
+                                endDay
+                            )
+                        )
+                    }
+                }
+            }
 
             query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
             criteriaBuilder.and(*(predicates.toTypedArray()))
@@ -119,7 +130,7 @@ class CommissionStatisticsService(
 
 
     fun saveCommissionStatistics(dtoCommissionStatistics: DTOCommissionStatistics): CommissionStatistics {
-        val nowDateTime = dtoCommissionStatistics.dateTime?: tenantDateTime.now()
+        val nowDateTime = dtoCommissionStatistics.dateTime ?: tenantDateTime.now()
         return save(
             CommissionStatistics(
                 id = sequence.nextId(),

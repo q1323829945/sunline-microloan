@@ -242,7 +242,7 @@ class CommissionStatisticsManagerService(
         )
         val commissionChartsAmount = ArrayList<DTOCommissionChartsAmount>()
         val groupBy = page.sortedBy { it.datetime }.groupBy {
-            when (frequency) {
+            when (frequencyData) {
                 Frequency.D -> it.year.toString() + String.format("%02d", it.month) + String.format("%02d", it.day)
                 Frequency.M -> it.year.toString() + String.format("%02d", it.month)
                 Frequency.Y -> it.year.toString()
