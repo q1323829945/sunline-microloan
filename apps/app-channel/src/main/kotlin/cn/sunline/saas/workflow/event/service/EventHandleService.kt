@@ -137,7 +137,8 @@ class EventHandleService(
             data = data.data,
             productType = data.productType,
             status = event.status,
-            user = event.user
+            user = event.user,
+            next = event.next
         )
     }
 

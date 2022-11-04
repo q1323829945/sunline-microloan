@@ -31,5 +31,6 @@ data class DTOEventHandleDetail(
     val data:Any? = null,
     val productType: ProductType? = null,
     val status: StepStatus,
-    val user:String? = null
+    val user:String? = null,
+    val next:Long? = null
 )

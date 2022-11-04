@@ -32,7 +32,7 @@ class AppActivityStepService(private val tenantDateTime: TenantDateTime) {
             next = activityStep.next?.toString(),
             start = activityStep.start?.run { tenantDateTime.toTenantDateTime(this).toString() },
             end = activityStep.end?.run { tenantDateTime.toTenantDateTime(this).toString() },
-            user = activityStep.events.firstOrNull()?.run { this.user }
+            user = activityStep.events.firstOrNull { it.user != null && it.user != "system" }?.run { this.user }
         )
     }
 }
