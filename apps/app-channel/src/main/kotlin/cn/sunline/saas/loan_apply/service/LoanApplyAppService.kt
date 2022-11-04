@@ -149,10 +149,10 @@ class LoanApplyAppService {
                 channelCast.id,
                 Pageable.unpaged()
             ).content.first()
-//            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
+            val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
 
             val syncData = SyncData(
-                amount = BigDecimal(2000000),
+                amount = dtoLoanAgent.loanInformation?.amount?.toBigDecimal(),
                 channelAgreementId = channelAgreement.id.toLong(),
                 channelCode = channelCast.channelCode,
                 channelName = channelCast.channelName,
@@ -165,7 +165,7 @@ class LoanApplyAppService {
             )
 
             syncLoanApplicationStatistics(syncData)
-            //syncCommissionStatistics(syncData)
+            syncCommissionStatistics(syncData)
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
         } catch (e: Exception) {
             logger.error("[syncLoanApplicationStatistics]: sync applicationId:$applicationId , error massage : ${e.message}")

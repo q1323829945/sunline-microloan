@@ -25,8 +25,6 @@ class InterestRateController {
     @Autowired
     private lateinit var interestRateManagerService: InterestRateManagerService
 
-    @Autowired
-    private lateinit var interestRateTemplateDataServiceImpl: InterestRateTemplateDataServiceImpl
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
@@ -64,17 +62,6 @@ class InterestRateController {
     fun getInvokeAll(@RequestParam(required = false) ratePlanId: String): List<DTOInterestRateView> {
         val page = interestRateManagerService.getPaged(ratePlanId.toLong(), Pageable.unpaged())
         return page.content.map { objectMapper.convertValue(it) }
-    }
-
-    @GetMapping("template/data/{ratePlanId}")
-    fun getTemplateRatePlanData(@PathVariable(name = "ratePlanId") ratePlanId: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
-        return DTOResponseSuccess(
-            interestRateTemplateDataServiceImpl.getTemplateData<DTOInterestRate>(
-                DTOInterestRate::class,
-                ratePlanId.toString(),
-                false
-            )
-        ).response()
     }
 
 }

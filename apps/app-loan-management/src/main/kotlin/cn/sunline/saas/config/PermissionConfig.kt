@@ -37,14 +37,12 @@ enum class PermissionConfig (
     RATE_PLAN_GET_LIST_BY_TYPE("ratePlan", "RatePlan/all(\\?.*|\$)", RequestMethod.GET, "View ratePlan list by type"),
     RATE_PLAN_GET_ALL_CUSTOM_LIST("ratePlan", "RatePlan/all/custom", RequestMethod.GET, "View aLL custom ratePlan list"),
     RATE_PLAN_ADD("ratePlan", "RatePlan\$", RequestMethod.POST, "Add ratePlan role"),
-    RATE_TEMPLATE_DATA("ratePlan", "RatePlan/template/data\$", RequestMethod.GET, "get ratePlan template data"),
 
 
     INTEREST_RATE_ADD("interestRate", "InterestRate\$", RequestMethod.POST, "Add interestRate"),
     INTEREST_RATE_GET_LIST("interestRate", "InterestRate(\\?.*|\$)", RequestMethod.GET, "View interestRate list"),
     INTEREST_RATE_MODIFY("interestRate", "InterestRate/[0-9]+\$", RequestMethod.PUT, "Modify interestRate"),
     INTEREST_RATE_DELETE("interestRate", "InterestRate/[0-9]+/[0-9]+\$", RequestMethod.DELETE, "Delete interestRate"),
-    INTEREST_TEMPLATE_DATA("interestRate", "InterestRate/template/data/[0-9]+\$", RequestMethod.GET, "get interest rate template data"),
 
     DOCUMENT_TEMPLATE_ADD("documentTemplate", "DocumentTemplate\$", RequestMethod.POST, "Add documentTemplate"),
     DOCUMENT_TEMPLATE_GET_LIST("documentTemplate", "DocumentTemplate(\\?.*|\$)", RequestMethod.GET, "View documentTemplate list"),
@@ -132,9 +130,7 @@ enum class PermissionConfig (
     LOAN_QUERY_MENU("menu","loanQuery", RequestMethod.GET,"view loan query menu"),
     COMMISSION_STATISTICS_QUERY_MENU("menu","commissionStatisticsConfig", RequestMethod.GET,"View commission statistics query menu"),
     LOAN_APPLICATION_STATISTICS_QUERY_MENU("menu","loanApplicationStatisticsConfig", RequestMethod.GET,"view loan application statistics query menu"),
-
-
-
+    SCHEDULE_CALCULATOR_TRAIL_QUERY_MENU("menu","scheduleCalculatorTrailConfig", RequestMethod.GET,"view schedule Calculator trail config query menu"),
 
     CUSTOMER_LOAN_INVOICE_CURRENT("ConsumerLoan","ConsumerLoan/repayment/instruction(\\?.*|\$)",RequestMethod.GET,"View invoice information"),
     CUSTOMER_LOAN_INVOICE_HISTORY("ConsumerLoan","ConsumerLoan/invoice/(.*?)/history",RequestMethod.GET,"View invoice history information"),
@@ -160,7 +156,22 @@ enum class PermissionConfig (
 
     COMMISSION_STATISTICS_GET_LIST("CommissionStatistics","CommissionStatistics(\\?.*|\$)",RequestMethod.GET,"View commission statistics"),
     COMMISSION_DETAIL_ADD("CommissionStatistics", "CommissionStatistics/addDetail\$", RequestMethod.POST, "Add commission detail"),
-    COMMISSION_STATISTICS_ADD("CommissionStatistics", "CommissionStatistics/addStatistics\$", RequestMethod.POST, "Add application statistics")
+    COMMISSION_STATISTICS_ADD("CommissionStatistics", "CommissionStatistics/addStatistics\$", RequestMethod.POST, "Add application statistics"),
+
+
+    TEMPLATE_DATA_RATE_PLAN("TemplateData", "templateData/ratePlan\$", RequestMethod.GET, "Get Product ratePlan Data"),
+    TEMPLATE_DATA_INTEREST_RATE("TemplateData", "templateData/interestRate/[0-9]+\$", RequestMethod.GET, "Get interestRate Template Data"),
+    TEMPLATE_DATA_LOAN_PRODUCT("TemplateData", "templateData/loanProduct\$", RequestMethod.GET, "Get Product loanProduct Data"),
+    TEMPLATE_DATA_UPLOAD_CONFIGURE("TemplateData", "templateData/uploadConfigure\$", RequestMethod.GET, "Get uploadConfigure Template Data"),
+    TEMPLATE_DATA_ORGANISATION("TemplateData", "templateData/organisation\$", RequestMethod.GET, "Get organisation Template Data"),
+    TEMPLATE_DATA_PERSON("TemplateData", "templateData/person\$", RequestMethod.GET, "Get person Template Data"),
+    TEMPLATE_DATA_PDPA("TemplateData", "templateData/pdpa\$", RequestMethod.GET, "Get Product pdpa Data"),
+    TEMPLATE_DATA_PERMISSION("TemplateData", "templateData/permission\$", RequestMethod.GET, "Get permission Template Data"),
+    TEMPLATE_DATA_ROLE("TemplateData", "templateData/role\$", RequestMethod.GET, "Get role Template Data"),
+    TEMPLATE_DATA_USER("TemplateData", "templateData/user\$", RequestMethod.GET, "Get user Template Data"),
+    TEMPLATE_DATA_RISK_CONTROL("TemplateData", "templateData/riskControl\$", RequestMethod.GET, "Get riskControl Template Data")
+
+
 
 }
 
