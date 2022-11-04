@@ -17,14 +17,14 @@ abstract class AbstractActivityStepHandle(
         return activityStepService.getOne(activityStepId)
     }
 
-    protected fun setCurrentActivityStart(activityStepId: Long){
+    protected fun setCurrentActivityProcessing(activityStepId: Long){
         val activity = activityStepService.updateOne(activityStepId,
             DTOActivityStepChange(
                 status = StepStatus.PROCESSING,
                 start = tenantDateTime.now().toDate()
             )
         )
-        setProcessStart(activity.processStepId)
+        setProcessProcessing(activity.processStepId)
     }
 
     private fun getNextActivity(activityStep: ActivityStep): ActivityStep?{

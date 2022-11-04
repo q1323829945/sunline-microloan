@@ -36,7 +36,7 @@ abstract class AbstractEventStepHandle(
 
     protected fun setCurrentEventStepProcessing(user:String, eventStep: EventStep,applicationId:Long){
         setEventStepProcessing(user, eventStep, applicationId)
-        setCurrentActivityStart(eventStep.activityStepId)
+        setCurrentActivityProcessing(eventStep.activityStepId)
     }
 
     protected fun setNextEventStepStart(eventStep: EventStep,applicationId: Long,data: Any? = null){

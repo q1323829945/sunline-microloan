@@ -28,7 +28,7 @@ abstract class AbstractProcessStepHandle(
         }
     }
 
-    protected fun setProcessStart(processStepId: Long){
+    protected fun setProcessProcessing(processStepId: Long){
         processStepService.updateOne(
             processStepId,
             DTOProcessStepChange(
