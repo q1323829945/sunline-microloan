@@ -13,7 +13,8 @@ data class DTOLoanApplicationStatistics(
     val approvalCount: Long,
     val applyAmount: BigDecimal,
     val approvalAmount: BigDecimal,
-    val frequency: Frequency
+    val frequency: Frequency,
+    val dateTime: DateTime
 )
 
 data class DTOLoanApplicationStatisticsFindParams(

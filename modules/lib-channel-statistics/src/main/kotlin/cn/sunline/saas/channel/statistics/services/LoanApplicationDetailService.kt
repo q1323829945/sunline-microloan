@@ -37,9 +37,10 @@ class LoanApplicationDetailService(
                 applicationId = dtoLoanApplicationDetail.applicationId,
                 applyAmount = dtoLoanApplicationDetail.applyAmount,
                 approvalAmount = dtoLoanApplicationDetail.approvalAmount,
-                datetime = tenantDateTime.now().toDate(),
+                datetime = dtoLoanApplicationDetail.dateTime.toDate(),
                 currency = dtoLoanApplicationDetail.currency,
-                status = dtoLoanApplicationDetail.status
+                status = dtoLoanApplicationDetail.status,
+                created = tenantDateTime.now().toDate()
             )
         )
     }

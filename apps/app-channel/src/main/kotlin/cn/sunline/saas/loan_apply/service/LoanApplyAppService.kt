@@ -130,13 +130,13 @@ class LoanApplyAppService {
         val loanAgent = loanAgentService.updateStatus(applicationId.toLong(), status)
 
         saveBusinessStatistic(applicationId)
-        syncLoanApplicationStatistics(applicationId)
+        syncLoanApplicationStatistics(applicationId, status)
 
         return loanAgent
     }
 
 
-    fun syncLoanApplicationStatistics(applicationId: String) {
+    fun syncLoanApplicationStatistics(applicationId: String, applyStatus: ApplyStatus?) {
         try {
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics start")
             val loanAgent =
@@ -150,22 +150,25 @@ class LoanApplyAppService {
                 Pageable.unpaged()
             ).content.first()
             val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
-
+            val status = applyStatus ?: loanAgent.status
             val syncData = SyncData(
                 amount = dtoLoanAgent.loanInformation?.amount?.toBigDecimal(),
                 channelAgreementId = channelAgreement.id.toLong(),
                 channelCode = channelCast.channelCode,
                 channelName = channelCast.channelName,
                 applicationId = applicationId.toLong(),
-                status = ApplyStatus.RECORD,
+                status = status,
                 created = tenantDateTime.toTenantDateTime(loanAgent.created!!).toString(),
                 productId = loanAgent.productId,
                 productType = loanAgent.loanApply?.productType?.name,
                 currency = CurrencyType.USD
             )
-
-            syncLoanApplicationStatistics(syncData)
-            syncCommissionStatistics(syncData)
+            if (loanAgent.status == ApplyStatus.APPROVALED) {
+                syncLoanApplicationStatistics(syncData)
+                syncCommissionStatistics(syncData)
+            }else{
+                syncCommissionStatistics(syncData)
+            }
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
         } catch (e: Exception) {
             logger.error("[syncLoanApplicationStatistics]: sync applicationId:$applicationId , error massage : ${e.message}")
@@ -201,7 +204,8 @@ class LoanApplyAppService {
                     RoundingMode.HALF_UP
                 ), //TODO new approval amount
                 status = syncData.status,
-                currency = syncData.currency
+                currency = syncData.currency,
+                dateTime = tenantDateTime.toTenantDateTime(syncData.created)
             )
         )
         loanApplicationStatisticsManagerService.addLoanApplicationStatistics(
@@ -316,7 +320,11 @@ class LoanApplyAppService {
             DTOCreateEventScheduler(
                 applicationId = loanAgent.applicationId.toString(),
                 body = dtoLoanAgent
-            ))
+            )
+        )
+
+        syncLoanApplicationStatistics(loanAgent.applicationId.toString(), ApplyStatus.RECORD)
+
         return loanAgent
     }
 
@@ -366,7 +374,8 @@ class LoanApplyAppService {
 
     @Transactional(rollbackFor = [Exception::class])
     fun addProduct(applicationId: String, productId: String) {
-        val oldLoanAgent = loanAgentService.getOne(applicationId.toLong())?: throw LoanApplyNotFoundException("Invalid loan apply")
+        val oldLoanAgent =
+            loanAgentService.getOne(applicationId.toLong()) ?: throw LoanApplyNotFoundException("Invalid loan apply")
         val product = productService.getProduct(productId.toLong())
         val loanAgentData = LoanApplyAssembly.convertToLoanAgent(oldLoanAgent.data)
         loanAgentData.applicationId = oldLoanAgent.applicationId.toString()
@@ -374,9 +383,8 @@ class LoanApplyAppService {
         loanAgentData.productId = product.id
         loanAgentData.productName = product.name
 
-        val loanAgent = loanAgentService.updateOne(oldLoanAgent, productId.toLong(),objectMapper.writeValueAsString(loanAgentData))
-
-
+        val loanAgent =
+            loanAgentService.updateOne(oldLoanAgent, productId.toLong(), objectMapper.writeValueAsString(loanAgentData))
 
 
         val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
@@ -481,12 +489,6 @@ class LoanApplyAppService {
         } catch (e: Exception) {
             logger.error("[saveBusinessDetailStatistic]: save applicationId:$applicationId  business detail statistics, error massage : ${e.message}")
             createScheduler.create(ActorType.LOAN_APPLY_STATISTICS, applicationId)
-        }
-    }
-
-    fun test1() {
-        loanAgentService.getPageWithTenant(null, Pageable.unpaged()).content.forEach {
-            syncLoanApplicationStatistics(it.applicationId.toString())
         }
     }
 }

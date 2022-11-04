@@ -38,7 +38,7 @@ class ChannelCommissionCalculator(
         var rangeValue = countRangeAmounts.firstOrNull()?.rangeValue
         countRangeAmounts.forEach {
             rangeValue = if (range > it.lowerLimit && range < it.upperLimit) {
-                it.rangeValue
+                return it.rangeValue
             } else {
                 null
             }

@@ -43,39 +43,46 @@ class LoanApplicationStatisticsService(
             channelName?.let { predicates.add(criteriaBuilder.equal(root.get<String>("channelName"), it)) }
             productId?.let { predicates.add(criteriaBuilder.equal(root.get<Long>("productId"), it)) }
             frequency?.let { predicates.add(criteriaBuilder.equal(root.get<Frequency>("frequency"), it)) }
-            startYear?.let {
-                endYear?.let {
-                    predicates.add(
-                        criteriaBuilder.between(
-                            root.get("year"),
-                            startYear,
-                            endYear
-                        )
-                    )
-                }
-            }
-            startMonth?.let {
-                endMonth?.let {
-                    predicates.add(
-                        criteriaBuilder.between(
-                            root.get("month"),
-                            startMonth,
-                            endMonth
-                        )
-                    )
-                }
-            }
-            startDay?.let {
-                endDay?.let {
-                    predicates.add(
-                        criteriaBuilder.between(
-                            root.get("day"),
-                            startDay,
-                            endDay
-                        )
-                    )
-                }
-            }
+            val star = tenantDateTime.toTenantDateTime(startYear!!.toInt(), startMonth!!.toInt(), startDay!!.toInt()).toDate()
+            val end = tenantDateTime.toTenantDateTime(endYear!!.toInt(), endMonth!!.toInt(), endDay!!.toInt()).plusDays(1).toDate()
+            predicates.add(
+                criteriaBuilder.between(
+                    root.get("datetime"), star, end
+                )
+            )
+//            startYear?.let {
+//                endYear?.let {
+//                    predicates.add(
+//                        criteriaBuilder.between(
+//                            root.get("year"),
+//                            startYear,
+//                            endYear
+//                        )
+//                    )
+//                }
+//            }
+//            startMonth?.let {
+//                endMonth?.let {
+//                    predicates.add(
+//                        criteriaBuilder.between(
+//                            root.get("month"),
+//                            startMonth,
+//                            endMonth
+//                        )
+//                    )
+//                }
+//            }
+//            startDay?.let {
+//                endDay?.let {
+//                    predicates.add(
+//                        criteriaBuilder.between(
+//                            root.get("day"),
+//                            startDay,
+//                            endDay
+//                        )
+//                    )
+//                }
+//            }
 
             query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
 
@@ -117,7 +124,7 @@ class LoanApplicationStatisticsService(
 
 
     fun saveLoanApplicationStatistics(dtoLoanApplicationStatistics: DTOLoanApplicationStatistics): LoanApplicationStatistics {
-        val nowDateTime = tenantDateTime.now()
+        val nowDateTime = dtoLoanApplicationStatistics.dateTime?: tenantDateTime.now()
         return save(
             LoanApplicationStatistics(
                 id = sequence.nextId(),
@@ -133,7 +140,8 @@ class LoanApplicationStatisticsService(
                 year = nowDateTime.year.toLong(),
                 month = nowDateTime.monthOfYear.toLong(),
                 day = nowDateTime.dayOfMonth.toLong(),
-                datetime = nowDateTime.toDate()
+                datetime = nowDateTime.toDate(),
+                created = tenantDateTime.now().toDate()
             )
         )
     }
@@ -155,7 +163,8 @@ class LoanApplicationStatisticsService(
                 year = lastDateTime.year.toLong(),
                 month = lastDateTime.monthOfYear.toLong(),
                 day = lastDateTime.dayOfMonth.toLong(),
-                datetime = tenantDateTime.now().toDate()
+                datetime = tenantDateTime.now().toDate(),
+                created = tenantDateTime.now().toDate()
             )
         )
     }

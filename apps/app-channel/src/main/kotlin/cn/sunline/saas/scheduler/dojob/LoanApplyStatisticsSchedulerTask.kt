@@ -30,7 +30,7 @@ class LoanApplyStatisticsSchedulerTask(
 
         try {
             logger.info("[LoanApplyStatisticsSchedulerTask]: sync $actorId statistics start")
-            loanApplyAppService.syncLoanApplicationStatistics(actorId)
+            loanApplyAppService.syncLoanApplicationStatistics(actorId, null)
             logger.info("[LoanApplyStatisticsSchedulerTask]: sync $actorId statistics end")
             schedulerJobHelper.succeed(schedulerJobLog)
             //delete reminder

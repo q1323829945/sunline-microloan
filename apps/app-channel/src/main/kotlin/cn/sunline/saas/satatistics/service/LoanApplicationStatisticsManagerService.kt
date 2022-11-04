@@ -146,7 +146,7 @@ class LoanApplicationStatisticsManagerService(
                 business.approvalAmount = it.approvalAmount
                 business.applyCount = it.applyCount
                 business.approvalCount = it.approvalCount
-                business.datetime = tenantDateTime.now().toDate()
+                business.datetime = dateTime.toDate()
                 loanApplicationStatisticsService.save(business)
             } else {
                 loanApplicationStatisticsService.saveLoanApplicationStatistics(
@@ -159,7 +159,8 @@ class LoanApplicationStatisticsManagerService(
                         approvalAmount = it.approvalAmount,
                         applyCount = it.applyCount,
                         approvalCount = it.approvalCount,
-                        frequency = frequency
+                        frequency = frequency,
+                        dateTime = dateTime
                     )
                 )
             }

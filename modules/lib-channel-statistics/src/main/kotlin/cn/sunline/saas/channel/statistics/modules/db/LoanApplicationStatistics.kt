@@ -68,6 +68,10 @@ class LoanApplicationStatistics (
     @Temporal(TemporalType.TIMESTAMP)
     var datetime: Date,
 
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    var created: Date,
+
     ): MultiTenant {
 
     @NotNull
