@@ -54,7 +54,7 @@ class DefinitionServiceTest {
     fun updateProcess(){
         val oldProcess = processDefinitionService.detail(processId1!!)
         val newProcess = processDefinitionService.updateOne(oldProcess, DTOProcessDefinition(name = "process1alter"))
-        Assertions.assertThat(newProcess.status).isEqualTo(DefinitionStatus.NOT_START)
+        Assertions.assertThat(newProcess.status).isEqualTo(DefinitionStatus.READY)
         Assertions.assertThat(newProcess.name).isEqualTo("process1alter")
     }
 
@@ -147,7 +147,7 @@ class DefinitionServiceTest {
             DTOActivityDefinition(
                 processId = processId1!!,
                 name = "activity1",
-                position = null,
+                position = "admin",
                 description = "this is a activity definition 1",
             )
         )
@@ -157,7 +157,7 @@ class DefinitionServiceTest {
             DTOActivityDefinition(
                 processId = processId1!!,
                 name = "activity2",
-                position = null,
+                position = "admin",
                 description = "this is a activity definition 2",
             )
         )
@@ -167,7 +167,7 @@ class DefinitionServiceTest {
             DTOActivityDefinition(
                 processId = processId1!!,
                 name = "activity3",
-                position = null,
+                position = "admin",
                 description = "this is a activity definition 2",
             )
         )
@@ -177,7 +177,7 @@ class DefinitionServiceTest {
             DTOActivityDefinition(
                 processId = processId2!!,
                 name = "activity4",
-                position = null,
+                position = "admin",
                 description = "this is a activity definition 4",
             )
         )
@@ -185,7 +185,7 @@ class DefinitionServiceTest {
             DTOActivityDefinition(
                 processId = processId2!!,
                 name = "activity5",
-                position = null,
+                position = "admin",
                 description = "this is a activity definition 5",
             )
         )

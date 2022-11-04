@@ -49,14 +49,14 @@ class SubscriptionGetInfo(
                 "SUBSCRIPTION_META_KEY_1" to gatewayApi,
                 "${gatewayApi}_DESCRIPTION" to "General user manual for getting started",
                 "${gatewayApi}_TYPE" to "api",
-                "${gatewayApi}_NAME" to "MicroLoan Server Api",
+                "${gatewayApi}_NAME" to "API Gateway",
                 "${gatewayApi}_VALUE" to apiMap,
 
 
                 "SUBSCRIPTION_META_KEY_2" to microloanApiDoc,
-                "${microloanApiDoc}_DESCRIPTION" to "Here you will find Microloan developer and interface documentation",
+                "${microloanApiDoc}_DESCRIPTION" to "Here you will find developer and interface documentation",
                 "${microloanApiDoc}_TYPE" to "api_doc",
-                "${microloanApiDoc}_NAME" to "MicroLoan Server API Doc",
+                "${microloanApiDoc}_NAME" to "API Document",
                 "${microloanApiDoc}_VALUE" to microloanApiDocMap,
 
             )

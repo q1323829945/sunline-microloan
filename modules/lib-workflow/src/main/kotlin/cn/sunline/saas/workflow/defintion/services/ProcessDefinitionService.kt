@@ -50,7 +50,7 @@ class ProcessDefinitionService (
     fun updateStatus(id: Long,status: DefinitionStatus):ProcessDefinition{
         val process = preflightCheckProcess(id)
 
-        if(status == DefinitionStatus.NOT_START){
+        if(status == DefinitionStatus.READY){
             throw ProcessDefinitionUpdateException("This process can't update!")
         }
 
@@ -72,7 +72,7 @@ class ProcessDefinitionService (
 
     fun preflightCheckProcessStatus(id: Long):ProcessDefinition{
         val process = preflightCheckProcess(id)
-        if (process.status != DefinitionStatus.NOT_START) {
+        if (process.status != DefinitionStatus.READY) {
             throw ProcessDefinitionUpdateException("Status is not NOT_START!!")
         }
         return process
