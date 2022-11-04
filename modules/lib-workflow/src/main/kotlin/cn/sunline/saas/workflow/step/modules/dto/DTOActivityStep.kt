@@ -26,4 +26,5 @@ data class DTOActivityStepView(
     val next: String? = null,
     val start:String? = null,
     val end:String? = null,
+    val user:String? = null,
 )
