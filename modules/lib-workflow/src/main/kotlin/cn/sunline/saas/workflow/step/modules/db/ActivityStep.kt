@@ -31,6 +31,7 @@ class ActivityStep (
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "activity_step_id")
+    @OrderBy("sort asc,id desc")
     val events: MutableList<EventStep> = mutableListOf(),
 
     @NotNull

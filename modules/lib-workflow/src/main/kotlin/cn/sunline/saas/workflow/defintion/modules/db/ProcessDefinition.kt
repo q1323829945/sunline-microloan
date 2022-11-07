@@ -25,7 +25,7 @@ class ProcessDefinition (
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 128, columnDefinition = "varchar(128) not null")
-    var status: DefinitionStatus = DefinitionStatus.NOT_START,
+    var status: DefinitionStatus = DefinitionStatus.READY,
 
     @Column(nullable = true, length = 1024, columnDefinition = "varchar(1024) default null")
     var description: String? = null,

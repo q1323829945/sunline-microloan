@@ -37,9 +37,9 @@ class EventFactory(
             CHECK_CUSTOMER -> CheckCustomerAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanAgentService)
             CHECK_DATA -> CheckDataAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanAgentService)
             RECOMMEND_PRODUCT -> RecommendProductAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler, productService, loanApplyService, loanAgentService, loanApplyAuditService)
-            COLLECT_INFORMATION -> CollectInformationAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService)
-            CUSTOMER_ARCHIVE -> CustomerArchiveAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService, loanAgentService, loanApplyAuditService)
-            ASSETS_ARCHIVE -> AssetsArchiveAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService, loanAgentService, loanApplyAuditService)
+            COLLECT_INFORMATION -> CollectInformationAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService, loanAgentService, loanApplyAuditService)
+            CUSTOMER_ARCHIVE -> CustomerArchiveAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService)
+            ASSETS_ARCHIVE -> AssetsArchiveAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService)
             PRE_APPROVAL -> PreApprovalAbstractEventImpl(eventStepService,eventStepDataService, activityStepService, processStepService, tenantDateTime, createScheduler,loanApplyService, loanAgentService, loanApplyHandleService)
         }
     }

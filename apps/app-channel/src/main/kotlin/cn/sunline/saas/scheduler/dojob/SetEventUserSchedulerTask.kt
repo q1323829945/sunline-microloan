@@ -73,10 +73,11 @@ class SetEventUserSchedulerTask(
             }
         }
 
-
-
-        val user = getUser(payload.position)?: run {
-            return
+        var user = event.user
+        event.next?: run {
+            user = getUser(payload.position)?: run {
+                return
+            }
         }
 
         try {
@@ -87,9 +88,9 @@ class SetEventUserSchedulerTask(
                         supplement = user
                     )
                 )
-                eventFactory.instance(event.eventDefinition.type).setCurrent(user,event,payload.applicationId.toLong())
+                eventFactory.instance(event.eventDefinition.type).setCurrent(user!!,event,payload.applicationId.toLong())
             } else {
-                eventFactory.instance(event.eventDefinition.type).setNext(user,event,payload.applicationId.toLong())
+                eventFactory.instance(event.eventDefinition.type).setNext(user!!,event,payload.applicationId.toLong())
             }
 
             schedulerJobHelper.succeed(schedulerJobLog)

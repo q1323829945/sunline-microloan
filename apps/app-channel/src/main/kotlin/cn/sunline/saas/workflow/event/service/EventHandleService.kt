@@ -51,6 +51,7 @@ class EventHandleService(
             val activity = root.join<ProcessStep,ActivityStep>("activities")
             val event = activity.join<ActivityStep,ProcessStep>("events")
             user?.run { predicates.add(builder.equal(event.get<String>("user"),this)) }
+            user?:run{ predicates.add(builder.notEqual(event.get<StepStatus>("status"),StepStatus.WAITING)) }
             status?.run { predicates.add(builder.equal(event.get<StepStatus>("status"),this)) }
             query.distinct(true).where(builder.and(*(predicates.toTypedArray()))).restriction
 
@@ -89,7 +90,9 @@ class EventHandleService(
 
     fun updateEventStep(id:Long,dtoEventHandle: DTOEventHandle){
         val event = eventStepService.getOne(id)?: throw EventStepNotFoundException("Invalid event !!")
-        val user = if(dtoEventHandle.user.isNullOrEmpty()){
+        val user = if(event.next != null){
+            event.user
+        } else if(dtoEventHandle.user.isNullOrEmpty()){
             null
         } else {
             dtoEventHandle.user
@@ -134,7 +137,8 @@ class EventHandleService(
             data = data.data,
             productType = data.productType,
             status = event.status,
-            user = event.user
+            user = event.user,
+            next = event.next
         )
     }
 

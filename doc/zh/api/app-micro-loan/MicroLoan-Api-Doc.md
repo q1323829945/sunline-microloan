@@ -55,11 +55,11 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 | X-Authorization-Tenant | string | M    | 租户代码                                   |
 | Content-Type           | string | M    | **如未特别说明固定值**："application/json" |
 
-# 通用路径
+# 访问凭证
+
+# 场景
 
 /microloan 
-
-*拼接方式   域名 + /microloan + Path
 
 # 服务响应
 
@@ -101,10 +101,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /Customer |
-| ----------- | --------- |
-| Method      | POST      |
-| Description | 新增客户  |
+| Path        | /microloan/Customer |
+| ----------- | ------------------- |
+| Method      | POST                |
+| Description | 新增客户            |
 
 #### 请求头
 
@@ -154,10 +154,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /Customer/{userId} |
-| ----------- | ------------------ |
-| Method      | GET                |
-| Description | 查询客户信息       |
+| Path        | /microloan/Customer/{userId} |
+| ----------- | ---------------------------- |
+| Method      | GET                          |
+| Description | 查询客户信息                 |
 
 #### 路径参数
 
@@ -197,10 +197,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /product     |
-| ----------- | ------------ |
-| Method      | GET          |
-| Description | 查询贷款产品 |
+| Path        | /microloan/product |
+| ----------- | ------------------ |
+| Method      | GET                |
+| Description | 查询贷款产品       |
 
 #### 请求头
 
@@ -281,10 +281,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /product/interestRate/{productId} |
-| ----------- | --------------------------------- |
-| Method      | GET                               |
-| Description | 查询贷款产品期限参数              |
+| Path        | /microloan/product/interestRate/{productId} |
+| ----------- | ------------------------------------------- |
+| Method      | GET                                         |
+| Description | 查询贷款产品期限参数                        |
 
 #### 路径参数
 
@@ -319,10 +319,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /CustomerOffer/loanUploadTemplate/{productId} |
-| ----------- | --------------------------------------------- |
-| Method      | GET                                           |
-| Description | 查询上传模版                                  |
+| Path        | /microloan/CustomerOffer/loanUploadTemplate/{productId} |
+| ----------- | ------------------------------------------------------- |
+| Method      | GET                                                     |
+| Description | 查询上传模版                                            |
 
 #### 路径参数
 
@@ -368,10 +368,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /ConsumerLoan/{productId}/{amount}/{term}/calculate |
-| ----------- | --------------------------------------------------- |
-| Method      | GET                                                 |
-| Description | 查询还款计划                                        |
+| Path        | /microloan/ConsumerLoan/{productId}/{amount}/{term}/calculate |
+| ----------- | ------------------------------------------------------------ |
+| Method      | GET                                                          |
+| Description | 查询还款计划                                                 |
 
 #### 路径参数
 
@@ -438,10 +438,10 @@ Path模板是指使用由大括号 ({}) 分隔的模板表达式，以使用路�
 
 ### 请求
 
-| Path        | /customerOffer/loan/initiate |
-| ----------- | ---------------------------- |
-| Method      | POST                         |
-| Description | 记录客户贷款申请信息         |
+| Path        | /microloan/customerOffer/loan/initiate |
+| ----------- | -------------------------------------- |
+| Method      | POST                                   |
+| Description | 记录客户贷款申请信息                   |
 
 #### 请求头
 
@@ -545,10 +545,10 @@ contentType:  multipart/form-data
 
 ### 请求
 
-| Path        | /customerOffer/loan/{customerOfferId}/submit |
-| ----------- | -------------------------------------------- |
-| Method      | PUT                                          |
-| Description | 提交客户贷款申请信息                         |
+| Path        | /microloan/customerOffer/loan/{customerOfferId}/submit |
+| ----------- | ------------------------------------------------------ |
+| Method      | PUT                                                    |
+| Description | 提交客户贷款申请信息                                   |
 
 #### 请求头
 
@@ -718,10 +718,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /customerOffer/loan/{customerOfferId}/update |
-| ----------- | -------------------------------------------- |
-| Method      | PUT                                          |
-| Description | 修改客户贷款申请信息                         |
+| Path        | /microloan/customerOffer/loan/{customerOfferId}/update |
+| ----------- | ------------------------------------------------------ |
+| Method      | PUT                                                    |
+| Description | 修改客户贷款申请信息                                   |
 
 #### 请求头
 
@@ -891,7 +891,7 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /customerOffer/loan/{customerOfferId}/{countryCode}/retrieve |
+| Path        | /microloan/customerOffer/loan/{customerOfferId}/{countryCode}/retrieve |
 | ----------- | ------------------------------------------------------------ |
 | Method      | GET                                                          |
 | Description | 检索客户贷款申请信息                                         |
@@ -1131,10 +1131,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /customerOffer/loan/{customerId}/list |
-| ----------- | ------------------------------------- |
-| Method      | GET                                   |
-| Description | 查询客户贷款申请                      |
+| Path        | /microloan/customerOffer/loan/{customerId}/list |
+| ----------- | ----------------------------------------------- |
+| Method      | GET                                             |
+| Description | 查询客户贷款申请                                |
 
 #### 请求头
 
@@ -1186,10 +1186,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /invoice/retrieve/{customerId}/current |
-| ----------- | -------------------------------------- |
-| Method      | GET                                    |
-| Description | 查询当期账单                           |
+| Path        | /microloan/invoice/retrieve/{customerId}/current |
+| ----------- | ------------------------------------------------ |
+| Method      | GET                                              |
+| Description | 查询当期账单                                     |
 
 #### 路径参数
 
@@ -1286,10 +1286,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/prepayment/{agreementId}/calculate |
-| ----------- | ------------------------------------------------ |
-| Method      | GET                                              |
-| Description | 提前还款试算                                     |
+| Path        | /microloan/ConsumerLoan/prepayment/{agreementId}/calculate |
+| ----------- | ---------------------------------------------------------- |
+| Method      | GET                                                        |
+| Description | 提前还款试算                                               |
 
 #### 路径参数
 
@@ -1340,10 +1340,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/repay |
-| ----------- | ------------------- |
-| Method      | POST                |
-| Description | 账单提前还款        |
+| Path        | /microloan/ConsumerLoan/repay |
+| ----------- | ----------------------------- |
+| Method      | POST                          |
+| Description | 账单提前还款                  |
 
 #### 请求头
 
@@ -1379,10 +1379,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /invoice/prepayment/{agreementId}/calculate |
-| ----------- | ------------------------------------------- |
-| Method      | GET                                         |
-| Description | 账单试算                                    |
+| Path        | /microloan/invoice/prepayment/{agreementId}/calculate |
+| ----------- | ----------------------------------------------------- |
+| Method      | GET                                                   |
+| Description | 账单试算                                              |
 
 #### 路径参数
 
@@ -1433,10 +1433,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/invoice/repay |
-| ----------- | --------------------------- |
-| Method      | POST                        |
-| Description | 账单还款                    |
+| Path        | /microloan/ConsumerLoan/invoice/repay |
+| ----------- | ------------------------------------- |
+| Method      | POST                                  |
+| Description | 账单还款                              |
 
 #### 请求头
 
@@ -1523,10 +1523,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /invoice/schedule/{agreementId}/retrieve |
-| ----------- | ---------------------------------------- |
-| Method      | GET                                      |
-| Description | 查询还款计划                             |
+| Path        | /microloan/invoice/schedule/{agreementId}/retrieve |
+| ----------- | -------------------------------------------------- |
+| Method      | GET                                                |
+| Description | 查询还款计划                                       |
 
 #### 路径参数
 
@@ -1615,10 +1615,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/repaymentAccount |
-| ----------- | ------------------------------ |
-| Method      | POST                           |
-| Description | 新建还款账户                   |
+| Path        | /microloan/ConsumerLoan/repaymentAccount |
+| ----------- | ---------------------------------------- |
+| Method      | POST                                     |
+| Description | 新建还款账户                             |
 
 #### 请求头
 
@@ -1687,10 +1687,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/repaymentAccount/{agreementId}/retrieve |
-| ----------- | ----------------------------------------------------- |
-| Method      | GET                                                   |
-| Description | 查询还款账户列表                                      |
+| Path        | /microloan/ConsumerLoan/repaymentAccount/{agreementId}/retrieve |
+| ----------- | ------------------------------------------------------------ |
+| Method      | GET                                                          |
+| Description | 查询还款账户列表                                             |
 
 #### 路径参数
 
@@ -1745,10 +1745,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/LoanAgreement/detail/{agreementId}/retrieve |
-| ----------- | --------------------------------------------------------- |
-| Method      | GET                                                       |
-| Description | 借款详情                                                  |
+| Path        | /microloan/ConsumerLoan/LoanAgreement/detail/{agreementId}/retrieve |
+| ----------- | ------------------------------------------------------------ |
+| Method      | GET                                                          |
+| Description | 借款详情                                                     |
 
 #### 路径参数
 
@@ -1800,10 +1800,10 @@ contentType: multipart/form-data
 
 ### 请求
 
-| Path        | /ConsumerLoan/repayment/record/{customerId}/retrieve |
-| ----------- | ---------------------------------------------------- |
-| Method      | GET                                                  |
-| Description | 查询还款记录                                         |
+| Path        | /microloan/ConsumerLoan/repayment/record/{customerId}/retrieve |
+| ----------- | ------------------------------------------------------------ |
+| Method      | GET                                                          |
+| Description | 查询还款记录                                                 |
 
 #### 路径参数
 

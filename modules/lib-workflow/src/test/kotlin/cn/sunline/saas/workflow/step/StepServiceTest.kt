@@ -15,6 +15,7 @@ import cn.sunline.saas.workflow.defintion.services.ProcessDefinitionService
 import cn.sunline.saas.workflow.step.modules.StepStatus
 import cn.sunline.saas.workflow.step.modules.dto.*
 import cn.sunline.saas.workflow.step.services.ActivityStepService
+import cn.sunline.saas.workflow.step.services.EventStepDataService
 import cn.sunline.saas.workflow.step.services.EventStepService
 import cn.sunline.saas.workflow.step.services.ProcessStepService
 import org.assertj.core.api.Assertions
@@ -42,6 +43,8 @@ class StepServiceTest {
     private lateinit var activityStepService: ActivityStepService
     @Autowired
     private lateinit var eventStepService: EventStepService
+    @Autowired
+    private lateinit var eventStepDataService: EventStepDataService
 
     var processDefinitionId:Long? = null
     var activityDefinitionId:Long? = null
@@ -67,12 +70,10 @@ class StepServiceTest {
     fun updateProcessStep(){
         val process = processStepService.updateOne(
             processStepId!!,DTOProcessStepChange(
-            startActivity = 123,
             status = StepStatus.PASSED,
             end = Date()
         ))
 
-        Assertions.assertThat(process.startActivity).isEqualTo(123)
         Assertions.assertThat(process.status).isEqualTo(StepStatus.PASSED)
         Assertions.assertThat(process.end).isNotNull
 
@@ -88,7 +89,6 @@ class StepServiceTest {
     fun updateActivityStep(){
         val activity = activityStepService.updateOne(activityStepId!!,
             DTOActivityStepChange(
-                next = 123,
                 status = StepStatus.FAILED,
                 start = Date(),
                 end = Date()
@@ -96,7 +96,6 @@ class StepServiceTest {
         )
 
         Assertions.assertThat(activity.status).isEqualTo(StepStatus.FAILED)
-        Assertions.assertThat(activity.next).isEqualTo(123)
         Assertions.assertThat(activity.start).isNotNull
         Assertions.assertThat(activity.end).isNotNull
     }
@@ -111,16 +110,15 @@ class StepServiceTest {
     fun updateEventStep(){
         val event = eventStepService.updateOne(eventStepId!!,
             DTOEventStepChange(
-                next = 123,
                 status = StepStatus.FAILED,
                 start = Date(),
                 end = Date()
             )
         )
         Assertions.assertThat(event.status).isEqualTo(StepStatus.FAILED)
-        Assertions.assertThat(event.next).isEqualTo(123)
         Assertions.assertThat(event.start).isNotNull
         Assertions.assertThat(event.end).isNotNull
+        Assertions.assertThat(event.data!!.applicationId).isEqualTo(1)
     }
 
 
@@ -145,6 +143,14 @@ class StepServiceTest {
             )
         )
         eventStepId = eventStep.id
+
+        eventStepDataService.addData(
+            DTOEventStepData(
+                id = eventStep.id,
+                applicationId = 1,
+                data = "test"
+            )
+        )
     }
 
     private fun initTenant(){
