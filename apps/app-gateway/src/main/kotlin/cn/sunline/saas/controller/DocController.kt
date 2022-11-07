@@ -16,7 +16,7 @@ class DocController {
     @GetMapping
     fun microloanDoc(@PathParam("type") type:DocType): ModelAndView {
         return when(type){
-            DocType.Microloan -> ModelAndView("microloan")
+            DocType.Microloan -> ModelAndView("html/index")
         }
     }
 }

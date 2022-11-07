@@ -1,0 +1,1382 @@
+
+<!DOCTYPE HTML>
+<html lang="zh" >
+    <head>
+        <title>检索客户贷款申请信息 · GitBook</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="list_loan_customer_offer.html" />
+    
+    
+    <link rel="prev" href="update_loan_customer_offer.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../../">
+            
+                <a href="../../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [API]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../../overview.html">
+            
+                <a href="../../overview.html">
+            
+                    
+                    概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../header.html">
+            
+                <a href="../../header.html">
+            
+                    
+                    请求头
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../response.html">
+            
+                <a href="../../response.html">
+            
+                    
+                    服务响应
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../access_token/access_token.html">
+            
+                <a href="../../access_token/access_token.html">
+            
+                    
+                    访问凭证(access token)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" >
+            
+                <span>
+            
+                    
+                    [场景]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../../scene/micro_loan.html">
+            
+                <a href="../../scene/micro_loan.html">
+            
+                    
+                    小微贷
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" >
+            
+                <span>
+            
+                    
+                    [产品]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../product/overview.html">
+            
+                <a href="../product/overview.html">
+            
+                    
+                    概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../product/query_product.html">
+            
+                <a href="../product/query_product.html">
+            
+                    
+                    查询贷款产品
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../product/query_product_interest_rate.html">
+            
+                <a href="../product/query_product_interest_rate.html">
+            
+                    
+                    查询贷款产品期限参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../product/query_calculate.html">
+            
+                <a href="../product/query_calculate.html">
+            
+                    
+                    查询当前产品还款计划
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.5" data-path="../product/query_upload_template.html">
+            
+                <a href="../product/query_upload_template.html">
+            
+                    
+                    查询文件上传模版
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" >
+            
+                <span>
+            
+                    
+                    [客户申请]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="overview.html">
+            
+                <a href="overview.html">
+            
+                    
+                    概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="add_customer.html">
+            
+                <a href="add_customer.html">
+            
+                    
+                    新增客户
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="query_customer.html">
+            
+                <a href="query_customer.html">
+            
+                    
+                    查询客户信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="initiate_loan_customer_offer.html">
+            
+                <a href="initiate_loan_customer_offer.html">
+            
+                    
+                    记录客户贷款申请信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.5" data-path="submit_loan_customer_offer.html">
+            
+                <a href="submit_loan_customer_offer.html">
+            
+                    
+                    提交客户贷款申请
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.6" data-path="update_loan_customer_offer.html">
+            
+                <a href="update_loan_customer_offer.html">
+            
+                    
+                    修改客户贷款申请
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.7.7" data-path="retrieve_loan_customer_offer.html">
+            
+                <a href="retrieve_loan_customer_offer.html">
+            
+                    
+                    检索客户贷款申请信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.8" data-path="list_loan_customer_offer.html">
+            
+                <a href="list_loan_customer_offer.html">
+            
+                    
+                    查询客户贷款申请列表
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" >
+            
+                <span>
+            
+                    
+                    [PDPA]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../pdpa/retrieve_pdpa.html">
+            
+                <a href="../pdpa/retrieve_pdpa.html">
+            
+                    
+                    查询PDPA内容
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" >
+            
+                <span>
+            
+                    
+                    [贷款]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.9.1" data-path="../loan/add_repayment_account.html">
+            
+                <a href="../loan/add_repayment_account.html">
+            
+                    
+                    新建还款账户
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.2" data-path="../loan/query_repayment_account.html">
+            
+                <a href="../loan/query_repayment_account.html">
+            
+                    
+                    查询还款账户列表
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.3" data-path="../loan/prepayment_calculate.html">
+            
+                <a href="../loan/prepayment_calculate.html">
+            
+                    
+                    提前还款试算
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.4" data-path="../loan/invoice_prepayment.html">
+            
+                <a href="../loan/invoice_prepayment.html">
+            
+                    
+                    提前还款
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.5" data-path="../loan/retrieve_invoice_schedule.html">
+            
+                <a href="../loan/retrieve_invoice_schedule.html">
+            
+                    
+                    查询期供计划
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.6" data-path="../loan/invoice_repay.html">
+            
+                <a href="../loan/invoice_repay.html">
+            
+                    
+                    期供还款
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.7" data-path="../loan/retrieve_loan_agreement.html">
+            
+                <a href="../loan/retrieve_loan_agreement.html">
+            
+                    
+                    借款详情
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.8" data-path="../loan/retrieve_repayment_record.html">
+            
+                <a href="../loan/retrieve_repayment_record.html">
+            
+                    
+                    查询还款记录
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" >
+            
+                <span>
+            
+                    
+                    [账单]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.10.1" data-path="../invoice/retrieve_current_invoice.html">
+            
+                <a href="../invoice/retrieve_current_invoice.html">
+            
+                    
+                    查询当期账单
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [附录]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../appendices/country_code.html">
+            
+                <a href="../../appendices/country_code.html">
+            
+                    
+                    国家代码
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../appendices/currency_code.html">
+            
+                <a href="../../appendices/currency_code.html">
+            
+                    
+                    币种代码
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../appendices/dictionary_code.html">
+            
+                <a href="../../appendices/dictionary_code.html">
+            
+                    
+                    字典代码
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../.." >检索客户贷款申请信息</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x68C0;&#x7D22;&#x5BA2;&#x6237;&#x8D37;&#x6B3E;&#x7533;&#x8BF7;&#x4FE1;&#x606F;">&#x68C0;&#x7D22;&#x5BA2;&#x6237;&#x8D37;&#x6B3E;&#x7533;&#x8BF7;&#x4FE1;&#x606F;</h1>
+<h2 id="&#x8BF7;&#x6C42;">&#x8BF7;&#x6C42;</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>/microloan/customerOffer/loan/{customerOfferId}/{countryCode}/retrieve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>&#x68C0;&#x7D22;&#x5BA2;&#x6237;&#x8D37;&#x6B3E;&#x7533;&#x8BF7;&#x4FE1;&#x606F;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x8BF7;&#x6C42;&#x5934;">&#x8BF7;&#x6C42;&#x5934;</h3>
+<p><a href="../../header.html">&#x8BE6;&#x89C1;</a></p>
+<h3 id="&#x8DEF;&#x5F84;&#x53C2;&#x6570;">&#x8DEF;&#x5F84;&#x53C2;&#x6570;</h3>
+<table>
+<thead>
+<tr>
+<th>&#x53C2;&#x6570;</th>
+<th>&#x7C7B;&#x578B;</th>
+<th>M/O</th>
+<th>&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>customerOfferId</td>
+<td>integer</td>
+<td>M</td>
+<td>&#x5BA2;&#x6237;&#x7533;&#x8BF7;Id</td>
+</tr>
+<tr>
+<td>countryCode</td>
+<td>string</td>
+<td>M</td>
+<td>&#x56FD;&#x5BB6;&#x4EE3;&#x7801;<br><a href="../../appendices/country_code.html">&#x8BE6;&#x89C1;&#x9644;&#x5F55;&#x56FD;&#x5BB6;&#x4EE3;&#x7801;</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="&#x54CD;&#x5E94;">&#x54CD;&#x5E94;</h2>
+<h3 id="&#x54CD;&#x5E94;&#x4F53;">&#x54CD;&#x5E94;&#x4F53;</h3>
+<table>
+<thead>
+<tr>
+<th>&#x53C2;&#x6570;</th>
+<th>&#x7C7B;&#x578B;</th>
+<th>&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>object</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x221F;customerOfferProcedure</td>
+<td>object</td>
+<td>&#x5BA2;&#x6237;&#x7533;&#x8BF7;&#x6D41;&#x7A0B;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; customerOfferId</td>
+<td>integer</td>
+<td>&#x7533;&#x8BF7;Id</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; customerId</td>
+<td>integer</td>
+<td>&#x5BA2;&#x6237;Id</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; customerOfferProcess</td>
+<td>string</td>
+<td>&#x5BA2;&#x6237;&#x7533;&#x8BF7;&#x5904;&#x7406;&#x6D41;&#x7A0B;<br>TODO</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; employee</td>
+<td>integer</td>
+<td>&#x5904;&#x7406;&#x4EFB;&#x52A1;&#x7684;&#x5458;&#x5DE5;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; customerOfferProcessNextTask</td>
+<td>string</td>
+<td>&#x4E0B;&#x4E00;&#x6B65;&#x4EFB;&#x52A1;<br>TODO</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; status</td>
+<td>string</td>
+<td>&#x7533;&#x8BF7;&#x72B6;&#x6001;<br><a href="../../appendices/dictionary_code.html">&#x8BE6;&#x89C1;&#x9644;&#x5F55;&#x7533;&#x8BF7;&#x72B6;&#x6001;</a></td>
+</tr>
+<tr>
+<td>&#x221F;pdpa</td>
+<td>object</td>
+<td>pdpa&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;id</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;pdpaInformation</td>
+<td>array</td>
+<td>&#x4E2A;&#x4EBA;&#x4FE1;&#x606F;&#x8981;&#x7D20;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; item</td>
+<td>string</td>
+<td>&#x8981;&#x7D20;item</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; information</td>
+<td>array</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F;&#x221F;label</td>
+<td>string</td>
+<td>&#x8981;&#x7D20;key</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F;&#x221F;name</td>
+<td>string</td>
+<td>&#x8981;&#x7D20;&#x540D;&#x79F0;</td>
+</tr>
+<tr>
+<td>&#x221F;product</td>
+<td>object</td>
+<td>&#x4EA7;&#x54C1;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;productId</td>
+<td>integer</td>
+<td>&#x4EA7;&#x54C1;ID,&#x5168;&#x5C40;&#x552F;&#x4E00;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;identificationCode</td>
+<td>string</td>
+<td>&#x4EA7;&#x54C1;&#x6807;&#x8BC6;&#x53F7;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;name</td>
+<td>string</td>
+<td>&#x4EA7;&#x54C1;&#x540D;&#x79F0;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;version</td>
+<td>string</td>
+<td>&#x7248;&#x672C;&#x53F7;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;description</td>
+<td>string</td>
+<td>&#x63CF;&#x8FF0;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;amountConfiguration</td>
+<td>object</td>
+<td>&#x91D1;&#x989D;&#x8303;&#x56F4;&#x53C2;&#x6570;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; maxValueRange</td>
+<td>string</td>
+<td>&#x6700;&#x5927;&#x91D1;&#x989D;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; minValueRange</td>
+<td>string</td>
+<td>&#x6700;&#x5C0F;&#x91D1;&#x989D;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;termConfiguration</td>
+<td>object</td>
+<td>&#x671F;&#x9650;&#x8303;&#x56F4;&#x53C2;&#x6570;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; maxValueRange</td>
+<td>string</td>
+<td>&#x6700;&#x5927;&#x671F;&#x9650;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x671F;&#x9650;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; minValueRange</td>
+<td>string</td>
+<td>&#x6700;&#x5C0F;&#x671F;&#x9650;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x671F;&#x9650;</a></td>
+</tr>
+<tr>
+<td>&#x221F;loan</td>
+<td>object</td>
+<td>&#x8D37;&#x6B3E;&#x7533;&#x8BF7;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; amount</td>
+<td>string</td>
+<td>&#x7533;&#x8BF7;&#x91D1;&#x989D;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; currency</td>
+<td>string</td>
+<td>&#x5E01;&#x79CD;&#x4EE3;&#x7801;&#xFF0C;&#x9ED8;&#x8BA4;&#x672C;&#x5E01;<br><a href="../../appendices/currency_code.html">&#x8BE6;&#x89C1;&#x9644;&#x4EF6;&#x5E01;&#x79CD;&#x4EE3;&#x7801;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; term</td>
+<td>string</td>
+<td>&#x671F;&#x9650;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x671F;&#x9650;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; local</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x7ECF;&#x8425;&#x5730;&#x533A;&#x662F;&#x5426;&#x4E3A;&#x672C;&#x5730;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; employ</td>
+<td>string</td>
+<td>&#x6709;&#x591A;&#x5C11;&#x5458;&#x5DE5;&#xFF0C;&#x9009;&#x9879;&#xFF1A;1-10~30&#xFF1B;2-30~50&#xFF1B;3-50~100&#xFF1B;4-100&#x4EE5;&#x4E0A;</td>
+</tr>
+<tr>
+<td>&#x221F;company</td>
+<td>object</td>
+<td>&#x516C;&#x53F8;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; regestrationNo</td>
+<td>string</td>
+<td>&#x6CE8;&#x518C;&#x53F7;</td>
+</tr>
+<tr>
+<td>&#x221F;contact</td>
+<td>object</td>
+<td>&#x8054;&#x7CFB;&#x4EBA;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;contacts</td>
+<td>string</td>
+<td>&#x8054;&#x7CFB;&#x4EBA;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; contactNRIC</td>
+<td>string</td>
+<td>&#x8054;&#x7CFB;&#x4EBA;&#x8EAB;&#x4EFD;&#x8BC1;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; mobileArea</td>
+<td>string</td>
+<td>&#x79FB;&#x52A8;&#x7535;&#x8BDD;&#x533A;&#x57DF;&#x7801;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; mobileNumber</td>
+<td>string</td>
+<td>&#x79FB;&#x52A8;&#x53F7;&#x7801;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; email</td>
+<td>string</td>
+<td>&#x7535;&#x5B50;&#x90AE;&#x4EF6;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td>&#x221F;detail</td>
+<td>object</td>
+<td>&#x516C;&#x53F8;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; name</td>
+<td>string</td>
+<td>&#x6CE8;&#x518C;&#x540D;&#x79F0;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; regestrationNo</td>
+<td>string</td>
+<td>&#x6CE8;&#x518C;&#x53F7;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; address</td>
+<td>string</td>
+<td>&#x6CE8;&#x518C;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; businessType</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x7C7B;&#x578B;<br>TODO</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; contactAddress</td>
+<td>string</td>
+<td>&#x8054;&#x7CFB;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; businessPremiseType</td>
+<td>string</td>
+<td>&#x7ECF;&#x8425;&#x573A;&#x6240;&#x7C7B;&#x578B;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x6240;&#x6709;&#x6743;&#x7C7B;&#x578B;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; businessFocused</td>
+<td>integer</td>
+<td>&#x4E1A;&#x52A1;&#x5728;&#x5236;&#x9020;&#x4E1A;&#x548C;&#x670D;&#x52A1;&#x4E1A;&#x7684;&#x5173;&#x6CE8;&#x5EA6;&#xFF0C;&#x6570;&#x503C;&#x8D8A;&#x5C0F;&#x8D8A;&#x5173;&#x6CE8;&#x4E8E;&#x5236;&#x9020;&#x4E1A;&#xFF0C;&#x6570;&#x503C;&#x8D8A;&#x5927;&#x8D8A;&#x5173;&#x6CE8;&#x4E8E;&#x670D;&#x52A1;&#x4E1A;</td>
+</tr>
+<tr>
+<td>&#x221F;guarantor</td>
+<td>object</td>
+<td>&#x62C5;&#x4FDD;&#x4EBA;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; primaryGuarantor</td>
+<td>string</td>
+<td>&#x4E3B;&#x62C5;&#x4FDD;&#x4EBA;&#x7684;&#x8EAB;&#x4EFD;&#x8BC1;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; guarantors</td>
+<td>array</td>
+<td>&#x62C5;&#x4FDD;&#x4EBA;&#x5217;&#x8868;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; name</td>
+<td>string</td>
+<td>&#x59D3;&#x540D;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; nric</td>
+<td>string</td>
+<td>&#x8EAB;&#x4EFD;&#x8BC1;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; nationality</td>
+<td>string</td>
+<td>&#x56FD;&#x5BB6;&#x4EE3;&#x7801;<br><a href="../../appendices/country_code.html">&#x8BE6;&#x89C1;&#x9644;&#x5F55;&#x56FD;&#x5BB6;&#x4EE3;&#x7801;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; mobileArea</td>
+<td>string</td>
+<td>&#x79FB;&#x52A8;&#x7535;&#x8BDD;&#x533A;&#x57DF;&#x7801;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; mobileNumber</td>
+<td>string</td>
+<td>&#x79FB;&#x52A8;&#x53F7;&#x7801;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; email</td>
+<td>string</td>
+<td>&#x7535;&#x5B50;&#x90AE;&#x4EF6;&#x5730;&#x5740;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; occupation</td>
+<td>string</td>
+<td>&#x804C;&#x4E1A;<br>TODO</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F;industryExpYear</td>
+<td>integer</td>
+<td>&#x884C;&#x4E1A;&#x7ECF;&#x9A8C;&#x5E74;&#x9650;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F;manageExpYear</td>
+<td>integer</td>
+<td>&#x7BA1;&#x7406;&#x7ECF;&#x9A8C;&#x5E74;&#x9650;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; residenceType</td>
+<td>string</td>
+<td>&#x4F4F;&#x5B85;&#x7C7B;&#x578B;<br>TODO</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;&#x221F; residenceOwnership</td>
+<td>string</td>
+<td>&#x4F4F;&#x5B85;&#x6240;&#x6709;&#x6743;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x6240;&#x6709;&#x6743;&#x7C7B;&#x578B;</a></td>
+</tr>
+<tr>
+<td>&#x221F;financial</td>
+<td>object</td>
+<td>&#x516C;&#x53F8;&#x8D22;&#x52A1;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; lastestYearRevenus</td>
+<td>string</td>
+<td>&#x53EF;&#x9009;&#xFF1A;1-&#x5C0F;&#x4E8E;1&#x5343;&#x4E07;&#xFF1B;2-1&#x5343;&#x4E07;&#x5230;1&#x4EBF;&#xFF1B;3-&#x5927;&#x4E8E;1&#x4EBF;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; mainAccountWithOurBank</td>
+<td>string</td>
+<td>&#x516C;&#x53F8;&#x4E3B;&#x8D26;&#x6237;&#x662F;&#x5426;&#x5728;&#x6211;&#x884C;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; outLoanNotWithOutBank</td>
+<td>string</td>
+<td>&#x662F;&#x5426;&#x6709;&#x4E0D;&#x5728;&#x6211;&#x884C;&#x7684;&#x5916;&#x90E8;&#x8D37;&#x6B3E;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;uploadDocument</td>
+<td>array</td>
+<td>&#x4E0A;&#x4F20;&#x6587;&#x4EF6;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; documentTemplateId</td>
+<td>integer</td>
+<td>&#x6587;&#x6863;&#x6A21;&#x677F;Id</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; file</td>
+<td>string</td>
+<td>&#x6587;&#x4EF6;</td>
+</tr>
+<tr>
+<td>&#x221F;kyc</td>
+<td>object</td>
+<td>kyc&#x76F8;&#x5173;&#x4FE1;&#x606F;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;businessInBlackListArea</td>
+<td>string</td>
+<td>&#x662F;&#x5426;&#x5728;&#x9ED1;&#x540D;&#x5355;&#x5730;&#x533A;&#x6709;&#x4E1A;&#x52A1;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;businessPlanInBlackListArea</td>
+<td>string</td>
+<td>&#x662F;&#x5426;&#x5728;&#x9ED1;&#x540D;&#x5355;&#x5730;&#x533A;&#x6709;&#x5F00;&#x5C55;&#x4E1A;&#x52A1;&#x89C4;&#x5212;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;businessOrPartnerSanctioned</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x6216;&#x5408;&#x4F5C;&#x4F19;&#x4F34;&#x662F;&#x5426;&#x88AB;&#x5236;&#x88C1;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;relationInBlackListArea</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x5173;&#x8054;&#x65B9;&#x662F;&#x5426;&#x5728;&#x9ED1;&#x540D;&#x5355;&#x5730;&#x533A;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;repaymentSourceInBlackListArea</td>
+<td>string</td>
+<td>&#x8D37;&#x6B3E;&#x8FD8;&#x6B3E;&#x6765;&#x6E90;&#x5173;&#x8054;&#x65B9;&#x662F;&#x5426;&#x5728;&#x9ED1;&#x540D;&#x5355;&#x5730;&#x533A;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;representsNeutrality</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x662F;&#x5426;&#x4E0E;&#x7B2C;&#x4E09;&#x65B9;&#x65E0;&#x5173;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;representsNeutralityShared</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x662F;&#x5426;&#x4E0E;&#x7B2C;&#x4E09;&#x65B9;&#x5171;&#x4EAB;&#x76F8;&#x5173;&#x5C5E;&#x6027;&#xFF0C;&#x5730;&#x5740;&#x3001;&#x7535;&#x8BDD;&#x53F7;&#x7801;&#x3001;&#x53D7;&#x76CA;&#x6240;&#x6709;&#x4EBA;&#x3001;&#x6388;&#x6743;&#x7B7E;&#x5B57;&#x4EBA;&#x3001;&#x5458;&#x5DE5;<br><a href="../../appendices/dictionary_code.html">&#x53C2;&#x89C1;&#x9644;&#x5F55;&#x5B57;&#x5178;&#x4EE3;&#x7801;&#x2014;&#x662F;/&#x5426;</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;familiarWithBusiness</td>
+<td>string</td>
+<td>&#x4E1A;&#x52A1;&#x8303;&#x56F4;&#x7C7B;&#x578B;&#x7684;&#x4F01;&#x4E1A;&#xFF0C;&#x9009;&#x9879;&#xFF1A;1-&#x5316;&#x5B66;&#x7269;&#x8D28;&#x6279;&#x53D1;&#x5546;&#xFF1B;2-&#x56FD;&#x9632;&#x76F8;&#x5173;&#x4E1A;&#x52A1;&#xFF1B;3-&#x5927;&#x4F7F;&#x9986;&#x3001;&#x9886;&#x4E8B;&#x9986;&#x548C;&#x9AD8;&#x7EA7;&#x4E13;&#x5458;&#x516C;&#x7F72;&#x5BA2;&#x6237;&#xFF1B;4-&#x80FD;&#x6E90;&#x548C;&#x91D1;&#x5C5E;&#x91C7;&#x6398;&#x4E1A;&#xFF1B;5-&#x4ECE;&#x4E8B;&#x6279;&#x53D1;&#x94F6;&#x884C;&#x5238;&#x4E1A;&#x52A1;&#x7684;&#x91D1;&#x878D;&#x673A;&#x6784;&#xFF1B;6-&#x6301;&#x724C;&#x8D4C;&#x573A;&#x3001;&#x535A;&#x5F69;&#x4F01;&#x4E1A;&#x548C;&#x6301;&#x724C;&#x8D4C;&#x573A;&#x4E2D;&#x4ECB;&#xFF1B;7-&#x6301;&#x724C;&#x653E;&#x503A;&#x4EBA;&#xFF1B;8-&#x8D27;&#x5E01;&#x5151;&#x6362;&#x5546;&#x548C;&#x6C47;&#x6B3E;&#x4EE3;&#x7406;&#x5546;&#xFF1B;9-&#x77F3;&#x6CB9;&#x548C;&#x5929;&#x7136;&#x6C14;(&#x5305;&#x62EC;&#x52A0;&#x6CB9;)&#xFF1B;10-&#x652F;&#x4ED8;&#x670D;&#x52A1;&#x63D0;&#x4F9B;&#x5546;&#xFF1B;11-&#x5546;&#x54C1;&#x7684;&#x5B9E;&#x7269;&#x8FD0;&#x8F93;&#xFF1B;12-&#x7EAF;&#x79C1;&#x4EBA;&#x94F6;&#x884C;&#xFF1B;13-&#x822A;&#x8FD0;&#x3001;&#x6D77;&#x8FD0;&#x6216;&#x8239;&#x8236;&#x79DF;&#x8D41;(&#x5305;&#x62EC;&#x52A0;&#x6CB9;)&#xFF1B;14-&#x6CA1;&#x6709;&#x6838;&#x5FC3;&#x7ECF;&#x8425;&#x4E1A;&#x52A1;&#x6216;&#x57FA;&#x7840;&#x4E1A;&#x52A1;&#x4EA4;&#x6613;&#x7684;&#x7279;&#x6B8A;&#x76EE;&#x7684;&#x5B9E;&#x4F53;</td>
+</tr>
+<tr>
+<td>&#x221F;referenceAccount</td>
+<td>object</td>
+<td>&#x5173;&#x8054;&#x8D26;&#x6237;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;account</td>
+<td>string</td>
+<td>&#x8D26;&#x6237;</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;accountBank</td>
+<td>string</td>
+<td>&#x5F00;&#x6237;&#x884C;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x54CD;&#x5E94;&#x4F53;&#x793A;&#x4F8B;">&#x54CD;&#x5E94;&#x4F53;&#x793A;&#x4F8B;</h3>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;data&quot;</span>:{
+      <span class="hljs-string">&quot;customerOfferProcedure&quot;</span>: {
+          <span class="hljs-string">&quot;customerOfferId&quot;</span>: <span class="hljs-number">123456789</span>,
+          <span class="hljs-string">&quot;customerId&quot;</span>: <span class="hljs-number">1231234556</span>,
+          <span class="hljs-string">&quot;customerOfferProcess&quot;</span>: <span class="hljs-string">&quot;MICRO_LOAN_PROCESS&quot;</span>,
+          <span class="hljs-string">&quot;employee&quot;</span>: <span class="hljs-number">1231245667</span>,
+          <span class="hljs-string">&quot;customerOfferProcessNextTask&quot;</span>: <span class="hljs-string">&quot;LOAN_APPLICATION&quot;</span>,
+          <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;RECORD&quot;</span>
+      },
+      <span class="hljs-string">&quot;pdpa&quot;</span>: [
+          {
+              <span class="hljs-string">&quot;item&quot;</span>:<span class="hljs-string">&quot;personalInformation&quot;</span>,
+              <span class="hljs-string">&quot;pdpaInformation&quot;</span>:[
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Name&quot;</span> },
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;aliasName&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alias Name&quot;</span> },
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;sex&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Sex&quot;</span> },
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;dateOfBirth&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Date of Birth&quot;</span> }
+              ]
+          },
+          {
+              <span class="hljs-string">&quot;item&quot;</span>:<span class="hljs-string">&quot;corporateInformation&quot;</span>,
+              <span class="hljs-string">&quot;pdpaInformation&quot;</span>:[
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;entityBasicProfile&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Entity Basic Profile&quot;</span> },
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;entityPreviousNames&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Entity Previous Names&quot;</span> },
+                  { <span class="hljs-string">&quot;label&quot;</span>: <span class="hljs-string">&quot;entityAddresses&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Entity Addresses&quot;</span> }
+              ]
+          }
+      ],
+      <span class="hljs-string">&quot;product&quot;</span>: {
+          <span class="hljs-string">&quot;productId&quot;</span>: <span class="hljs-string">&quot;99990220099&quot;</span>,
+          <span class="hljs-string">&quot;identificationCode&quot;</span>: <span class="hljs-string">&quot;SM0010&quot;</span>,
+          <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;&#x6781;&#x901F;&#x8D37;&quot;</span>,
+          <span class="hljs-string">&quot;version&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+          <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;&#x63D0;&#x4F9B;&#x7ED9;&#x4E2D;&#x5C0F;&#x4F01;&#x4E1A;&#x6781;&#x901F;&#x529E;&#x7406;&#x8D37;&#x6B3E;&#x7684;&#x611F;&#x53D7;&quot;</span>,
+          <span class="hljs-string">&quot;amountConfiguration&quot;</span>: {
+            <span class="hljs-string">&quot;maxValueRange&quot;</span>: <span class="hljs-string">&quot;10000000&quot;</span>,
+            <span class="hljs-string">&quot;minValueRange&quot;</span>: <span class="hljs-string">&quot;10000&quot;</span>
+        },
+      <span class="hljs-string">&quot;termConfiguration&quot;</span>: {
+          <span class="hljs-string">&quot;maxValueRange&quot;</span>: <span class="hljs-string">&quot;ONE_YEAR&quot;</span>,
+          <span class="hljs-string">&quot;minValueRange&quot;</span>: <span class="hljs-string">&quot;THREE_MONTHS&quot;</span>
+        }
+      },
+      <span class="hljs-string">&quot;loan&quot;</span>: {
+          <span class="hljs-string">&quot;amount&quot;</span>: <span class="hljs-string">&quot;1000000&quot;</span>,
+          <span class="hljs-string">&quot;currency&quot;</span>: <span class="hljs-string">&quot;SGP&quot;</span>,
+          <span class="hljs-string">&quot;term&quot;</span>: <span class="hljs-string">&quot;SIX_MONTHS&quot;</span>,
+          <span class="hljs-string">&quot;local&quot;</span>: <span class="hljs-string">&quot;Y&quot;</span>,
+          <span class="hljs-string">&quot;employ&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>
+      },
+      <span class="hljs-string">&quot;company&quot;</span>: {
+          <span class="hljs-string">&quot;regestrationNo&quot;</span>: <span class="hljs-string">&quot;000666303&quot;</span>
+      },
+      <span class="hljs-string">&quot;contact&quot;</span>: {
+          <span class="hljs-string">&quot;contants&quot;</span>:<span class="hljs-string">&quot;Mr. A&quot;</span>
+          <span class="hljs-string">&quot;contactNRIC&quot;</span>: <span class="hljs-string">&quot;123456789&quot;</span>,
+          <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;86&quot;</span>,
+          <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1765498274&quot;</span>,
+          <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>
+      },
+      <span class="hljs-string">&quot;detail&quot;</span>: {
+          <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;xxxx company&quot;</span>,
+          <span class="hljs-string">&quot;regestrationNo&quot;</span>: <span class="hljs-string">&quot;000666303&quot;</span>,
+          <span class="hljs-string">&quot;address&quot;</span>: <span class="hljs-string">&quot;xxxx street&quot;</span>,
+          <span class="hljs-string">&quot;businessType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+          <span class="hljs-string">&quot;contactAddress&quot;</span>: <span class="hljs-string">&quot;xxxx road&quot;</span>,
+          <span class="hljs-string">&quot;businessPremiseType&quot;</span>: <span class="hljs-string">&quot;OWNED&quot;</span>,
+          <span class="hljs-string">&quot;businessFocused&quot;</span>: <span class="hljs-number">40</span>
+      },
+      <span class="hljs-string">&quot;guarantor&quot;</span>: {
+          <span class="hljs-string">&quot;primaryGuarantor&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+          <span class="hljs-string">&quot;guarantors&quot;</span>: [
+              {
+                <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Coco&quot;</span>,
+                <span class="hljs-string">&quot;nric&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+                <span class="hljs-string">&quot;nationality&quot;</span>: <span class="hljs-string">&quot;USA&quot;</span>,
+                <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;65&quot;</span>,
+                <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1238765447&quot;</span>,
+                <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>,
+                <span class="hljs-string">&quot;occupation&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+                <span class="hljs-string">&quot;industryExpYear&quot;</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-string">&quot;manageExpYear&quot;</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-string">&quot;residenceType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+                <span class="hljs-string">&quot;residenceOwnership&quot;</span>: <span class="hljs-string">&quot;RENTED&quot;</span>
+              },
+              {
+                <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Lili&quot;</span>,
+                <span class="hljs-string">&quot;nric&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+                <span class="hljs-string">&quot;nationality&quot;</span>: <span class="hljs-string">&quot;USA&quot;</span>,
+                <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;65&quot;</span>,
+                <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1238765447&quot;</span>,
+                <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>,
+                <span class="hljs-string">&quot;occupation&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+                <span class="hljs-string">&quot;industryExpYear&quot;</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-string">&quot;manageExpYear&quot;</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-string">&quot;residenceType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+                <span class="hljs-string">&quot;residenceOwnership&quot;</span>: <span class="hljs-string">&quot;RENTED&quot;</span>
+              }
+          ]
+      },
+      <span class="hljs-string">&quot;financial&quot;</span>: {
+          <span class="hljs-string">&quot;lastestYearRevenus&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+          <span class="hljs-string">&quot;mainAccountWithOurBank&quot;</span>: <span class="hljs-string">&quot;Y&quot;</span>,
+          <span class="hljs-string">&quot;outLoanNotWithOutBank&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>
+      },
+      <span class="hljs-string">&quot;uploadDocument&quot;</span>: [
+          { <span class="hljs-string">&quot;documentTemplateId&quot;</span>: <span class="hljs-number">123455312</span>, <span class="hljs-string">&quot;file&quot;</span>: <span class="hljs-string">&quot;weofowusfljwoeuf&quot;</span> },
+          { <span class="hljs-string">&quot;documentTemplateId&quot;</span>: <span class="hljs-number">123453577</span>, <span class="hljs-string">&quot;file&quot;</span>: <span class="hljs-string">&quot;weofowusfljwoeuf&quot;</span> }
+      ],
+      <span class="hljs-string">&quot;kyc&quot;</span>: {
+          <span class="hljs-string">&quot;businessInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;businessPlanInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;businessOrPartnerSanctioned&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;relationInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;repaymentSourceInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;representsNeutrality&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;representsNeutralityShared&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+          <span class="hljs-string">&quot;familiarWithBusiness&quot;</span>: <span class="hljs-string">&quot;14&quot;</span>
+      },
+      <span class="hljs-string">&quot;referenceAccount&quot;</span>:{
+          <span class="hljs-string">&quot;account&quot;</span>:<span class="hljs-string">&quot;123123&quot;</span>,
+          <span class="hljs-string">&quot;accountBank&quot;</span>:<span class="hljs-string">&quot;ABC Bank&quot;</span>
+      }
+    }
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="update_loan_customer_offer.html" class="navigation navigation-prev " aria-label="Previous page: 修改客户贷款申请">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="list_loan_customer_offer.html" class="navigation navigation-next " aria-label="Next page: 查询客户贷款申请列表">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"检索客户贷款申请信息","level":"1.2.7.7","depth":3,"next":{"title":"查询客户贷款申请列表","level":"1.2.7.8","depth":3,"path":"api/microloan/customer_offer/list_loan_customer_offer.md","ref":"api/microloan/customer_offer/list_loan_customer_offer.md","articles":[]},"previous":{"title":"修改客户贷款申请","level":"1.2.7.6","depth":3,"path":"api/microloan/customer_offer/update_loan_customer_offer.md","ref":"api/microloan/customer_offer/update_loan_customer_offer.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"zh","gitbook":"*"},"file":{"path":"api/microloan/customer_offer/retrieve_loan_customer_offer.md","mtime":"2022-11-07T08:10:49.608Z","type":"markdown"},"gitbook":{"version":"3.0.1","time":"2022-11-07T08:41:04.273Z"},"basePath":"../../..","book":{"language":"zh"}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../../../gitbook/gitbook.js"></script>
+    <script src="../../../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+
