@@ -1,0 +1,187 @@
+package cn.sunline.saas.template_data.controller
+
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+
+@RestController
+@RequestMapping("templateData")
+class TemplateDataController {
+//    @Autowired
+//    private lateinit var channelInterestRateTemplateDataServiceImpl: ChannelInterestRateTemplateDataServiceImpl
+//
+//    @Autowired
+//    private lateinit var channelLoanProductTemplateServiceImpl: ChannelLoanProductTemplateServiceImpl
+//
+//    @Autowired
+//    private lateinit var commonTemplateDataServiceImpl: CommonTemplateDataServiceImpl
+//
+//    @Autowired
+//    private lateinit var channelInfoTemplateDataServiceImpl: ChannelInfoTemplateDataServiceImpl
+//
+//    @Autowired
+//    private lateinit var channelCommissionTemplateDataServiceImpl: ChannelCommissionTemplateDataServiceImpl
+//
+//    @Autowired
+//    private lateinit var channelPapdTemplateDataServiceImpl: ChannelPapdTemplateDataServiceImpl
+//
+//    @Autowired
+//    private lateinit var riskControlRuleTemplateDataServiceImpl: RiskControlRuleTemplateDataServiceImpl
+//
+//
+//    @GetMapping("ratePlan")
+//    fun getRatePlanData(): ResponseEntity<DTOResponseSuccess<DTORatePlan>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTORatePlan>(
+//                DTORatePlan::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("interestRate/{ratePlanId}")
+//    fun getInterestRate(@PathVariable(name = "ratePlanId") ratePlanId: Long): ResponseEntity<DTOResponseSuccess<DTOInterestRate>> {
+//        return DTOResponseSuccess(
+//            channelInterestRateTemplateDataServiceImpl.getTemplateData<DTOInterestRate>(
+//                DTOInterestRate::class,
+//                ratePlanId.toString(),
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("questionnaire")
+//    fun getQuestionnaire(): ResponseEntity<DTOResponseSuccess<DTOQuestionnaireAdd>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOQuestionnaireAdd>(
+//                DTOQuestionnaireAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("loanProduct")
+//    fun getLoanProductData(): ResponseEntity<DTOResponseSuccess<DTOProductAdd>> {
+//        return DTOResponseSuccess(
+//            channelLoanProductTemplateServiceImpl.getTemplateData<DTOProductAdd>(
+//                DTOProductAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//
+//    @GetMapping("channel")
+//    fun getOrganisationData(): ResponseEntity<DTOResponseSuccess<DTOChannelAdd>> {
+//        return DTOResponseSuccess(
+//            channelInfoTemplateDataServiceImpl.getTemplateData<DTOChannelAdd>(
+//                DTOChannelAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("channel/commission/{channelId}")
+//    fun getPersonData(): ResponseEntity<DTOResponseSuccess<DTOChannelAgreementAdd>> {
+//        return DTOResponseSuccess(
+//            channelCommissionTemplateDataServiceImpl.getTemplateData<DTOChannelAgreementAdd>(
+//                DTOChannelAgreementAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("pdpa")
+//    fun getPdpaData(): ResponseEntity<DTOResponseSuccess<DTOPdpaAdd>> {
+//        return DTOResponseSuccess(
+//            channelPapdTemplateDataServiceImpl.getTemplateData<DTOPdpaAdd>(
+//                DTOPdpaAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("permission")
+//    fun getPermissionData(): ResponseEntity<DTOResponseSuccess<DTOPermission>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOPermission>(
+//                DTOPermission::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("position")
+//    fun getPositionData(): ResponseEntity<DTOResponseSuccess<DTOPositionAdd>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOPositionAdd>(
+//                DTOPositionAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("role")
+//    fun getRoleData(): ResponseEntity<DTOResponseSuccess<DTORoleChange>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTORoleChange>(
+//                DTORoleChange::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("user")
+//    fun getUserData(): ResponseEntity<DTOResponseSuccess<DTOUserAdd>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOUserAdd>(
+//                DTOUserAdd::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("activity/definition")
+//    fun getActivityDefinitionData(): ResponseEntity<DTOResponseSuccess<DTOActivityDefinition>> {
+//        return DTOResponseSuccess(
+//            riskControlRuleTemplateDataServiceImpl.getTemplateData<DTOActivityDefinition>(
+//                DTOActivityDefinition::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//
+//    @GetMapping("event/definition")
+//    fun getEventDefinitionData(): ResponseEntity<DTOResponseSuccess<DTOEventDefinition>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOEventDefinition>(
+//                DTOEventDefinition::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+//
+//    @GetMapping("process/definition")
+//    fun getProcessDefinitionData(): ResponseEntity<DTOResponseSuccess<DTOProcessDefinition>> {
+//        return DTOResponseSuccess(
+//            commonTemplateDataServiceImpl.getTemplateData<DTOProcessDefinition>(
+//                DTOProcessDefinition::class,
+//                null,
+//                false
+//            )
+//        ).response()
+//    }
+}

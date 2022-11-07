@@ -11,7 +11,7 @@ data class DTOChannelCommissionAgreementView(
     val id: String,
     val channelId: String,
     val agreementType: AgreementType,
-    val channelArrangement: List<DTOChannelArrangementView>,
+    val channelArrangement: DTOChannelArrangementView,
     val fromDateTime: String,
     val toDateTime: String
 )

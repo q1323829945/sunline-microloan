@@ -96,7 +96,7 @@ class CommissionStatisticsManagerService(
     fun addCommissionDetail(dtoCommissionDetail: List<DTOCommissionDetail>) {
         val detail = arrayListOf<CommissionDetail>()
         dtoCommissionDetail.forEach {
-            commissionDetailService.getByApplicationIdAndStatus(it.applicationId,it.applyStatus) ?: run {
+            commissionDetailService.getByApplicationIdAndStatus(it.applicationId, it.applyStatus) ?: run {
                 detail += CommissionDetail(
                     id = null,
                     channelCode = it.channelCode,
@@ -116,7 +116,7 @@ class CommissionStatisticsManagerService(
     }
 
     fun addCommissionStatistics(dateTime: DateTime? = null) {
-        val nowDate = dateTime?:tenantDateTime.now()
+        val nowDate = dateTime ?: tenantDateTime.now()
 //        if (nowDate.hourOfDay == 0) {
         //根据租户时区统计数据
         //每日统计
@@ -159,13 +159,8 @@ class CommissionStatisticsManagerService(
             )
         )
         commission.forEach { it ->
-            val business = checkCommissionStatisticsExist(it.channelCode, it.channelName, dateTime, frequency)
-            if (business != null) {
-                business.commissionAmount = it.commissionAmount
-                business.statisticsAmount = it.statisticsAmount
-                business.datetime = dateTime.toDate()
-                commissionStatisticsService.save(business)
-            } else {
+            val list = checkCommissionStatisticsExist(it.channelCode, it.channelName, dateTime, frequency)
+            if (list.none { f -> f.applyStatus == it.applyStatus && f.channelCode == it.channelCode }) {
                 commissionStatisticsService.saveCommissionStatistics(
                     DTOCommissionStatistics(
                         channelCode = it.channelCode,
@@ -177,6 +172,12 @@ class CommissionStatisticsManagerService(
                         dateTime = dateTime
                     )
                 )
+            } else {
+                val first = list.first { f -> f.applyStatus == it.applyStatus && f.channelCode == it.channelCode }
+                first.commissionAmount = it.commissionAmount
+                first.statisticsAmount = it.statisticsAmount
+                first.datetime = dateTime.toDate()
+                commissionStatisticsService.save(first)
             }
         }
     }
@@ -186,7 +187,7 @@ class CommissionStatisticsManagerService(
         channelName: String,
         dateTime: DateTime,
         frequency: Frequency
-    ): CommissionStatistics? {
+    ): List<CommissionStatistics> {
         return commissionStatisticsService.findByDate(
             DTOCommissionStatisticsFindParams(
                 channelCode = channelCode,
@@ -194,7 +195,7 @@ class CommissionStatisticsManagerService(
                 dateTime = dateTime,
                 frequency = frequency
             )
-        )
+        ).content
     }
 
     fun getChartsPaged(

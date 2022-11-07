@@ -1,7 +1,11 @@
 package cn.sunline.saas.channel.arrangement.factory
 
 import cn.sunline.saas.channel.arrangement.model.db.ChannelArrangement
+import cn.sunline.saas.channel.arrangement.model.db.ChannelCommissionItems
 import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementAdd
+import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelCommissionItemsAdd
+import cn.sunline.saas.global.constant.CommissionMethodType
+import cn.sunline.saas.global.constant.CommissionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,24 +22,31 @@ class ChannelArrangementFactory(
 
     fun instance(
         channelAgreementId: Long,
-        dtoChannelArrangementAdd: List<DTOChannelArrangementAdd>
-    ): List<ChannelArrangement> {
-        val channelArrangements = mutableListOf<ChannelArrangement>()
-        dtoChannelArrangementAdd.forEach {
-            channelArrangements.add(
-                ChannelArrangement(
+        dtoChannelArrangementAdd: DTOChannelArrangementAdd
+    ): ChannelArrangement {
+
+        val channelArrangementId = seq.nextId()
+        val channelCommissionItems = mutableListOf<ChannelCommissionItems>()
+        dtoChannelArrangementAdd.commissionItems.forEach {
+            channelCommissionItems.add(
+                ChannelCommissionItems(
                     id = seq.nextId(),
-                    channelAgreementId = channelAgreementId,
+                    channelArrangementId = channelArrangementId,
                     applyStatus = it.applyStatus,
-                    commissionType = it.commissionType,
-                    commissionMethodType = it.commissionMethodType,
                     commissionAmountRange = it.commissionAmountRange,
                     commissionAmount = it.commissionAmount,
                     commissionCountRange = it.commissionCountRange,
                     commissionRatio = it.commissionRatio,
-                 )
+                )
             )
         }
-        return channelArrangements
+        return ChannelArrangement(
+            id = channelArrangementId,
+            channelAgreementId = channelAgreementId,
+            commissionType = dtoChannelArrangementAdd.commissionType,
+            commissionMethodType = dtoChannelArrangementAdd.commissionMethodType,
+            channelArrangementType = dtoChannelArrangementAdd.channelArrangementType,
+            commissionItems = channelCommissionItems
+        )
     }
 }

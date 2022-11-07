@@ -26,36 +26,40 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
     @Autowired
     private lateinit var seq: Sequence
 
+    @Autowired
+    private lateinit var channelCommissionItemsService: ChannelCommissionItemsService
 
-    fun getPageByChannelAgreementId(channelAgreementId: Long, pageable: Pageable): Page<ChannelArrangement> {
-        return getPageWithTenant({ root, _, criteriaBuilder ->
+    fun getOneByChannelAgreementId(channelAgreementId: Long): ChannelArrangement? {
+        return getOneWithTenant { root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, pageable)
+        }
     }
 
-    fun getRangeValuesByChannelAgreementId(channelAgreementId: Long,applyStatus: ApplyStatus?, pageable: Pageable): MutableMap<ApplyStatus,List<RangeValue>> {
-        val pages = getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<Long>("channelAgreementId"), channelAgreementId))
-            applyStatus?.let{predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("applyStatus"), it))}
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, pageable).content
-        val rangeMap = mutableMapOf<ApplyStatus,List<RangeValue>>()
-        val type = pages.firstOrNull()?.commissionMethodType ?: throw ChannelArrangementNotFoundException(
-            "channel commission method type is null",
+    fun getRangeValuesByChannelAgreementId(
+        channelAgreementId: Long,
+        applyStatus: ApplyStatus?,
+        pageable: Pageable
+    ): MutableMap<ApplyStatus, List<RangeValue>> {
+        val content = getOneByChannelAgreementId(channelAgreementId)
+        val rangeMap = mutableMapOf<ApplyStatus, List<RangeValue>>()
+        val type = content?.commissionMethodType ?: throw ChannelArrangementNotFoundException(
+            "channel arrangement method type is null",
             ManagementExceptionCode.CHANNEL_COMMISSION_NOT_FOUND
         )
+
+        val pages = channelCommissionItemsService.getPageByChannelArrangementId(content.id, Pageable.unpaged())
+
         val groupBy = pages.groupBy { it.applyStatus }
         groupBy.forEach { (t, u) ->
             var firstRange = BigDecimal.ZERO
             val rangeValues = mutableListOf<RangeValue>()
-            when(type){
-                CommissionMethodType.COUNT_FIX_AMOUNT ->{
+            when (type) {
+                CommissionMethodType.COUNT_FIX_AMOUNT -> {
                     u.sortedBy { it.commissionCountRange }.forEach {
-                        rangeValues+= RangeValue(
-                            commissionMethodType = it.commissionMethodType,
+                        rangeValues += RangeValue(
+                            commissionMethodType = type,
                             applyStatus = t,
                             lowerLimit = firstRange,
                             upperLimit = it.commissionCountRange?.toBigDecimal(),
@@ -68,10 +72,11 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
                         firstRange = it.commissionCountRange?.toBigDecimal()
                     }
                 }
-                CommissionMethodType.AMOUNT_RATIO ->{
+
+                CommissionMethodType.AMOUNT_RATIO -> {
                     u.sortedBy { it.commissionAmountRange }.forEach {
-                        rangeValues+= RangeValue(
-                            commissionMethodType = it.commissionMethodType,
+                        rangeValues += RangeValue(
+                            commissionMethodType = type,
                             applyStatus = t,
                             lowerLimit = firstRange,
                             upperLimit = it.commissionAmountRange,

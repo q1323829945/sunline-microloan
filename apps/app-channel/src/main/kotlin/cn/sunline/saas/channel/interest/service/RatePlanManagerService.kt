@@ -30,11 +30,7 @@ class RatePlanManagerService {
     }
 
     fun getAll(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
-        return ratePlanService.getPageWithTenant({ root, _, criteriaBuilder ->
-            val predicates = mutableListOf<Predicate>()
-            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
-            criteriaBuilder.and(*(predicates.toTypedArray()))
-        }, Pageable.unpaged())
+        return ratePlanService.getByRatePlanType(type, Pageable.unpaged())
     }
 
     fun addOne(dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {

@@ -39,6 +39,11 @@ dependencies {
     implementation(project(":lib-filter"))
     implementation(project(":lib-schedule"))
     implementation(project(":lib-invoice"))
+    implementation(project(":lib-channel-interest"))
+    implementation(project(":lib-channel-product"))
+    implementation(project(":lib-channel-party"))
+    implementation(project(":lib-channel-arrangement"))
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-web")

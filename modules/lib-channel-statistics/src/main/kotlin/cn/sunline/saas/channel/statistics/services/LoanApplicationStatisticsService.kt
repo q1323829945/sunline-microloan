@@ -60,7 +60,7 @@ class LoanApplicationStatisticsService(
                         predicates.add(
                             criteriaBuilder.between(
                                 root.get("month"),
-                                endMonth,
+                                endMonth + 1,
                                 startMonth
                             ).not()
                         )
@@ -81,7 +81,7 @@ class LoanApplicationStatisticsService(
                         predicates.add(
                             criteriaBuilder.between(
                                 root.get("day"),
-                                endDay,
+                                endDay + 1,
                                 startDay
                             ).not()
                         )

@@ -6,6 +6,8 @@ import cn.sunline.saas.channel.interest.repository.RatePlanRepository
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.seq.Sequence
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
@@ -49,4 +51,12 @@ class RatePlanService(private val ratePlanRepository: RatePlanRepository) :
 //            criteriaBuilder.and(*(predicates.toTypedArray()))
 //        }, Pageable.unpaged())
 //    }
+
+    fun getByRatePlanType(type: RatePlanType, pageable: Pageable): Page<RatePlan> {
+        return getPageWithTenant({ root, _, criteriaBuilder ->
+            val predicates = mutableListOf<Predicate>()
+            predicates.add(criteriaBuilder.equal(root.get<RatePlanType>("type"), type))
+            criteriaBuilder.and(*(predicates.toTypedArray()))
+        }, Pageable.unpaged())
+    }
 }

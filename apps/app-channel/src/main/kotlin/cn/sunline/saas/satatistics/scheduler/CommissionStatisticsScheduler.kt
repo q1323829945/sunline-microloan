@@ -64,26 +64,26 @@ class CommissionStatisticsScheduler(
                 endDate
             )
         )
-        commission.forEach {
-            // TODO  get CommissionFeature by commissionFeatureId ,get the ratio
-            val business = checkCommissionStatisticsExist(it.channelCode,it.channelName, dateTime, frequency)
-            if (business != null) {
-                business.commissionAmount = it.statisticsAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP)
-                business.statisticsAmount =  it.statisticsAmount
-                business.datetime = dateTime.toDate()
-                commissionStatisticsService.save(business)
-            } else {
+        commission.forEach { it ->
+            val list = checkCommissionStatisticsExist(it.channelCode, it.channelName, dateTime, frequency)
+            if (list.none { f -> f.applyStatus == it.applyStatus && f.channelCode == it.channelCode }) {
                 commissionStatisticsService.saveCommissionStatistics(
                     DTOCommissionStatistics(
                         channelCode = it.channelCode,
                         channelName = it.channelName,
-                        statisticsAmount =  it.statisticsAmount,
-                        commissionAmount = it.commissionAmount.multiply(ratio).setScale(2, RoundingMode.HALF_UP),
+                        statisticsAmount = it.statisticsAmount,
+                        commissionAmount = it.commissionAmount,
                         frequency = frequency,
                         applyStatus = it.applyStatus,
                         dateTime = dateTime
                     )
                 )
+            } else {
+                val first = list.first { f -> f.applyStatus == it.applyStatus && f.channelCode == it.channelCode }
+                first.commissionAmount = it.commissionAmount
+                first.statisticsAmount = it.statisticsAmount
+                first.datetime = dateTime.toDate()
+                commissionStatisticsService.save(first)
             }
         }
     }
@@ -93,7 +93,7 @@ class CommissionStatisticsScheduler(
         channelName: String,
         dateTime: DateTime,
         frequency: Frequency
-    ): CommissionStatistics? {
+    ): List<CommissionStatistics> {
         return commissionStatisticsService.findByDate(
             DTOCommissionStatisticsFindParams(
                 channelCode = channelCode,
@@ -101,6 +101,6 @@ class CommissionStatisticsScheduler(
                 dateTime = dateTime,
                 frequency = frequency
             )
-        )
+        ).content
     }
 }

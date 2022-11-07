@@ -3,8 +3,6 @@ package cn.sunline.saas.channel.arrangement.model.db
 import cn.sunline.saas.global.constant.*
 import cn.sunline.saas.multi_tenant.jpa.TenantListener
 import cn.sunline.saas.multi_tenant.model.MultiTenant
-import java.math.BigDecimal
-import java.util.Date
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
@@ -28,26 +26,18 @@ class ChannelArrangement(
     val commissionType: CommissionType,
 
     @NotNull
+    @Column(name = "channel_arrangement_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
+    @Enumerated(value = EnumType.STRING)
+    val channelArrangementType: ChannelArrangementType = ChannelArrangementType.COMMISSION,
+
+    @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "commission_method_type", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
     val commissionMethodType: CommissionMethodType,
 
-    @Column(name = "commission_amount",nullable = true, scale = 19, precision = 2, columnDefinition = "decimal(19,2) default null")
-    val commissionAmount: BigDecimal?,
-
-    @Column(name = "commission_ratio",nullable = true, scale = 9, precision = 6, columnDefinition = "decimal(9,6) default null")
-    val commissionRatio: BigDecimal?,
-
-    @Column(name = "commission_amount_range", nullable = true, columnDefinition = "decimal(19,2) default null")
-    val commissionAmountRange: BigDecimal?,
-
-    @Column(name = "commission_count_range", nullable = true, columnDefinition =  "bigint default null")
-    val commissionCountRange: Long?,
-
-    @NotNull
-    @Column(name = "apply_status", nullable = false, length = 32, columnDefinition = "varchar(32) not null")
-    @Enumerated(value = EnumType.STRING)
-    val applyStatus: ApplyStatus
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "channel_arrangement_id")
+    var commissionItems: MutableList<ChannelCommissionItems> = mutableListOf()
 
     ) : MultiTenant {
 

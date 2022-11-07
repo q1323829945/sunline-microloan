@@ -1,6 +1,5 @@
 package cn.sunline.saas.templatedata.service.impl
 
-import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaInformation
 import cn.sunline.saas.pdpa.modules.dto.DTOPdpaItem
@@ -15,7 +14,7 @@ import kotlin.reflect.full.superclasses
 
 
 @Service
-class PapdTemplateDataServiceImpl : TemplateDataService() {
+class ChannelPapdTemplateDataServiceImpl : TemplateDataService() {
 
     @Autowired
     private lateinit var sequence: Sequence

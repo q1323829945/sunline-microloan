@@ -1,16 +1,21 @@
 package cn.sunline.saas.channel.statistics.services
 
 import cn.sunline.saas.channel.statistics.modules.db.CommissionStatistics
+import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionDetail
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionStatistics
 import cn.sunline.saas.channel.statistics.modules.dto.DTOCommissionStatisticsFindParams
 import cn.sunline.saas.channel.statistics.repositories.CommissionStatisticsRepository
+import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.global.constant.Frequency
+import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import javax.persistence.criteria.Predicate
 
@@ -59,7 +64,7 @@ class CommissionStatisticsService(
                         predicates.add(
                             criteriaBuilder.between(
                                 root.get("month"),
-                                endMonth,
+                                endMonth + 1,
                                 startMonth
                             ).not()
                         )
@@ -80,7 +85,7 @@ class CommissionStatisticsService(
                         predicates.add(
                             criteriaBuilder.between(
                                 root.get("day"),
-                                endDay,
+                                endDay + 1,
                                 startDay
                             ).not()
                         )
@@ -102,9 +107,9 @@ class CommissionStatisticsService(
         }, pageable)
     }
 
-    fun findByDate(dtoCommissionStatisticsFindParams: DTOCommissionStatisticsFindParams): CommissionStatistics? {
+    fun findByDate(dtoCommissionStatisticsFindParams: DTOCommissionStatisticsFindParams): Page<CommissionStatistics> {
         val dateTime = dtoCommissionStatisticsFindParams.dateTime
-        return getOneWithTenant { root, query, criteriaBuilder ->
+        return getPageWithTenant({ root, query, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(
                 criteriaBuilder.equal(
@@ -125,7 +130,7 @@ class CommissionStatisticsService(
             query.orderBy(criteriaBuilder.desc(root.get<Date>("datetime")))
 
             criteriaBuilder.and(*(predicates.toTypedArray()))
-        }
+        }, Pageable.unpaged())
     }
 
 
@@ -168,4 +173,59 @@ class CommissionStatisticsService(
             )
         )
     }
+
+
+//    private fun syncCommissionStatistics(syncData: SyncData) {
+//        var commissionAmount = BigDecimal.ZERO
+//        var ratio: BigDecimal? = BigDecimal.ZERO
+//        val statisticsAmount = syncData.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
+//        val rangeValuesMap = channelArrangementService.getRangeValuesByChannelAgreementId(
+//            syncData.channelAgreementId,
+//            syncData.status,
+//            Pageable.unpaged()
+//        )
+//        val dto = arrayListOf<DTOCommissionDetail>()
+//
+//        rangeValuesMap.forEach { (t, u) ->
+//
+//            val details = commissionDetailService.getListByStatus(t)
+//
+//            commissionAmount = when (u.first().commissionMethodType) {
+//
+//                CommissionMethodType.COUNT_FIX_AMOUNT -> {
+//                    val count = details.size + 1
+//                    ratio = null
+//                    ChannelCommissionCalculator(u.first().commissionMethodType).calculate(
+//                        count.toBigDecimal(),
+//                        u
+//                    ) ?: BigDecimal.ZERO
+//                }
+//
+//                CommissionMethodType.AMOUNT_RATIO -> {
+//                    ratio = ChannelCommissionCalculator(u.first().commissionMethodType).calculate(statisticsAmount, u)
+//                        ?: BigDecimal.ZERO
+//                    statisticsAmount.multiply(ratio)
+//                }
+//
+//                else -> {
+//                    TODO()
+//                }
+//            }
+//            dto += DTOCommissionDetail(
+//                channelCode = syncData.channelCode,
+//                channelName = syncData.channelName,
+//                applicationId = syncData.applicationId,
+//                commissionAmount = commissionAmount,
+//                applyStatus = syncData.status,
+//                currency = CurrencyType.USD,
+//                ratio = ratio,
+//                statisticsAmount = statisticsAmount,
+//                dateTime = tenantDateTime.toTenantDateTime(syncData.created)
+//            )
+//        }
+//
+//        commissionStatisticsManagerService.addCommissionDetail(dto)
+//
+//        commissionStatisticsManagerService.addCommissionStatistics(tenantDateTime.toTenantDateTime(syncData.created))
+//    }
 }
