@@ -18,12 +18,17 @@ class GatewayPathFilter: Filter {
 
     val ignoreStartsWith = mutableListOf(
         "/instance","/api"
-        ,"/test","/healthz","/dapr","/actors","/test","/webhook","/server","/doc"
+        ,"/test","/healthz","/dapr","/actors","/test","/webhook","/server","/doc","/gitbook","/en","/zh"
     )
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest = request as HttpServletRequest
         logger.info { "url:${httpServletRequest.requestURI}" }
+
+        if(httpServletRequest.requestURI == "/zh/" || httpServletRequest.requestURI == "/en/"){
+            httpServletRequest.getRequestDispatcher(httpServletRequest.requestURI + "index.html").forward(request, response)
+            return
+        }
 
         ignoreStartsWith.forEach {
             if(httpServletRequest.requestURI.startsWith(it)){
@@ -31,6 +36,7 @@ class GatewayPathFilter: Filter {
                 return
             }
         }
+
 
         httpServletRequest.getHeader("client_id")?: run {
             FilterException.handleException(response!!, ManagementExceptionCode.AUTHORIZATION_TOKEN_VALIDATION_FAILED, "client_id undefined!")

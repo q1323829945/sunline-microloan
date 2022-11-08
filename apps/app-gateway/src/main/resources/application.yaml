@@ -25,6 +25,7 @@ spring:
       max-request-size: 200MB
 
 
+
 gateway:
   send: http
 
