@@ -27,10 +27,14 @@ class LoanApplyStatisticsSchedulerTask(
 
     override fun doJob(actorId: String, jobId: String, data: ActorCommand) {
         val schedulerJobLog = schedulerJobHelper.execute(jobId)
-
+        if (schedulerJobLog?.schedulerTime!!.before(tenantDateTime.now().plusDays(1).plusMinutes(-2).toDate())) {
+            schedulerJobHelper.failed(schedulerJobLog, "time out") //TODO error_content length no enough
+            ActorReminderService.deleteReminders(actorType, actorId, jobId)
+            return
+        }
         try {
             logger.info("[LoanApplyStatisticsSchedulerTask]: sync $actorId statistics start")
-            loanApplyAppService.syncLoanApplicationStatistics(actorId, null)
+            loanApplyAppService.syncStatisticsForSchedule(actorId)
             logger.info("[LoanApplyStatisticsSchedulerTask]: sync $actorId statistics end")
             schedulerJobHelper.succeed(schedulerJobLog)
             //delete reminder

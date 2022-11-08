@@ -49,7 +49,8 @@ class ChannelArrangementService(private val channelArrangementRepo: ChannelArran
             ManagementExceptionCode.CHANNEL_COMMISSION_NOT_FOUND
         )
 
-        val pages = channelCommissionItemsService.getPageByChannelArrangementId(content.id, Pageable.unpaged())
+        val pages =
+            channelCommissionItemsService.getPageByChannelArrangementId(content.id, applyStatus, Pageable.unpaged())
 
         val groupBy = pages.groupBy { it.applyStatus }
         groupBy.forEach { (t, u) ->

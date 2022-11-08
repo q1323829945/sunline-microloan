@@ -114,6 +114,19 @@ class LoanApplyAppService {
 
     private val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
+    data class SyncData(
+        val amount: BigDecimal?,
+        val channelAgreementId: Long,
+        val channelCode: String,
+        val channelName: String,
+        val applicationId: Long,
+        val status: ApplyStatus,
+        val created: String,
+        val productId: Long?,
+        val productType: String?,
+        val currency: CurrencyType?,
+    )
+
     fun getProduct(productType: ProductType): DTOProductAppView {
         val product =
             productService.getProductByProductType(productType) ?: throw LoanProductNotFoundException("Invalid product")
@@ -130,13 +143,12 @@ class LoanApplyAppService {
         val loanAgent = loanAgentService.updateStatus(applicationId.toLong(), status)
 
         saveBusinessStatistic(applicationId)
-        syncLoanApplicationStatistics(applicationId, status)
+        syncStatisticsForImmediately(applicationId, status)
 
         return loanAgent
     }
 
-
-    fun syncLoanApplicationStatistics(applicationId: String, applyStatus: ApplyStatus?) {
+    fun syncStatisticsForImmediately(applicationId: String, applyStatus: ApplyStatus) {
         try {
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics start")
             val loanAgent =
@@ -166,7 +178,7 @@ class LoanApplyAppService {
             if (loanAgent.status == ApplyStatus.APPROVALED) {
                 syncLoanApplicationStatistics(syncData)
                 syncCommissionStatistics(syncData)
-            }else{
+            } else {
                 syncCommissionStatistics(syncData)
             }
             logger.info("[syncLoanApplicationStatistics]: sync $applicationId statistics end")
@@ -174,21 +186,43 @@ class LoanApplyAppService {
             logger.error("[syncLoanApplicationStatistics]: sync applicationId:$applicationId , error massage : ${e.message}")
             createScheduler.create(ActorType.LOAN_APPLY_STATISTICS, applicationId)
         }
-
     }
 
-    data class SyncData(
-        val amount: BigDecimal?,
-        val channelAgreementId: Long,
-        val channelCode: String,
-        val channelName: String,
-        val applicationId: Long,
-        val status: ApplyStatus,
-        val created: String,
-        val productId: Long?,
-        val productType: String?,
-        val currency: CurrencyType?,
-    )
+    fun syncStatisticsForSchedule(applicationId: String) {
+
+        logger.info("[syncStatisticsForSchedule]: sync $applicationId statistics start")
+        val loanAgent =
+            loanAgentService.getOne(applicationId.toLong())
+                ?: throw LoanApplyNotFoundException("Invalid loan apply")
+
+        val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)
+            ?: throw LoanApplyNotFoundException("Invalid loan apply")
+        val channelAgreement = channelAgreementService.getPageByChannelId(
+            channelCast.id,
+            Pageable.unpaged()
+        ).content.first()
+        val dtoLoanAgent = LoanApplyAssembly.convertToLoanAgent(loanAgent.data)
+        val status = loanAgent.status
+        val syncData = SyncData(
+            amount = dtoLoanAgent.loanInformation?.amount?.toBigDecimal(),
+            channelAgreementId = channelAgreement.id.toLong(),
+            channelCode = channelCast.channelCode,
+            channelName = channelCast.channelName,
+            applicationId = applicationId.toLong(),
+            status = status,
+            created = tenantDateTime.toTenantDateTime(loanAgent.created!!).toString(),
+            productId = loanAgent.productId,
+            productType = loanAgent.loanApply?.productType?.name,
+            currency = CurrencyType.USD
+        )
+        if (loanAgent.status == ApplyStatus.APPROVALED) {
+            syncLoanApplicationStatistics(syncData)
+            syncCommissionStatistics(syncData)
+        } else {
+            syncCommissionStatistics(syncData)
+        }
+        logger.info("[syncStatisticsForSchedule]: sync $applicationId statistics end")
+    }
 
     private fun syncLoanApplicationStatistics(syncData: SyncData) {
         loanApplicationStatisticsManagerService.addLoanApplicationDetail(
@@ -217,8 +251,6 @@ class LoanApplyAppService {
     }
 
     private fun syncCommissionStatistics(syncData: SyncData) {
-        var commissionAmount = BigDecimal.ZERO
-        var ratio: BigDecimal? = BigDecimal.ZERO
         val statisticsAmount = syncData.amount ?: BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP)
         val rangeValuesMap = channelArrangementService.getRangeValuesByChannelAgreementId(
             syncData.channelAgreementId,
@@ -230,36 +262,21 @@ class LoanApplyAppService {
         rangeValuesMap.forEach { (t, u) ->
 
             val details = commissionDetailService.getListByStatus(t)
+            val count = details.size + 1
+            val commissionData = ChannelCommissionCalculator(u.first().commissionMethodType).calculate(
+                count.toString(),
+                statisticsAmount,
+                u
+            )
 
-            commissionAmount = when (u.first().commissionMethodType) {
-
-                CommissionMethodType.COUNT_FIX_AMOUNT -> {
-                    val count = details.size + 1
-                    ratio = null
-                    ChannelCommissionCalculator(u.first().commissionMethodType).calculate(
-                        count.toBigDecimal(),
-                        u
-                    ) ?: BigDecimal.ZERO
-                }
-
-                CommissionMethodType.AMOUNT_RATIO -> {
-                    ratio = ChannelCommissionCalculator(u.first().commissionMethodType).calculate(statisticsAmount, u)
-                        ?: BigDecimal.ZERO
-                    statisticsAmount.multiply(ratio)
-                }
-
-                else -> {
-                    TODO()
-                }
-            }
             dto += DTOCommissionDetail(
                 channelCode = syncData.channelCode,
                 channelName = syncData.channelName,
                 applicationId = syncData.applicationId,
-                commissionAmount = commissionAmount,
+                commissionAmount = commissionData.commission,
                 applyStatus = syncData.status,
                 currency = CurrencyType.USD,
-                ratio = ratio,
+                ratio = commissionData.ratio,
                 statisticsAmount = statisticsAmount,
                 dateTime = tenantDateTime.toTenantDateTime(syncData.created)
             )
@@ -323,7 +340,7 @@ class LoanApplyAppService {
             )
         )
 
-        syncLoanApplicationStatistics(loanAgent.applicationId.toString(), ApplyStatus.RECORD)
+        syncStatisticsForImmediately(loanAgent.applicationId.toString(), ApplyStatus.RECORD)
 
         return loanAgent
     }
@@ -488,7 +505,7 @@ class LoanApplyAppService {
             logger.info("[saveBusinessDetailStatistic]: save $applicationId  business detail statistics end")
         } catch (e: Exception) {
             logger.error("[saveBusinessDetailStatistic]: save applicationId:$applicationId  business detail statistics, error massage : ${e.message}")
-            createScheduler.create(ActorType.LOAN_APPLY_STATISTICS, applicationId)
+            createScheduler.create(ActorType.BUSINESS_STATISTICS, applicationId)
         }
     }
 }

@@ -28,6 +28,7 @@ class SchedulerJobHelper(
     fun failed(schedulerJobLog: SchedulerJobLog?,log:String?){
         schedulerJobLog?.run {
             this.failed(tenantDateTime.now(),log)
+            schedulerJobLogService.save(this)
         }
     }
 

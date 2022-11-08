@@ -25,10 +25,15 @@ class ChannelCommissionItemsService(private val channelCommissionItemsRepo: Chan
     @Autowired
     private lateinit var seq: Sequence
 
-    fun getPageByChannelArrangementId(channelArrangementId: Long, pageable: Pageable): Page<ChannelCommissionItems> {
+    fun getPageByChannelArrangementId(
+        channelArrangementId: Long,
+        applyStatus: ApplyStatus?,
+        pageable: Pageable
+    ): Page<ChannelCommissionItems> {
         return getPageWithTenant({ root, _, criteriaBuilder ->
             val predicates = mutableListOf<Predicate>()
             predicates.add(criteriaBuilder.equal(root.get<Long>("channelArrangementId"), channelArrangementId))
+            applyStatus?.let { predicates.add(criteriaBuilder.equal(root.get<ApplyStatus>("applyStatus"), it)) }
             criteriaBuilder.and(*(predicates.toTypedArray()))
         }, pageable)
     }
