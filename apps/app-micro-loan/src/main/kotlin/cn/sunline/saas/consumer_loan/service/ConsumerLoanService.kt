@@ -416,7 +416,11 @@ class ConsumerLoanService(
         )
     }
 
-    fun calculateSchedule(productId: Long, amount: BigDecimal, term: LoanTermType): ScheduleHelper.DTORepaymentScheduleTrialView {
+    fun calculateSchedule(
+        productId: Long,
+        amount: BigDecimal,
+        term: LoanTermType
+    ): ScheduleHelper.DTORepaymentScheduleTrialView {
 
         val loanProduct = productInvokeImpl.getProductInfoByProductId(productId)
         val feeArrangement = loanProduct.feeFeatures?.run {
@@ -667,15 +671,19 @@ class ConsumerLoanService(
                 .add(feeDeductItem.immediateFee)
         ).getPrepaymentSchedules(repaymentArrangement.paymentMethod)
 
-        val prepaymentLines = convertToInvoiceLines(schedule)
+        val prepaymentLines = convertToInvoiceLines(agreement.loanAgreement.amount, schedule)
+        val totalAmount = prepaymentLines.sumOf { it.invoiceAmount.toBigDecimal() }
         return DTOPreRepaymentTrailView(
             agreementId = agreementId.toString(),
-            totalAmount = prepaymentLines.sumOf { it.invoiceAmount.toBigDecimal() }.toPlainString(),
+            totalAmount = totalAmount.toPlainString(),
             prepaymentLines = prepaymentLines
         )
     }
 
-    private fun convertToInvoiceLines(schedule: MutableList<Schedule>): ArrayList<DTOInvoiceLinesView> {
+    private fun convertToInvoiceLines(
+        amount: BigDecimal,
+        schedule: MutableList<Schedule>
+    ): ArrayList<DTOInvoiceLinesView> {
         var totalPrincipal = BigDecimal.ZERO
         var totalInterest = BigDecimal.ZERO
         var totalFee = BigDecimal.ZERO
@@ -693,7 +701,9 @@ class ConsumerLoanService(
             if (InvoiceAmountType.PRINCIPAL == it) {
                 prepaymentLines.add(
                     DTOInvoiceLinesView(
-                        invoiceAmountType = it, invoiceAmount = totalPrincipal.toPlainString()
+                        invoiceAmountType = it,
+                        invoiceAmount = if (totalPrincipal == amount) totalPrincipal.subtract(totalFee)
+                            .toPlainString() else totalPrincipal.toPlainString()
                     )
                 )
             } else if (InvoiceAmountType.INTEREST == it) {

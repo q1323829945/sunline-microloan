@@ -39,7 +39,7 @@ class CommonTemplateDataServiceImpl: TemplateDataService() {
                 if(param.name!!.contains("id")){
                     mapData[param] = sequence.nextId().toString()
                 }else {
-                    mapData[param] = "888811L"
+                    mapData[param] = param.name + "_" + sequence.nextId().toString().substring(6, 9)
                 }
             }
             if(param.type.classifier == Date::class){

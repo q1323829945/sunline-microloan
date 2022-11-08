@@ -149,17 +149,19 @@ class LoanInvoiceService(private val tenantDateTime: TenantDateTime) {
         var totalInterest = BigDecimal.ZERO
         var totalFee = BigDecimal.ZERO
         invoiceService.listInvoiceByAgreementId(agreementId, Pageable.unpaged()).map {
-            scheduleLines.add(
-                DTOInvoiceScheduleLineView(
-                    period = it.period,
-                    invoiceId = it.id.toString(),
-                    invoiceInstalment = it.invoiceAmount.toPlainString(),
-                    invoicePeriodFromDate = it.invoicePeriodFromDate.toString(),
-                    invoicePeriodToDate = it.invoicePeriodToDate.toString(),
-                    invoiceRepaymentDate = it.invoiceRepaymentDate.toString(),
-                    invoiceLines = objectMapper.convertValue(it.invoiceLines)
+            if(it.invoiceStatus!=InvoiceStatus.TEMP) {
+                scheduleLines.add(
+                    DTOInvoiceScheduleLineView(
+                        period = it.period,
+                        invoiceId = it.id.toString(),
+                        invoiceInstalment = it.invoiceAmount.toPlainString(),
+                        invoicePeriodFromDate = it.invoicePeriodFromDate.toString(),
+                        invoicePeriodToDate = it.invoicePeriodToDate.toString(),
+                        invoiceRepaymentDate = it.invoiceRepaymentDate.toString(),
+                        invoiceLines = objectMapper.convertValue(it.invoiceLines)
+                    )
                 )
-            )
+            }
         }
         scheduleLines.forEach { view ->
             view.invoiceLines.forEach {
