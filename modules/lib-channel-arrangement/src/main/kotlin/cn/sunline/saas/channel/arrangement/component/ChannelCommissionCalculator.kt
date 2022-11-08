@@ -8,30 +8,55 @@ class ChannelCommissionCalculator(
     private val commissionMethodType: CommissionMethodType
 ) {
 
-    fun calculate(range: BigDecimal, rangeValues: List<RangeValue>): BigDecimal? {
+    data class CommissionData(val commission: BigDecimal, val ratio: BigDecimal?)
+
+    fun calculate(
+        count: String,
+        statisticsAmount: BigDecimal,
+        rangeValues: List<RangeValue>
+    ): CommissionData {
         return when (commissionMethodType) {
-            CommissionMethodType.AMOUNT_RATIO -> calculateRatioAmount(range, rangeValues)
-            CommissionMethodType.COUNT_FIX_AMOUNT -> calculateCountFixAmount(range, rangeValues)
+
+            CommissionMethodType.COUNT_FIX_AMOUNT -> {
+                val commission = getCommissionAmountOrRatio(
+                    count.toBigDecimal(),
+                    rangeValues
+                ) ?: BigDecimal.ZERO
+                CommissionData(commission, null)
+            }
+
+            CommissionMethodType.AMOUNT_RATIO -> {
+                val ratio = getCommissionAmountOrRatio(statisticsAmount, rangeValues) ?: BigDecimal.ZERO
+                val commission = statisticsAmount.multiply(ratio)
+                CommissionData(commission, ratio)
+            }
+        }
+    }
+
+    private fun getCommissionAmountOrRatio(range: BigDecimal, rangeValues: List<RangeValue>): BigDecimal? {
+        return when (commissionMethodType) {
+            CommissionMethodType.AMOUNT_RATIO -> getAmountRatio(range, rangeValues)
+            CommissionMethodType.COUNT_FIX_AMOUNT -> getCountFixAmount(range, rangeValues)
         }
     }
 
 
-    private fun calculateCountFixAmount(
-        applyCount: BigDecimal,
-        countRangeAmounts: List<RangeValue>
+    private fun getCountFixAmount(
+        count: BigDecimal,
+        rangeAmounts: List<RangeValue>
     ): BigDecimal? {
-        return calculateRangeValue(applyCount, countRangeAmounts)
+        return getRangeValue(count, rangeAmounts)
     }
 
-    private fun calculateRatioAmount(
+    private fun getAmountRatio(
         approvalCount: BigDecimal,
-        countRangeAmounts: List<RangeValue>
+        rangeAmounts: List<RangeValue>
     ): BigDecimal? {
-        return calculateRangeValue(approvalCount, countRangeAmounts)
+        return getRangeValue(approvalCount, rangeAmounts)
     }
 
 
-    private fun calculateRangeValue(
+    private fun getRangeValue(
         range: BigDecimal,
         countRangeAmounts: List<RangeValue>
     ): BigDecimal? {
