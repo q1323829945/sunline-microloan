@@ -25,14 +25,14 @@ class PermissionController {
 
     @GetMapping
     fun getPaged(pageable: Pageable): ResponseEntity<DTOPagedResponseSuccess> {
-        val page = permissionService.getPaged(pageable = pageable)
+        val page = permissionService.getPageWithTenant(pageable = pageable)
         return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTOPermission>(it)}).response()
     }
 
 
     @GetMapping("all")
     fun getAll(): ResponseEntity<DTOPagedResponseSuccess> {
-        val page = permissionService.getPaged(pageable = Pageable.unpaged())
+        val page = permissionService.getPageWithTenant(pageable = Pageable.unpaged())
         return DTOPagedResponseSuccess(page.map { objectMapper.convertValue<DTOPermission>(it)}).response()
     }
 
