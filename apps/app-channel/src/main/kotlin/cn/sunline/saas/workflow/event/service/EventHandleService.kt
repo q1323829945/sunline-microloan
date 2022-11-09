@@ -61,19 +61,37 @@ class EventHandleService(
         processes.forEach { process ->
             process.activities.forEach { activity ->
                 activity.events.filter { user == null || it.user == user }
-                    .filter { status == null || it.status == status }.forEach {
-                        val handle = DTOEventHandleView(
-                            id = it.id.toString(),
-                            processName = process.processDefinition.name,
-                            activityName = activity.activityDefinition.name,
-                            eventType = it.eventDefinition.type,
-                            position = activity.activityDefinition.position,
-                            user = it.user,
-                            status = it.status,
-                            start = it.start?.run { tenantDateTime.toTenantDateTime(this).toDate() },
-                            end = it.end?.run { tenantDateTime.toTenantDateTime(this).toDate() },
-                        )
-                        dtoEventHandles.add(handle)
+                    .filter { status == null || it.status == status }
+                        .forEach {
+                            if(user != null){
+                                val handle = DTOEventHandleView(
+                                    id = it.id.toString(),
+                                    processName = process.processDefinition.name,
+                                    activityName = activity.activityDefinition.name,
+                                    eventType = it.eventDefinition.type,
+                                    position = activity.activityDefinition.position,
+                                    user = it.user,
+                                    status = it.status,
+                                    start = it.start?.run { tenantDateTime.toTenantDateTime(this).toDate() },
+                                    end = it.end?.run { tenantDateTime.toTenantDateTime(this).toDate() },
+                                )
+                                dtoEventHandles.add(handle)
+                            }
+                            if(user == null && it.status != StepStatus.WAITING){
+                                val handle = DTOEventHandleView(
+                                    id = it.id.toString(),
+                                    processName = process.processDefinition.name,
+                                    activityName = activity.activityDefinition.name,
+                                    eventType = it.eventDefinition.type,
+                                    position = activity.activityDefinition.position,
+                                    user = it.user,
+                                    status = it.status,
+                                    start = it.start?.run { tenantDateTime.toTenantDateTime(this).toDate() },
+                                    end = it.end?.run { tenantDateTime.toTenantDateTime(this).toDate() },
+                                )
+                                dtoEventHandles.add(handle)
+                            }
+
                 }
             }
         }

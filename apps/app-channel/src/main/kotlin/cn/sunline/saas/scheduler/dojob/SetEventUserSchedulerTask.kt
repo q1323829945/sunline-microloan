@@ -74,6 +74,12 @@ class SetEventUserSchedulerTask(
         }
 
         var user = event.user
+
+        if(payload.isCurrentEventStep){
+            user = getUser(payload.position)?: run {
+                return
+            }
+        }
         event.next?: run {
             user = getUser(payload.position)?: run {
                 return
