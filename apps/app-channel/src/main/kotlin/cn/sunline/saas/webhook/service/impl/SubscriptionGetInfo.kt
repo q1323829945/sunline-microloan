@@ -54,9 +54,9 @@ class SubscriptionGetInfo(
             true,
             mutableMapOf(
                 "SUBSCRIPTION_META_KEY_1" to agentManagement,
-                "${agentManagement}_DESCRIPTION" to "Access micro loan agent backend management portal",
+                "${agentManagement}_DESCRIPTION" to "Access microloan agent backend management portal",
                 "${agentManagement}_TYPE" to "management",
-                "${agentManagement}_NAME" to "Micro Loan Agent Management Portal",
+                "${agentManagement}_NAME" to "Microloan Agent Management Portal",
                 "${agentManagement}_VALUE" to agentManagementMap,
 
                 "SUBSCRIPTION_META_KEY_2" to channelManagement,

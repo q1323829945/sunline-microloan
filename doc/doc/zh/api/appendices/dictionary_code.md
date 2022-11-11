@@ -49,7 +49,7 @@
 |                                                | ON_HOLD                                  | 保持             |
 |                                                | PREPARED                                 | 准备             |
 |                                                | REQUEST                                  | 请求             |
-| 还款日类型（RepaymentFrequency）               | ONE_MONTH                                | 一个月           |
+| 还款频率（RepaymentFrequency）                 | ONE_MONTH                                | 一个月           |
 |                                                | THREE_MONTHS                             | 三个月           |
 |                                                | SIX_MONTHS                               | 六个月           |
 |                                                | ONE_YEAR                                 | 一年             |

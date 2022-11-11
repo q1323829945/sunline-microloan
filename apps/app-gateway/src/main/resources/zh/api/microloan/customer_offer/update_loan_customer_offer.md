@@ -77,6 +77,9 @@
 | ∟representsNeutrality           | string  | M    | 业务是否与第三方无关<br />[参见附录字典代码—是/否](../../appendices/dictionary_code.md) |
 | ∟representsNeutralityShared     | string  | M    | 业务是否与第三方共享相关属性，地址、电话号码、受益所有人、授权签字人、员工<br />[参见附录字典代码—是/否](../../appendices/dictionary_code.md) |
 | ∟familiarWithBusiness           | string  | M    | 业务范围类型的企业，选项：1-化学物质批发商；2-国防相关业务；3-大使馆、领事馆和高级专员公署客户；4-能源和金属采掘业；5-从事批发银行券业务的金融机构；6-持牌赌场、博彩企业和持牌赌场中介；7-持牌放债人；8-货币兑换商和汇款代理商；9-石油和天然气(包括加油)；10-支付服务提供商；11-商品的实物运输；12-纯私人银行；13-航运、海运或船舶租赁(包括加油)；14-没有核心经营业务或基础业务交易的特殊目的实体 |
+| referenceAccount                | object  | M    | 关联账户                                                     |
+| ∟account                        | string  | M    | 账户                                                         |
+| ∟accountBank                    | string  | M    | 开户行                                                       |
 
 ### 请求体示例
 
@@ -159,6 +162,10 @@ value:
         "representsNeutrality": "N",
         "representsNeutralityShared": "N",
         "familiarWithBusiness": "14"
+      },
+      "referenceAccount":{
+          "account":"123123",
+          "accountBank":"ABC Bank"
       }
 }
 
