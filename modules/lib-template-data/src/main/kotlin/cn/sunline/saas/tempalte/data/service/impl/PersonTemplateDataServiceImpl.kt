@@ -1,17 +1,13 @@
-package cn.sunline.saas.templatedata.service.impl
+package cn.sunline.saas.tempalte.data.service.impl
 
-import cn.sunline.saas.global.model.CountryType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.party.organisation.model.OrganisationIdentificationType
-import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationIdentificationAdd
 import cn.sunline.saas.party.person.model.PersonIdentificationType
-import cn.sunline.saas.party.person.model.ResidentialStatus
 import cn.sunline.saas.party.person.model.RoleType
 import cn.sunline.saas.party.person.model.dto.DTOPersonIdentificationAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonNameAdd
 import cn.sunline.saas.party.person.model.dto.DTOPersonRoleAdd
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.templatedata.service.TemplateDataService
+import cn.sunline.saas.tempalte.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.reflect.KClass

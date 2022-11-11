@@ -5,8 +5,10 @@ import cn.sunline.saas.channel.party.organisation.model.OrganisationIdentificati
 import cn.sunline.saas.channel.party.organisation.model.db.OrganisationIdentification
 import cn.sunline.saas.channel.party.organisation.repository.OrganisationIdentificationRepository
 import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Service
 import javax.persistence.criteria.Predicate
 
+@Service
 class OrganisationIdentificationService (private val organisationRepos: OrganisationIdentificationRepository) :
     BaseMultiTenantRepoService<OrganisationIdentification, Long>(organisationRepos) {
 

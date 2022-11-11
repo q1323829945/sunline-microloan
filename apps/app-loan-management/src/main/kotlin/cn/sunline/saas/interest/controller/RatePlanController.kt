@@ -6,8 +6,6 @@ import cn.sunline.saas.interest.service.RatePlanManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.templatedata.service.TemplateDataService
-import cn.sunline.saas.templatedata.service.impl.CommonTemplateDataServiceImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

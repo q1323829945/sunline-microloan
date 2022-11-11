@@ -1,8 +1,8 @@
-package cn.sunline.saas.templatedata.service.impl
+package cn.sunline.saas.channel.template.data.service.impl
 
+import cn.sunline.saas.channel.template.data.service.TemplateDataService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.templatedata.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -13,7 +13,7 @@ import kotlin.reflect.full.superclasses
 
 
 @Service
-class CommonTemplateDataServiceImpl: TemplateDataService() {
+class CommonTemplateDataServiceImpl : TemplateDataService() {
 
     @Autowired
     private lateinit var sequence: Sequence
@@ -22,7 +22,11 @@ class CommonTemplateDataServiceImpl: TemplateDataService() {
     private lateinit var tenantDateTime: TenantDateTime
 
 
-    override fun <T: Any> getTemplateData(type: KClass<T>,defaultMapData: Map<String, Any>?, overrideDefaults: Boolean): T {
+    override fun <T : Any> getTemplateData(
+        type: KClass<T>,
+        defaultMapData: Map<String, Any>?,
+        overrideDefaults: Boolean
+    ): T {
         val constructor = type.primaryConstructor!!
         val parameters = constructor.parameters
 //        if (!parameters.all { param -> (param.type.classifier == String::class || param.isOptional)||
@@ -30,25 +34,25 @@ class CommonTemplateDataServiceImpl: TemplateDataService() {
 //            error("Class $type primary constructor has required non-String parameters.")
 //        }
 
-        val mapData =  mutableMapOf<KParameter, Any?>()
+        val mapData = mutableMapOf<KParameter, Any?>()
         constructor.parameters.forEach { param ->
-            if(param.type.classifier == Long::class){
+            if (param.type.classifier == Long::class) {
                 mapData[param] = sequence.nextId()
             }
-            if(param.type.classifier == String::class){
-                if(param.name!!.contains("id")){
+            if (param.type.classifier == String::class) {
+                if (param.name!!.contains("id")) {
                     mapData[param] = sequence.nextId().toString()
-                }else {
-                    mapData[param] = param.name + "_" + sequence.nextId().toString().substring(6, 9)
+                } else {
+                    mapData[param] = "888811L"
                 }
             }
-            if(param.type.classifier == Date::class){
+            if (param.type.classifier == Date::class) {
                 mapData[param] = tenantDateTime.now().toDate()
             }
-            if(param.type.classifier == Boolean::class){
+            if (param.type.classifier == Boolean::class) {
                 mapData[param] = false
             }
-            if((param.type.classifier as KClass<*>).superclasses.first() == Enum::class){
+            if ((param.type.classifier as KClass<*>).superclasses.first() == Enum::class) {
                 mapData[param] = (Class.forName((param.type as Any).toString()).enumConstants as Array<*>).first()
             }
         }

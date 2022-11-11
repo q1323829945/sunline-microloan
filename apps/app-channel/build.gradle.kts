@@ -47,7 +47,7 @@ dependencies {
     implementation(project(":lib-pdpa"))
     implementation(project(":lib-workflow"))
 
-//    implementation(project(":lib-template-data"))
+    implementation(project(":lib-channel-template-data"))
 
     implementation("io.projectreactor:reactor-core:3.3.11.RELEASE")
 }

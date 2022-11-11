@@ -132,5 +132,20 @@ enum class PermissionConfig (
     WORKFLOW_QUERY_MENU("menu","workflowQuery", RequestMethod.GET,"View workflowQuery menu"),
     EVENT_HANDLE_MENU("menu","eventHandle", RequestMethod.GET,"View eventHandle menu"),
     EVENT_HANDLE_QUERY_MENU("menu","eventHandleQuery", RequestMethod.GET,"View eventHandleQuery menu"),
+
+
+    TEMPLATE_DATA_RATE_PLAN("TemplateData", "templateData/ratePlan\$", RequestMethod.GET, "Get Product ratePlan Data"),
+    TEMPLATE_DATA_INTEREST_RATE("TemplateData", "templateData/interestRate/[0-9]+\$", RequestMethod.GET, "Get interestRate Template Data"),
+    TEMPLATE_DATA_LOAN_PRODUCT("TemplateData", "templateData/loanProduct\$", RequestMethod.GET, "Get Product loanProduct Data"),
+    TEMPLATE_DATA_QUESTIONNAIRE("TemplateData", "templateData/questionnaire\$", RequestMethod.GET, "Get questionnaire Template Data"),
+    TEMPLATE_DATA_CHANNEL("TemplateData", "templateData/channel\$", RequestMethod.GET, "Get channel Template Data"),
+    TEMPLATE_DATA_CHANNEL_COMMISSION("TemplateData", "templateData/channel/commission/[0-9]+\$", RequestMethod.GET, "Get channel commission Template Data"),
+    TEMPLATE_DATA_PDPA("TemplateData", "templateData/pdpa\$", RequestMethod.GET, "Get Product pdpa Data"),
+    TEMPLATE_DATA_PERMISSION("TemplateData", "templateData/permission\$", RequestMethod.GET, "Get permission Template Data"),
+    TEMPLATE_DATA_ROLE("TemplateData", "templateData/role\$", RequestMethod.GET, "Get role Template Data"),
+    TEMPLATE_DATA_USER("TemplateData", "templateData/user\$", RequestMethod.GET, "Get user Template Data"),
+    TEMPLATE_DATA_POSITION("TemplateData", "templateData/position\$", RequestMethod.GET, "Get position Template Data")
+
+
 }
 

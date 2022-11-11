@@ -1,9 +1,5 @@
-package cn.sunline.saas.templatedata.service.impl
+package cn.sunline.saas.tempalte.data.service.impl
 
-import cn.sunline.saas.loan.product.model.dto.DTOAmountLoanProductConfiguration
-import cn.sunline.saas.loan.product.model.dto.DTOInterestFeature
-import cn.sunline.saas.loan.product.model.dto.DTORepaymentFeature
-import cn.sunline.saas.loan.product.model.dto.DTOTermLoanProductConfiguration
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.organisation.model.BusinessUnitType
 import cn.sunline.saas.party.organisation.model.OrganisationIdentificationType
@@ -12,14 +8,12 @@ import cn.sunline.saas.party.organisation.model.dto.DTOBusinessUnitAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationIdentificationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganizationInvolvementAdd
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.templatedata.service.TemplateDataService
+import cn.sunline.saas.tempalte.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.superclasses
 
 @Service
 class OrganisationTemplateDataServiceImpl : TemplateDataService() {

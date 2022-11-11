@@ -42,7 +42,7 @@ dependencies {
 //    implementation(project(":lib-channel-interest"))
 //    implementation(project(":lib-channel-product"))
 //    implementation(project(":lib-channel-party"))
-//    implementation(project(":lib-channel-arrangement"))
+    api(project(":lib-template-data-util"))
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

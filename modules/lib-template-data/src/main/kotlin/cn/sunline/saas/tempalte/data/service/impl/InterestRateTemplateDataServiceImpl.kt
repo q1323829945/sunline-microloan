@@ -1,12 +1,12 @@
-package cn.sunline.saas.templatedata.service.impl
+package cn.sunline.saas.tempalte.data.service.impl
 
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.interest.model.RatePlanType
 import cn.sunline.saas.interest.service.RatePlanService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.templatedata.exception.TemplateDataBusinessException
-import cn.sunline.saas.templatedata.service.TemplateDataService
+import cn.sunline.saas.tempalte.data.exception.TemplateDataBusinessException
+import cn.sunline.saas.tempalte.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigDecimal

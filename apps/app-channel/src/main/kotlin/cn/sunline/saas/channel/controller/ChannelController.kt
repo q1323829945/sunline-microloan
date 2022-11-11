@@ -3,6 +3,7 @@ package cn.sunline.saas.channel.controller
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.controller.dto.*
 import cn.sunline.saas.channel.party.organisation.model.ChannelCastType
+import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelAdd
 import cn.sunline.saas.channel.service.ChannelAgreementManagerService
 import cn.sunline.saas.channel.service.ChannelManagerService
 import cn.sunline.saas.global.constant.AgreementType

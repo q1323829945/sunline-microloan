@@ -38,10 +38,3 @@ data class DTOBusinessUnitAdd(
     var organisationId:Long?,
     val type: BusinessUnitType,
 )
-
-data class DTOChannelCastAdd(
-    var id:Long?,
-    val channelCode: String,
-    val channelName: String,
-    val channelCastType: ChannelCastType
-)

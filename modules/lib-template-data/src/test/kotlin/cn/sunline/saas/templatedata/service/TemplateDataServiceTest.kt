@@ -1,8 +1,6 @@
 package cn.sunline.saas.templatedata.service
 
-import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.templatedata.service.TemplateDataService
-import cn.sunline.saas.templatedata.service.TestClass
+import cn.sunline.saas.tempalte.data.service.TemplateDataService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

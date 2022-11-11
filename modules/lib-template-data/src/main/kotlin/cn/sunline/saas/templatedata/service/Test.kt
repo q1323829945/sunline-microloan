@@ -14,7 +14,7 @@ import kotlin.reflect.full.primaryConstructor
  * @author : xujm
  * @date : 2022/10/31 14:56
  */
-class Test {
+class TestClass {
 }
 fun main(args: Array<String>) {
     val templateData = getTemplateData(TestClass::class, false)

@@ -41,12 +41,12 @@ class LoanAgentServiceTest {
         individualId = individual.applicationId.toString()
     }
 
-    @Test
-    fun `set product`(){
-        val productId = 123L
-        val loanAgent = loanAgentService.updateOne(corporateId.toLong(),productId)
-        Assertions.assertThat(loanAgent.productId).isEqualTo(productId)
-    }
+//    @Test
+//    fun `set product`(){
+//        val productId = 123L
+//        val loanAgent = loanAgentService.updateOne(corporateId.toLong(),productId)
+//        Assertions.assertThat(loanAgent.productId).isEqualTo(productId)
+//    }
 
     @Test
     fun `get paged`(){

@@ -13,7 +13,8 @@ import cn.sunline.saas.rbac.controller.dto.DTOUserAdd
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.risk.control.rule.controller.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.templatedata.service.impl.*
+import cn.sunline.saas.tempalte.data.service.impl.*
+import cn.sunline.saas.tempalte.data.service.impl.InterestRateTemplateDataServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -50,10 +51,9 @@ class TemplateDataController {
     @GetMapping("ratePlan")
     fun getRatePlanData(): ResponseEntity<DTOResponseSuccess<DTORatePlan>> {
         return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<DTORatePlan>(
+            commonTemplateDataServiceImpl.deepCustomAssignment(
                 DTORatePlan::class,
-                null,
-                false
+                null
             )
         ).response()
     }
@@ -84,10 +84,9 @@ class TemplateDataController {
     @GetMapping("uploadConfigure")
     fun getUploadConfigureData(): ResponseEntity<DTOResponseSuccess<DTOUploadConfigure>> {
         return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<DTOUploadConfigure>(
+            commonTemplateDataServiceImpl.deepCustomAssignment(
                 DTOUploadConfigure::class,
-                null,
-                false
+                null
             )
         ).response()
     }
@@ -128,10 +127,9 @@ class TemplateDataController {
     @GetMapping("permission")
     fun getPermissionData(): ResponseEntity<DTOResponseSuccess<PermissionController.DTOPermission>> {
         return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<PermissionController.DTOPermission>(
+            commonTemplateDataServiceImpl.deepCustomAssignment(
                 PermissionController.DTOPermission::class,
-                null,
-                false
+                null
             )
         ).response()
     }
@@ -139,10 +137,9 @@ class TemplateDataController {
     @GetMapping("role")
     fun getRoleData(): ResponseEntity<DTOResponseSuccess<DTORoleChange>> {
         return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<DTORoleChange>(
+            commonTemplateDataServiceImpl.deepCustomAssignment(
                 DTORoleChange::class,
-                null,
-                false
+                null
             )
         ).response()
     }
@@ -150,10 +147,9 @@ class TemplateDataController {
     @GetMapping("user")
     fun getUserData(): ResponseEntity<DTOResponseSuccess<DTOUserAdd>> {
         return DTOResponseSuccess(
-            commonTemplateDataServiceImpl.getTemplateData<DTOUserAdd>(
+            commonTemplateDataServiceImpl.deepCustomAssignment(
                 DTOUserAdd::class,
-                null,
-                false
+                null
             )
         ).response()
     }

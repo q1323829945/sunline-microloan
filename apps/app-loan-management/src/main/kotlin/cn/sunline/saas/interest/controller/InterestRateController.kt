@@ -7,8 +7,8 @@ import cn.sunline.saas.interest.service.InterestRateManagerService
 import cn.sunline.saas.response.DTOPagedResponseSuccess
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
-import cn.sunline.saas.templatedata.service.impl.CommonTemplateDataServiceImpl
-import cn.sunline.saas.templatedata.service.impl.InterestRateTemplateDataServiceImpl
+import cn.sunline.saas.tempalte.data.service.impl.CommonTemplateDataServiceImpl
+import cn.sunline.saas.tempalte.data.service.impl.InterestRateTemplateDataServiceImpl
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
