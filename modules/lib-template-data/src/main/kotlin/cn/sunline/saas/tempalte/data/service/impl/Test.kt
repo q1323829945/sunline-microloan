@@ -1,4 +1,4 @@
-package cn.sunline.saas.templatedata.service
+package cn.sunline.saas.tempalte.data.service.impl
 
 import org.joda.time.DateTime
 import org.springframework.boot.runApplication
