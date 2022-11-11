@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.service
+package cn.sunline.saas.template.data.service
 
 import kotlin.reflect.KClass
 

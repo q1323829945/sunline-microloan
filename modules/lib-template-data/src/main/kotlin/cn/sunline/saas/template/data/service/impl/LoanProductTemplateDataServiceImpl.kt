@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.service.impl
+package cn.sunline.saas.template.data.service.impl
 
 import cn.sunline.saas.document.template.services.DocumentTemplateService
 import cn.sunline.saas.document.template.services.LoanUploadConfigureService
@@ -10,8 +10,8 @@ import cn.sunline.saas.loan.product.model.dto.*
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.organisation.service.OrganisationService
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.tempalte.data.exception.TemplateDataBusinessException
-import cn.sunline.saas.tempalte.data.service.TemplateDataService
+import cn.sunline.saas.template.data.exception.TemplateDataBusinessException
+import cn.sunline.saas.template.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service

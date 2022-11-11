@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.service.impl
+package cn.sunline.saas.template.data.service.impl
 
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.seq.Sequence

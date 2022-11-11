@@ -13,8 +13,7 @@ import cn.sunline.saas.rbac.controller.dto.DTOUserAdd
 import cn.sunline.saas.response.DTOResponseSuccess
 import cn.sunline.saas.response.response
 import cn.sunline.saas.risk.control.rule.controller.dto.DTORiskControlRuleAdd
-import cn.sunline.saas.tempalte.data.service.impl.*
-import cn.sunline.saas.tempalte.data.service.impl.InterestRateTemplateDataServiceImpl
+import cn.sunline.saas.template.data.service.impl.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

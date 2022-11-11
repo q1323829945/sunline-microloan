@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.service.impl
+package cn.sunline.saas.template.data.service.impl
 
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.party.organisation.model.BusinessUnitType
@@ -8,7 +8,7 @@ import cn.sunline.saas.party.organisation.model.dto.DTOBusinessUnitAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganisationIdentificationAdd
 import cn.sunline.saas.party.organisation.model.dto.DTOOrganizationInvolvementAdd
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.tempalte.data.service.TemplateDataService
+import cn.sunline.saas.template.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.reflect.KClass

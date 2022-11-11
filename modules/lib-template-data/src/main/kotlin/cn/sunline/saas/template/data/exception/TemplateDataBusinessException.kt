@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.exception
+package cn.sunline.saas.template.data.exception
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException

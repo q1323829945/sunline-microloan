@@ -1,4 +1,4 @@
-package cn.sunline.saas.tempalte.data.service.impl
+package cn.sunline.saas.template.data.service.impl
 
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import cn.sunline.saas.risk.control.rule.modules.DataItem
@@ -6,7 +6,7 @@ import cn.sunline.saas.risk.control.rule.modules.LogicalOperationType
 import cn.sunline.saas.risk.control.rule.modules.RelationalOperatorType
 import cn.sunline.saas.risk.control.rule.modules.dto.DTORiskControlRuleParam
 import cn.sunline.saas.seq.Sequence
-import cn.sunline.saas.tempalte.data.service.TemplateDataService
+import cn.sunline.saas.template.data.service.TemplateDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.reflect.KClass
