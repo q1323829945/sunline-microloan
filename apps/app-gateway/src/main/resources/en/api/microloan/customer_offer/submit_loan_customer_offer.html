@@ -1,0 +1,1298 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <title>Submit customer loan application · GitBook</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="update_loan_customer_offer.html" />
+    
+    
+    <link rel="prev" href="initiate_loan_customer_offer.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../../">
+            
+                <a href="../../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [API]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../../overview.html">
+            
+                <a href="../../overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../header.html">
+            
+                <a href="../../header.html">
+            
+                    
+                    Request Header
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../response.html">
+            
+                <a href="../../response.html">
+            
+                    
+                    Response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../access_token/access_token.html">
+            
+                <a href="../../access_token/access_token.html">
+            
+                    
+                    Access Credentials
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" >
+            
+                <span>
+            
+                    
+                    [Scene]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../../scene/micro_loan.html">
+            
+                <a href="../../scene/micro_loan.html">
+            
+                    
+                    Microloan
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" >
+            
+                <span>
+            
+                    
+                    [Product]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../product/overview.html">
+            
+                <a href="../product/overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../product/query_product.html">
+            
+                <a href="../product/query_product.html">
+            
+                    
+                    Query loan products
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../product/query_product_interest_rate.html">
+            
+                <a href="../product/query_product_interest_rate.html">
+            
+                    
+                    Query loan product term parameters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../product/query_calculate.html">
+            
+                <a href="../product/query_calculate.html">
+            
+                    
+                    Query the current product repayment plan
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.5" data-path="../product/query_upload_template.html">
+            
+                <a href="../product/query_upload_template.html">
+            
+                    
+                    Query file upload template
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" >
+            
+                <span>
+            
+                    
+                    [Customer offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="overview.html">
+            
+                <a href="overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="add_customer.html">
+            
+                <a href="add_customer.html">
+            
+                    
+                    Add customer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="query_customer.html">
+            
+                <a href="query_customer.html">
+            
+                    
+                    Query customer information
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="initiate_loan_customer_offer.html">
+            
+                <a href="initiate_loan_customer_offer.html">
+            
+                    
+                    Record customer loan application information
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.7.5" data-path="submit_loan_customer_offer.html">
+            
+                <a href="submit_loan_customer_offer.html">
+            
+                    
+                    Submit customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.6" data-path="update_loan_customer_offer.html">
+            
+                <a href="update_loan_customer_offer.html">
+            
+                    
+                    Update customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.7" data-path="retrieve_loan_customer_offer.html">
+            
+                <a href="retrieve_loan_customer_offer.html">
+            
+                    
+                    Retrieve customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.8" data-path="list_loan_customer_offer.html">
+            
+                <a href="list_loan_customer_offer.html">
+            
+                    
+                    Query customer loan applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" >
+            
+                <span>
+            
+                    
+                    [PDPA]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../pdpa/retrieve_pdpa.html">
+            
+                <a href="../pdpa/retrieve_pdpa.html">
+            
+                    
+                    Query PDPA content
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" >
+            
+                <span>
+            
+                    
+                    [Loan]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.9.1" data-path="../loan/add_repayment_account.html">
+            
+                <a href="../loan/add_repayment_account.html">
+            
+                    
+                    Add repayment account
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.2" data-path="../loan/query_repayment_account.html">
+            
+                <a href="../loan/query_repayment_account.html">
+            
+                    
+                    Query repayment accounts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.3" data-path="../loan/prepayment_calculate.html">
+            
+                <a href="../loan/prepayment_calculate.html">
+            
+                    
+                    Trial calculation of prepayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.4" data-path="../loan/invoice_prepayment.html">
+            
+                <a href="../loan/invoice_prepayment.html">
+            
+                    
+                    Prepayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.5" data-path="../loan/retrieve_invoice_schedule.html">
+            
+                <a href="../loan/retrieve_invoice_schedule.html">
+            
+                    
+                    Query periodic supply plan
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.6" data-path="../loan/invoice_repay.html">
+            
+                <a href="../loan/invoice_repay.html">
+            
+                    
+                    Normal repayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.7" data-path="../loan/retrieve_loan_agreement.html">
+            
+                <a href="../loan/retrieve_loan_agreement.html">
+            
+                    
+                    Borrowing details
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.8" data-path="../loan/retrieve_repayment_record.html">
+            
+                <a href="../loan/retrieve_repayment_record.html">
+            
+                    
+                    Query repayment record
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" >
+            
+                <span>
+            
+                    
+                    [Invoice]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.10.1" data-path="../invoice/retrieve_current_invoice.html">
+            
+                <a href="../invoice/retrieve_current_invoice.html">
+            
+                    
+                    Query current invoice
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [Appendix]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../appendices/country_code.html">
+            
+                <a href="../../appendices/country_code.html">
+            
+                    
+                    Country code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../appendices/currency_code.html">
+            
+                <a href="../../appendices/currency_code.html">
+            
+                    
+                    Currency code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../appendices/dictionary_code.html">
+            
+                <a href="../../appendices/dictionary_code.html">
+            
+                    
+                    Dictionary code
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../.." >Submit customer loan application</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="submit-customer-loan-application">Submit customer loan application</h1>
+<h2 id="request">Request</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>/microloan/customerOffer/loan/{customerOfferId}/submit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td>PUT</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Submit customer loan application</td>
+</tr>
+</tbody>
+</table>
+<h3 id="request-header">Request header</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>M/O</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>string</td>
+<td>M</td>
+<td><strong>Fixed value</strong>&#xFF1A;&quot;multipart/form-data&quot;</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../../header.html">others see</a></p>
+<h3 id="path-parameter">Path parameter</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>M/O</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>customerOfferId</td>
+<td>integer</td>
+<td>M</td>
+<td>Customer offer id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="request-body">Request body</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>M/O</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loan</td>
+<td>object</td>
+<td>M</td>
+<td>Loan information</td>
+</tr>
+<tr>
+<td>&#x221F; amount</td>
+<td>string</td>
+<td>M</td>
+<td>Loan amount</td>
+</tr>
+<tr>
+<td>&#x221F; currency</td>
+<td>string</td>
+<td>M</td>
+<td>Currency code, default functional currency<br><a href="../../appendices/currency_code.html">See Appendix Currency Code</a></td>
+</tr>
+<tr>
+<td>&#x221F; term</td>
+<td>string</td>
+<td>M</td>
+<td>Term<br> <a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Term</a></td>
+</tr>
+<tr>
+<td>&#x221F; local</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the business operation area is local<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F; employ</td>
+<td>string</td>
+<td>M</td>
+<td>How many employees are there? Options: 1-10~30; 2-30~50&#xFF1B; 3-50~100&#xFF1B; Above 4-100</td>
+</tr>
+<tr>
+<td>company</td>
+<td>object</td>
+<td>M</td>
+<td>Company information</td>
+</tr>
+<tr>
+<td>&#x221F; regestrationNo</td>
+<td>string</td>
+<td>M</td>
+<td>Registration No.</td>
+</tr>
+<tr>
+<td>contact</td>
+<td>object</td>
+<td>M</td>
+<td>Contact information</td>
+</tr>
+<tr>
+<td>&#x221F;contacts</td>
+<td>string</td>
+<td>M</td>
+<td>Contact name</td>
+</tr>
+<tr>
+<td>&#x221F; contactNRIC</td>
+<td>string</td>
+<td>M</td>
+<td>Contact NRIC</td>
+</tr>
+<tr>
+<td>&#x221F; mobileArea</td>
+<td>string</td>
+<td>M</td>
+<td>Mobile area</td>
+</tr>
+<tr>
+<td>&#x221F; mobileNumber</td>
+<td>string</td>
+<td>M</td>
+<td>Mobile number</td>
+</tr>
+<tr>
+<td>&#x221F; email</td>
+<td>string</td>
+<td>M</td>
+<td>Email</td>
+</tr>
+<tr>
+<td>detail</td>
+<td>object</td>
+<td>M</td>
+<td>Company detail information</td>
+</tr>
+<tr>
+<td>&#x221F; name</td>
+<td>string</td>
+<td>M</td>
+<td>Registration name</td>
+</tr>
+<tr>
+<td>&#x221F; regestrationNo</td>
+<td>string</td>
+<td>M</td>
+<td>Registration No.</td>
+</tr>
+<tr>
+<td>&#x221F; address</td>
+<td>string</td>
+<td>M</td>
+<td>Registration Address</td>
+</tr>
+<tr>
+<td>&#x221F; businessType</td>
+<td>string</td>
+<td>M</td>
+<td>Business type</td>
+</tr>
+<tr>
+<td>&#x221F; contactAddress</td>
+<td>string</td>
+<td>M</td>
+<td>Contact address</td>
+</tr>
+<tr>
+<td>&#x221F; businessPremiseType</td>
+<td>string</td>
+<td>M</td>
+<td>Business premise Type<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Ownership Type</a></td>
+</tr>
+<tr>
+<td>&#x221F; businessFocused</td>
+<td>integer</td>
+<td>M</td>
+<td>The attention of business in manufacturing and service industry. The smaller the value, the more attention will be paid to manufacturing, and the larger the value, the more attention will be paid to service industry</td>
+</tr>
+<tr>
+<td>guarantor</td>
+<td>object</td>
+<td>M</td>
+<td>Guarantor information</td>
+</tr>
+<tr>
+<td>&#x221F; primaryGuarantor</td>
+<td>string</td>
+<td>M</td>
+<td>Primary guarantor</td>
+</tr>
+<tr>
+<td>&#x221F; guarantors</td>
+<td>array</td>
+<td>M</td>
+<td>Guarantors</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; name</td>
+<td>string</td>
+<td>M</td>
+<td>Name</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; nric</td>
+<td>string</td>
+<td>M</td>
+<td>NRIC</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; nationality</td>
+<td>string</td>
+<td>M</td>
+<td>Nationality<br><a href="../../appendices/country_code.html">See Appendix Country Code</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; mobileArea</td>
+<td>string</td>
+<td>M</td>
+<td>Mobile area</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; mobileNumber</td>
+<td>string</td>
+<td>M</td>
+<td>Mobile number</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; email</td>
+<td>string</td>
+<td>M</td>
+<td>Email</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; occupation</td>
+<td>string</td>
+<td>M</td>
+<td>Occupation</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;industryExpYear</td>
+<td>integer</td>
+<td>M</td>
+<td>Years of industry experience</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;manageExpYear</td>
+<td>integer</td>
+<td>M</td>
+<td>Years of management experience</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; residenceType</td>
+<td>string</td>
+<td>M</td>
+<td>Residence Type</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F; residenceOwnership</td>
+<td>string</td>
+<td>M</td>
+<td>Residence ownership<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Ownership Type</a></td>
+</tr>
+<tr>
+<td>financial</td>
+<td>object</td>
+<td>M</td>
+<td>The company financial information</td>
+</tr>
+<tr>
+<td>&#x221F; lastestYearRevenus</td>
+<td>string</td>
+<td>M</td>
+<td>Optional: 1 - less than 10 million; 20 million to 100 million; 3 to more than 100 million</td>
+</tr>
+<tr>
+<td>&#x221F; mainAccountWithOurBank</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the company&apos;s main account is in our bank<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F; outLoanNotWithOutBank</td>
+<td>string</td>
+<td>M</td>
+<td>Whether there are external loans not in our bank<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>uploadDocument</td>
+<td>array</td>
+<td>O</td>
+<td>Document upload</td>
+</tr>
+<tr>
+<td>&#x221F; documentTemplateId</td>
+<td>integer</td>
+<td>M?</td>
+<td>Document Template id</td>
+</tr>
+<tr>
+<td>&#x221F; file</td>
+<td>string</td>
+<td>M?</td>
+<td>file name format &#xFF1A;documentTemplateId/fileName</td>
+</tr>
+<tr>
+<td>kyc</td>
+<td>object</td>
+<td>M</td>
+<td>Kyc information</td>
+</tr>
+<tr>
+<td>&#x221F;businessInBlackListArea</td>
+<td>string</td>
+<td>M</td>
+<td>Whether there is business in the blacklist area<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;businessPlanInBlackListArea</td>
+<td>string</td>
+<td>M</td>
+<td>Whether there is a business plan in the blacklist area<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;businessOrPartnerSanctioned</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the business or partner is sanctioned<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;relationInBlackListArea</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the business related party is in the blacklist area<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;repaymentSourceInBlackListArea</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the related party of loan repayment source is in the blacklist area<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;representsNeutrality</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the business is unrelated to the third party<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;representsNeutralityShared</td>
+<td>string</td>
+<td>M</td>
+<td>Whether the business shares relevant attributes, address, telephone number, beneficial owner, authorized signatory and employee with the third party<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Yes or No</a></td>
+</tr>
+<tr>
+<td>&#x221F;familiarWithBusiness</td>
+<td>string</td>
+<td>M</td>
+<td>Business scope type enterprises, options: 1 - chemical substance wholesaler; 2 - National defense related business; 3 - Clients of embassies, consulates and high commissions; 4 - Energy and metal mining industry; 5 - Financial institutions engaged in wholesale bank notes business; 6 - licensed casinos, gambling enterprises and licensed casino intermediaries; 7 - licensed money lenders; 8 - Money changers and remittance agents; 9 - Oil and natural gas (including refueling); 10 Payment service providers; 11. Physical transportation of goods; 12 Pure private bank; 13 - Shipping, ocean shipping or ship leasing (including refueling); 14 - Special purpose entities without core business or underlying business transactions</td>
+</tr>
+<tr>
+<td>referenceAccount</td>
+<td>object</td>
+<td>M</td>
+<td>Reference Account</td>
+</tr>
+<tr>
+<td>&#x221F;account</td>
+<td>string</td>
+<td>M</td>
+<td>Account</td>
+</tr>
+<tr>
+<td>&#x221F;accountBank</td>
+<td>string</td>
+<td>M</td>
+<td>Bank</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-of-request-body">Example of request body</h3>
+<pre><code class="lang-json">key: customer
+value: 
+{
+      <span class="hljs-string">&quot;loan&quot;</span>: {
+        <span class="hljs-string">&quot;amount&quot;</span>: <span class="hljs-string">&quot;1000000&quot;</span>,
+        <span class="hljs-string">&quot;currency&quot;</span>: <span class="hljs-string">&quot;SGP&quot;</span>,
+        <span class="hljs-string">&quot;term&quot;</span>: <span class="hljs-string">&quot;SIX_MONTHS&quot;</span>,
+        <span class="hljs-string">&quot;local&quot;</span>: <span class="hljs-string">&quot;Y&quot;</span>,
+        <span class="hljs-string">&quot;employ&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>
+      },
+      <span class="hljs-string">&quot;company&quot;</span>: {
+        <span class="hljs-string">&quot;regestrationNo&quot;</span>: <span class="hljs-string">&quot;000666303&quot;</span>
+      },
+      <span class="hljs-string">&quot;contact&quot;</span>: {
+        <span class="hljs-string">&quot;contants&quot;</span>:<span class="hljs-string">&quot;&#x5F20;&#x4E09;&quot;</span>,
+        <span class="hljs-string">&quot;contactNRIC&quot;</span>: <span class="hljs-string">&quot;123456789&quot;</span>,
+        <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;86&quot;</span>,
+        <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1765498274&quot;</span>,
+        <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>
+      },
+      <span class="hljs-string">&quot;detail&quot;</span>: {
+        <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;xxxx company&quot;</span>,
+        <span class="hljs-string">&quot;regestrationNo&quot;</span>: <span class="hljs-string">&quot;000666303&quot;</span>,
+        <span class="hljs-string">&quot;address&quot;</span>: <span class="hljs-string">&quot;xxxx street&quot;</span>,
+        <span class="hljs-string">&quot;businessType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+        <span class="hljs-string">&quot;contactAddress&quot;</span>: <span class="hljs-string">&quot;xxxx road&quot;</span>,
+        <span class="hljs-string">&quot;businessPremiseType&quot;</span>: <span class="hljs-string">&quot;OWNED&quot;</span>,
+        <span class="hljs-string">&quot;businessFocused&quot;</span>: <span class="hljs-number">40</span>
+      },
+      <span class="hljs-string">&quot;guarantor&quot;</span>: {
+        <span class="hljs-string">&quot;primaryGuarantor&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+        <span class="hljs-string">&quot;guarantors&quot;</span>: [
+          {
+            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Coco&quot;</span>,
+            <span class="hljs-string">&quot;nric&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+            <span class="hljs-string">&quot;nationality&quot;</span>: <span class="hljs-string">&quot;USA&quot;</span>,
+            <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;65&quot;</span>,
+            <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1238765447&quot;</span>,
+            <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>,
+            <span class="hljs-string">&quot;occupation&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+            <span class="hljs-string">&quot;industryExpYear&quot;</span>: <span class="hljs-number">6</span>,
+            <span class="hljs-string">&quot;manageExpYear&quot;</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-string">&quot;residenceType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+            <span class="hljs-string">&quot;residenceOwnership&quot;</span>: <span class="hljs-string">&quot;RENTED&quot;</span>
+          },
+          {
+            <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Lili&quot;</span>,
+            <span class="hljs-string">&quot;nric&quot;</span>: <span class="hljs-string">&quot;123445&quot;</span>,
+            <span class="hljs-string">&quot;nationality&quot;</span>: <span class="hljs-string">&quot;USA&quot;</span>,
+            <span class="hljs-string">&quot;mobileArea&quot;</span>: <span class="hljs-string">&quot;65&quot;</span>,
+            <span class="hljs-string">&quot;mobileNumber&quot;</span>: <span class="hljs-string">&quot;1238765447&quot;</span>,
+            <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;xxxx@hotmail.cn&quot;</span>,
+            <span class="hljs-string">&quot;occupation&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+            <span class="hljs-string">&quot;industryExpYear&quot;</span>: <span class="hljs-number">6</span>,
+            <span class="hljs-string">&quot;manageExpYear&quot;</span>: <span class="hljs-number">3</span>,
+            <span class="hljs-string">&quot;residenceType&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+            <span class="hljs-string">&quot;residenceOwnership&quot;</span>: <span class="hljs-string">&quot;RENTED&quot;</span>
+          }
+        ]
+      },
+      <span class="hljs-string">&quot;financial&quot;</span>: {
+        <span class="hljs-string">&quot;lastestYearRevenus&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>,
+        <span class="hljs-string">&quot;mainAccountWithOurBank&quot;</span>: <span class="hljs-string">&quot;Y&quot;</span>,
+        <span class="hljs-string">&quot;outLoanNotWithOutBank&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>
+      },
+      <span class="hljs-string">&quot;uploadDocument&quot;</span>: [
+        { <span class="hljs-string">&quot;documentTemplateId&quot;</span>: <span class="hljs-number">123455312</span>, <span class="hljs-string">&quot;file&quot;</span>: <span class="hljs-string">&quot;123455312/weofowusfljwoeuf.png&quot;</span> },
+        { <span class="hljs-string">&quot;documentTemplateId&quot;</span>: <span class="hljs-number">123453577</span>, <span class="hljs-string">&quot;file&quot;</span>: <span class="hljs-string">&quot;123453577/weofowusfljwoeuf.pig&quot;</span> }
+      ],
+      <span class="hljs-string">&quot;kyc&quot;</span>: {
+        <span class="hljs-string">&quot;businessInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;businessPlanInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;businessOrPartnerSanctioned&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;relationInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;repaymentSourceInBlackListArea&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;representsNeutrality&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;representsNeutralityShared&quot;</span>: <span class="hljs-string">&quot;N&quot;</span>,
+        <span class="hljs-string">&quot;familiarWithBusiness&quot;</span>: <span class="hljs-string">&quot;14&quot;</span>
+      },
+    <span class="hljs-string">&quot;referenceAccount&quot;</span>:{
+        <span class="hljs-string">&quot;account&quot;</span>:<span class="hljs-string">&quot;99966&quot;</span>,
+        <span class="hljs-string">&quot;accountBank&quot;</span>:<span class="hljs-string">&quot;abcBank&quot;</span>
+    }
+}
+
+contentType: application:json
+</code></pre>
+<pre><code>key: files --Multiple
+value: file --File Naming Rules&#xFF1A; documentTemplateId/fileName
+contentType: multipart/form-data
+</code></pre><h2 id="response">Response</h2>
+<h3 id="response-body">Response body</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-of-response-body">Example of response body</h3>
+<pre><code class="lang-json">{
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="initiate_loan_customer_offer.html" class="navigation navigation-prev " aria-label="Previous page: Record customer loan application information">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="update_loan_customer_offer.html" class="navigation navigation-next " aria-label="Next page: Update customer loan application">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Submit customer loan application","level":"1.2.7.5","depth":3,"next":{"title":"Update customer loan application","level":"1.2.7.6","depth":3,"path":"api/microloan/customer_offer/update_loan_customer_offer.md","ref":"api/microloan/customer_offer/update_loan_customer_offer.md","articles":[]},"previous":{"title":"Record customer loan application information","level":"1.2.7.4","depth":3,"path":"api/microloan/customer_offer/initiate_loan_customer_offer.md","ref":"api/microloan/customer_offer/initiate_loan_customer_offer.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"en","gitbook":"*"},"file":{"path":"api/microloan/customer_offer/submit_loan_customer_offer.md","mtime":"2022-11-10T06:02:53.941Z","type":"markdown"},"gitbook":{"version":"3.0.1","time":"2022-11-10T08:25:31.919Z"},"basePath":"../../..","book":{"language":"en"}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../../../gitbook/gitbook.js"></script>
+    <script src="../../../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

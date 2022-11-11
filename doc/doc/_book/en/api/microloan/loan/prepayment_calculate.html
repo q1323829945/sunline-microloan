@@ -1,0 +1,887 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <title>Trial calculation of prepayment · GitBook</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="invoice_prepayment.html" />
+    
+    
+    <link rel="prev" href="query_repayment_account.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../../">
+            
+                <a href="../../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    [API]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../../overview.html">
+            
+                <a href="../../overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../header.html">
+            
+                <a href="../../header.html">
+            
+                    
+                    Request Header
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../response.html">
+            
+                <a href="../../response.html">
+            
+                    
+                    Response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../access_token/access_token.html">
+            
+                <a href="../../access_token/access_token.html">
+            
+                    
+                    Access Credentials
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" >
+            
+                <span>
+            
+                    
+                    [Scene]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../../scene/micro_loan.html">
+            
+                <a href="../../scene/micro_loan.html">
+            
+                    
+                    Microloan
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" >
+            
+                <span>
+            
+                    
+                    [Product]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../product/overview.html">
+            
+                <a href="../product/overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../product/query_product.html">
+            
+                <a href="../product/query_product.html">
+            
+                    
+                    Query loan products
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../product/query_product_interest_rate.html">
+            
+                <a href="../product/query_product_interest_rate.html">
+            
+                    
+                    Query loan product term parameters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../product/query_calculate.html">
+            
+                <a href="../product/query_calculate.html">
+            
+                    
+                    Query the current product repayment plan
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.5" data-path="../product/query_upload_template.html">
+            
+                <a href="../product/query_upload_template.html">
+            
+                    
+                    Query file upload template
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" >
+            
+                <span>
+            
+                    
+                    [Customer offer]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../customer_offer/overview.html">
+            
+                <a href="../customer_offer/overview.html">
+            
+                    
+                    Summary
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../customer_offer/add_customer.html">
+            
+                <a href="../customer_offer/add_customer.html">
+            
+                    
+                    Add customer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../customer_offer/query_customer.html">
+            
+                <a href="../customer_offer/query_customer.html">
+            
+                    
+                    Query customer information
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../customer_offer/initiate_loan_customer_offer.html">
+            
+                <a href="../customer_offer/initiate_loan_customer_offer.html">
+            
+                    
+                    Record customer loan application information
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.5" data-path="../customer_offer/submit_loan_customer_offer.html">
+            
+                <a href="../customer_offer/submit_loan_customer_offer.html">
+            
+                    
+                    Submit customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.6" data-path="../customer_offer/update_loan_customer_offer.html">
+            
+                <a href="../customer_offer/update_loan_customer_offer.html">
+            
+                    
+                    Update customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.7" data-path="../customer_offer/retrieve_loan_customer_offer.html">
+            
+                <a href="../customer_offer/retrieve_loan_customer_offer.html">
+            
+                    
+                    Retrieve customer loan application
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.8" data-path="../customer_offer/list_loan_customer_offer.html">
+            
+                <a href="../customer_offer/list_loan_customer_offer.html">
+            
+                    
+                    Query customer loan applications
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" >
+            
+                <span>
+            
+                    
+                    [PDPA]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../pdpa/retrieve_pdpa.html">
+            
+                <a href="../pdpa/retrieve_pdpa.html">
+            
+                    
+                    Query PDPA content
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" >
+            
+                <span>
+            
+                    
+                    [Loan]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.9.1" data-path="add_repayment_account.html">
+            
+                <a href="add_repayment_account.html">
+            
+                    
+                    Add repayment account
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.2" data-path="query_repayment_account.html">
+            
+                <a href="query_repayment_account.html">
+            
+                    
+                    Query repayment accounts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.9.3" data-path="prepayment_calculate.html">
+            
+                <a href="prepayment_calculate.html">
+            
+                    
+                    Trial calculation of prepayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.4" data-path="invoice_prepayment.html">
+            
+                <a href="invoice_prepayment.html">
+            
+                    
+                    Prepayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.5" data-path="retrieve_invoice_schedule.html">
+            
+                <a href="retrieve_invoice_schedule.html">
+            
+                    
+                    Query periodic supply plan
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.6" data-path="invoice_repay.html">
+            
+                <a href="invoice_repay.html">
+            
+                    
+                    Normal repayment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.7" data-path="retrieve_loan_agreement.html">
+            
+                <a href="retrieve_loan_agreement.html">
+            
+                    
+                    Borrowing details
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9.8" data-path="retrieve_repayment_record.html">
+            
+                <a href="retrieve_repayment_record.html">
+            
+                    
+                    Query repayment record
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" >
+            
+                <span>
+            
+                    
+                    [Invoice]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.10.1" data-path="../invoice/retrieve_current_invoice.html">
+            
+                <a href="../invoice/retrieve_current_invoice.html">
+            
+                    
+                    Query current invoice
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    [Appendix]
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../appendices/country_code.html">
+            
+                <a href="../../appendices/country_code.html">
+            
+                    
+                    Country code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../appendices/currency_code.html">
+            
+                <a href="../../appendices/currency_code.html">
+            
+                    
+                    Currency code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../../appendices/dictionary_code.html">
+            
+                <a href="../../appendices/dictionary_code.html">
+            
+                    
+                    Dictionary code
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../.." >Trial calculation of prepayment</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="trial-calculation-of-prepayment">Trial calculation of prepayment</h1>
+<h2 id="request">Request</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>/microloan/ConsumerLoan/prepayment/{agreementId}/calculate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td>GET</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Trial calculation of prepayment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="path-parameter">Path parameter</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>M/O</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agreementId</td>
+<td>string</td>
+<td>M</td>
+<td>Agreement id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="request-header">Request header</h3>
+<p><a href="../../header.html">see</a></p>
+<h2 id="response">Response</h2>
+<h3 id="response-body">Response body</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>object</td>
+<td></td>
+</tr>
+<tr>
+<td>&#x221F;agreementId</td>
+<td>string</td>
+<td>Agreement id</td>
+</tr>
+<tr>
+<td>&#x221F;totalAmount</td>
+<td>string</td>
+<td>Total amount</td>
+</tr>
+<tr>
+<td>&#x221F;prepaymentLines</td>
+<td>array</td>
+<td>Prepayments</td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;invoiceAmountType</td>
+<td>string</td>
+<td>Invoice amount typpe<br><a href="../../appendices/dictionary_code.html">See Appendix Dictionary Code - Invoice Amount Type</a></td>
+</tr>
+<tr>
+<td>&#x221F;&#x221F;invoiceAmount</td>
+<td>string</td>
+<td>Invoice amount</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-of-response-body">Example of response body</h3>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;data&quot;</span>:{
+        <span class="hljs-string">&quot;agreementId&quot;</span>:<span class="hljs-string">&quot;123&quot;</span>,
+        <span class="hljs-string">&quot;totalAmount&quot;</span>:<span class="hljs-string">&quot;5000&quot;</span>,
+        <span class="hljs-string">&quot;prepaymentLines&quot;</span>:[
+            {
+                <span class="hljs-string">&quot;invoiceAmountType&quot;</span>:<span class="hljs-string">&quot;PRINCIPAL&quot;</span>,
+                <span class="hljs-string">&quot;invoiceAmount&quot;</span>:<span class="hljs-string">&quot;4000&quot;</span>
+            },
+            {
+                <span class="hljs-string">&quot;invoiceAmountType&quot;</span>:<span class="hljs-string">&quot;FEE&quot;</span>,
+                <span class="hljs-string">&quot;invoiceAmount&quot;</span>:<span class="hljs-string">&quot;4000&quot;</span>
+            }
+        ]
+    },
+    <span class="hljs-string">&quot;code&quot;</span>:<span class="hljs-number">0</span>
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="query_repayment_account.html" class="navigation navigation-prev " aria-label="Previous page: Query repayment accounts">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="invoice_prepayment.html" class="navigation navigation-next " aria-label="Next page: Prepayment">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Trial calculation of prepayment","level":"1.2.9.3","depth":3,"next":{"title":"Prepayment","level":"1.2.9.4","depth":3,"path":"api/microloan/loan/invoice_prepayment.md","ref":"api/microloan/loan/invoice_prepayment.md","articles":[]},"previous":{"title":"Query repayment accounts","level":"1.2.9.2","depth":3,"path":"api/microloan/loan/query_repayment_account.md","ref":"api/microloan/loan/query_repayment_account.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"en","gitbook":"*"},"file":{"path":"api/microloan/loan/prepayment_calculate.md","mtime":"2022-11-10T06:42:27.910Z","type":"markdown"},"gitbook":{"version":"3.0.1","time":"2022-11-10T08:25:31.919Z"},"basePath":"../../..","book":{"language":"en"}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../../../gitbook/gitbook.js"></script>
+    <script src="../../../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../../../gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

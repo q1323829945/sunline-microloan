@@ -25,9 +25,9 @@
 | ----------------------- | ------- | ------------------------------------------------------------ |
 | data                    | object  |                                                              |
 | ∟agreementId            | string  | 协议编号                                                     |
-| ∟repaymentFrequency     | string  | 还款频率                                                     |
+| ∟repaymentFrequency     | string  | 还款频率<br />[参见附录字典代码—还款频率](../../appendices/dictionary_code.md) |
 | ∟repaymentDayType       | string  | 还款日类型<br/>[参见附录字典代码—还款日类型](../../appendices/dictionary_code.md) |
-| ∟paymentMethodType      | string  | 还款日期类型<br/>[参见附录字典代码—还款日期类型](../../appendices/dictionary_code.md) |
+| ∟paymentMethodType      | string  | 还款日期类型<br/>[参见附录字典代码—还款方式](../../appendices/dictionary_code.md) |
 | ∟fromDate               | string  | 起始日                                                       |
 | ∟endDate                | string  | 截止日                                                       |
 | ∟totalInstalmentLines   | array   | 总分期信息                                                   |
