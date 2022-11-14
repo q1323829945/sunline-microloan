@@ -37,8 +37,8 @@ class CommissionTemplateDataServiceImpl : TemplateDataService() {
         val map = mutableMapOf<String, Any>()
         map["channelId"] = channelId.toLong()
         map["agreementType"] = AgreementType.COMMISSION_SALE
-        map["fromDateTime"] = tenantDateTime.toTenantDateTime(tenantDateTime.now().toString()).toString()
-        map["toDateTime"] = tenantDateTime.toTenantDateTime(tenantDateTime.now().plusYears(1).toString()).toString()
+        map["fromDateTime"] = tenantDateTime.getYearMonthDay(tenantDateTime.now())
+        map["toDateTime"] = tenantDateTime.getYearMonthDay(tenantDateTime.toTenantDateTime(tenantDateTime.now().plusYears(1).toString()))
         val commissionItems = mutableListOf<DTOChannelCommissionItemsAdd>()
         commissionItems += DTOChannelCommissionItemsAdd(
             applyStatus = ApplyStatus.APPROVALED,

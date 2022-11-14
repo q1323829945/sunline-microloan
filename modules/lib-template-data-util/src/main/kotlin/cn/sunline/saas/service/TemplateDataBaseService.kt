@@ -54,6 +54,10 @@ abstract class TemplateDataBaseService(defaultMap: Map<String, Any>? = null) {
                 if (param.type.classifier == String::class) {
                     if (param.name == "id" || param.name!!.contains("Id") || param.name!!.contains("id")) {
                         any = sequence.nextId().toString().substring(6, 9)
+                    } else if (param.name!!.contains("dateTime", true)) {
+                        any = tenantDateTime.getYearMonthDay(tenantDateTime.now())
+                    } else if (param.name!!.contains("date", true)) {
+                        any = tenantDateTime.getYearMonthDay(tenantDateTime.now())
                     } else {
                         any = "${param.name?.substring(0, 2)}_${sequence.nextId().toString().substring(6, 9)}"
                     }
