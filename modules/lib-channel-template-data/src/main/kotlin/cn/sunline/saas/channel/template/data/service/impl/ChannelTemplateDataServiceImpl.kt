@@ -5,6 +5,7 @@ import cn.sunline.saas.channel.party.organisation.model.OrganisationIdentificati
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelCastAdd
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelIdentificationAdd
 import cn.sunline.saas.channel.template.data.service.TemplateDataService
+import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import cn.sunline.saas.seq.Sequence
@@ -19,6 +20,9 @@ class ChannelTemplateDataServiceImpl : TemplateDataService() {
 
     @Autowired
     private lateinit var sequence: Sequence
+
+    @Autowired
+    private lateinit var tenantDateTime: TenantDateTime
 
     private fun getChannelCast(): DTOChannelCastAdd {
         return DTOChannelCastAdd(
@@ -47,6 +51,9 @@ class ChannelTemplateDataServiceImpl : TemplateDataService() {
         constructor.parameters.forEach { param ->
             if (param.type.classifier == String::class) {
                 mapData[param] = "channel_" + sequence.nextId().toString().substring(6, 9)
+                if(param.name!!.contains("Date") ||  param.name!!.contains("date")){
+                    mapData[param] =  tenantDateTime.getYearMonthDay(tenantDateTime.now())
+                }
             }
             if ((param.type.classifier as KClass<*>).superclasses.first() == Enum::class) {
                 mapData[param] = (Class.forName((param.type as Any).toString()).enumConstants as Array<*>).first()

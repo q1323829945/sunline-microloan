@@ -29,7 +29,7 @@ class QuestionnaireTemplateDataServiceImpl : TemplateDataService() {
             }
             if (!param.isOptional) {
                 if (param.type.classifier == String::class) {
-                    mapData[param] = "888811L"
+                    mapData[param] = "${param.name?.substring(0, 2)}_${sequence.nextId().toString().substring(6, 9)}"
                 }
                 if ((param.type.classifier as KClass<*>).superclasses.first() == Enum::class) {
                     mapData[param] = (Class.forName((param.type as Any).toString()).enumConstants as Array<*>).first()
