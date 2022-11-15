@@ -35,3 +35,10 @@
     "code":0
 }
 ```
+
+### Error code
+
+| HTTP status code | Error code | Error message              | Propose                                                      |
+| ---------------- | ---------- | -------------------------- | ------------------------------------------------------------ |
+| 404              | 1010       | Invalid tenant             | Whether the incoming tenant of the request header is correct |
+| 500              | 5101       | Invalid interest rate plan | Configure the product's interest rate plan                   |

@@ -13,7 +13,10 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 @Table(
-    name = "tenant"
+    name = "tenant",
+    indexes = [
+        Index(name = "tenant_uuid_unique_index", columnList = "uuid",unique = true)
+    ]
 )
 class Tenant(
     @Id

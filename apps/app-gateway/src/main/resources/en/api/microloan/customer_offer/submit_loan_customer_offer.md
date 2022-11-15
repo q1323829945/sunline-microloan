@@ -178,19 +178,9 @@ value: file --File Naming Rules： documentTemplateId/fileName
 contentType: multipart/form-data
 ```
 
+### Error code
 
-
-## Response
-
-### Response body
-
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-|           |      |             |
-
-### Example of response body
-
-```json
-{
-}
-```
+| HTTP status code | Error code | Error message          | Propose                                                      |
+| ---------------- | ---------- | ---------------------- | ------------------------------------------------------------ |
+| 404              | 1010       | Invalid tenant         | Whether the incoming tenant of the request header is correct |
+| 404              | 5550       | Invalid customer offer | Check whether {customerOfferId} in the request path is correct |

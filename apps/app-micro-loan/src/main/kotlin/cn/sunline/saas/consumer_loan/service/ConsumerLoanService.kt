@@ -36,6 +36,7 @@ import cn.sunline.saas.invoice.arrangement.exception.InvoiceArrangementNotFoundE
 import cn.sunline.saas.invoice.arrangement.service.InvoiceArrangementService
 import cn.sunline.saas.invoice.exception.InvoiceNotFoundException
 import cn.sunline.saas.invoice.exception.LoanInvoiceBusinessException
+import cn.sunline.saas.invoice.exception.RepaymentInstructionAlreadyExistsException
 import cn.sunline.saas.invoice.model.InvoiceAmountType
 import cn.sunline.saas.invoice.model.InvoiceStatus
 import cn.sunline.saas.invoice.model.db.Invoice
@@ -513,7 +514,7 @@ class ConsumerLoanService(
             ?: throw LoanAgreementNotFoundException("repayment arrangement not found")
 
         val disbursementArrangement = disbursementArrangementService.getOne(agreementId)
-            ?: throw LoanAgreementNotFoundException("disbursement arrangement not found")
+            ?: throw LoanAgreementNotFoundException("disbursement arrangement not found",ManagementExceptionCode.DISBURSEMENT_ARRANGEMENT_NOT_FOUND)
 
         return DTOLoanAgreementDetailView(
             agreementId = agreementId.toString(),
@@ -561,9 +562,8 @@ class ConsumerLoanService(
         val preRepaymentInstruction =
             repaymentInstructionService.getPageByInvoiceId(dtoInvoiceRepay.invoiceId.toLong(), Pageable.unpaged())
         if (!preRepaymentInstruction.isEmpty) {
-            throw LoanInvoiceBusinessException(
+            throw RepaymentInstructionAlreadyExistsException(
                 "repayment instruction already exists",
-                ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR
             )
         }
 
@@ -742,9 +742,8 @@ class ConsumerLoanService(
                     it.moneyTransferInstructionStatus != InstructionLifecycleStatus.FAILED
         }
         if (!preRepaymentInstruction.isEmpty) {
-            throw LoanInvoiceBusinessException(
+            throw RepaymentInstructionAlreadyExistsException(
                 "repayment instruction already exists",
-                ManagementExceptionCode.REPAYMENT_INSTRUCTION_ERROR
             )
         }
 

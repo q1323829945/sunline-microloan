@@ -24,7 +24,7 @@ class SecurityConfiguration (private val tokenService: TokenService,
         web!!.ignoring()
             .antMatchers("/auth/login","/dapr/**","/error","/healthz","/questionnaire","questionnaire/**",
                 "/loan/record","/loan/status/**","/loan/product/**","/loan/submit/callback","/application/batch/record/loan"
-                ,"/webhook","/actors/**","/**/all","/pdpa","/pdpa/**","/users/position/**")
+                ,"/webhook","/actors/**","/**/all","/pdpa","/pdpa/**","/users/position/**","/test/**")
             .regexMatchers(HttpMethod.GET,"/product(\\?.*|\$)","/test(\\?.*|\$)","/(\\?.*|\$)/all(\\?.*|\$)")
     }
 

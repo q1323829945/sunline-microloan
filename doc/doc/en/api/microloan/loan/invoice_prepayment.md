@@ -36,3 +36,12 @@
     "repaymentAccount":"123"
 }
 ```
+
+### Error code
+
+| HTTP status code | Error code | Error message                         | Propose                                                      |
+| ---------------- | ---------- | ------------------------------------- | ------------------------------------------------------------ |
+| 404              | 1010       | Invalid tenant                        | Whether the incoming tenant of the request header is correct |
+| 404              | 5560       | Invalid loan agreement                | Check whether the loan agreement exists                      |
+| 500              | 5614       | Repayment instructions already exists | The bill has been prepaid                                    |
+| 404              | 1007       | Invalid data                          | Check whether the repayment account exists                   |
