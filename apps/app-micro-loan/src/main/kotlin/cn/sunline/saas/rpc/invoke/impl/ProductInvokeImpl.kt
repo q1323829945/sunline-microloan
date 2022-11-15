@@ -8,7 +8,10 @@ import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getTenant
 import cn.sunline.saas.global.util.getUUID
 import cn.sunline.saas.global.util.getUserId
+import cn.sunline.saas.interest.exception.InterestRateNullException
 import cn.sunline.saas.response.DTOResponseSuccess
+import cn.sunline.saas.rpc.exception.InterestRateNotFoundException
+import cn.sunline.saas.rpc.exception.ProductNotFoundException
 import cn.sunline.saas.rpc.invoke.ProductInvoke
 import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProduct
 import cn.sunline.saas.rpc.invoke.dto.DTOInvokeLoanProducts
@@ -28,12 +31,15 @@ class ProductInvokeImpl: ProductInvoke {
             methodName = "LoanProduct/$productId",
             queryParams = mapOf(),
             headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID().toString(),
+                Header.TENANT_AUTHORIZATION.key to ContextUtil.getUUID(),
             ),
-            tenant = ContextUtil.getTenant().toString()
+            tenant = ContextUtil.getTenant()
         )
         // TODO Throw Exception
-        return loanProductResponse?.data!!
+        loanProductResponse?: run {
+            throw ProductNotFoundException("Invalid product !!")
+        }
+        return loanProductResponse.data!!
     }
 
 
@@ -69,14 +75,18 @@ class ProductInvokeImpl: ProductInvoke {
     }
 
     override fun getInterestRate(productId: Long): List<LoanTermType> {
-        return RPCService.get(
-            APP_LOAN_MANAGEMENT,
-            "LoanProduct/interestRate/$productId",
-            mapOf(),
-            headerParams = mapOf(
-                Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant()
-            ),
-            tenant = ContextUtil.getTenant().toString()
-        )!!
+        return try {
+            RPCService.get(
+                APP_LOAN_MANAGEMENT,
+                "LoanProduct/interestRate/$productId",
+                mapOf(),
+                headerParams = mapOf(
+                    Header.TENANT_AUTHORIZATION.key to ContextUtil.getTenant()
+                ),
+                tenant = ContextUtil.getTenant().toString()
+            )!!
+        } catch (e:Exception){
+            throw InterestRateNotFoundException("Invalid interest rate!!")
+        }
     }
 }

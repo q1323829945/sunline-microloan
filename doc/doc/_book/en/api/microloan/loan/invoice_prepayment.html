@@ -790,6 +790,43 @@
     <span class="hljs-string">&quot;repaymentAccount&quot;</span>:<span class="hljs-string">&quot;123&quot;</span>
 }
 </code></pre>
+<h3 id="error-code">Error code</h3>
+<table>
+<thead>
+<tr>
+<th>HTTP status code</th>
+<th>Error code</th>
+<th>Error message</th>
+<th>Propose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>404</td>
+<td>1010</td>
+<td>Invalid tenant</td>
+<td>Whether the incoming tenant of the request header is correct</td>
+</tr>
+<tr>
+<td>404</td>
+<td>5560</td>
+<td>Invalid loan agreement</td>
+<td>Check whether the loan agreement exists</td>
+</tr>
+<tr>
+<td>500</td>
+<td>5614</td>
+<td>Repayment instructions already exists</td>
+<td>The bill has been prepaid</td>
+</tr>
+<tr>
+<td>404</td>
+<td>1007</td>
+<td>Invalid data</td>
+<td>Check whether the repayment account exists</td>
+</tr>
+</tbody>
+</table>
 
                                 
                                 </section>
@@ -833,7 +870,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Prepayment","level":"1.2.9.4","depth":3,"next":{"title":"Query periodic supply plan","level":"1.2.9.5","depth":3,"path":"api/microloan/loan/retrieve_invoice_schedule.md","ref":"api/microloan/loan/retrieve_invoice_schedule.md","articles":[]},"previous":{"title":"Trial calculation of prepayment","level":"1.2.9.3","depth":3,"path":"api/microloan/loan/prepayment_calculate.md","ref":"api/microloan/loan/prepayment_calculate.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"en","gitbook":"*"},"file":{"path":"api/microloan/loan/invoice_prepayment.md","mtime":"2022-11-10T06:44:16.796Z","type":"markdown"},"gitbook":{"version":"3.0.1","time":"2022-11-10T08:25:31.919Z"},"basePath":"../../..","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Prepayment","level":"1.2.9.4","depth":3,"next":{"title":"Query periodic supply plan","level":"1.2.9.5","depth":3,"path":"api/microloan/loan/retrieve_invoice_schedule.md","ref":"api/microloan/loan/retrieve_invoice_schedule.md","articles":[]},"previous":{"title":"Trial calculation of prepayment","level":"1.2.9.3","depth":3,"path":"api/microloan/loan/prepayment_calculate.md","ref":"api/microloan/loan/prepayment_calculate.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"language":"en","gitbook":"*"},"file":{"path":"api/microloan/loan/invoice_prepayment.md","mtime":"2022-11-15T05:49:08.779Z","type":"markdown"},"gitbook":{"version":"3.0.1","time":"2022-11-15T06:18:18.677Z"},"basePath":"../../..","book":{"language":"en"}});
         });
     </script>
 </div>

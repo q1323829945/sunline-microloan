@@ -52,3 +52,10 @@
 }
 ```
 
+### Error code
+
+| HTTP status code | Error code | Error message   | Propose                                                      |
+| ---------------- | ---------- | --------------- | ------------------------------------------------------------ |
+| 404              | 1010       | Invalid tenant  | Whether the incoming tenant of the request header is correct |
+| 404              | 5640       | Invalid account | Check whether the repayment account exists                   |
+| 404              | 1007       | Invalid data    | Check whether the repayment agreement exists                 |

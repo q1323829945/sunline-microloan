@@ -18,4 +18,4 @@ const val APP_WRAPPER_PUB_SUB = "app-wrapper-pub-sub"
 
 
 //bindings
-const val CHANNEL_SYNC_BINDINGS = "channel-sync-bindings"
+const val CHANNEL_SYNC_BINDINGS = "bindings-rabbitmq"

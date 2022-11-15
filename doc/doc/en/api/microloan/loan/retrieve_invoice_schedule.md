@@ -90,3 +90,12 @@
 }
 ```
 
+### Error code
+
+| HTTP status code | Error code | Error message                 | Propose                                                      |
+| ---------------- | ---------- | ----------------------------- | ------------------------------------------------------------ |
+| 404              | 1010       | Invalid tenant                | Whether the incoming tenant of the request header is correct |
+| 404              | 5560       | Invalid loan agreement        | Check whether the loan agreement exists                      |
+| 404              | 5601       | Invalid interest rate plan    | Check whether the interest rate plan exists                  |
+| 404              | 5610       | Invalid repayment arrangement | Check whether the repayment arrangement exists               |
+| 404              | 5620       | Invalid invoice arrangement   | Check whether the invoice arrangement exists                 |

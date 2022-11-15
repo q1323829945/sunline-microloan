@@ -8,7 +8,7 @@ import cn.sunline.saas.rpc.invoke.dto.DTOPdpaAuthority
 import cn.sunline.saas.rpc.invoke.dto.DTOPdpaView
 
 interface PdpaInvoke {
- fun getPDPAInformation(country: CountryType, language: LanguageType): RPCResponse<DTOPdpaView>?
+ fun getPDPAInformation(country: CountryType, language: LanguageType): RPCResponse<DTOPdpaView>
 
  fun getCustomerPdpaAuthorityInformation(customerId:String): DTOCustomerPdpaInformation?
 
