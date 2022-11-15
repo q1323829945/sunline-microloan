@@ -30,6 +30,27 @@ class InterestRateTemplateDataServiceImpl : TemplateDataService() {
     private lateinit var ratePlanService: RatePlanService
 
 
+    private fun initData(ratePlanId: String): Map<String, Any> {
+        val ratePlan =
+            ratePlanService.getOne(ratePlanId.toLong()) ?: throw TemplateDataBusinessException("Invalid RatePlan")
+        val map = mutableMapOf<String, Any>()
+        when (ratePlan.type) {
+            RatePlanType.STANDARD,
+            RatePlanType.CUSTOMER,
+            RatePlanType.LOAN_TERM_TIER_CUSTOMER -> {
+                map["toPeriod"] = LoanTermType.ONE_MONTH
+                map["ratePlanId"] = ratePlanId
+            }
+
+            RatePlanType.LOAN_AMOUNT_TIER_CUSTOMER -> {
+                map["toAmountPeriod"] = BigDecimal(100000)
+                map["ratePlanId"] = ratePlanId
+            }
+        }
+        map["rate"] = BigDecimal(0.2)
+        return map
+    }
+
     fun <T : Any> getTemplateData(type: KClass<T>, ratePlanId: String, overrideDefaults: Boolean): T {
         val ratePlan =
             ratePlanService.getOne(ratePlanId.toLong()) ?: throw TemplateDataBusinessException("Invalid RatePlan")
@@ -59,10 +80,10 @@ class InterestRateTemplateDataServiceImpl : TemplateDataService() {
         val constructor = type.primaryConstructor!!
         val mapData = mutableMapOf<KParameter, Any?>()
         constructor.parameters.forEach { param ->
-            if(defaultMapData != null && defaultMapData.containsKey(param.name!!)){
+            if (defaultMapData != null && defaultMapData.containsKey(param.name!!)) {
                 mapData[param] = defaultMapData[param.name!!]
             }
-            if(!param.isOptional){
+            if (!param.isOptional) {
                 if (param.type.classifier == Long::class) {
                     mapData[param] = sequence.nextId()
                 }

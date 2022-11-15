@@ -127,6 +127,8 @@ class LoanProductTemplateDataServiceImpl : TemplateDataService() {
                 )
             )
         }
+
+
     }
 
     private fun getDTORepaymentFeature(): DTORepaymentFeature {

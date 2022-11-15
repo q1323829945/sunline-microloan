@@ -2,7 +2,8 @@ package cn.sunline.saas.channel.service
 
 import cn.sunline.saas.channel.controller.dto.*
 import cn.sunline.saas.channel.controller.dto.DTOChannelCastView
-import cn.sunline.saas.channel.exception.ChannelBusinessException
+import cn.sunline.saas.channel.party.organisation.exception.ChannelBusinessException
+import cn.sunline.saas.channel.party.organisation.exception.ChannelNotFoundException
 import cn.sunline.saas.channel.party.organisation.model.dto.*
 import cn.sunline.saas.channel.party.organisation.model.dto.DTOChannelCastAdd
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
@@ -54,10 +55,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
     fun getChannelPaged(channelCode: String?, channelName: String?, pageable: Pageable): Page<DTOChannelPageView> {
         val page = channelCastService.getChannelCastPaged(channelCode, channelName, pageable)
         return page.map {
-            val organisation = organisationService.getOne(it.id) ?: throw ChannelBusinessException(
-                "Invalid Channel",
-                ManagementExceptionCode.CHANNEL_NOT_FOUND
-            )
+            val organisation = organisationService.getOne(it.id) ?: throw ChannelNotFoundException("Invalid Channel")
             DTOChannelPageView(
                 id = it.id.toString(),
                 channelCode = it.channelCode,
@@ -80,7 +78,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
             dtoChannelAdd.channelCast.channelName
         )
         if (oldChannel != null) {
-            throw ChannelBusinessException("This channel has already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
+            throw ChannelBusinessException("the channel has already exist")
         }
         dtoChannelAdd.channelIdentification.forEach {
             val organisationId = organisationIdentificationService.findOrganisationId(
@@ -88,7 +86,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
                 it.channelIdentification
             )
             if (organisationId != null) {
-                throw ChannelBusinessException("This channel identification already exist", ManagementExceptionCode.DATA_ALREADY_EXIST)
+                throw ChannelBusinessException("This channel identification already exist")
             }
         }
 
@@ -127,10 +125,7 @@ class ChannelManagerService(private val tenantDateTime: TenantDateTime) {
 
     private fun getDTOChannelView(dtoOrganisationView: DTOOrganisationView): DTOChannelView {
 
-        val channelCast = dtoOrganisationView.channelCast ?: throw ChannelBusinessException(
-            "Channel Invalid",
-            ManagementExceptionCode.CHANNEL_NOT_FOUND
-        )
+        val channelCast = dtoOrganisationView.channelCast ?: throw ChannelNotFoundException("Channel Invalid")
         val dtoChannelCast = DTOChannelCastView(
             id = channelCast.id.toString(),
             channelCode = channelCast.channelCode,

@@ -1,9 +1,10 @@
-package cn.sunline.saas.channel.rbac.exception
+package cn.sunline.saas.channel.party.organisation.exception
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException
 
-class PositionNotFoundException (
+
+class ChannelNotFoundException (
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.POSITION_NOT_FOUND
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.CHANNEL_NOT_FOUND
 ): NotFoundException(exceptionMessage,statusCode)

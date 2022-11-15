@@ -7,5 +7,5 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 
 class RatePlanBusinessException (
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.DATA_ALREADY_EXIST
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.RATE_PLAN_DATA_ALREADY_EXIST
 ) : BusinessException(exceptionMessage, statusCode)

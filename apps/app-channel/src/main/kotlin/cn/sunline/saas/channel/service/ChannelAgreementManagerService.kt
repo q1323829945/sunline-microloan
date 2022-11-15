@@ -1,5 +1,6 @@
 package cn.sunline.saas.channel.service
 
+import cn.sunline.saas.channel.agreement.exception.ChannelAgreementBusinessException
 import cn.sunline.saas.channel.agreement.exception.ChannelAgreementNotFoundException
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementAdd
 import cn.sunline.saas.channel.agreement.model.dto.DTOChannelAgreementPageView
@@ -7,11 +8,10 @@ import cn.sunline.saas.channel.agreement.service.ChannelAgreementService
 import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelArrangementView
 import cn.sunline.saas.channel.arrangement.model.dto.DTOChannelCommissionItemsView
 import cn.sunline.saas.channel.controller.dto.DTOChannelCommissionAgreementView
-import cn.sunline.saas.channel.exception.ChannelAgreementBusinessException
-import cn.sunline.saas.channel.exception.ChannelBusinessException
+import cn.sunline.saas.channel.party.organisation.exception.ChannelBusinessException
+import cn.sunline.saas.channel.party.organisation.exception.ChannelNotFoundException
 import cn.sunline.saas.channel.party.organisation.service.ChannelCastService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
-import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.CommissionMethodType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -41,9 +41,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
 
     fun addChannelCommissionAgreement(dtoChannelAgreementAdd: DTOChannelAgreementAdd): DTOChannelCommissionAgreementView {
 
-        channelCastService.getOne(dtoChannelAgreementAdd.channelId) ?: throw ChannelBusinessException(
-            "Invalid Channel", ManagementExceptionCode.CHANNEL_NOT_FOUND
-        )
+        channelCastService.getOne(dtoChannelAgreementAdd.channelId) ?: throw ChannelNotFoundException("Invalid Channel",)
 
         val oldAgreement = channelAgreementService.getListByChannelIdAndAgreementType(
             dtoChannelAgreementAdd.channelId,
@@ -52,10 +50,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
         oldAgreement.forEach {
             val now = tenantDateTime.now()
             if (now.isBefore(tenantDateTime.toTenantDateTime(it.toDateTime))) {
-                throw ChannelAgreementBusinessException(
-                    "This channel has effective agreement",
-                    ManagementExceptionCode.DATA_ALREADY_EXIST
-                )
+                throw ChannelAgreementBusinessException("the channel has effective agreement")
             }
         }
 
@@ -64,7 +59,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 if (dtoChannelAgreementAdd.channelCommissionArrangement.commissionItems.any { f -> f.commissionAmountRange == null || f.commissionRatio == null }) {
                     throw ChannelAgreementBusinessException(
                         "amount range or ratio is not null",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                        ManagementExceptionCode.CHANNEL_COMMISSION_AMOUNT_OR_RATIO_NOT_NULL
                     )
                 }
                 val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.commissionItems.filter { f ->
@@ -73,7 +68,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 if (amountItem.size > 1) {
                     throw ChannelAgreementBusinessException(
                         "more than one same config",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                        ManagementExceptionCode.CHANNEL_COMMISSION_CONFIG_MORE_THAN_ONE
                     )
                 }
             }
@@ -82,7 +77,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 if (dtoChannelAgreementAdd.channelCommissionArrangement.commissionItems.any { f -> f.commissionCountRange == null || f.commissionAmount == null }) {
                     throw ChannelAgreementBusinessException(
                         "count range or amount is not null",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                        ManagementExceptionCode.CHANNEL_COMMISSION_AMOUNT_OR_RATIO_NOT_NULL
                     )
                 }
                 val amountItem = dtoChannelAgreementAdd.channelCommissionArrangement.commissionItems.filter { f ->
@@ -91,7 +86,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
                 if (amountItem.size > 1) {
                     throw ChannelAgreementBusinessException(
                         "more than one same config",
-                        ManagementExceptionCode.DATA_ALREADY_EXIST
+                        ManagementExceptionCode.CHANNEL_COMMISSION_CONFIG_MORE_THAN_ONE
                     )
                 }
             }
@@ -133,7 +128,7 @@ class ChannelAgreementManagerService(private val tenantDateTime: TenantDateTime)
 
     fun getChannelCommissionAgreement(id: Long): DTOChannelCommissionAgreementView {
         val channelCommissionAgreement = channelAgreementService.getOne(id) ?: throw ChannelAgreementNotFoundException(
-            "This channel agreement has already exist"
+            "the agreement of channel has not found"
         )
         val detail = channelAgreementService.getDetail(id)!!
 

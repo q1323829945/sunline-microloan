@@ -15,6 +15,7 @@ import cn.sunline.saas.global.model.CurrencyType
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getApplyLoanSubmit
 import cn.sunline.saas.channel.interest.service.InterestRateService
+import cn.sunline.saas.channel.party.organisation.exception.ChannelNotFoundException
 import cn.sunline.saas.loan.exception.LoanApplyNotFoundException
 import cn.sunline.saas.loan.exception.LoanApplyStatusException
 import cn.sunline.saas.loan.model.db.LoanApply
@@ -156,7 +157,7 @@ class LoanApplyAppService {
                     ?: throw LoanApplyNotFoundException("Invalid loan apply")
 
             val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)
-                ?: throw LoanApplyNotFoundException("Invalid loan apply")
+                ?: throw ChannelNotFoundException("Invalid channel")
             val channelAgreement = channelAgreementService.getPageByChannelId(
                 channelCast.id,
                 Pageable.unpaged()
@@ -196,7 +197,7 @@ class LoanApplyAppService {
                 ?: throw LoanApplyNotFoundException("Invalid loan apply")
 
         val channelCast = channelCastService.getChannelCast(loanAgent.channelCode, loanAgent.channelName)
-            ?: throw LoanApplyNotFoundException("Invalid loan apply")
+            ?: throw ChannelNotFoundException("Invalid channel")
         val channelAgreement = channelAgreementService.getPageByChannelId(
             channelCast.id,
             Pageable.unpaged()

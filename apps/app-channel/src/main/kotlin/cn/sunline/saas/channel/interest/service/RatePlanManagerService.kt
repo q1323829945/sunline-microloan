@@ -37,14 +37,14 @@ class RatePlanManagerService {
         val ratePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val typeRatePlan = ratePlanService.findByType(RatePlanType.STANDARD)
         if(typeRatePlan != null && ratePlan.type == RatePlanType.STANDARD){
-            throw RatePlanBusinessException("The standard type of rate plan has exist，Only one is allowed", ManagementExceptionCode.DATA_ALREADY_EXIST)
+            throw RatePlanBusinessException("The standard type of rate plan has exist，Only one is allowed")
         }
         val savedRatePlan = ratePlanService.addOne(ratePlan)
         return objectMapper.convertValue(savedRatePlan)
     }
 
     fun updateOne(id: Long,dtoRatePlan: DTORatePlan): DTORatePlanWithInterestRates {
-        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val oldRatePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan")
         val newRatePlan = objectMapper.convertValue<RatePlan>(dtoRatePlan)
         val savedRatePlan = ratePlanService.updateOne(oldRatePlan, newRatePlan)
         return objectMapper.convertValue(savedRatePlan)
@@ -52,7 +52,7 @@ class RatePlanManagerService {
 
 
     fun getOne(id: Long): DTORatePlanWithInterestRates {
-        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan", ManagementExceptionCode.DATA_NOT_FOUND)
+        val ratePlan = ratePlanService.getOne(id)?: throw RatePlanNotFoundException("Invalid ratePlan")
         return objectMapper.convertValue(ratePlan)
     }
 

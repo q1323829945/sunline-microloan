@@ -40,20 +40,14 @@ class InterestRateManagerService {
         val typeInterestRate =
             interestRateService.findByRatePlanIdAndPeriod(interestRate.ratePlanId, interestRate.period)
         if (typeInterestRate != null) {
-            throw InterestRateBusinessException(
-                "The type of interest has exist",
-                ManagementExceptionCode.DATA_ALREADY_EXIST
-            )
+            throw InterestRateBusinessException( "The type of interest has exist")
         }
         val savedInterestRate = interestRateService.addOne(interestRate)
         return objectMapper.convertValue(savedInterestRate)
     }
 
     fun updateOne(id: Long, dtoInterestRate: DTOInterestRate): DTOInterestRate {
-        val oldInterestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException(
-            "Invalid interestRate",
-            ManagementExceptionCode.DATA_NOT_FOUND
-        )
+        val oldInterestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException("Invalid interestRate")
         val newInterestRate = objectMapper.convertValue<InterestRate>(dtoInterestRate)
         checkRatePlanUseStatus(newInterestRate.ratePlanId)
         val savedInterestRate = interestRateService.updateOne(oldInterestRate, newInterestRate)
@@ -62,10 +56,7 @@ class InterestRateManagerService {
 
     fun deleteOne(id: Long, ratePlanId: Long): DTOInterestRate {
         checkRatePlanUseStatus(ratePlanId)
-        val interestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException(
-            "Invalid interestRate",
-            ManagementExceptionCode.DATA_NOT_FOUND
-        )
+        val interestRate = interestRateService.getOne(id) ?: throw InterestRateNotFoundException("Invalid interestRate")
         interestRateService.deleteById(id)
         return objectMapper.convertValue(interestRate)
     }
@@ -74,7 +65,7 @@ class InterestRateManagerService {
         val interestFeatures = interestFeatureService.findByRatePlanId(ratePlanId)
         if (interestFeatures != null && interestFeatures.size > 0) {
             throw InterestRateBusinessException(
-                "This rate plan has been used",
+                "the rate plan has been used",
                 ManagementExceptionCode.RATE_PLAN_HAS_BEEN_USED
             )
         }

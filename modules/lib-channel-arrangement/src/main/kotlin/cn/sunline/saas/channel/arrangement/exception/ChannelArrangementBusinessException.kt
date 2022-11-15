@@ -6,5 +6,5 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 
 class ChannelArrangementBusinessException(
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.CHANNEL_ARRANGEMENT_NOT_FOUND
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.CHANNEL_ARRANGEMENT_ALREADY_EXIST
 ) : BusinessException(exceptionMessage, statusCode)

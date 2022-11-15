@@ -6,5 +6,5 @@ import cn.sunline.saas.exceptions.NotFoundException
 
 class PositionChangeException (
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.POSITION_NOT_FOUND
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.POSITION_CHANGE_EXCEPTION
 ): BusinessException(exceptionMessage,statusCode)
