@@ -1,8 +1,8 @@
 package cn.sunline.saas.channel.party.person.service
 
+import cn.sunline.saas.channel.party.person.exception.PersonNotFoundException
 import cn.sunline.saas.multi_tenant.services.BaseMultiTenantRepoService
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
-import cn.sunline.saas.party.person.exception.PersonNotFoundException
 import cn.sunline.saas.channel.party.person.model.PersonIdentificationType
 import cn.sunline.saas.channel.party.person.model.RoleType
 import cn.sunline.saas.channel.party.person.model.db.Person

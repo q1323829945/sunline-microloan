@@ -1,4 +1,4 @@
-package cn.sunline.saas.party.person.exception
+package cn.sunline.saas.channel.party.person.exception
 
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.exceptions.NotFoundException

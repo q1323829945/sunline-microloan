@@ -6,5 +6,5 @@ import cn.sunline.saas.exceptions.ManagementExceptionCode
 
 class InterestRateBusinessException (
     exceptionMessage: String? = null,
-    statusCode: ManagementExceptionCode = ManagementExceptionCode.DATA_ALREADY_EXIST
+    statusCode: ManagementExceptionCode = ManagementExceptionCode.INTEREST_RATE_DATA_ALREADY_EXIST
 ) : BusinessException(exceptionMessage, statusCode)

@@ -1,27 +1,27 @@
 package cn.sunline.saas.consumer_loan.service
 
-import cn.sunline.saas.consumer_loan.exception.LoanBusinessException
 import cn.sunline.saas.consumer_loan.service.dto.*
-import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.customer.offer.services.CustomerLoanApplyService
 import cn.sunline.saas.customer.offer.services.CustomerOfferService
 import cn.sunline.saas.exceptions.ManagementExceptionCode
 import cn.sunline.saas.fee.arrangement.component.FeeArrangementHelper
 import cn.sunline.saas.fee.arrangement.model.dto.DTOFeeArrangementView
+import cn.sunline.saas.global.constant.ApplyStatus
 import cn.sunline.saas.global.constant.LoanTermType
 import cn.sunline.saas.global.constant.YesOrNo
 import cn.sunline.saas.global.util.ContextUtil
 import cn.sunline.saas.global.util.getUserId
 import cn.sunline.saas.interest.component.InterestRateHelper
+import cn.sunline.saas.interest.exception.InterestFeatureNotFoundException
 import cn.sunline.saas.interest.model.InterestRate
-import cn.sunline.saas.interest.model.RatePlanType
-import cn.sunline.saas.loan.product.model.dto.DTOLoanProduct
+import cn.sunline.saas.loan.agreement.exception.LoanAgreementNotFoundException
+import cn.sunline.saas.loan.product.exception.LoanProductNotFoundException
 import cn.sunline.saas.money.transfer.instruction.model.InstructionLifecycleStatus
 import cn.sunline.saas.money.transfer.instruction.model.MoneyTransferInstructionType
 import cn.sunline.saas.multi_tenant.util.TenantDateTime
+import cn.sunline.saas.party.person.exception.PersonNotFoundException
 import cn.sunline.saas.party.person.model.PersonIdentificationType
 import cn.sunline.saas.party.person.service.PersonService
-import cn.sunline.saas.product.exception.LoanProductBusinessException
 import cn.sunline.saas.repayment.instruction.service.RepaymentInstructionService
 import cn.sunline.saas.rpc.invoke.CustomerOfferInvoke
 import cn.sunline.saas.rpc.invoke.impl.PageInvokeImpl
@@ -70,7 +70,7 @@ class LoanBusinessManagerService(
     ): Page<DTOLoanBusinessView> {
 
         val person = personService.findByIdentification(identificationNo, identificationType)
-            ?: throw LoanBusinessException("Invalid Person", ManagementExceptionCode.DATA_NOT_FOUND)
+            ?: throw PersonNotFoundException("Invalid Person")
         val filter = customerOfferService.getCustomerOfferPaged(person.id, null, null, pageable).content
             .filter { it.status != ApplyStatus.RECORD && it.status != ApplyStatus.SUBMIT }
 
@@ -119,7 +119,7 @@ class LoanBusinessManagerService(
 
     fun getFeeItemPaged(applicationId: String, pageable: Pageable): Page<DTOFeeItemView> {
         val loanAgreement = customerOfferInvoke.getLoanAgreement(applicationId.toLong())
-            ?: throw LoanBusinessException("Invalid loan agreement", ManagementExceptionCode.DATA_NOT_FOUND)
+            ?: throw LoanAgreementNotFoundException("Invalid loan agreement")
         val dtoFeeItemViews = customerOfferInvoke.getFeeItemListByAgreementId(loanAgreement.id.toLong())
         val content = ArrayList<DTOFeeItemView>()
         dtoFeeItemViews?.let { it ->
@@ -142,7 +142,7 @@ class LoanBusinessManagerService(
 
     fun getLoanDisbursementPaged(agreementId: String, pageable: Pageable): Page<DTOLoanDisbursementView> {
         val agreementViewInfo = customerOfferInvoke.getLoanAgreementInfoByAgreementId(agreementId.toLong())
-            ?: throw LoanBusinessException("Invalid customer offer", ManagementExceptionCode.DATA_NOT_FOUND)
+            ?: throw LoanAgreementNotFoundException("Invalid customer offer")
         val content = ArrayList<DTOLoanDisbursementView>()
         content.add(
             DTOLoanDisbursementView(
@@ -162,7 +162,7 @@ class LoanBusinessManagerService(
 
     fun getLoanHistoryEventPaged(agreementId: String, pageable: Pageable): Page<DTOLoanHistoryEventView> {
         val agreementViewInfo = customerOfferInvoke.getLoanAgreementInfoByAgreementId(agreementId.toLong())
-            ?: throw LoanBusinessException("Invalid customer offer", ManagementExceptionCode.DATA_NOT_FOUND)
+            ?: throw LoanAgreementNotFoundException("Invalid customer offer")
 
         return repaymentInstructionService.getPage(
             agreementId.toLong(),
@@ -216,7 +216,7 @@ class LoanBusinessManagerService(
     ): ScheduleHelper.DTORepaymentScheduleTrialView {
 
         val loanProduct = customerOfferInvoke.getProduct(productId.toLong())
-            ?: throw LoanBusinessException("Invalid loan product", ManagementExceptionCode.DATA_NOT_FOUND)
+            ?: throw LoanProductNotFoundException("Invalid loan product")
 
         val feeArrangement = loanProduct.feeFeatures?.run {
             objectMapper.convertValue<MutableList<DTOFeeArrangementView>>(
@@ -226,10 +226,7 @@ class LoanBusinessManagerService(
 
         val feeDeductItem = FeeArrangementHelper.getDisbursementFeeDeductItem(feeArrangement, amount.toBigDecimal())
 
-        val interestFeature = loanProduct.interestFeature ?: throw LoanBusinessException(
-            "Invalid interest feature",
-            ManagementExceptionCode.DATA_NOT_FOUND
-        )
+        val interestFeature = loanProduct.interestFeature ?: throw InterestFeatureNotFoundException("Invalid interest feature")
 
         val rateResult =
             productInvokeImpl.getRatePlanWithInterestRate(interestFeature.ratePlanId.toLong())
